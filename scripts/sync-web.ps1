@@ -1,0 +1,59 @@
+<#
+.SYNOPSIS
+    Regenerates app/www from web/ for one instrument, and wires in the native
+    back-button bridge. app/www is always disposable: never hand-edit it.
+
+.PARAMETER Instrument
+    One of: guitar, bass-4, ukulele
+
+.PARAMETER RepoPath
+    Root of the fretoboard-hero repo. Default: the repo root (two levels up from this script).
+#>
+param(
+    [Parameter(Mandatory = $true)]
+    [ValidateSet("guitar", "bass-4", "ukulele")]
+    [string]$Instrument,
+
+    [string]$RepoPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+)
+
+$ErrorActionPreference = "Stop"
+
+$webSource = Join-Path $RepoPath "web"
+$appRoot   = Join-Path $RepoPath "app"
+$wwwPath   = Join-Path $appRoot "www"
+
+if (-not (Test-Path $webSource)) {
+    throw "Web source folder not found: $webSource"
+}
+
+# 1. Fresh copy of the web engine into app/www (disposable, always regenerated)
+if (Test-Path $wwwPath) {
+    Remove-Item $wwwPath -Recurse -Force
+}
+New-Item -ItemType Directory -Path $wwwPath -Force | Out-Null
+Copy-Item -Path (Join-Path $webSource "*") -Destination $wwwPath -Recurse -Force
+
+# 2. Force the instrument selection for this build
+$siteConfigPath = Join-Path $wwwPath "site.config.json"
+@{ instrument = $Instrument } | ConvertTo-Json | Set-Content -Path $siteConfigPath -Encoding UTF8
+
+# 3. Copy the native bridge script and inject its <script> tag before </body>
+$bridgeSource = Join-Path $appRoot "native-assets\capacitor-bridge.js"
+$wwwCoreDir = Join-Path $wwwPath "core"
+if (-not (Test-Path $wwwCoreDir)) {
+    New-Item -ItemType Directory -Path $wwwCoreDir -Force | Out-Null
+}
+Copy-Item -Path $bridgeSource -Destination (Join-Path $wwwCoreDir "capacitor-bridge.js") -Force
+
+$indexPath = Join-Path $wwwPath "index.html"
+# Read/write as explicit UTF-8 (no BOM): Windows PowerShell's Get-Content/Set-Content
+# default to the system ANSI codepage for BOM-less files, which corrupts multi-byte
+# UTF-8 characters (emoji, arrows) in the source HTML.
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
+$indexContent = [System.IO.File]::ReadAllText($indexPath, [System.Text.Encoding]::UTF8)
+$bridgeTag = "  <script src=`"./core/capacitor-bridge.js`" defer></script>`r`n"
+$indexContent = $indexContent -replace '(?=</body>)', $bridgeTag
+[System.IO.File]::WriteAllText($indexPath, $indexContent, $utf8NoBom)
+
+Write-Host "app/www synced for instrument '$Instrument'." -ForegroundColor Green
