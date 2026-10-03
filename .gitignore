@@ -1,0 +1,11 @@
+node_modules/
+dist/
+app/www/
+app/android/.gradle/
+app/android/local.properties
+app/android/build/
+app/android/app/build/
+app/android/captures/
+app/ios/App/Pods/
+app/ios/App/build/
+*.apk
