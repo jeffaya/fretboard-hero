@@ -1,0 +1,7 @@
+{
+  "name": "fretoboard-hero",
+  "compatibility_date": "2024-09-25",
+  "assets": {
+    "directory": "./web"
+  }
+}
