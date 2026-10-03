@@ -571,7 +571,6 @@
   $('#backToScore')?.addEventListener('click',backFromRankLadder);
   $('#introBackHome')?.addEventListener('click',exitQuizToHome);
   $('#resultBackHome')?.addEventListener('click',exitQuizToHome);
-  $('#rankLadderBackHome')?.addEventListener('click',exitQuizToHome);
   $('#shareScore').addEventListener('click',async()=>{const qz=state.quiz||{score:0,correct:0},{emoji,rank}=quizRank(qz.score);const text=`${emoji} I reached ${rank} with ${qz.score.toLocaleString('en-US')} points and ${qz.correct} correct answers in ${quizSeconds()} seconds on ${product.name} ${product.shareEmoji||''}\nWhat's your rank?`,url=product.url||location.href;try{if(navigator.share)await navigator.share({title:product.name,text,url});else{await navigator.clipboard.writeText(`${text}\n${url}`);const shareLabel=$('#shareScore span');if(shareLabel){shareLabel.textContent='COPIED!';setTimeout(()=>shareLabel.textContent='SHARE MY SCORE',1400)}}}catch{}});
   renderPractice();
 })();
