@@ -165,7 +165,7 @@ Quiz.
 
 | | Web | Native app (Capacitor) |
 |---|---|---|
-| Hosting | `stupid-games.seignemorte.com` | 3 separately installable APKs (one per instrument) |
+| Hosting | Cloudflare | 3 separately installable APKs (one per instrument) |
 | Connectivity | Needs network on first load | 100% offline (bundled assets) |
 | Back button | -- | Hardware/gesture Back: goes to Home, then exits the app from Home |
 | Zoom/overscroll | Standard browser | Pinch-zoom and overscroll bounce disabled (app-like feel) |

@@ -27,7 +27,7 @@
     setAttr('link[rel="canonical"]','href',url);
     setMeta('meta[property="og:title"]',seo.ogTitle||seo.title||name);
     setMeta('meta[property="og:description"]',seo.ogDescription||seo.description||'Interactive fretboard trainer.');
-    setMeta('meta[property="og:site_name"]',seo.siteName||'Stupid Games');
+    setMeta('meta[property="og:site_name"]',seo.siteName||name);
     setMeta('meta[property="og:url"]',url);
     setMeta('meta[property="og:image"]',ogImage);
     setMeta('meta[property="og:image:alt"]',seo.ogImageAlt||`${name} fretboard trainer`);
@@ -44,7 +44,7 @@
         isAccessibleForFree:true,inLanguage:'en',keywords:(seo.keywords||[]).join(', '),
         genre:['Music','Education'],featureList:seo.featureList||[],
         author:{'@type':'Person',name:'Jean-François Seignemorte'},
-        publisher:{'@type':'Organization',name:'Stupid Games',url:'https://stupid-games.seignemorte.com/'}
+        publisher:{'@type':'Person',name:'Jean-François Seignemorte'}
       });
     }
 
