@@ -559,11 +559,19 @@
     $('#resultCopy').textContent=`${copy} ${qz.correct} ${qz.correct===1?'correct answer':'correct answers'} in ${quizSeconds()} seconds.`;
     rankLadderReturn='score';showScoreResult();$('#resultModal').classList.add('show');$('#resultModal').setAttribute('aria-hidden','false');
   }
+  function exitQuizToHome(){
+    const qz=state.quiz;if(qz?.timer){clearInterval(qz.timer);qz.timer=null}
+    $('#resultModal').classList.remove('show');$('#resultModal').setAttribute('aria-hidden','true');
+    go('home');
+  }
   $('#startQuizButton')?.addEventListener('click',startQuiz);
   $('#introRankLadder')?.addEventListener('click',()=>showRankLadder('intro'));
   $('#replayQuiz').addEventListener('click',startQuiz);
   $('#viewRankLadder')?.addEventListener('click',()=>showRankLadder('score'));
   $('#backToScore')?.addEventListener('click',backFromRankLadder);
+  $('#introBackHome')?.addEventListener('click',exitQuizToHome);
+  $('#resultBackHome')?.addEventListener('click',exitQuizToHome);
+  $('#rankLadderBackHome')?.addEventListener('click',exitQuizToHome);
   $('#shareScore').addEventListener('click',async()=>{const qz=state.quiz||{score:0,correct:0},{emoji,rank}=quizRank(qz.score);const text=`${emoji} I reached ${rank} with ${qz.score.toLocaleString('en-US')} points and ${qz.correct} correct answers in ${quizSeconds()} seconds on ${product.name} ${product.shareEmoji||''}\nWhat's your rank?`,url=product.url||location.href;try{if(navigator.share)await navigator.share({title:product.name,text,url});else{await navigator.clipboard.writeText(`${text}\n${url}`);const shareLabel=$('#shareScore span');if(shareLabel){shareLabel.textContent='COPIED!';setTimeout(()=>shareLabel.textContent='SHARE MY SCORE',1400)}}}catch{}});
   renderPractice();
 })();

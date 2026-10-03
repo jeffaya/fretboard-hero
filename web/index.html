@@ -183,11 +183,12 @@
       <p class="quiz-intro-lead">Find the requested <strong>ROOT, 3RD or 5TH</strong> anywhere on the visible fretboard.</p>
       <div class="quiz-intro-rules" aria-label="Quiz rules">
         <div><b>✓</b><span>Correct answers build your multiplier up to <strong>×5</strong>.</span></div>
-        <div><b>×</b><span>A wrong answer resets your multiplier to <strong>×1</strong>.</span></div>
+        <div><b class="icon-cross">×</b><span>A wrong answer resets your multiplier to <strong>×1</strong>.</span></div>
         <div><b>⚡</b><span>Score as many points as possible in <strong>60 seconds</strong>.</span></div>
       </div>
       <button id="startQuizButton" class="modal-primary quiz-start-button">START QUIZ</button>
       <button id="introRankLadder" class="modal-secondary rank-ladder-open">VIEW RANK LADDER</button>
+      <button id="introBackHome" class="modal-secondary modal-action quiz-back-home">← BACK TO HOME</button>
     </div>
     <div id="quizResultView" class="result-modal">
       <div class="result-kicker">60 SECOND RUN COMPLETE</div>
@@ -197,6 +198,7 @@
       <button id="viewRankLadder" class="modal-secondary rank-ladder-open">VIEW RANK LADDER</button>
       <button id="shareScore" class="modal-primary modal-action"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a3 3 0 1 0-2.83-4A3 3 0 0 0 15 5c0 .22.02.43.07.63L8.91 9.1A3 3 0 0 0 7 8.42a3 3 0 1 0 1.91 5.48l6.16 3.47A3 3 0 0 0 15 18a3 3 0 1 0 .83-2.07L9.67 12.5c.04-.16.06-.33.06-.5s-.02-.34-.06-.5l6.16-3.43c.55.58 1.32.93 2.17.93Z"/></svg><span>SHARE MY SCORE</span></button>
       <button id="replayQuiz" class="modal-secondary modal-action"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 1-2.34-5.66L20 7.68V3h2v8h-8V9h4.54l-2.3-2.25A6 6 0 1 0 18 11h2Z"/></svg><span>PLAY AGAIN</span></button>
+      <button id="resultBackHome" class="modal-secondary modal-action quiz-back-home">← BACK TO HOME</button>
     </div>
     <div id="rankLadderView" class="result-modal rank-ladder-modal" hidden>
       <div id="rankLadderKicker" class="result-kicker">YOUR PLACE ON THE NECK</div>
@@ -204,6 +206,7 @@
       <div id="rankLadderSummary" class="rank-ladder-summary"></div>
       <div id="rankLadderList" class="rank-ladder-list" role="list" aria-label="All quiz ranks"></div>
       <button id="backToScore" class="modal-secondary rank-ladder-back">← BACK TO MY SCORE</button>
+      <button id="rankLadderBackHome" class="modal-secondary modal-action quiz-back-home">← BACK TO HOME</button>
     </div>
   </div>
 

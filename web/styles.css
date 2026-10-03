@@ -3284,6 +3284,8 @@ body{
 .rank-ladder-item.is-current{opacity:1;border-color:rgba(255,62,201,.72);background:linear-gradient(90deg,rgba(255,62,201,.12),rgba(39,215,255,.08));box-shadow:inset 0 0 18px rgba(255,62,201,.08),0 0 16px rgba(39,215,255,.08)}
 .rank-ladder-item.is-current .rank-ladder-position{color:var(--cyan)}.rank-ladder-item.is-current .rank-ladder-name b{color:#fff;text-shadow:0 0 10px rgba(255,62,201,.45)}.rank-ladder-item.is-current .rank-ladder-threshold{color:#fff}
 .rank-ladder-back{margin-top:12px!important}
+.quiz-back-home{background:transparent!important;border:0!important;box-shadow:none!important;color:#7f9aad!important;font-weight:700;padding:10px!important;margin-top:4px!important}
+.quiz-back-home:hover{color:#fff!important}
 @media(max-width:600px){.rank-ladder-modal{padding:18px 12px 14px}.rank-ladder-list{height:min(52dvh,420px);min-height:250px;scroll-padding-block:calc(5 * 50px)}.rank-ladder-item{min-height:46px;margin:4px 0;padding:6px 8px}.rank-ladder-name b{font-size:13px}.rank-ladder-threshold{font-size:10px}.rank-ladder-summary strong{font-size:21px}}
 
 
@@ -3395,7 +3397,8 @@ body{
 .quiz-intro-lead strong{color:var(--cyan);text-shadow:0 0 10px rgba(39,215,255,.35)}
 .quiz-intro-rules{display:grid;gap:8px;margin:0 0 18px;text-align:left}
 .quiz-intro-rules>div{display:grid;grid-template-columns:26px 1fr;align-items:center;gap:8px;padding:9px 10px;border:1px solid rgba(80,116,139,.24);border-radius:10px;background:rgba(7,17,26,.7);color:#a9c0ce;font:700 13px/1.25 "Barlow Condensed",sans-serif}
-.quiz-intro-rules b{color:var(--cyan);font-size:16px;text-align:center}.quiz-intro-rules strong{color:#fff}
+.quiz-intro-rules b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;font-size:13px;line-height:1;color:#04141c;background:var(--cyan);box-shadow:0 0 10px rgba(39,215,255,.5)}.quiz-intro-rules strong{color:#fff}
+.quiz-intro-rules b.icon-cross{background:var(--pink);box-shadow:0 0 10px rgba(255,62,201,.5)}
 .quiz-intro-modal button{width:100%;padding:14px;border-radius:12px;font-weight:900;cursor:pointer}
 .quiz-intro-modal .quiz-start-button{margin-top:0;font-size:15px;letter-spacing:.08em;box-shadow:0 0 24px rgba(255,50,199,.16)}
 .quiz-intro-modal .rank-ladder-open{margin-top:8px!important;margin-bottom:0!important}
