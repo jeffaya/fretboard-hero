@@ -17,7 +17,6 @@
     const iconBase=`assets/icons/${iconKey}/`;
     const assets={
       faviconIco:`${iconBase}favicon.ico`,
-      faviconSvg:'favicon.svg',
       favicon16:`${iconBase}favicon-16.png`,
       favicon32:`${iconBase}favicon-32.png`,
       favicon48:`${iconBase}favicon-48.png`,
