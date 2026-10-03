@@ -13,18 +13,18 @@
     const instrumentId=window.FRETBOARD_SITE_CONFIG?.instrument||instrument?.id||'';
     const seo={...(product.seo||{}),...((product.seoByInstrument||{})[instrumentId]||{})};
     const pwa={...(product.pwa||{}),...((product.pwaByInstrument||{})[instrumentId]||{})};
-    const iconKey=(product.id||'').replace(/-fretboard-hero$/,'');
-    const iconBase=iconKey?`assets/icons/${iconKey}/`:'';
+    const iconKey=(product.id||'').replace(/-fretboard-hero$/,'')||'guitar';
+    const iconBase=`assets/icons/${iconKey}/`;
     const assets={
-      faviconIco:iconBase?`${iconBase}favicon.ico`:undefined,
+      faviconIco:`${iconBase}favicon.ico`,
       faviconSvg:'favicon.svg',
-      favicon16:iconBase?`${iconBase}favicon-16.png`:undefined,
-      favicon32:iconBase?`${iconBase}favicon-32.png`:undefined,
-      favicon48:iconBase?`${iconBase}favicon-48.png`:undefined,
-      icon192:iconBase?`${iconBase}icon-192.png`:undefined,
-      icon512:iconBase?`${iconBase}icon-512.png`:undefined,
-      appleTouchIcon:iconBase?`${iconBase}apple-touch-icon.png`:undefined,
-      maskable512:iconBase?`${iconBase}icon-maskable-512.png`:undefined,
+      favicon16:`${iconBase}favicon-16.png`,
+      favicon32:`${iconBase}favicon-32.png`,
+      favicon48:`${iconBase}favicon-48.png`,
+      icon192:`${iconBase}icon-192.png`,
+      icon512:`${iconBase}icon-512.png`,
+      appleTouchIcon:`${iconBase}apple-touch-icon.png`,
+      maskable512:`${iconBase}icon-maskable-512.png`,
       ...(product.assets||{})
     };
     const home=product.home||{};
