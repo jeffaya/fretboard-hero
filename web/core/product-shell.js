@@ -13,7 +13,20 @@
     const instrumentId=window.FRETBOARD_SITE_CONFIG?.instrument||instrument?.id||'';
     const seo={...(product.seo||{}),...((product.seoByInstrument||{})[instrumentId]||{})};
     const pwa={...(product.pwa||{}),...((product.pwaByInstrument||{})[instrumentId]||{})};
-    const assets=product.assets||{};
+    const iconKey=(product.id||'').replace(/-fretboard-hero$/,'');
+    const iconBase=iconKey?`assets/icons/${iconKey}/`:'';
+    const assets={
+      faviconIco:iconBase?`${iconBase}favicon.ico`:undefined,
+      faviconSvg:'favicon.svg',
+      favicon16:iconBase?`${iconBase}favicon-16.png`:undefined,
+      favicon32:iconBase?`${iconBase}favicon-32.png`:undefined,
+      favicon48:iconBase?`${iconBase}favicon-48.png`:undefined,
+      icon192:iconBase?`${iconBase}icon-192.png`:undefined,
+      icon512:iconBase?`${iconBase}icon-512.png`:undefined,
+      appleTouchIcon:iconBase?`${iconBase}apple-touch-icon.png`:undefined,
+      maskable512:iconBase?`${iconBase}icon-maskable-512.png`:undefined,
+      ...(product.assets||{})
+    };
     const home=product.home||{};
     const name=branding.name||product.name||'Fretboard Hero';
     const url=(seo.canonical||product.url||location.href).replace(/\/$/,'')+'/';
