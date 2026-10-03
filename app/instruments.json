@@ -1,0 +1,5 @@
+{
+  "guitar":  { "appId": "com.guitar.fretboardhero",  "name": "Guitar Fretboard Hero" },
+  "bass-4":  { "appId": "com.bass.fretboardhero",    "name": "Bass Fretboard Hero" },
+  "ukulele": { "appId": "com.ukulele.fretboardhero", "name": "Ukulele Fretboard Hero" }
+}
