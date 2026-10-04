@@ -7,6 +7,10 @@
     return screenId !== 'home';
   }
 
+  function markNativeApp(doc) {
+    doc.documentElement.classList.add('native-app');
+  }
+
   function attach(capacitorApp, doc) {
     capacitorApp.addListener('backButton', function () {
       var activeScreen = doc.querySelector('.screen.active');
@@ -23,8 +27,9 @@
   }
 
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { shouldGoHome: shouldGoHome, attach: attach };
+    module.exports = { shouldGoHome: shouldGoHome, markNativeApp: markNativeApp, attach: attach };
   } else if (root.Capacitor && root.Capacitor.Plugins && root.Capacitor.Plugins.App) {
+    markNativeApp(document);
     attach(root.Capacitor.Plugins.App, document);
   }
 })(typeof window !== 'undefined' ? window : globalThis);

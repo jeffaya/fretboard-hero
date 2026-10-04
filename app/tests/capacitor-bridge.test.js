@@ -1,10 +1,20 @@
 const assert = require('node:assert/strict');
-const { shouldGoHome, attach } = require('../native-assets/capacitor-bridge.js');
+const { shouldGoHome, markNativeApp, attach } = require('../native-assets/capacitor-bridge.js');
 
 // shouldGoHome: pure decision logic
 assert.equal(shouldGoHome('practice'), true);
 assert.equal(shouldGoHome('quiz'), true);
 assert.equal(shouldGoHome('home'), false);
+
+// markNativeApp: adds a class to <html> only, never touches anything else
+const addedClasses = [];
+const fakeNativeDoc = {
+  documentElement: {
+    classList: { add: (name) => addedClasses.push(name) }
+  }
+};
+markNativeApp(fakeNativeDoc);
+assert.deepEqual(addedClasses, ['native-app'], 'expected native-app class to be added to <html>');
 
 // attach(): wires the Capacitor "backButton" event
 let clicked = false;
