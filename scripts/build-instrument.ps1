@@ -62,6 +62,19 @@ try {
     # Write without a BOM: Gradle's Groovy parser rejects a leading UTF-8 BOM.
     [System.IO.File]::WriteAllText($gradlePath, $gradleContent, (New-Object System.Text.UTF8Encoding $false))
 
+    # 3c. Update the Android app display name and custom URL scheme to match this instrument
+    $stringsPath = Join-Path $appRoot "android\app\src\main\res\values\strings.xml"
+    $stringsXml = [xml](Get-Content $stringsPath -Raw)
+    foreach ($node in $stringsXml.resources.string) {
+        switch ($node.name) {
+            "app_name" { $node.InnerText = $entry.name }
+            "title_activity_main" { $node.InnerText = $entry.name }
+            "package_name" { $node.InnerText = $entry.appId }
+            "custom_url_scheme" { $node.InnerText = $entry.appId }
+        }
+    }
+    $stringsXml.Save($stringsPath)
+
     # 3b. Generate the Android launcher icon for this instrument from its web icon
     $iconKey = if ($entry.iconKey) { $entry.iconKey } else { $Instrument }
     $iconSource = Join-Path $RepoPath "web\assets\icons\$iconKey\icon-1024.png"
