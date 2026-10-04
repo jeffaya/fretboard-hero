@@ -62,6 +62,29 @@ try {
     # Write without a BOM: Gradle's Groovy parser rejects a leading UTF-8 BOM.
     [System.IO.File]::WriteAllText($gradlePath, $gradleContent, (New-Object System.Text.UTF8Encoding $false))
 
+    # 3b. Generate the Android launcher icon for this instrument from its web icon
+    $iconKey = if ($entry.iconKey) { $entry.iconKey } else { $Instrument }
+    $iconSource = Join-Path $RepoPath "web\assets\icons\$iconKey\icon-1024.png"
+    if (-not (Test-Path $iconSource)) {
+        throw "Missing icon source for instrument '$Instrument' at $iconSource"
+    }
+    # @capacitor/assets joins projectRoot + assetPath with path.join, which breaks
+    # if assetPath is absolute. Use a path relative to $appRoot (we're Push-Location'd there).
+    $assetsTemp = Join-Path $appRoot "assets"
+    if (Test-Path $assetsTemp) { Remove-Item $assetsTemp -Recurse -Force }
+    New-Item -ItemType Directory -Path $assetsTemp -Force | Out-Null
+    Copy-Item $iconSource (Join-Path $assetsTemp "logo.png")
+
+    $previousEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    npx @capacitor/assets generate --android --iconBackgroundColor "#05070b" --iconBackgroundColorDark "#05070b" --assetPath "assets"
+    $assetsExitCode = $LASTEXITCODE
+    $ErrorActionPreference = $previousEap
+    Remove-Item $assetsTemp -Recurse -Force -ErrorAction SilentlyContinue
+    if ($assetsExitCode -ne 0) {
+        throw "npx @capacitor/assets generate failed with exit code $assetsExitCode"
+    }
+
     # 4. Sync web assets + config into the native Android project
     # Native tools (npx/gradlew) write harmless notices to stderr; don't let
     # $ErrorActionPreference = "Stop" treat that as a terminating error.
