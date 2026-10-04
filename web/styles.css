@@ -217,6 +217,13 @@ body{
   gap: 10px;
 }
 
+/* Native app only (Capacitor WebView): add the real status-bar inset Capacitor
+   injects as --safe-area-inset-top. Never applied on the plain website, since
+   .native-app is only added by app/native-assets/capacitor-bridge.js. */
+html.native-app .topbar{
+  padding-top: max(14px,var(--safe-area-inset-top,0px));
+}
+
 .icon-btn{
   border: 1px solid #25384a;
   background: #09111b;
@@ -2448,6 +2455,10 @@ body{
     align-items: center;
     padding: max(8px,env(safe-area-inset-top)) 8px 6px !important;
     gap: 6px !important;
+  }
+
+  html.native-app .topbar{
+    padding-top: max(8px,var(--safe-area-inset-top,0px)) !important;
   }
 
   .topbar>.icon-btn[data-go="home"]{

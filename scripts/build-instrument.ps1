@@ -48,7 +48,6 @@ $capacitorConfig = @{
         StatusBar = @{
             style           = "DARK"
             backgroundColor = "#05070b"
-            overlaysWebView = $false
         }
     }
 } | ConvertTo-Json -Depth 5
