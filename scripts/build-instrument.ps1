@@ -49,6 +49,12 @@ $capacitorConfig = @{
             style           = "DARK"
             backgroundColor = "#05070b"
         }
+        # Capacitor v8 auto-manages edge-to-edge insets on targetSdk 36; disable its
+        # built-in handling so @capacitor-community/safe-area is the single source of
+        # truth for safe-area insets (per plugin requirements).
+        SystemBars = @{
+            insetsHandling = "disable"
+        }
     }
 } | ConvertTo-Json -Depth 5
 Set-Content -Path (Join-Path $appRoot "capacitor.config.json") -Value $capacitorConfig -Encoding UTF8
