@@ -10,18 +10,25 @@
   --pink: #ff3ec9;
   --yellow: #ffd53c;
   --text: #edf8ff;
-  /* Safe-area insets used everywhere below. On the website and on iOS these
-     are the standard env() values. Inside the Android native app,
-     @capacitor-community/safe-area (wired up in MainActivity.java) makes
-     these env() values reliable: it patches them on Chromium versions that
-     misreport them, applying real WebView padding instead so content never
-     overlaps system bars/cutouts, in which case env() reports 0 here (safe
-     to use directly, no double-counting). Works for all 4 sides, including
-     the left/right insets needed in landscape. */
+  /* Safe-area insets used everywhere below. On the website these simply equal
+     the standard env() values (unchanged behavior). Inside the native app,
+     html.native-app overrides them with max(env(),Capacitor's injected
+     --safe-area-inset-* custom property), which is the only reliable source
+     on Android WebView/API 36. Works for all 4 sides, including the
+     left/right insets needed in landscape. */
   --sa-top: env(safe-area-inset-top, 0px);
   --sa-right: env(safe-area-inset-right, 0px);
   --sa-bottom: env(safe-area-inset-bottom, 0px);
   --sa-left: env(safe-area-inset-left, 0px);
+}
+
+/* Native app only (Capacitor WebView): never matches on the plain website,
+   since .native-app is only added by app/native-assets/capacitor-bridge.js. */
+html.native-app{
+  --sa-top: max(env(safe-area-inset-top,0px),var(--safe-area-inset-top,0px));
+  --sa-right: max(env(safe-area-inset-right,0px),var(--safe-area-inset-right,0px));
+  --sa-bottom: max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px));
+  --sa-left: max(env(safe-area-inset-left,0px),var(--safe-area-inset-left,0px));
 }
 
 *{

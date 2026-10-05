@@ -1,19 +1,16 @@
 ﻿{
-    "appId":  "com.ukulele.fretboardhero",
+    "appId":  "com.guitar.fretboardhero",
     "webDir":  "www",
-    "appName":  "Ukulele Fretboard Hero",
+    "appName":  "Guitar Fretboard Hero",
     "plugins":  {
-                    "SystemBars":  {
-                                       "insetsHandling":  "disable"
-                                   },
-                    "StatusBar":  {
-                                      "style":  "DARK",
-                                      "backgroundColor":  "#05070b"
-                                  },
                     "SplashScreen":  {
                                          "launchAutoHide":  true,
                                          "backgroundColor":  "#05070b",
                                          "launchShowDuration":  400
-                                     }
+                                     },
+                    "StatusBar":  {
+                                      "style":  "DARK",
+                                      "backgroundColor":  "#05070b"
+                                  }
                 }
 }
