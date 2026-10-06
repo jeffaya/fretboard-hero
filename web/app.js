@@ -179,7 +179,7 @@
       const degree=button.dataset.degreeFilter,pill=button.querySelector('.legend');
       const pc={root:rootPC(),third:thirdPC(),fourth:mod(rootPC()+5),fifth:fifthPC(),seventh:mod(rootPC()+(state.quality==='minor'?10:11))}[degree];
       pill.classList.add('neck-note-pill');pill.style.setProperty('--note-color',FretboardAppearance.DEGREE_COLORS[degree]);
-      appearance.pill(pill,noteName(pc));button.setAttribute('aria-label',`${button.querySelector('small').textContent}: ${noteName(pc)}`);
+      appearance.pill(pill,noteName(pc),{light:modeKind()==='pentatonic',color:FretboardAppearance.DEGREE_COLORS[degree]});button.setAttribute('aria-label',`${button.querySelector('small').textContent}: ${noteName(pc)}`);
     });
     const fourth=$('#legendFourth'),seventh=$('#legendSeventh');
     if(!fourth||!seventh)return;
@@ -342,7 +342,7 @@
       const d=degreeFor(pc);if(!d)continue;if(state.degreeFilter!=='all'&&d!==state.degreeFilter)continue;
       if(ModeRegistry.kind(instrument,opt.mode)!=='pentatonic'&&visibleKeys&&!visibleKeys.has(s+':'+f))continue;
       const degreeColor=DEGREE_COLORS[d]||'#52606b';
-      appearance.note(svg,{x,y,isP,color:degreeColor,label:degreeLabel(pc),target:d==='root',attrs:{'data-string':s,'data-fret':f,'data-degree':d}});
+      appearance.note(svg,{x,y,isP,color:degreeColor,label:degreeLabel(pc),target:d==='root',light:renderKind==='pentatonic',attrs:{'data-string':s,'data-fret':f,'data-degree':d}});
     }
   }
 
