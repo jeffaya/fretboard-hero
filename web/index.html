@@ -39,9 +39,10 @@
   <link rel="icon" type="image/png" sizes="192x192">
   <link rel="icon" type="image/png" sizes="512x512">
   <link rel="apple-touch-icon" sizes="180x180">
-  <link rel="stylesheet" href="./styles.css?v=10.16.0">
-  <link rel="stylesheet" href="./home.css?v=10.16.0">
-  <link rel="stylesheet" href="./theme.css?v=10.16.0">
+  <link rel="stylesheet" href="./styles.css?v=10.17.0">
+  <link rel="stylesheet" href="./home.css?v=10.17.0">
+  <link rel="stylesheet" href="./theme.css?v=10.17.0">
+  <link rel="stylesheet" href="./play.css?v=10.17.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
 </head>
 <body data-loading="true" aria-busy="true">
@@ -57,7 +58,7 @@
         <div class="home-menu">
           <nav class="home-actions" aria-label="Choose your session">
             <button class="hero-btn practice-card" data-go="practice"><span class="hero-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#practice"/></svg></span><span class="home-card-copy"><strong>PRACTICE</strong><small>Notes · Triads · Scales · Chords</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-            <button class="hero-btn play-card" data-go="quiz"><span class="hero-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#play"/></svg></span><span class="home-card-copy"><strong>PLAY MODE</strong><small>Your 60-second stage challenge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+            <button class="hero-btn play-card" data-go="play"><span class="hero-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#play"/></svg></span><span class="home-card-copy"><strong>PLAY</strong><small>Learn by playing · Daily licks</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn map-card" data-go="fretmap"><span class="hero-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#map"/></svg></span><span class="home-card-copy"><strong>FRETBOARD MAP</strong><small>Explore the neck</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn quiz-card" data-go="quiz"><span class="hero-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#quiz"/></svg></span><span class="home-card-copy"><strong>QUIZ</strong><small>Test your knowledge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn circle-card" data-go="circle"><span class="hero-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#circle"/></svg></span><span class="home-card-copy"><strong>CIRCLE OF FIFTHS</strong><small>Visualize & practice</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
@@ -68,6 +69,37 @@
             <button type="button" data-home-instrument="ukulele" aria-pressed="false"><svg class="instrument-art" viewBox="510 16.8333 190 253.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.14.0" width="768" height="256"/></svg><span>Ukulele</span></button>
           </nav>
         </div>
+      </div>
+    </section>
+
+    <section id="play" class="screen play-screen" aria-label="Play">
+      <header class="topbar">
+        <button class="icon-btn nav-back ui-back" data-go="home" aria-label="Back home"><span class="back-icon" aria-hidden="true">←</span></button>
+        <div class="section-heading"><strong>PLAY</strong><small class="screen-context">LEARN BY PLAYING</small></div>
+        <button id="playMenuBtn" class="icon-btn mobile-menu-btn" aria-label="Open Play setup" aria-expanded="false"><span></span><span></span><span></span></button>
+      </header>
+      <div id="playDrawer" class="responsive-drawer" aria-hidden="true">
+        <div class="drawer-head"><strong>PLAY SETUP</strong><button id="playMenuClose" class="icon-btn" aria-label="Close menu">×</button></div>
+        <section class="control-panel">
+          <div class="control-group is-select" data-control-group="style"><label>STYLE</label><div id="playStyleControls" class="control-options"></div><div class="control-select" data-select-for="playStyleControls"></div></div>
+          <div class="control-group is-select" data-control-group="root"><label>KEY</label><div id="playRootControls" class="control-options"></div><div class="control-select" data-select-for="playRootControls"></div></div>
+          <div class="control-group is-select" data-control-group="level"><label>LEVEL</label><div id="playLevelControls" class="control-options"></div><div class="control-select" data-select-for="playLevelControls"></div></div>
+        </section>
+      </div>
+      <div id="playDrawerBackdrop" class="drawer-backdrop"></div>
+      <div class="play-content">
+        <article class="play-exercise ui-panel">
+          <span id="playLickKicker" class="play-kicker">DAILY LICK</span>
+          <h2 id="playLickTitle">Back to the root</h2>
+          <p id="playLickContext"></p>
+          <div id="playTabScroll" class="play-tab-scroll" tabindex="0" aria-label="Tablature. Scroll horizontally to read the full phrase"><svg id="playTab" role="img" aria-label="Exercise tablature"></svg></div>
+          <p class="play-rhythm-help">Read left to right. Below each note: bar:beat, then its length. Count four beats per bar. Scroll the tab if needed.</p>
+          <div class="play-exercise-footer"><div id="playTechniques" class="play-techniques"></div><p id="playTip"></p><span id="playNoteCount"></span></div>
+        </article>
+        <div class="play-actions"><button id="playGotIt" class="ui-primary" type="button">✓ Got it</button><button id="playPracticing" class="ui-secondary" type="button">Still practicing</button></div>
+        <p id="playStatus" class="play-status" role="status"></p>
+        <div class="play-links"><button id="playAnother" class="ui-back" type="button">Try another →</button><button id="playSimpler" class="ui-back" type="button" hidden>Try an easier level →</button></div>
+        <p id="playProgress" class="play-progress"></p>
       </div>
     </section>
 
@@ -198,7 +230,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.16.0" defer></script>
+  <script src="./bootstrap.js?v=10.17.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>
