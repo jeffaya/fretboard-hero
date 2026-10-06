@@ -112,6 +112,7 @@
       resizeRenderFrame=0;
       if(!state.fretManual)state.maxFret=defaultFretCount();
       if(!state.mapFretManual)state.mapMaxFret=defaultFretCount();
+      if(state.screen==='play')playSession.resize();
       if(state.screen==='practice')renderPractice();
       if(state.screen==='fretmap')renderFretboardMap();
       if(state.screen==='circle')renderCircle();
