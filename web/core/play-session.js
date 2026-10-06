@@ -34,7 +34,7 @@
     $('#playGotIt').addEventListener('click',()=>{const id=identity(current());if(completed.has(id)){next();return}completed.add(id);save();render();$('#playStatus').textContent='Nice work. This lick is marked as completed.'});
     $('#playPracticing').addEventListener('click',()=>{$('#playStatus').textContent='Take your time. Keep this lick and practise it again.';$('#playSimpler').hidden=state.level==='Beginner'});
     $('#playSimpler').addEventListener('click',()=>{state.level=PlayExercises.levels[Math.max(0,PlayExercises.levels.indexOf(state.level)-1)];$('#playLevelControls').querySelectorAll('button').forEach(b=>{const active=b.textContent===state.level;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});render()});
-    return {enter(){if(state.daily)state.index=PlayExercises.dailyIndex();render()}};
+    return {resize(){PlayRenderer.render($('#playTab'),current(),engine)},enter(){if(state.daily)state.index=PlayExercises.dailyIndex();render()}};
   }
   window.PlaySession=Object.freeze({create});
 })();
