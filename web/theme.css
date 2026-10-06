@@ -108,7 +108,7 @@ body #resultModal .result-modal {
   background: var(--ui-surface) !important;
   border-color: color-mix(in srgb, var(--ui-accent) 22%, #26354c) !important;
 }
-body #app .topbar { background: var(--ui-surface) !important; }
+body #app .topbar { background: transparent !important; border-bottom: 0 !important; box-shadow: none !important; backdrop-filter: none !important; }
 body #resultModal { background: #030b17bf; }
 @keyframes stage-spotlight {
   from { transform: translateX(-12px) rotate(-24deg); opacity: .32; }
