@@ -72,7 +72,8 @@
     }
 
     function note(svg,{x,y,isP,color,label,target=false,attrs={}}){
-      const r=isP?26:24,prefix=svg.dataset.neckPrefix;
+      const r=Number(svg.dataset.noteRadius)||(isP?26:24),prefix=svg.dataset.neckPrefix;
+      if(Number(attrs['data-fret'])===0)svg.querySelector(`.neck-tuning[data-string="${attrs['data-string']}"]`)?.remove();
       const group=svgEl('g',{class:'neck-note','data-note-color':color,...attrs});
       group.append(svgEl('circle',{cx:x+1,cy:y+3,r:r+1,fill:'#000',opacity:.65}));
       group.append(svgEl('circle',{cx:x,cy:y,r:r+4,fill:'none',stroke:color,'stroke-width':5,opacity:target?.22:.12}));
@@ -85,8 +86,8 @@
       svg.append(centeredLabel({x:14,y:14,label,size:16}));
       host.replaceChildren(svg);host.setAttribute('aria-label',label);
     }
-    function tuning(svg,{x,y,label}){
-      const group=svgEl('g',{class:'neck-tuning','pointer-events':'none'});
+    function tuning(svg,{x,y,label,string}){
+      const group=svgEl('g',{class:'neck-tuning','data-string':string,'pointer-events':'none'});
       group.append(svgEl('circle',{cx:x,cy:y,r:24,fill:`url(#${svg.dataset.neckPrefix}NoteGlass)`,stroke:'#b1a5c9','stroke-width':2}));
       group.append(svgEl('path',{d:`M ${x-11} ${y-8} Q ${x} ${y-16} ${x+11} ${y-8}`,fill:'none',stroke:'#fff','stroke-width':.8,opacity:.4}));
       group.append(centeredLabel({x,y,label,size:26}));svg.append(group);

@@ -165,7 +165,7 @@
       const pc=engine.noteAt(string,fret),degree=key.scalePCs.indexOf(pc);if(!pcs.has(pc)||degree<0)continue;
       const centerF=FretboardLayout.fretCenter(fret,fretPos),centerS=visualStringPos(string),x=isP?centerS:centerF,y=isP?centerF:centerS;
       const root=degree===0,col=palette[degree];
-      appearance.note(svg,{x,y,isP,color:col,label:key.scale[degree],target:root});
+      appearance.note(svg,{x,y,isP,color:col,label:key.scale[degree],target:root,attrs:{'data-string':string,'data-fret':fret}});
     }
   }
 
@@ -205,6 +205,7 @@
     const layout=FretboardLayout.create({portrait:portrait(),stringCount:STRING_COUNT,maxFret});
     const {isP,W,H,fretStart,fretEnd,stringStart,stringEnd,fretPos,stringPos}=layout;
     svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
+    svg.dataset.noteRadius=String(Math.min(isP?26:24,(fretPos(1)-fretPos(0)-20)/2));
     const visualStringPos=s=>stringPos(engine.visualStringIndex(s,isP));
     premiumSurface(svg,isP,W,H,prefix);
     if(onSurface)onSurface({svg,isP,W,H,fretStart,fretEnd,stringStart,stringEnd,fretPos,stringPos,visualStringPos,maxFret});
@@ -212,7 +213,7 @@
       const p=fretPos(f),isNut=f===0&&fretOffset===0;premiumFret(svg,isP,p,W,H,isNut,prefix);
       const actualFret=fretOffset===0?f:(fretOffset+f-1);
       if(fretOffset===0||f>0){
-        const lp=f===0?fretPos(0):(fretPos(f-1)+fretPos(f))/2;
+        const lp=f===0?FretboardLayout.OPEN_CENTER:(fretPos(f-1)+fretPos(f))/2;
         const landmark=[3,5,7,9,12,15,17,19,21].includes(actualFret);
         svg.append(svgEl('text',{x:isP?22:lp,y:isP?lp:42,fill:landmark?'#f5edff':'#b5b8cf','font-size':isP?24:24,'font-weight':landmark?800:500,'text-anchor':'middle','dominant-baseline':'central','data-fret-label':actualFret},String(actualFret)));
       }
@@ -238,7 +239,7 @@
     tuning.forEach((st,s)=>{
       const p=visualStringPos(s);
       premiumString(svg,isP,p,fretStart,fretEnd,s,prefix);
-      appearance.tuning(svg,{x:isP?p:35,y:isP?35:p,label:st.name});
+      appearance.tuning(svg,{x:isP?p:35,y:isP?35:p,label:st.name,string:s});
     });
     return {svg,isP,W,H,fretStart,fretEnd,stringStart,stringEnd,fretPos,stringPos,visualStringPos,maxFret};
   }
@@ -322,7 +323,7 @@
   function renderPentaSegments(svg,{isP,fretPos,visualStringPos,maxFret}){PentatonicRenderer.renderSegments({svg,windows:visiblePentaPairs(maxFret),colors:PENTA_POSITION_COLORS,stringCount:STRING_COUNT,isPortrait:isP,fretPos,stringPos:visualStringPos,maxFret,fretCenter,svgEl})}
   function renderPentaPositionLabels(svg,{isP,fretPos,visualStringPos,maxFret}){
     visiblePentaPairs(maxFret).forEach(window=>{
-      const notes=[];for(let string=0;string<STRING_COUNT;string++)notes.push(...pentaNotesOnString(window,string,maxFret));if(!notes.length)return;
+      const notes=[];for(let string=0;string<STRING_COUNT;string++)notes.push(...pentaNotesOnString(window,string,maxFret).filter(f=>f>0));if(!notes.length)return;
       const min=Math.min(...notes),max=Math.max(...notes),mid=(fretCenter(min,fretPos)+fretCenter(max,fretPos))/2,color=PENTA_POSITION_COLORS[window.id-1];
       const edgeString=STRING_COUNT-1,x=isP?visualStringPos(edgeString)-34:mid,y=isP?mid:visualStringPos(edgeString)-25;
       const label=svgEl('g',{'pointer-events':'none'});label.append(svgEl('rect',{x:x-18,y:y-14,width:36,height:24,rx:8,fill:'#05080c',stroke:color,'stroke-width':2.2,opacity:.94}));label.append(svgEl('text',{x,y:y+3,fill:color,'font-size':13,'font-weight':1000,'text-anchor':'middle'},`P${window.id}`));svg.append(label);
@@ -422,7 +423,7 @@
     const defs=svg.querySelector('defs');const glow=svgEl('filter',{id:'qglow',x:'-50%',y:'-50%',width:'200%',height:'200%'});glow.append(svgEl('feGaussianBlur',{stdDeviation:'6',result:'b'}));const merge=svgEl('feMerge');merge.append(svgEl('feMergeNode',{in:'b'}),svgEl('feMergeNode',{in:'SourceGraphic'}));glow.append(merge);defs?.append(glow);
     const localForFret=f=>hasOpen?f:(f-startFret+1);
     const fretBounds=f=>{
-      if(hasOpen&&f===0){const nut=fretPos(0);return[nut-38,nut]}
+      if(hasOpen&&f===0){const center=FretboardLayout.OPEN_CENTER;return[center-28,center+28]}
       const local=localForFret(f);return[fretPos(local-1),fretPos(local)];
     };
     const stringBounds=s=>{
