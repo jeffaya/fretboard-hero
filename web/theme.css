@@ -209,3 +209,19 @@ body #app .control-panel .control-group > label::after {
 [data-control-group="mode"] { --control-menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m13%202-8%2012h6l-1%208%209-13h-6z%22%2F%3E%3C%2Fsvg%3E"); }
 [data-control-group="context"] { --control-menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%224%22%2F%3E%3C%2Fsvg%3E"); }
 [data-control-group="fretboard"] { --control-menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%2218%22%20height%3D%2214%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%205v14M14%205v14M3%2010h18M3%2014h18%22%2F%3E%3C%2Fsvg%3E"); }
+
+/* Navigation follows the same white glass finish as the control menus. */
+body #app .topbar > button:is(.nav-back,.mobile-menu-btn) {
+  --ui-button-border: #bfc5d77a;
+  --ui-button-fill: linear-gradient(180deg,#1d2337d9,#080d1de8);
+  --ui-button-shadow: inset 0 1px 1px #ffffff26,0 2px 6px #0005;
+  --ui-gloss: linear-gradient(180deg,#ffffff0d,transparent 50%);
+  border-radius: 50% !important;
+  color: #fff !important;
+}
+body #app .topbar > button:is(.nav-back,.mobile-menu-btn):is(:hover,[aria-expanded='true']) {
+  border-color: #fff !important;
+  background: var(--ui-gloss),linear-gradient(180deg,#30364bea,#10182beb) !important;
+  box-shadow: inset 0 1px 1px #ffffff40,0 0 9px #ffffff24 !important;
+}
+body #app .topbar > .mobile-menu-btn > span { background: #fff !important; }
