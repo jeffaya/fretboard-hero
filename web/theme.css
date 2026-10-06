@@ -24,7 +24,7 @@
   --ui-accent: var(--ui-purple);
   --ui-tint: #2b073e;
   --ui-radius: 12px;
-  --ui-scene: url('./assets/theme/concert-stage.webp');
+  --ui-scene: url('./assets/theme/concert-crowd.webp');
   --ui-surface: linear-gradient(180deg, #ffffff08, #ffffff00 45%), #050e1de8;
   --ui-gloss: linear-gradient(180deg, #ffffff16 0%, #ffffff04 42%, transparent 43%);
   --ui-button-fill: linear-gradient(110deg, var(--ui-tint), #090817 94%);
@@ -50,7 +50,7 @@ body[data-screen='home'] { --ui-scene-shade: .22; }
   overflow: hidden;
   background-image: linear-gradient(rgb(3 11 23 / var(--ui-scene-shade)), rgb(3 11 23 / var(--ui-scene-shade))), var(--ui-scene);
   background-size: cover;
-  background-position: right center;
+  background-position: center center;
 }
 .stage-light {
   position: absolute;
@@ -115,7 +115,7 @@ body #resultModal { background: #030b17bf; }
   to { transform: rotate(18deg); opacity: .28; }
 }
 @media (orientation: portrait) {
-  .app-stage { background-size: auto max(600px, 100dvh); background-position: right top; }
+  .app-stage { background-size: auto max(600px, 100dvh); background-position: center top; }
 }
 @media (prefers-reduced-motion: reduce) {
   .stage-light { animation: none !important; }
