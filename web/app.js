@@ -207,7 +207,7 @@
     svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.innerHTML='';
     svg.dataset.noteRadius=String(Math.min(isP?26:24,(fretPos(1)-fretPos(0)-20)/2));
     const visualStringPos=s=>stringPos(engine.visualStringIndex(s,isP));
-    premiumSurface(svg,isP,W,H,prefix);
+    premiumSurface(svg,isP,W,H,prefix,fretStart);
     if(onSurface)onSurface({svg,isP,W,H,fretStart,fretEnd,stringStart,stringEnd,fretPos,stringPos,visualStringPos,maxFret});
     for(let f=0;f<=maxFret;f++){
       const p=fretPos(f),isNut=f===0&&fretOffset===0;premiumFret(svg,isP,p,W,H,isNut,prefix);
