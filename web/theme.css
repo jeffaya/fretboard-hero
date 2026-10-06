@@ -103,7 +103,7 @@ body #app button:focus-visible, body #resultModal button:focus-visible {
 }
 body #app button:disabled, body #resultModal button:disabled { opacity: .45; cursor: default; }
 /* One surface material for frames, drawers and dialogs. */
-body #app :is(.circle-wheel-panel, .circle-info-panel, .circle-info-card, .quiz-hud, .select-popover, .rank-ladder-summary, .rank-ladder-item, .degree-chord),
+body #app :is(.circle-info-panel, .circle-info-card, .quiz-hud, .select-popover, .rank-ladder-summary, .rank-ladder-item, .degree-chord),
 body #resultModal .result-modal {
   background: var(--ui-surface) !important;
   border-color: color-mix(in srgb, var(--ui-accent) 22%, #26354c) !important;
