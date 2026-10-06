@@ -19,7 +19,6 @@
   };
   const QUALITIES=['','m','m','','','m','°'];
   const ROMAN=['I','ii','iii','IV','V','vi','vii°'];
-  const pcOf=n=>MusicTheory.PC[n.replace('♯','#').replace('♭','b')] ?? ({Db:4,Ab:11,Eb:6,Bb:1,Gb:9,Cb:2,Fb:7}[n.replace('♯','#').replace('♭','b')]);
   const normalizePc=n=>{const map={'D♭':4,'A♭':11,'E♭':6,'B♭':1,'G♭':9,'C♭':2,'F♭':7,'F♯':9,'C♯':4,'G♯':11,'D♯':6,'A♯':1,'E♯':8};return map[n]??MusicTheory.PC[n]};
   function getKey(index=0){const i=((index%12)+12)%12,k=MAJOR[i],scale=SPELLINGS[k.name];return {...k,index:i,scale,scalePCs:scale.map(normalizePc),chords:scale.map((n,j)=>({degree:ROMAN[j],name:n+QUALITIES[j]})),progressions:[['I','V','vi','IV'],['I','IV','V','I'],['vi','IV','I','V']]};}
   window.CircleOfFifths=Object.freeze({keys:MAJOR,getKey});
