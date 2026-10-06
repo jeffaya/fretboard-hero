@@ -24,7 +24,6 @@
       $('#playStatus').textContent=done?'Completed. Move on when you feel ready.':'';
       $('#playSimpler').hidden=true;
       PlayRenderer.render($('#playTab'),exercise,engine);
-      $('#playTabScroll').scrollLeft=0;
       refreshControls();
     }
     function setup(id,values,key){const host=$('#'+id);values.forEach(value=>{const b=document.createElement('button');b.type='button';b.textContent=key==='quality'?value.toUpperCase():value;b.classList.toggle('active',state[key]===value);b.setAttribute('aria-pressed',String(state[key]===value));b.addEventListener('click',()=>{state[key]=value;state.index=PlayExercises.dailyIndex();state.daily=true;host.querySelectorAll('button').forEach(n=>{n.classList.toggle('active',n===b);n.setAttribute('aria-pressed',String(n===b))});render()});host.append(b)})}
