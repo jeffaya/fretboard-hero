@@ -340,7 +340,7 @@ Play Mode and Quiz are two entry points to the existing quiz intro, not independ
 
 ### Home artwork and responsive layout (V10.6.1)
 
-`assets/theme/concert-crowd.webp` and the three `assets/home/*-wordmark.webp` logos contain only illustration/lettering; controls and text remain native DOM. `icons.svg` is a shared symbol sprite referenced with SVG use. Barlow Condensed 500/800 are self-hosted subset WOFF2 fonts in `assets/theme`, licensed under the bundled OFL. No remote font request is needed. Asset payload (illustration, logo, sprite and fonts) is approximately 415 KB across all variants on disk; only the selected logo is requested. `ProductShell` loads the active product’s wordmark via `assets.heroLogo` and derives the Practice description from the active profile's registered modes.
+`assets/theme/concert-crowd.webp` and the shared `assets/home/product-wordmarks.webp` logo sprite contain only illustration/lettering; controls and text remain native DOM. `icons.svg` is a shared symbol sprite referenced with SVG use. Barlow Condensed 500/800 are self-hosted subset WOFF2 fonts in `assets/theme`, licensed under the bundled OFL. No remote font request is needed. Asset payload (illustration, logo, sprite and fonts) is approximately 415 KB across all variants on disk; the shared logo sprite is requested once. `ProductShell` loads the active product’s wordmark viewport via `assets.heroLogoViewport` and derives the Practice description from the active profile's registered modes.
 
 Portrait layout is a centered column; landscape ≥700px is a two-column composition; short landscape ≥740px uses two columns inside the card menu. Media rules live in `home.css`, scoped to `#home`, without changing fretboard layouts. Native app/www must still be rebuilt from web. Small screens allow vertical scrolling.
 
@@ -354,4 +354,6 @@ The selector contains Guitar, Bass and Ukulele only. The configured product come
 
 ## Startup readiness (V10.8.3)
 
-The page shows a single loading status until the chosen product, interaction handlers and decoded logo are ready. Classic scripts use async=false: requests are queued concurrently while execution follows dependency order. If a logo request fails, a readable product title replaces it and the app remains usable. Switching instruments still reloads bootstrap with the saved session selection.
+The page shows a single loading status until the chosen product, interaction handlers and loaded logo are ready. Classic scripts use async=false: requests are queued concurrently while execution follows dependency order. If a logo request fails, a readable product title replaces it and the app remains usable. Switching instruments still reloads bootstrap with the saved session selection.
+
+The product wordmarks share one 2700×550 WebP sprite, displayed through independent 900×550 SVG viewports. Instrument switching reuses the same cached artwork URL. Bootstrap waits for that shared image to load before revealing the home.
