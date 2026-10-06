@@ -40,7 +40,6 @@ Le même package peut être déployé sur les différents sites. Pour changer d'
 | `guitar` | Guitare 6 cordes | Guitar Fretboard Hero |
 | `bass-4` | Basse 4 cordes | Bass Fretboard Hero |
 | `ukulele` | Ukulélé standard G C E A | Ukulele Fretboard Hero |
-| `guitar-12` | Guitare 12 cordes / 6 chœurs | 12-String Fretboard Hero |
 
 ## Exemple — guitare
 
@@ -66,14 +65,6 @@ Le même package peut être déployé sur les différents sites. Pour changer d'
 }
 ```
 
-## Exemple — guitare 12 cordes
-
-```json
-{
-  "instrument": "guitar-12"
-}
-```
-
 ## Principe
 
 `site.config.json` → profil `/instruments` → profil `/products` → moteur partagé `/core`.
@@ -88,7 +79,7 @@ Si la valeur `instrument` est inconnue, le bootstrap affiche une erreur de confi
 
 `guitar` est le profil de référence à tester pour la non-régression V10.3.
 
-`bass-4`, `ukulele` et `guitar-12` sont déjà sélectionnables par le bootstrap afin de valider l'architecture, mais leurs contenus pédagogiques spécifiques ne sont pas encore déclarés production-complets. Le changement de configuration ne doit jamais être interprété comme une validation musicale de ces trois produits.
+`bass-4` et `ukulele` sont déjà sélectionnables par le bootstrap afin de valider l'architecture, mais leurs contenus pédagogiques spécifiques ne sont pas encore déclarés production-complets. Le changement de configuration ne doit jamais être interprété comme une validation musicale de ces deux produits.
 
 
 ## Architecture V10.3
@@ -109,14 +100,13 @@ Product names are intentionally:
 - Bass Fretboard Hero
 - Ukulele Fretboard Hero
 
-`guitar-12` is an instrument profile but uses the `Guitar Fretboard Hero` product identity. The deployment rule remains: same ZIP everywhere; edit only `site.config.json`.
+The deployment rule remains: same package everywhere; edit only `site.config.json`.
 
 
 ## V10.4.2 — Completed instrument profiles
 
 - `bass-4`: pentatonic P1–P5, triads, arpeggios, Bass-specific quiz ranks.
 - `ukulele`: pentatonic P1–P5 for re-entrant G C E A, triads, chord families, arpeggios, Ukulele-specific quiz ranks.
-- `guitar-12`: full Guitar pedagogy (pentatonic, triads, CAGED) on six courses, rendered as twelve physical strings; lower four courses are octave pairs and upper two are unison pairs.
 
 The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele Fretboard Hero. String/course count stays an instrument-profile detail.
 
@@ -133,8 +123,8 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 - Removed fullscreen button and fullscreen functionality.
 - Mobile controls menu now uses the former fullscreen position on the right side of the header.
 - The controls drawer is right-anchored and opens inward from right to left.
-- Per-instrument SEO is configured for Guitar, Bass, Ukulele and 12-string Guitar.
-- Bass, Ukulele and 12-string Guitar instrument profiles are supported from the same package through `site.config.json`.
+- Per-instrument SEO is configured for Guitar, Bass and Ukulele.
+- Bass and Ukulele instrument profiles are supported from the same package through `site.config.json`.
 
 ### V10.4.7
 - Fixed the V10.4.6 regression that forced Practice and Fretboard Map controls into the hamburger drawer on tablet/desktop.
@@ -216,3 +206,11 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 ## V10.5.8 — Quiz relevant quality
 - Quiz no longer generates or displays MAJOR/MINOR for ROOT and 5TH questions because those targets are quality-independent.
 - MAJOR/MINOR is generated and displayed only for 3RD questions, where it changes the answer (3 vs flat 3).
+
+## V10.8.0 — Three-product identity
+
+- Guitar, Bass and Ukulele each use a transparent brush-neon logo with a prominent instrument name.
+- A shared concert crowd background contains no instrument.
+- Home dock order is determined by the original site configuration: configured instrument first, then remaining instruments in Guitar/Bass/Ukulele order. Session switching updates the active product without changing dock order.
+- Invalid saved instrument selections are cleared before bootstrap.
+- Supported profiles, manifests, metadata, icon artwork and fretboard rendering now cover the three products only.
