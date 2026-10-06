@@ -102,9 +102,9 @@
   gap: 3px;
   margin-top: 20px;
   padding: 4px;
-  border: 1px solid #264763;
+  border: 1px solid transparent;
   border-radius: 20px;
-  background: #030d1b;
+  background: transparent;
 }
 #home .home-instruments button {
   display: flex;

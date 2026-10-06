@@ -3059,55 +3059,15 @@ body{
   .topbar>.section-heading>.screen-context{font-size:8px!important;letter-spacing:.11em!important}
 }
 
-.circle-wheel{font-size:38px!important;line-height:1}
-.circle-screen{min-height:100dvh;overflow:auto;padding-bottom:max(22px,var(--sa-bottom))}
-.circle-content{width:min(1280px,100%);margin:0 auto;padding:18px 22px 30px;display:grid;gap:22px;align-items:start}
-.circle-main{display:grid;grid-template-columns:minmax(360px,.9fr) minmax(420px,1.1fr);gap:22px;align-items:start;min-width:0}
-.circle-selector>.drawer-head{display:none}
-.circle-wheel-panel,.circle-info-panel,.circle-fretboard-panel{border:1px solid #1b3446;background:linear-gradient(180deg,#08121bcc,#05090dcc);border-radius:20px;box-shadow:inset 0 0 38px #0c243322,0 12px 38px #0005}
-.circle-wheel-panel{padding:12px;display:grid;place-items:center;min-width:0}.circle-wheel-svg{width:min(100%,600px);height:auto;display:block;overflow:visible}
-.circle-key{cursor:pointer;outline:none}.circle-key circle,.circle-key text{transition:.18s}.circle-key:hover circle,.circle-key:focus circle{stroke:#27d7ff;filter:url(#circleGlow)}
-.circle-info-panel{padding:22px;display:grid;grid-template-columns:1fr 1fr;gap:14px}.circle-key-title{grid-column:1/-1;padding:4px 2px 12px;border-bottom:1px solid #193246}.circle-key-title>span,.circle-info-card>span{display:block;color:#718fa4;font:800 11px/1 var(--ui-font);letter-spacing:.14em;margin-bottom:7px}.circle-key-title>strong{display:block;font:400 clamp(30px,4vw,46px)/1 var(--ui-font);color:#f8fbff;text-shadow:0 0 14px #ff3ec955}.circle-key-title>small{display:block;margin-top:7px;color:#27d7ff;font-weight:800}
-.circle-info-card{padding:15px;border:1px solid #183143;border-radius:14px;background:#071019}.circle-info-card>strong{color:#f8fbff;font-size:17px}.circle-scale-card,.circle-chords-card,.circle-progressions-card{grid-column:1/-1}
-.circle-note-pills{display:flex;flex-wrap:wrap;gap:7px}.circle-note-pills span{min-width:38px;padding:7px 9px;text-align:center;border:1px solid #31536a;border-radius:999px;color:#cfe5ef;font-weight:900;background:#0b1720}.circle-note-pills span.root{border-color:#27d7ff;color:#27d7ff;box-shadow:0 0 12px #27d7ff33}
-.circle-chord-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}.degree-chord{padding:9px 4px;text-align:center;border-radius:10px;background:#0b1720;border:1px solid #203d50}.degree-chord small{display:block;color:#7894a7;font-weight:800}.degree-chord strong{display:block;color:#f8fbff;margin-top:3px;font-size:15px}
-.circle-progressions{display:grid;gap:7px}.circle-progressions>div{display:flex;align-items:center;gap:7px}.circle-progressions .degree-chord{min-width:52px;padding:7px 8px}.circle-progressions b{color:#ff3ec9;font-size:18px;text-shadow:0 0 9px #ff3ec955}
-.circle-fretboard-panel{padding:16px 18px 20px;min-width:0}.circle-fretboard-heading{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-bottom:10px}.circle-fretboard-heading strong{color:#f8fbff;letter-spacing:.05em}.circle-fretboard-heading small{color:#718fa4}.circle-board{height:min(42vh,390px);min-height:260px}.circle-board svg{width:100%;height:100%;display:block}
-
-/* Compact: keep all theory in normal document flow. Only key selection moves to the right drawer. */
-@media (max-width:900px){
-  .circle-screen>.topbar>.mobile-menu-btn{display:inline-flex!important}
-  .circle-content{padding:14px 16px 28px;display:block}
-  .circle-main{display:block}
-  .circle-info-panel{width:100%;box-sizing:border-box;padding:14px;grid-template-columns:1fr;gap:9px}
-  .circle-info-card,.circle-scale-card,.circle-chords-card,.circle-progressions-card,.circle-key-title{grid-column:1}
-  .circle-chord-grid{grid-template-columns:repeat(4,1fr)}
-  .circle-selector{position:fixed;z-index:80;top:0;right:0;width:min(92vw,520px);height:100dvh;overflow-y:auto;padding:16px 16px max(20px,var(--sa-bottom));background:linear-gradient(180deg,#07111c 0%,#03070c 100%);border-left:1px solid #24465c;box-shadow:-18px 0 50px #000a;transform:translateX(104%);transition:transform .22s ease;box-sizing:border-box}
-  .circle-selector.open{transform:translateX(0)}
-  .circle-selector>.drawer-head{display:flex;align-items:center;justify-content:space-between;padding-top:max(0px,var(--sa-top));margin-bottom:12px}
-  .circle-selector>.drawer-head strong{font-family:var(--ui-font);color:#f8fbff;font-size:22px}
-  .circle-selector>.drawer-head .icon-btn{display:grid;place-items:center;width:42px;height:42px;color:#fff}
-  .circle-selector .circle-wheel-panel{width:100%;box-sizing:border-box;padding:6px}
-  .circle-selector .circle-wheel-svg{width:min(100%,430px);margin:auto}
-  .circle-fretboard-panel{width:100%;box-sizing:border-box;margin-top:16px}
-  .circle-board{height:calc(100dvh - var(--screen-nav-h) - 100px);min-height:500px}
-}
-@media (min-width:901px){
-  .circle-screen>.topbar>.mobile-menu-btn{display:none!important}
-  .circle-selector{transform:none!important}
-}
-@media (max-width:600px){.circle-content{padding:10px 10px 24px}.circle-wheel-panel,.circle-info-panel,.circle-fretboard-panel{border-radius:14px}.circle-key-title>strong{font-size:30px}.circle-fretboard-heading{display:block}.circle-fretboard-heading small{display:block;margin-top:4px}.circle-board{height:calc(100dvh - var(--screen-nav-h) - 84px);min-height:480px}.circle-progressions>div{gap:4px}.circle-progressions span{padding:5px 7px}}
-
-/* V10.5.2 — contextual learning help for Circle of Fifths */
-.circle-info-card{position:relative}
-.circle-info-label{display:flex;align-items:center;gap:7px;margin-bottom:7px}
-.circle-info-label>span{color:#718fa4;font:800 11px/1 var(--ui-font);letter-spacing:.14em}
-.circle-help-btn{display:grid;place-items:center;width:20px;height:20px;padding:0;border:1px solid #2d6079;border-radius:50%;background:#0a1822;color:#27d7ff;font:900 12px/1 system-ui,sans-serif;cursor:pointer;box-shadow:0 0 0 transparent;transition:border-color .16s,box-shadow .16s,color .16s}
-.circle-help-btn:hover,.circle-help-btn:focus-visible,.circle-help-btn[aria-expanded="true"]{outline:none;border-color:#27d7ff;color:#f8fbff;box-shadow:0 0 12px #27d7ff55}
-.circle-help-popover{position:absolute;z-index:12;top:42px;left:14px;right:14px;padding:12px 13px;border:1px solid #27d7ff88;border-radius:11px;background:#07131df5;color:#d7e8f0;font:600 13px/1.4 system-ui,sans-serif;letter-spacing:0;box-shadow:0 12px 28px #000b,0 0 18px #27d7ff20}
-.circle-help-popover[hidden]{display:none!important}
-.circle-help-popover strong{display:block;margin-top:7px;color:#27d7ff;font-size:13px}
-@media (max-width:900px){.circle-help-popover{position:relative;top:auto;left:auto;right:auto;margin-top:10px}}
-
-/* V10.5.4 structural guard: every feature screen stacks header then content. */
-.circle-screen{flex-direction:column!important}
+/* Circle of fifths: fixed dial, rotating labels. */
+.circle-screen{flex-direction:column!important;min-height:100dvh;overflow:auto;padding-bottom:max(22px,var(--sa-bottom))}
+.circle-content{box-sizing:border-box;width:min(1200px,100%);margin:auto;padding:16px 20px 30px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:24px;align-items:center}
+.circle-wheel-panel{min-width:0;padding:12px;border:1px solid #ba65ff70;border-radius:24px;background:#0710219c}
+.circle-wheel-svg{display:block;width:100%;height:auto;touch-action:pan-y;user-select:none;cursor:grab;font-family:var(--ui-font)}
+.circle-wheel-svg:active{cursor:grabbing}.circle-wheel-svg:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:50%}
+.circle-navigation{display:flex;align-items:center;justify-content:space-between;gap:10px}.circle-navigation button{width:44px;height:44px;border-radius:50%;font-size:24px}.circle-navigation p{margin:0;text-align:center;color:#bcc9df;font-size:14px}
+.circle-info-panel{min-width:0;padding:22px;border:1px solid #ba65ff70;border-radius:24px;background:#071021b8}
+.circle-key-title>span,.circle-info-label{color:#b9c6dd;font-size:12px;letter-spacing:.12em}.circle-key-title>strong{display:block;color:#fff;font-size:42px;line-height:1.2;margin-top:8px}.circle-key-title>small{display:block;color:#70f7ff;font-size:18px}.circle-key-title p,.circle-explanation,.circle-info-card p{color:#c0ccde;font-size:16px;line-height:1.5}
+.circle-info-card{margin-top:24px}.circle-info-label{margin-bottom:12px}.circle-progressions{display:grid;gap:12px}.circle-progressions>div{display:flex;align-items:center;gap:6px}.degree-chord{flex:1;min-width:0;text-align:center;border:1px solid #ffffff50;border-radius:12px;background:#ffffff08;padding:10px 4px}.degree-chord small{display:block;color:#aebed6;font-size:14px}.degree-chord strong{display:block;color:#fff;font-size:22px}.circle-progressions b{color:#70f7ff}
+@media(max-width:760px){.circle-content{grid-template-columns:1fr;padding:12px;gap:16px}.circle-wheel-panel{padding:8px}.circle-info-panel{padding:18px}}
+@media(orientation:landscape) and (max-height:600px){.circle-content{grid-template-columns:minmax(0,1fr) minmax(260px,1fr);align-items:start}.circle-wheel-panel{max-width:480px;justify-self:center}.circle-info-panel{padding:16px}}
