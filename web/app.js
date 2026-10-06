@@ -16,10 +16,10 @@
   const rootPC=()=>PC[state.root];
   const thirdPC=()=>mod(rootPC()+intervals[state.quality].third);
   const fifthPC=()=>mod(rootPC()+7);
-  function go(screen){document.body.dataset.screen=screen;state.screen=screen;$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+screen).classList.add('active');if(screen==='practice') renderPractice();if(screen==='fretmap') renderFretboardMap();if(screen==='circle') renderCircle();if(screen==='quiz') prepareQuiz();}
+  function go(screen){document.body.dataset.screen=screen;state.screen=screen;$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+screen).classList.add('active');if(screen==='play') playSession.enter();if(screen==='practice') renderPractice();if(screen==='fretmap') renderFretboardMap();if(screen==='circle') renderCircle();if(screen==='quiz') prepareQuiz();}
   $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
   // Shared controls live in core/controls.js.
-  ['practice','map'].forEach(name=>FretboardControls.bindDrawer({name}));
+  ['practice','map','play'].forEach(name=>FretboardControls.bindDrawer({name}));
 
   // V6 custom select-buttons. They proxy the existing buttons, so gameplay has
   // one source of truth regardless of responsive presentation.
@@ -35,8 +35,13 @@
     let trigger=host.querySelector('.select-trigger'), menu=host.querySelector('.select-popover');
     if(!trigger){
       trigger=document.createElement('button');trigger.type='button';trigger.className='select-trigger';trigger.setAttribute('aria-expanded','false');
-      menu=document.createElement('div');menu.className='select-popover';host.append(trigger,menu);
-      trigger.addEventListener('click',e=>{e.stopPropagation();const open=host.classList.toggle('select-open');trigger.setAttribute('aria-expanded',String(open));});
+      menu=document.createElement('div');menu.className='select-popover';menu.id=host.dataset.selectFor+'SelectMenu';menu.setAttribute('role','listbox');trigger.setAttribute('aria-haspopup','listbox');trigger.setAttribute('aria-controls',menu.id);host.append(trigger,menu);
+      trigger.addEventListener('click',e=>{e.stopPropagation();const open=!host.classList.contains('select-open');$$('.control-select.select-open').forEach(other=>{other.classList.remove('select-open');other.querySelector('.select-trigger')?.setAttribute('aria-expanded','false')});host.classList.toggle('select-open',open);trigger.setAttribute('aria-expanded',String(open));});
+      host.addEventListener('keydown',e=>{
+        if(e.key==='Escape'){e.preventDefault();e.stopPropagation();host.classList.remove('select-open');trigger.setAttribute('aria-expanded','false');trigger.focus();return}
+        if(e.key!=='ArrowDown'&&e.key!=='ArrowUp')return;
+        e.preventDefault();host.classList.add('select-open');trigger.setAttribute('aria-expanded','true');const options=[...menu.querySelectorAll('button')],index=options.indexOf(document.activeElement);options[(index+(e.key==='ArrowDown'?1:options.length-1)+options.length)%options.length]?.focus();
+      });
     }
     const signature=JSON.stringify(buttons.map(b=>[b.textContent.trim(),b.classList.contains('active')]));
     if(host.dataset.selectSignature===signature&&buttons.every((button,i)=>host._selectSources?.[i]===button))return;
@@ -44,16 +49,17 @@
     host.dataset.selectSignature=signature;
     menu.innerHTML='';
     const active=buttons.find(b=>b.classList.contains('active'))||buttons[0];
-    trigger.innerHTML=`<span>${active?.textContent?.trim()||'SELECT'}</span><b aria-hidden="true">⌄</b>`;
-    buttons.forEach(b=>{const o=document.createElement('button');o.type='button';o.className='select-option'+(b.classList.contains('active')?' active':'');o.textContent=b.textContent.trim();o.addEventListener('click',()=>{b.click();host.classList.remove('select-open');trigger.setAttribute('aria-expanded','false');requestAnimationFrame(refreshAllSelects)});menu.append(o)});
+    trigger.setAttribute('aria-label',`${host.closest('.control-group')?.querySelector('label')?.textContent||'Choose'}: ${active.textContent.trim()}`);
+    trigger.innerHTML=`<span class="select-value"><i class="select-icon" aria-hidden="true"></i><span>${active.textContent.trim()}</span></span><b aria-hidden="true">⌄</b>`;
+    buttons.forEach(b=>{const o=document.createElement('button');o.type='button';o.className='select-option'+(b.classList.contains('active')?' active':'');o.textContent=b.textContent.trim();o.setAttribute('role','option');o.setAttribute('aria-selected',String(b.classList.contains('active')));o.addEventListener('click',()=>{b.click();host.classList.remove('select-open');trigger.setAttribute('aria-expanded','false');requestAnimationFrame(refreshAllSelects)});menu.append(o)});
   }
   function refreshAllSelects(){ $$('.control-select').forEach(refreshSelect); requestAnimationFrame(updateAdaptiveControls); }
   document.addEventListener('click',e=>{if(!e.target.closest('.control-select'))$$('.control-select.select-open').forEach(x=>{x.classList.remove('select-open');x.querySelector('.select-trigger')?.setAttribute('aria-expanded','false')})});
 
   function updateAdaptiveControls(){
     const mobile=matchMedia('(max-width:767px), (orientation:landscape) and (max-width:1000px) and (max-height:599px)').matches;
-    const toolbars=[$('#practiceDrawer'),$('#mapDrawer')].filter(Boolean);
-    toolbars.forEach(toolbar=>toolbar.querySelectorAll('.control-group').forEach(g=>g.classList.remove('is-select')));
+    const toolbars=[$('#practiceDrawer'),$('#mapDrawer'),$('#playDrawer')].filter(Boolean);
+    toolbars.forEach(toolbar=>toolbar.querySelectorAll('.control-group').forEach(g=>g.classList.toggle('is-select',toolbar.id==='playDrawer')));
     if(mobile)return;
 
     toolbars.forEach(toolbar=>{
@@ -86,6 +92,8 @@
   });
   $$('.control-panel').forEach(el=>adaptiveObserver.observe(el));
   window.addEventListener('resize',scheduleControlsRefresh);
+
+  const playSession=PlaySession.create({engine,refreshControls:refreshAllSelects});
 
   // Build instrument-dependent controls from the active profile.
   const modeHost=$('#modeControls');if(modeHost){modeHost.innerHTML='';ModeRegistry.list(instrument).forEach((m,i)=>{const b=document.createElement('button');b.type='button';b.dataset.mode=m.id;b.textContent=m.label;b.classList.toggle('active',m.id===state.mode||(i===0&&!instrument.modes[state.mode]));modeHost.appendChild(b)});if(!instrument.modes[state.mode])state.mode=ModeRegistry.list(instrument)[0]?.id||'';}

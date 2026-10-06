@@ -1847,10 +1847,6 @@ body{
   justify-content: space-between;
   gap: 12px;
   padding: 0 11px;
-  border: 2px solid var(--control-active);
-  border-radius: 10px;
-  background: #170d1d;
-  color: #fff;
   font-size: 11px;
   font-weight: 900;
   letter-spacing: .02em;
@@ -1858,8 +1854,6 @@ body{
 }
 
 .control-select .select-trigger b{
-  font-size: 14px;
-  color: var(--cyan);
   font-weight: 900;
 }
 
@@ -1897,11 +1891,7 @@ body{
   cursor: pointer;
 }
 
-.control-select .select-option.active{
-  border-color: #ff57d7;
-  background: #2b0b2c;
-  color: #fff;
-}
+
 
 .responsive-drawer{
   display: contents;
@@ -3040,7 +3030,7 @@ body{
    exactly --sa-top instead of the inset eating into the fixed-height box
    (which previously crushed the title/menu button — see padding-top below). */
 :root{--screen-nav-h:calc(66px + var(--sa-top))}
-.practice-screen>.topbar,.fretmap-screen>.topbar,.quiz-screen>.topbar,.circle-screen>.topbar{
+.practice-screen>.topbar,.fretmap-screen>.topbar,.quiz-screen>.topbar,.circle-screen>.topbar,.play-screen>.topbar{
   display:grid!important;grid-template-columns:42px minmax(0,1fr) 42px!important;align-items:center!important;
   width:100%!important;min-height:var(--screen-nav-h)!important;height:var(--screen-nav-h)!important;
   padding:max(6px,var(--sa-top)) max(10px,var(--sa-right)) 6px max(10px,var(--sa-left))!important;gap:8px!important;
