@@ -103,7 +103,7 @@ body #app button:focus-visible, body #resultModal button:focus-visible {
 }
 body #app button:disabled, body #resultModal button:disabled { opacity: .45; cursor: default; }
 /* One surface material for frames, drawers and dialogs. */
-body #app :is(.circle-selector, .circle-wheel-panel, .circle-info-panel, .circle-fretboard-panel, .circle-info-card, .quiz-hud, .home-instruments, .select-popover, .circle-help-popover, .rank-ladder-summary, .rank-ladder-item, .degree-chord),
+body #app :is(.circle-wheel-panel, .circle-info-panel, .circle-info-card, .quiz-hud, .select-popover, .rank-ladder-summary, .rank-ladder-item, .degree-chord),
 body #resultModal .result-modal {
   background: var(--ui-surface) !important;
   border-color: color-mix(in srgb, var(--ui-accent) 22%, #26354c) !important;
@@ -145,7 +145,6 @@ body[data-loading='true'] #app { visibility: hidden; }
 /* Shared with SVG note badges: the palette comes from FretboardAppearance. */
 .neck-note-pill,
 .practice-legend .legend.neck-note-pill,
-.circle-note-pills span.neck-note-pill,
 #mapNoteControls .neck-note-pill {
   color: var(--ui-text);
   background: radial-gradient(ellipse at 32% 22%,#334655 0%,#172331 30%,#080e19 70%,#03070e 100%);
@@ -167,8 +166,6 @@ body[data-loading='true'] #app { visibility: hidden; }
 
 /* Optical glyph centering is shared with the SVG fretboard badges. */
 .neck-pill-label { display:block; flex:none; width:100%; height:100%; overflow:visible; }
-.circle-note-pills span.neck-note-pill { display:inline-flex; align-items:center; justify-content:center; }
-.circle-note-pills .neck-pill-label { width:28px; height:24px; }
 
 /* Control menu appearance; responsive geometry and interactions stay in styles.css/app.js. */
 
@@ -281,7 +278,7 @@ body #app .quiz-hud .hud-time.time-critical strong { color:#ff739a !important; t
 body #app .quiz-hud .hud-gain-pop { color:#9affca; text-shadow:0 0 10px #5cffb2aa; }
 
 @media (max-width:767px), (orientation:landscape) and (max-width:1000px) and (max-height:599px) {
-  .responsive-drawer,.circle-selector { will-change: transform; }
+  .responsive-drawer { will-change: transform; }
 }
 
 /* Instrument selection: the pressed state is unmistakable without changing dock geometry. */
