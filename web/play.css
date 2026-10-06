@@ -17,7 +17,7 @@
 .play-links{display:flex;flex-wrap:wrap;justify-content:center;gap:18px}.play-links button{padding:8px 12px;font-size:18px;min-height:44px}
 .play-status{min-height:24px;text-align:center;color:#70f7ff;margin:12px 0 0;font-size:17px}
 .play-progress{text-align:center;color:var(--ui-muted);font-size:16px;margin:8px 0}
-/* Reuse the shared drawer breakpoint; Play uses three compact selects inline. */
+/* Reuse the shared drawer breakpoint; Play uses four compact selects inline. */
 @media(min-width:768px){#playDrawer .control-group{flex:0 1 260px!important}#playDrawer .control-options{display:none!important}#playDrawer .control-select{display:block!important;width:100%!important}}
 @media(max-width:767px),(orientation:landscape) and (max-width:1000px) and (max-height:599px){
  .play-screen{padding-bottom:max(8px,var(--sa-bottom))}
