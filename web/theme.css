@@ -153,7 +153,8 @@ body[data-loading='true'] #app { visibility: hidden; }
   font-family: var(--ui-font);
   font-weight: 800;
 }
-.practice-legend .legend.neck-note-pill { box-sizing: border-box; min-width: 28px; width: 28px; height: 28px; }
+.practice-legend .legend-filter small { flex:none; white-space:nowrap; }
+.practice-legend .legend.neck-note-pill { flex:0 0 28px; box-sizing: border-box; min-width: 28px; width: 28px; height: 28px; }
 #mapNoteControls .neck-note-pill.active { border-color:var(--note-color); box-shadow:0 0 13px color-mix(in srgb,var(--note-color) 42%,transparent); }
 .neck-note text,.neck-tuning text { font-family:var(--ui-font); }
 
