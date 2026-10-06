@@ -1,5 +1,12 @@
 (() => {
   'use strict';
+  const logo=document.querySelector('#home .hero-logo svg');
+  const artworkReady=new Promise(resolve=>{
+    const artwork=logo.querySelector('image');
+    artwork.addEventListener('load',()=>resolve(true),{once:true});
+    artwork.addEventListener('error',()=>resolve(false),{once:true});
+    artwork.setAttribute('href','./assets/home/product-wordmarks.webp');
+  });
   const CATALOG={
     'guitar':{instrumentKey:'guitar',instrument:'./instruments/guitar.js?v=10.8.3',productKey:'guitar',product:'./products/guitar-fretboard-hero.js?v=10.8.3'},
     'bass-4':{instrumentKey:'bass4',instrument:'./instruments/bass-4.js?v=10.8.3',productKey:'bass',product:'./products/bass-fretboard-hero.js?v=10.8.3'},
@@ -32,9 +39,8 @@
       window.ProductShell.apply(product,instrument);
       await load('./home.js?v=10.8.3');
       await load('./app.js?v=10.8.3');
-      const logo=document.querySelector('#home .hero-logo img');
-      try{await logo.decode()}catch{
-        logo.hidden=true;
+      if(!await artworkReady){
+        logo.setAttribute('hidden','');
         const fallback=document.createElement('span');
         fallback.className='hero-logo-fallback';fallback.textContent=product.name;
         logo.parentElement.append(fallback);
