@@ -4,6 +4,17 @@
   const DEGREE_COLORS=Object.freeze({root:'#27d7ff',third:'#ff3ec9',fourth:'#ff8b3d',fifth:'#ffd14f',seventh:'#5cffb2',second:'#9b6cff',sixth:'#35d1b0'});
   const SCALE_COLORS=Object.freeze(['#27d7ff','#5cffb2','#ff3ec9','#ff9d3f','#ffd14f','#9b6cff','#35d1b0']);
   function create({svgEl,stringCount,instrument}){
+    const metrics=new Map(),measure=document.createElement('canvas').getContext('2d');
+    function centeredLabel({x,y,label,size}){
+      const family=getComputedStyle(document.body).fontFamily,key=`${family}:${size}:${label}`;
+      if(!metrics.has(key)){
+        measure.font=`800 ${size}px ${family}`;
+        metrics.set(key,measure.measureText(label));
+      }
+      const m=metrics.get(key);
+      // Center the visible glyph ink, not the font's em box or advance width.
+      return svgEl('text',{x:x+(m.actualBoundingBoxLeft-m.actualBoundingBoxRight)/2,y:y+(m.actualBoundingBoxAscent-m.actualBoundingBoxDescent)/2,fill:'#f4f3ff','font-size':size,'font-weight':800,'text-anchor':'start','dominant-baseline':'alphabetic','pointer-events':'none','data-label-center-x':x,'data-label-center-y':y},label);
+    }
     function gradient(defs,id,stops,radial=false,isP=false){
       const node=svgEl(radial?'radialGradient':'linearGradient',radial?{id,cx:'32%',cy:'22%',r:'85%'}:{id,x1:'0%',y1:'0%',x2:isP?'100%':'0%',y2:isP?'0%':'100%'});
       stops.forEach(([offset,color])=>node.append(svgEl('stop',{offset,'stop-color':color})));defs.append(node);
@@ -67,15 +78,20 @@
       group.append(svgEl('circle',{cx:x,cy:y,r:r+4,fill:'none',stroke:color,'stroke-width':5,opacity:target?.22:.12}));
       group.append(svgEl('circle',{cx:x,cy:y,r,fill:`url(#${prefix}NoteGlass)`,stroke:color,'stroke-width':target?3.4:2.8}));
       group.append(svgEl('path',{d:`M ${x-r*.68} ${y-r*.45} Q ${x} ${y-r*.98} ${x+r*.68} ${y-r*.45}`,fill:'none',stroke:'#fff','stroke-width':.9,opacity:.32,'pointer-events':'none'}));
-      group.append(svgEl('text',{x,y,fill:'#f4f3ff','font-size':isP?(label.length>1?21:26):(label.length>1?18:24),'font-weight':800,'text-anchor':'middle','dominant-baseline':'central','pointer-events':'none'},label));svg.append(group);
+      group.append(centeredLabel({x,y,label,size:isP?(label.length>1?21:26):(label.length>1?18:24)}));svg.append(group);
+    }
+    function pill(host,label){
+      const svg=svgEl('svg',{viewBox:'0 0 28 28',width:28,height:28,'aria-hidden':'true',class:'neck-pill-label'});
+      svg.append(centeredLabel({x:14,y:14,label,size:16}));
+      host.replaceChildren(svg);host.setAttribute('aria-label',label);
     }
     function tuning(svg,{x,y,label}){
       const group=svgEl('g',{class:'neck-tuning','pointer-events':'none'});
       group.append(svgEl('circle',{cx:x,cy:y,r:24,fill:`url(#${svg.dataset.neckPrefix}NoteGlass)`,stroke:'#b1a5c9','stroke-width':2}));
       group.append(svgEl('path',{d:`M ${x-11} ${y-8} Q ${x} ${y-16} ${x+11} ${y-8}`,fill:'none',stroke:'#fff','stroke-width':.8,opacity:.4}));
-      group.append(svgEl('text',{x,y,fill:'#f4f3ff','font-size':26,'font-weight':800,'text-anchor':'middle','dominant-baseline':'central'},label));svg.append(group);
+      group.append(centeredLabel({x,y,label,size:26}));svg.append(group);
     }
-    return {surface,fret,string,note,tuning,inlay};
+    return {surface,fret,string,note,tuning,inlay,pill};
   }
   window.FretboardAppearance={create,DEGREE_COLORS,SCALE_COLORS};
 })();

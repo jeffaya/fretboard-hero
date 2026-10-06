@@ -151,3 +151,8 @@ body[data-loading='true'] #app { visibility: hidden; }
   --ui-button-fill: radial-gradient(ellipse at 32% 22%,#334655,#080e19 70%,#03070e);
   --ui-tint: color-mix(in srgb,var(--note-color) 14%,#080e19);
 }
+
+/* Optical glyph centering is shared with the SVG fretboard badges. */
+.neck-pill-label { display:block; flex:none; width:100%; height:100%; overflow:visible; }
+.circle-note-pills span.neck-note-pill { display:inline-flex; align-items:center; justify-content:center; }
+.circle-note-pills .neck-pill-label { width:28px; height:24px; }
