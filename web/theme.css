@@ -103,10 +103,23 @@ body #app button:focus-visible, body #resultModal button:focus-visible {
 }
 body #app button:disabled, body #resultModal button:disabled { opacity: .45; cursor: default; }
 /* One surface material for frames, drawers and dialogs. */
-body #app :is(.control-group, .responsive-drawer, .circle-selector, .circle-wheel-panel, .circle-info-panel, .circle-fretboard-panel, .circle-info-card, .quiz-hud, .home-instruments, .select-popover, .circle-help-popover, .rank-ladder-summary, .rank-ladder-item, .degree-chord, .quiz-intro-rules > div),
+body #app :is(.circle-selector, .circle-wheel-panel, .circle-info-panel, .circle-fretboard-panel, .circle-info-card, .quiz-hud, .home-instruments, .select-popover, .circle-help-popover, .rank-ladder-summary, .rank-ladder-item, .degree-chord, .quiz-intro-rules > div),
 body #resultModal .result-modal {
   background: var(--ui-surface) !important;
   border-color: color-mix(in srgb, var(--ui-accent) 22%, #26354c) !important;
+}
+/* Inline toolbars reveal the stage; compact overlay drawers keep a readable surface. */
+body #app .responsive-drawer {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+@media (max-width:767px), (orientation:landscape) and (max-width:1000px) and (max-height:599px) {
+  body #app .responsive-drawer {
+    background: var(--ui-surface) !important;
+    border-left: 2px solid color-mix(in srgb, var(--ui-accent) 22%, #26354c) !important;
+    box-shadow: -22px 0 55px #000c !important;
+  }
 }
 body #app .topbar { background: transparent !important; border-bottom: 0 !important; box-shadow: none !important; backdrop-filter: none !important; }
 body #resultModal { background: #030b17bf; }
