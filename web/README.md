@@ -22,7 +22,7 @@
 ## V10.6.0 — Neon backstage home
 
 - Concert-style home drawn with CSS/SVG: moving lights, marker lettering, neon cards and instrument dock.
-- Practice, Map, Quiz and Circle retain their existing engines. Play Mode opens the same 60-second Quiz; it is a shortcut, not a new game.
+- The yellow Play card opens daily tablature practice. The Quiz card opens the separate 60-second challenge.
 - Home counters and footer slogan are omitted; card icons have a dedicated 80px column plus text spacing.
 - Settings toggle home animation; system reduced motion is always honored. Progress dialog shows real device-local statistics.
 - Day streak counts opening Practice/Map/Circle or completing a quiz, using local calendar dates. Total/best score and run count update only once per completed quiz. No invented sample statistics or historical migration.
@@ -214,3 +214,15 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 - Home dock order is determined by the original site configuration: configured instrument first, then remaining instruments in Guitar/Bass/Ukulele order. Session switching updates the active product without changing dock order.
 - Invalid saved instrument selections are cleared before bootstrap.
 - Supported profiles, manifests, metadata, icon artwork and fretboard rendering now cover the three products only.
+
+## Play — daily tablature practice
+
+The yellow home card opens Play; Quiz remains available through its own card. Play provides self-assessed minor-pentatonic licks for Guitar, Bass and Ukulele, with Blues/Rock/Melodic variations and four levels. The initial catalog contains four authored base phrases per instrument. Style/level transformations and uniform fret transposition preserve the phrase's fingering; these are original exercises, not transcriptions of songs. There is no audio, microphone or automatic assessment.
+
+`core/play-exercises.js` owns phrase data and transposition, `play-renderer.js` draws readable tablature and beat positions, and `play-session.js` handles choices and local completion storage. Play uses the shared responsive drawer and select controls; `play.css` owns its composition and `theme.css` supplies shared materials. Long tabs scroll horizontally. Completed exercises are stored on this device under `fretboard-play-v1`; changing instruments keeps separate completion identities.
+
+Run the music and self-assessment checks from the repository root:
+
+```sh
+node --test web/tests/play-exercises.test.cjs
+```
