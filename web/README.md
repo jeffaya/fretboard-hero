@@ -217,7 +217,7 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Play — daily tablature practice
 
-The yellow home card opens Play; Quiz remains available through its own card. Play provides self-assessed minor-pentatonic licks for Guitar, Bass and Ukulele, with Blues/Rock/Melodic variations and four levels. The initial catalog contains four authored base phrases per instrument. Style/level transformations and uniform fret transposition preserve the phrase's fingering; these are original exercises, not transcriptions of songs. There is no audio, microphone or automatic assessment.
+The yellow home card opens Play; Quiz remains available through its own card. Play provides self-assessed major/minor pentatonic licks for Guitar, Bass and Ukulele, with Blues/Rock/Melodic variations and four levels. The initial catalog contains four authored base phrases per instrument and quality. Style/level transformations and uniform fret transposition preserve the phrase's fingering; these are original exercises, not transcriptions of songs. There is no audio, microphone or automatic assessment.
 
 `core/play-exercises.js` owns phrase data and transposition, `play-renderer.js` draws readable tablature and beat positions, and `play-session.js` handles choices and local completion storage. Play uses the shared responsive drawer and select controls; `play.css` owns its composition and `theme.css` supplies shared materials. Tablature adapts to the available width with fixed-size readable fret labels. Completed exercises are stored on this device under `fretboard-play-v1`; changing instruments keeps separate completion identities.
 

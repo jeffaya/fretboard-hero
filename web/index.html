@@ -39,10 +39,10 @@
   <link rel="icon" type="image/png" sizes="192x192">
   <link rel="icon" type="image/png" sizes="512x512">
   <link rel="apple-touch-icon" sizes="180x180">
-  <link rel="stylesheet" href="./styles.css?v=10.18.0">
-  <link rel="stylesheet" href="./home.css?v=10.18.0">
-  <link rel="stylesheet" href="./theme.css?v=10.18.0">
-  <link rel="stylesheet" href="./play.css?v=10.18.0">
+  <link rel="stylesheet" href="./styles.css?v=10.19.0">
+  <link rel="stylesheet" href="./home.css?v=10.19.0">
+  <link rel="stylesheet" href="./theme.css?v=10.19.0">
+  <link rel="stylesheet" href="./play.css?v=10.19.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
 </head>
 <body data-loading="true" aria-busy="true">
@@ -82,7 +82,8 @@
         <div class="drawer-head"><strong>PLAY SETUP</strong><button id="playMenuClose" class="icon-btn" aria-label="Close menu">×</button></div>
         <section class="control-panel">
           <div class="control-group is-select" data-control-group="style"><label>STYLE</label><div id="playStyleControls" class="control-options"></div><div class="control-select" data-select-for="playStyleControls"></div></div>
-          <div class="control-group is-select" data-control-group="root"><label>KEY</label><div id="playRootControls" class="control-options"></div><div class="control-select" data-select-for="playRootControls"></div></div>
+          <div class="control-group is-select" data-control-group="root"><label>NOTE</label><div id="playRootControls" class="control-options"></div><div class="control-select" data-select-for="playRootControls"></div></div>
+          <div class="control-group is-select" data-control-group="quality"><label>KEY</label><div id="playQualityControls" class="control-options"></div><div class="control-select" data-select-for="playQualityControls"></div></div>
           <div class="control-group is-select" data-control-group="level"><label>LEVEL</label><div id="playLevelControls" class="control-options"></div><div class="control-select" data-select-for="playLevelControls"></div></div>
         </section>
       </div>
@@ -230,7 +231,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.18.0" defer></script>
+  <script src="./bootstrap.js?v=10.19.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>
