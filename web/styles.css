@@ -44,30 +44,6 @@ body{
   background: radial-gradient(circle at 15% 10%,#111c35 0,transparent 34%),radial-gradient(circle at 85% 70%,#2b0a2d 0,transparent 28%),#030509;
 }
 
-.ambient{
-  position: fixed;
-  inset: auto;
-  pointer-events: none;
-  filter: blur(60px);
-  opacity: .35;
-}
-
-.ambient-a{
-  width: 240px;
-  height: 240px;
-  background: #00c8ff;
-  left: -100px;
-  top: 25%;
-}
-
-.ambient-b{
-  width: 300px;
-  height: 300px;
-  background: #ff00ba;
-  right: -130px;
-  bottom: 5%;
-}
-
 .app-shell{
   min-height: 100dvh;
   position: relative;
@@ -105,21 +81,6 @@ body{
   font-style: italic;
   letter-spacing: -.07em;
   text-shadow: 0 0 12px currentColor;
-}
-
-.hero-guitar{
-  font-size: clamp(54px,13vw,110px);
-  color: #f8fbff;
-}
-
-.hero-fret{
-  font-size: clamp(46px,11vw,94px);
-  color: var(--cyan);
-}
-
-.hero-hero{
-  font-size: clamp(50px,12vw,100px);
-  color: var(--pink);
 }
 
 .tagline{
@@ -494,18 +455,6 @@ button{
   letter-spacing: -.025em;
 }
 
-.hero-guitar{
-  font-size: clamp(58px,13vw,116px);
-}
-
-.hero-fret{
-  font-size: clamp(48px,11vw,98px);
-}
-
-.hero-hero{
-  font-size: clamp(54px,12vw,106px);
-}
-
 .hero-btn,.icon-btn,.control-group,.control-options button,.fretboard-wrap,.result-modal,.modal-secondary{
   border-width: 2px;
 }
@@ -751,19 +700,6 @@ button{
   text-shadow: 0 0 8px currentColor,0 0 20px currentColor;
 }
 
-.hero-guitar{
-  color: #f8fbff !important;
-  text-shadow: 0 0 8px #fff,0 0 18px #c9d7ff !important;
-}
-
-.hero-fret{
-  color: var(--cyan) !important;
-}
-
-.hero-hero{
-  color: var(--pink) !important;
-}
-
 .home-screen{
   justify-content: center;
 }
@@ -778,10 +714,6 @@ button{
 
 .hero-btn:active{
   transform: none;
-}
-
-.practice-pick svg>path{
-  fill: currentColor;
 }
 
 @media (hover:hover) {
@@ -811,19 +743,7 @@ button{
   overflow: visible;
 }
 
-.hero-icon .icon-shell{
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 3;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0 6px currentColor);
-}
-
 .hero-icon circle{
-  fill: currentColor;
-}
-
-.hero-icon .icon-q{
   fill: currentColor;
 }
 
@@ -917,24 +837,11 @@ button{
   width: min(1040px,100%);
 }
 
-.hero-btn.map-btn{
-  border-color: #5cffb2;
-  box-shadow: 0 0 20px #31f6a622,inset 0 0 30px #18e79816;
-}
-
-.hero-btn.map-btn .hero-icon{
-  color: #5cffb2;
-}
-
 .map-note svg{
   width: 42px;
   height: 42px;
   overflow: visible;
   filter: drop-shadow(0 0 8px currentColor);
-}
-
-.map-note .note-beam{
-  fill: currentColor;
 }
 
 .fretmap-screen{
@@ -1272,18 +1179,6 @@ button:hover,button:active,a:hover,a:active{
 
   .hero-logo span{
     line-height: .76;
-  }
-
-  .hero-guitar{
-    font-size: clamp(44px,8.5vh,78px) !important;
-  }
-
-  .hero-fret{
-    font-size: clamp(38px,7.3vh,68px) !important;
-  }
-
-  .hero-hero{
-    font-size: clamp(40px,7.8vh,72px) !important;
   }
 
   .tagline{
@@ -2930,10 +2825,7 @@ body{
   border-color:#67e6ff !important;
   box-shadow:0 0 12px #27d7ff66,0 0 30px #27d7ff40,inset 0 0 34px #00bdf022 !important;
 }
-.home-screen .hero-btn.map-btn:hover,.home-screen .hero-btn.map-btn:focus-visible{
-  border-color:#d4f6ff !important;
-  box-shadow:0 0 12px #27d7ff55,0 0 26px #ff3ec92e,inset 0 0 34px #27d7ff18 !important;
-}
+
 @media (max-width:767px){
   .home-screen .home-actions{gap:16px !important;}
 }
@@ -3177,10 +3069,6 @@ body{
   .topbar>.section-heading>.screen-context{font-size:8px!important;letter-spacing:.11em!important}
 }
 
-/* V10.5.4 — Circle follows the shared screen/header contract.
-   Only the key selector becomes a drawer in compact layouts; theory remains page content. */
-.hero-btn.circle-btn{border-color:#ffd14f;box-shadow:0 0 20px #ffd14f22,inset 0 0 30px #ff9d3f14}
-.hero-btn.circle-btn .hero-icon{color:#ffd14f;text-shadow:0 0 12px #ffd14f}
 .circle-wheel{font-size:38px!important;line-height:1}
 .circle-screen{min-height:100dvh;overflow:auto;padding-bottom:max(22px,var(--sa-bottom))}
 .circle-content{width:min(1280px,100%);margin:0 auto;padding:18px 22px 30px;display:grid;gap:22px;align-items:start}

@@ -3,8 +3,6 @@
   // One visual language for the neck, note badges and their HTML legends.
   const DEGREE_COLORS=Object.freeze({root:'#27d7ff',third:'#ff3ec9',fourth:'#ff8b3d',fifth:'#ffd14f',seventh:'#5cffb2',second:'#9b6cff',sixth:'#35d1b0'});
   const SCALE_COLORS=Object.freeze(['#27d7ff','#5cffb2','#ff3ec9','#ff9d3f','#ffd14f','#9b6cff','#35d1b0']);
-  const DEGREE_INK=Object.freeze({root:'#007f9e',third:'#c92091',fourth:'#b94d00',fifth:'#946800',seventh:'#118044',second:'#6842bb',sixth:'#087c68'});
-  const inkFor=color=>DEGREE_INK[Object.keys(DEGREE_COLORS).find(degree=>DEGREE_COLORS[degree]===color)]||color;
   function create({svgEl,stringCount,instrument}){
     const metrics=new Map(),measure=document.createElement('canvas').getContext('2d');
     function centeredLabel({x,y,label,size,color='#f4f3ff'}){
@@ -73,20 +71,20 @@
       group.append(svgEl('path',{d:`M ${x} ${y} L ${x+w} ${y} L ${x} ${y+h} Z`,fill:'#d581ff'}));svg.append(group);
     }
 
-    function note(svg,{x,y,isP,color,label,target=false,light=false,attrs={}}){
+    function note(svg,{x,y,isP,color,label,target=false,attrs={}}){
       const r=Number(svg.dataset.noteRadius)||(isP?26:24),prefix=svg.dataset.neckPrefix;
       if(Number(attrs['data-fret'])===0)svg.querySelector(`.neck-tuning[data-string="${attrs['data-string']}"]`)?.remove();
-      const group=svgEl('g',{class:light?'neck-note neck-note-light':'neck-note','data-note-color':color,'data-note-ink':light?inkFor(color):'#f4f3ff',...attrs});
+      const group=svgEl('g',{class:'neck-note','data-note-color':color,'data-note-ink':'#f4f3ff',...attrs});
       group.append(svgEl('circle',{cx:x+1,cy:y+3,r:r+1,fill:'#000',opacity:.65}));
       group.append(svgEl('circle',{cx:x,cy:y,r:r+4,fill:'none',stroke:color,'stroke-width':5,opacity:target?.22:.12}));
-      group.append(svgEl('circle',{cx:x,cy:y,r,fill:light?'#fff':`url(#${prefix}NoteGlass)`,stroke:light?'#dce8ef':color,'stroke-width':light?1.8:(target?3.4:2.8)}));
+      group.append(svgEl('circle',{cx:x,cy:y,r,fill:`url(#${prefix}NoteGlass)`,stroke:color,'stroke-width':target?3.4:2.8}));
       group.append(svgEl('path',{d:`M ${x-r*.68} ${y-r*.45} Q ${x} ${y-r*.98} ${x+r*.68} ${y-r*.45}`,fill:'none',stroke:'#fff','stroke-width':.9,opacity:.32,'pointer-events':'none'}));
-      group.append(centeredLabel({x,y,label,size:isP?(label.length>1?21:26):(label.length>1?18:24),color:light?inkFor(color):'#f4f3ff'}));svg.append(group);
+      group.append(centeredLabel({x,y,label,size:isP?(label.length>1?21:26):(label.length>1?18:24),color:'#f4f3ff'}));svg.append(group);
     }
-    function pill(host,label,{light=false,color}={}){
+    function pill(host,label){
       const svg=svgEl('svg',{viewBox:'0 0 28 28',width:28,height:28,'aria-hidden':'true',class:'neck-pill-label'});
-      svg.append(centeredLabel({x:14,y:14,label,size:16,color:light?inkFor(color):'#f4f3ff'}));
-      host.replaceChildren(svg);host.classList.toggle('is-light',light);host.dataset.noteInk=light?inkFor(color):'#f4f3ff';host.setAttribute('aria-label',label);
+      svg.append(centeredLabel({x:14,y:14,label,size:16,color:'#f4f3ff'}));
+      host.replaceChildren(svg);host.dataset.noteInk='#f4f3ff';host.setAttribute('aria-label',label);
     }
     function tuning(svg,{x,y,label,string}){
       const group=svgEl('g',{class:'neck-tuning','data-string':string,'pointer-events':'none'});
