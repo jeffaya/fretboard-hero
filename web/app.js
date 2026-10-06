@@ -143,6 +143,7 @@
     $('#circleRelative').textContent=`Relative minor • ${key.minor}`;
     $('#circleSignature').textContent=key.accidentals;
     $('#circleScale').innerHTML=key.scale.map((n,i)=>`<span class="neck-note-pill${i===0?' root':''}" style="--note-color:${FretboardAppearance.SCALE_COLORS[i]}">${n}</span>`).join('');
+    [...$('#circleScale').children].forEach((pill,i)=>appearance.pill(pill,key.scale[i]));
     const degreeChord=(degree,name)=>`<div class="degree-chord"><small>${degree}</small><strong>${name}</strong></div>`;
     const degreeToChord=new Map(key.chords.map(c=>[c.degree,c.name]));
     $('#circleChords').innerHTML=key.chords.map(c=>degreeChord(c.degree,c.name)).join('');
@@ -178,7 +179,7 @@
       const degree=button.dataset.degreeFilter,pill=button.querySelector('.legend');
       const pc={root:rootPC(),third:thirdPC(),fourth:mod(rootPC()+5),fifth:fifthPC(),seventh:mod(rootPC()+(state.quality==='minor'?10:11))}[degree];
       pill.classList.add('neck-note-pill');pill.style.setProperty('--note-color',FretboardAppearance.DEGREE_COLORS[degree]);
-      pill.textContent=noteName(pc);button.setAttribute('aria-label',`${button.querySelector('small').textContent}: ${noteName(pc)}`);
+      appearance.pill(pill,noteName(pc));button.setAttribute('aria-label',`${button.querySelector('small').textContent}: ${noteName(pc)}`);
     });
     const fourth=$('#legendFourth'),seventh=$('#legendSeventh');
     if(!fourth||!seventh)return;
