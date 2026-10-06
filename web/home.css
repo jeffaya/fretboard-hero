@@ -30,7 +30,7 @@
   transform: none;
   filter: none;
 }
-#home .hero-logo img { display: block; width: 100%; height: auto; }
+#home .hero-logo svg { display: block; width: 100%; height: auto; }
 #home .hero-logo::after { display: none; }
 #home .tagline {
   margin: 8px 0 0 !important;
