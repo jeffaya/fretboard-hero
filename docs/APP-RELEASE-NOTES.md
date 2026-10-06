@@ -26,7 +26,6 @@ APKs built from the same `web/` code:
 - Content strictly identical to the website at build time (same engine,
   same 4 screens, same instruments) — the app doesn't redefine any product
   logic, it only bundles `web/` for offline use.
-- `guitar-12` is not packaged as a separate app (out of scope for v1).
 - iOS is scaffolded (`app/ios/`) but not built/tested in v1.
 
 See [`TECHNICAL.md`](TECHNICAL.md) for the full architecture, build

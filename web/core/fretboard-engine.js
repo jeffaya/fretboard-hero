@@ -7,7 +7,6 @@
     const courses=profile.courses;
     return {
       profile,courses,tuning:courses,stringCount:courses.length,
-      physicalStringCount:profile.physicalStrings??courses.reduce((n,c)=>n+(c.physicalStrings||1),0),
       maxFret:profile.maxFret??21,fretOptions:profile.fretOptions??[12,15,17,21],
       noteAt:(courseIndex,fret)=>mod(courses[courseIndex].pc+fret),
       midiAt:(courseIndex,fret)=>courses[courseIndex].midi+fret,

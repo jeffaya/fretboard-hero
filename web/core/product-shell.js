@@ -10,9 +10,8 @@
   function apply(product,instrument){
     if(!product) throw new Error('ProductShell requires an active product');
     const branding=product.branding||{};
-    const instrumentId=window.FRETBOARD_SITE_CONFIG?.instrument||instrument?.id||'';
-    const seo={...(product.seo||{}),...((product.seoByInstrument||{})[instrumentId]||{})};
-    const pwa={...(product.pwa||{}),...((product.pwaByInstrument||{})[instrumentId]||{})};
+    const seo=product.seo||{};
+    const pwa=product.pwa||{};
     const iconKey=(product.id||'').replace(/-fretboard-hero$/,'')||'guitar';
     const iconBase=`assets/icons/${iconKey}/`;
     const assets={
@@ -60,9 +59,9 @@
       });
     }
 
-    const heroInstrument=instrumentId==='guitar-12'?'12-String Guitar':(branding.instrumentName||instrument?.label||'Guitar');
-    setText('#home .hero-instrument',heroInstrument);
-    setAria('#home',`${heroInstrument} Fretboard Hero home`);
+    setAttr('#home .hero-logo img','src',assets.heroLogo);
+    setAttr('#home .hero-logo img','alt',name);
+    setAria('#home',`${name} home`);
     setText('.tagline',`MASTER THE ${(branding.instrumentName||instrument?.label||'INSTRUMENT').toUpperCase()} NECK`);
     setText('#home .practice-card small',ModeRegistry.list(instrument).map(m=>m.label.charAt(0)+m.label.slice(1).toLowerCase()).join(' · '));
     setText('#home .map-card small','Explore the neck');
