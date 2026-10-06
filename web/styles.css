@@ -3061,3 +3061,13 @@ body{
 .circle-info-card{margin-top:24px}.circle-info-label{margin-bottom:12px}.circle-progressions{display:grid;gap:12px}.circle-progressions>div{display:flex;align-items:center;gap:6px}.degree-chord{flex:1;min-width:0;text-align:center;border:1px solid #ffffff50;border-radius:12px;background:#ffffff08;padding:10px 4px}.degree-chord small{display:block;color:#aebed6;font-size:14px}.degree-chord strong{display:block;color:#fff;font-size:22px}.circle-progressions b{color:#70f7ff}
 @media(max-width:760px){.circle-content{grid-template-columns:1fr;padding:12px;gap:16px}.circle-wheel-panel{padding:8px}.circle-info-panel{padding:18px}}
 @media(orientation:landscape) and (max-height:600px){.circle-content{grid-template-columns:minmax(0,1fr) minmax(260px,1fr);align-items:start}.circle-wheel-panel{max-width:480px;justify-self:center}.circle-info-panel{padding:16px}}
+
+/* Phone portrait: a compact legend dock below the neck, never an overlay. */
+@media (max-width:767px) and (orientation:portrait){
+  .practice-learning-area{flex-direction:column!important;align-items:stretch!important}
+  .practice-learning-area .practice-board{flex:1 1 0!important;min-height:0!important}
+  .practice-learning-area>.practice-legend-row{position:static!important;inset:auto!important;transform:none!important;flex:0 0 auto!important;width:100%!important;display:flex!important;justify-content:center!important;padding:6px 8px max(6px,var(--sa-bottom))!important;box-sizing:border-box!important;pointer-events:auto!important}
+  .practice-learning-area .practice-legend{flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:8px!important;padding:0!important;background:transparent;backdrop-filter:none}
+  .practice-learning-area .practice-legend .legend-filter{width:48px!important;min-width:48px!important;flex-direction:column!important;gap:3px!important;padding:4px!important;box-sizing:border-box!important}
+  .practice-learning-area .practice-legend .legend-filter small{font-size:10px!important;line-height:1!important}
+}
