@@ -59,8 +59,8 @@
       });
     }
 
-    setAttr('#home .hero-logo img','src',assets.heroLogo);
-    setAttr('#home .hero-logo img','alt',name);
+    setAttr('#home .hero-logo svg','viewBox',assets.heroLogoViewport);
+    setAria('#home .hero-logo svg',name);
     setAria('#home',`${name} home`);
     setText('.tagline',`MASTER THE ${(branding.instrumentName||instrument?.label||'INSTRUMENT').toUpperCase()} NECK`);
     setText('#home .practice-card small',ModeRegistry.list(instrument).map(m=>m.label.charAt(0)+m.label.slice(1).toLowerCase()).join(' · '));
