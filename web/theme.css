@@ -78,7 +78,7 @@ body[data-screen]:not([data-screen='home']) .stage-light { opacity: .08; animati
 .hero-btn { --ui-radius: 16px; }
 /* High specificity bridges legacy !important paint without touching sizing. */
 body #app button, body #resultModal button {
-  border: 1px solid color-mix(in srgb, var(--ui-accent) 65%, #31415b) !important;
+  border: 1px solid var(--ui-button-border, color-mix(in srgb, var(--ui-accent) 65%, #31415b)) !important;
   border-radius: var(--ui-radius) !important;
   background: var(--ui-gloss), var(--ui-button-fill) !important;
   box-shadow: var(--ui-button-shadow) !important;
@@ -128,3 +128,31 @@ body[data-loading='true'] #app { visibility: hidden; }
 .startup-loader[hidden] { display: none; }
 #home .hero-logo-fallback { display: block; color: var(--ui-text); font: 800 clamp(24px, 6vw, 40px)/1.15 var(--ui-font); }
 #home .hero-logo svg[hidden] { display: none; }
+
+/* Shared with SVG note badges: the palette comes from FretboardAppearance. */
+.neck-note-pill,
+.practice-legend .legend.neck-note-pill,
+.circle-note-pills span.neck-note-pill,
+#mapNoteControls .neck-note-pill {
+  color: var(--ui-text);
+  background: radial-gradient(ellipse at 32% 22%,#334655 0%,#172331 30%,#080e19 70%,#03070e 100%);
+  border: 2px solid var(--note-color);
+  box-shadow: inset 0 1px 1px #ffffff40,0 0 9px color-mix(in srgb,var(--note-color) 24%,transparent);
+  font-family: var(--ui-font);
+  font-weight: 800;
+}
+.practice-legend .legend.neck-note-pill { box-sizing: border-box; min-width: 28px; width: 28px; height: 28px; }
+#mapNoteControls .neck-note-pill.active { border-color:var(--note-color); box-shadow:0 0 13px color-mix(in srgb,var(--note-color) 42%,transparent); }
+.neck-note text,.neck-tuning text { font-family:var(--ui-font); }
+
+#mapNoteControls .neck-note-pill {
+  --ui-accent: var(--note-color);
+  --ui-button-border: var(--note-color);
+  --ui-button-fill: radial-gradient(ellipse at 32% 22%,#334655,#080e19 70%,#03070e);
+  --ui-tint: color-mix(in srgb,var(--note-color) 14%,#080e19);
+}
+
+/* Optical glyph centering is shared with the SVG fretboard badges. */
+.neck-pill-label { display:block; flex:none; width:100%; height:100%; overflow:visible; }
+.circle-note-pills span.neck-note-pill { display:inline-flex; align-items:center; justify-content:center; }
+.circle-note-pills .neck-pill-label { width:28px; height:24px; }

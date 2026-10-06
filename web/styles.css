@@ -328,28 +328,9 @@ body{
   font-weight: 900;
 }
 
-.legend.root{
-  background: var(--cyan);
-  color: #032530;
-  box-shadow: 0 0 14px #27d7ff;
-}
 
-.legend.third{
-  background: var(--pink);
-  color: #38042c;
-  box-shadow: 0 0 14px #ff3ec9;
-}
 
-.legend.fifth{
-  background: var(--yellow);
-  color: #362800;
-  box-shadow: 0 0 14px #ffd53c;
-}
 
-.legend.other{
-  background: #91a3b1;
-  color: #14212a;
-}
 
 
 
@@ -679,11 +660,6 @@ button{
   display: contents;
 }
 
-.legend.seventh{
-  background: #62ef75;
-  color: #06280c;
-  box-shadow: 0 0 14px #62ef75;
-}
 
 
 
@@ -1420,11 +1396,6 @@ button:hover,button:active,a:hover,a:active{
   }
 }
 
-.legend.fourth{
-  background: #ff8b3d;
-  color: #351304;
-  box-shadow: 0 0 14px #ff8b3d;
-}
 
 .legend-filter.filter-dimmed{
   opacity: .28 !important;

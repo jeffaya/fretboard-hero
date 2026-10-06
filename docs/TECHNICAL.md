@@ -357,3 +357,18 @@ The selector contains Guitar, Bass and Ukulele only. The configured product come
 The page shows a single loading status until the chosen product, interaction handlers and loaded logo are ready. Classic scripts use async=false: requests are queued concurrently while execution follows dependency order. If a logo request fails, a readable product title replaces it and the app remains usable. Switching instruments still reloads bootstrap with the saved session selection.
 
 The product wordmarks share one 2700×550 WebP sprite, displayed through independent 900×550 SVG viewports. Instrument switching reuses the same cached artwork URL. Bootstrap waits for that shared image to load before revealing the home.
+
+
+## Shared premium neck (V10.9.0)
+
+`core/fretboard-appearance.js` owns the ebony surface, chrome frets, wound/plain strings, faceted violet diamond inlays, open-string tuning badges and dark glass note badges. Practice, Map, Quiz and Circle share the same structural neck; Practice, Map and Circle use the same note renderer. Geometry stays orthographic and follows the existing portrait/landscape layout. The 12th-fret pair is separated symmetrically for four- and six-string profiles. Open notes are centered 54 viewBox units before the nut, separately from the tuning labels.
+
+Degree colors and Circle scale colors have one source in `FretboardAppearance`. Practice legends display actual note names and use the exact corresponding note outline color; Circle scale pills and Map pitch filters follow their neck palette. Position bands remain available but are thinner and translucent so the strings and notes stay visible. Legacy legend color rules have been removed.
+
+The neck uses one 83 KB photorealistic ebony WebP texture, gradients and explicit contact shadows instead of turbulence and repeated blur filters. Metal parts, strings, faceted inlays and notes remain SVG geometry. No animation loop or additional dependencies are introduced. Existing Quiz hit zones and feedback remain intact.
+
+Validation: Chromium checked Guitar/Bass/Ukulele at 1440×900, 900×1440, 1024×768, 768×1024, 844×390 and 393×873; correct C pitch locations, 3/5/7/9/double-12/15 markers, exact Practice note/legend colors and labels across all registered modes in major/minor, degree filtering and Circle scale colors. Three-product navigation and Quiz rendering, JavaScript syntax checks, Capacitor bridge tests and diff checks passed. Browser viewport checks do not replace physical iPad/iPhone testing.
+
+V10.9.1: all fret numbers are shown, with 3/5/7/9/12/15/17/19/21 emphasized. Faceted violet diamonds replace pearls; cyan/magenta rails are removed. Raised fret bodies use rectangles so their cross-section gradients have a nonzero bounding box. Cylindrical string gauges range from 8 to 2 viewBox units, with two offset shadow layers and wound-wire patterns. Note radii are 24 landscape / 26 portrait and tuning badges 24. The landscape neck is taller for more breathing room. Updated checks verify complete fret numbering, diamond geometry, string-gauge range and texture use across all three profiles and six viewports.
+
+V10.9.2: note, tuning and legend labels share optical centering based on the visible glyph bounds (Canvas TextMetrics), rather than the font em box. Bold font loading completes before initial board rendering; measured label metrics are cached. Browser checks verified 680 labels including accidentals in desktop, iPad and phone layouts; note/legend matching and all profile/viewport regressions still pass.
