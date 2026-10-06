@@ -2222,7 +2222,7 @@ body{
   }
 
   .practice-learning-area .legend-filter{
-    width: 100%;
+    width: max-content;
     padding: 3px !important;
     gap: 4px !important;
   }
@@ -2306,7 +2306,7 @@ body{
   .practice-board svg,.map-board svg,.quiz-board svg{display:block!important;width:auto!important;max-width:88vw!important;height:min(72dvh,1500px)!important;max-height:72dvh!important;margin:0 auto!important}
   .practice-legend-row{position:absolute!important;right:max(6px,var(--sa-right))!important;top:50%!important;transform:translateY(-50%)!important;z-index:6!important;width:auto!important;margin:0!important;pointer-events:none}
   .practice-legend{display:flex!important;flex-direction:column!important;gap:7px!important;pointer-events:auto;background:rgba(3,10,18,.55);backdrop-filter:blur(5px);border-radius:16px;padding:7px 5px!important}
-  .practice-legend .legend-filter{padding:0!important;min-width:44px!important;display:flex!important;align-items:center!important;gap:4px!important}
+  .practice-legend .legend-filter{width:max-content!important;min-width:76px!important;box-sizing:border-box!important;padding:2px 8px 2px 4px!important;display:flex!important;align-items:center!important;gap:6px!important}
   .practice-legend .legend-filter small{font-size:10px!important}
   .practice-hint{display:none!important}
 }
