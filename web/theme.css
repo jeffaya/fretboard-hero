@@ -169,9 +169,3 @@ body[data-loading='true'] #app { visibility: hidden; }
 .neck-pill-label { display:block; flex:none; width:100%; height:100%; overflow:visible; }
 .circle-note-pills span.neck-note-pill { display:inline-flex; align-items:center; justify-content:center; }
 .circle-note-pills .neck-pill-label { width:28px; height:24px; }
-
-/* Pentatonic endpoints stay white, as do their matching legend samples. */
-.practice-legend .legend.neck-note-pill.is-light {
-  background:#fff; border-color:#dce8ef;
-  box-shadow:0 2px 4px #0007,0 0 7px color-mix(in srgb,var(--note-color) 22%,transparent);
-}
