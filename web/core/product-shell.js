@@ -60,7 +60,9 @@
       });
     }
 
-    setAria('#home',`${name} home`);
+    const heroInstrument=instrumentId==='guitar-12'?'12-String Guitar':(branding.instrumentName||instrument?.label||'Guitar');
+    setText('#home .hero-instrument',heroInstrument);
+    setAria('#home',`${heroInstrument} Fretboard Hero home`);
     setText('.tagline',`MASTER THE ${(branding.instrumentName||instrument?.label||'INSTRUMENT').toUpperCase()} NECK`);
     setText('#home .practice-card small',ModeRegistry.list(instrument).map(m=>m.label.charAt(0)+m.label.slice(1).toLowerCase()).join(' · '));
     setText('#home .map-card small','Explore the neck');

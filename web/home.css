@@ -20,13 +20,6 @@
   margin: auto;
   text-align: center;
 }
-#home .home-eyebrow {
-  grid-column: 1 / -1;
-  margin: 0 0 10px;
-  color: #a1b1ce;
-  font: 500 11px var(--ui-font);
-  letter-spacing: .2em;
-}
 #home .home-brand { padding: 0 0 22px; }
 #home .hero-logo {
   display: block;
@@ -36,6 +29,15 @@
   line-height: 0;
   transform: none;
   filter: none;
+}
+#home .hero-instrument {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ui-text);
+  font: 800 clamp(22px, 5vw, 32px)/1.1 var(--ui-font);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px var(--ui-purple);
 }
 #home .hero-logo img { display: block; width: 100%; height: auto; }
 #home .hero-logo::after { display: none; }
