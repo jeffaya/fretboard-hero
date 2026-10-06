@@ -60,20 +60,12 @@
       });
     }
 
-    const words=branding.heroWords||['FRETBOARD','HERO'];
-    const hero=q('.hero-logo');
-    if(hero){
-      hero.innerHTML=words.map((word,i)=>`<span class="${i===0?'hero-guitar':i===1?'hero-fret':'hero-hero'}">${String(word)}</span>`).join('');
-      hero.setAttribute('aria-label',name);
-    }
     setAria('#home',`${name} home`);
-    setText('.tagline',home.tagline||'SEE IT • LEARN IT • PLAY IT');
-    const tagline=q('.tagline');
-    if(tagline&&home.taglineHtml)tagline.innerHTML=home.taglineHtml;
-    setText('[data-go="practice"] small',home.practiceDescription);
-    setText('[data-go="fretmap"] small',home.mapDescription);
-    setText('[data-go="circle"] small',home.circleDescription);
-    setText('[data-go="quiz"] small',home.quizDescription);
+    setText('.tagline',`MASTER THE ${(branding.instrumentName||instrument?.label||'INSTRUMENT').toUpperCase()} NECK`);
+    setText('#home .practice-card small',ModeRegistry.list(instrument).map(m=>m.label.charAt(0)+m.label.slice(1).toLowerCase()).join(' · '));
+    setText('#home .map-card small','Explore the neck');
+    setText('#home .circle-card small','Visualize & practice');
+    setText('#home .quiz-card small','Test your knowledge');
 
     const instrumentLabel=(instrument?.label||branding.instrumentName||'instrument').toLowerCase();
     setAria('#practiceFretboard',`Interactive ${instrumentLabel} fretboard`);

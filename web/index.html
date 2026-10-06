@@ -39,38 +39,36 @@
   <link rel="icon" type="image/png" sizes="192x192">
   <link rel="icon" type="image/png" sizes="512x512">
   <link rel="apple-touch-icon" sizes="180x180">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=10.5.4">
+  <link rel="stylesheet" href="./styles.css?v=10.7.0">
+  <link rel="stylesheet" href="./home.css?v=10.7.0">
+  <link rel="stylesheet" href="./theme.css?v=10.7.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
 </head>
 <body>
-  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <div class="app-stage" aria-hidden="true"><i class="stage-light stage-light-pink"></i><i class="stage-light stage-light-blue"></i></div>
   <main id="app" class="app-shell">
     <section id="home" class="screen active home-screen" aria-label="Fretboard Hero home">
-      <div class="hero-logo" aria-label="Fretboard Hero">
-        <span class="hero-guitar">FRETBOARD</span>
-        <span class="hero-fret">HERO</span>
-      </div>
-      <p class="tagline">SEE IT <span>•</span> LEARN IT <span>•</span> PLAY IT</p>
-      <div class="home-actions">
-        <button class="hero-btn primary" data-go="practice">
-          <span class="hero-icon practice-pick" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="icon-shell" d="M32 4C18.2 4 8 10.4 8 20.2c0 9.7 8.6 23 24 39.8 15.4-16.8 24-30.1 24-39.8C56 10.4 45.8 4 32 4Z"/></svg></span>
-          <strong>PRACTICE</strong><small>Pentatonics, triads & chords in every key</small>
-        </button>
-        <button class="hero-btn map-btn" data-go="fretmap">
-          <span class="hero-icon map-note" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="note-beam" d="M40 8v34.5c-2.4-1.6-5.6-2.4-9-1.8-6.2 1-10.7 5.2-10 9.5.7 4.3 6.2 7 12.4 6 5.5-.9 9.6-4.4 9.7-8.2V20l14-3.4V8L40 12.1V8Z"/></svg></span>
-          <strong>FRETBOARD MAP</strong><small>Every note. One neck.</small>
-        </button>
-        <button class="hero-btn circle-btn" data-go="circle">
-          <span class="hero-icon circle-wheel" aria-hidden="true">◉</span>
-          <strong>CIRCLE OF FIFTHS</strong><small>Keys, chords & harmonic relationships</small>
-        </button>
-        <button class="hero-btn secondary" data-go="quiz">
-          <span class="hero-icon quiz-mark" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="icon-q" d="M15 20C16.8 9.9 24.7 4 35.7 4 48 4 56 11.2 56 21.7c0 9.6-5.7 14-12.3 17.9-5.3 3.2-7.5 5.7-7.5 11.4H22.4c0-10.8 4.5-16 11.8-20.4 5.1-3.1 8.1-5.1 8.1-8.8 0-3.4-3.1-5.8-7.5-5.8-5.2 0-8.2 2.9-9 7.6L15 20Zm7 36h14.5v8H22v-8Z"/></svg></span>
-          <strong>QUIZ</strong><small>Prove you know the neck. No excuses.</small>
-        </button>
+      <div class="home-content">
+        <p class="home-eyebrow">YOUR BACKSTAGE PASS</p>
+        <div class="home-brand">
+          <h1 class="hero-logo"><img src="./assets/home/hero-wordmark.webp" width="900" height="450" alt="Fretboard Hero" fetchpriority="high"></h1>
+          <p class="tagline">MASTER THE GUITAR NECK</p>
+        </div>
+        <div class="home-menu">
+          <nav class="home-actions" aria-label="Choose your session">
+            <button class="hero-btn practice-card" data-go="practice"><span class="hero-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#practice"/></svg></span><span class="home-card-copy"><strong>PRACTICE</strong><small>Notes · Triads · Scales · Chords</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+            <button class="hero-btn play-card" data-go="quiz"><span class="hero-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#play"/></svg></span><span class="home-card-copy"><strong>PLAY MODE</strong><small>Your 60-second stage challenge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+            <button class="hero-btn map-card" data-go="fretmap"><span class="hero-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#map"/></svg></span><span class="home-card-copy"><strong>FRETBOARD MAP</strong><small>Explore the neck</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+            <button class="hero-btn quiz-card" data-go="quiz"><span class="hero-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#quiz"/></svg></span><span class="home-card-copy"><strong>QUIZ</strong><small>Test your knowledge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+            <button class="hero-btn circle-card" data-go="circle"><span class="hero-icon"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#circle"/></svg></span><span class="home-card-copy"><strong>CIRCLE OF FIFTHS</strong><small>Visualize & practice</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+          </nav>
+          <nav class="home-instruments" aria-label="Choose instrument">
+            <button type="button" data-home-instrument="guitar" aria-pressed="false"><svg class="instrument-art" viewBox="48 25.8333 220 293.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.7.0" width="1024" height="341"/></svg><span>Guitar</span></button>
+            <button type="button" data-home-instrument="bass-4" aria-pressed="false"><svg class="instrument-art" viewBox="292.5 24.3333 220 293.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.7.0" width="1024" height="341"/></svg><span>Bass</span></button>
+            <button type="button" data-home-instrument="ukulele" aria-pressed="false"><svg class="instrument-art" viewBox="539 30.8333 220 293.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.7.0" width="1024" height="341"/></svg><span>Ukulele</span></button>
+            <button type="button" data-home-instrument="guitar-12" aria-pressed="false"><svg class="instrument-art" viewBox="785.5 23.3333 220 293.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.7.0" width="1024" height="341"/></svg><span>12-String</span></button>
+          </nav>
+        </div>
       </div>
     </section>
 
@@ -208,7 +206,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.5.4" defer></script>
+  <script src="./bootstrap.js?v=10.7.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>
