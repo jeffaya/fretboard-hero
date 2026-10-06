@@ -1,0 +1,123 @@
+/* Canonical product theme: typography, stage, surfaces and button states.
+   styles.css/home.css own geometry; this file owns shared appearance. */
+@font-face {
+  font-family: 'Hero Condensed';
+  src: url('./assets/theme/barlow-condensed-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Hero Condensed';
+  src: url('./assets/theme/barlow-condensed-800.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+:root {
+  --ui-font: 'Hero Condensed', system-ui, sans-serif;
+  --ui-bg: #030b17;
+  --ui-text: #f4f3ff;
+  --ui-muted: #b8c7df;
+  --ui-purple: #e927ff;
+  --ui-orange: #ff9814;
+  --ui-green: #00dca7;
+  --ui-blue: #009fff;
+  --ui-accent: var(--ui-purple);
+  --ui-tint: #2b073e;
+  --ui-radius: 12px;
+  --ui-scene: url('./assets/theme/concert-stage.webp');
+  --ui-surface: linear-gradient(180deg, #ffffff08, #ffffff00 45%), #050e1de8;
+  --ui-gloss: linear-gradient(180deg, #ffffff16 0%, #ffffff04 42%, transparent 43%);
+  --ui-button-fill: linear-gradient(110deg, var(--ui-tint), #090817 94%);
+  --ui-button-shadow: inset 0 0 18px color-mix(in srgb, var(--ui-accent) 10%, transparent), 0 0 7px color-mix(in srgb, var(--ui-accent) 12%, transparent);
+}
+html, body {
+  font-family: var(--ui-font);
+  font-weight: 500;
+  color: var(--ui-text);
+  background: var(--ui-bg);
+}
+/* Include SVG labels, dynamically generated controls and modal content. */
+body :where(button, input, select, textarea, div, strong, small, span, p, h1, h2, h3, label, em, b, text) {
+  font-family: var(--ui-font) !important;
+}
+body { --ui-scene-shade: .72; }
+body[data-screen='home'] { --ui-scene-shade: .22; }
+.app-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background-image: linear-gradient(rgb(3 11 23 / var(--ui-scene-shade)), rgb(3 11 23 / var(--ui-scene-shade))), var(--ui-scene);
+  background-size: cover;
+  background-position: right center;
+}
+.stage-light {
+  position: absolute;
+  width: 180px;
+  height: 300px;
+  top: 80px;
+  transform-origin: center top;
+  background: radial-gradient(ellipse, var(--light), transparent 70%);
+  animation: stage-spotlight 12s ease-in-out infinite alternate;
+  opacity: .16;
+}
+.stage-light-pink { --light: #fd02c1; left: 3%; }
+.stage-light-blue { --light: #06d6ff; right: 7%; animation-delay: -6s; }
+body[data-screen]:not([data-screen='home']) .stage-light { opacity: .08; animation-play-state: paused; }
+#app { position: relative; z-index: 1; }
+#app .screen { background: transparent !important; }
+.practice-screen { --ui-accent: var(--ui-purple); --ui-tint: #2b073e; }
+.fretmap-screen { --ui-accent: var(--ui-green); --ui-tint: #022f2a; }
+.circle-screen { --ui-accent: var(--ui-blue); --ui-tint: #052645; }
+.quiz-screen, #resultModal { --ui-accent: var(--ui-purple); --ui-tint: #290635; }
+.practice-card, .quiz-card { --ui-accent: var(--ui-purple); --ui-tint: #2b073e; }
+.play-card { --ui-accent: var(--ui-orange); --ui-tint: #32140a; }
+.map-card { --ui-accent: var(--ui-green); --ui-tint: #022f2a; }
+.circle-card { --ui-accent: var(--ui-blue); --ui-tint: #052645; }
+.hero-btn { --ui-radius: 16px; }
+/* High specificity bridges legacy !important paint without touching sizing. */
+body #app button, body #resultModal button {
+  border: 1px solid color-mix(in srgb, var(--ui-accent) 65%, #31415b) !important;
+  border-radius: var(--ui-radius) !important;
+  background: var(--ui-gloss), var(--ui-button-fill) !important;
+  box-shadow: var(--ui-button-shadow) !important;
+  color: var(--ui-text) !important;
+  font-family: var(--ui-font) !important;
+  cursor: pointer;
+  transition: box-shadow .18s ease, border-color .18s ease;
+}
+body #app button:is(.active, [aria-pressed='true'], [aria-selected='true']),
+body #resultModal button.modal-primary {
+  border-color: var(--ui-accent) !important;
+  background: var(--ui-gloss), linear-gradient(110deg, color-mix(in srgb, var(--ui-accent) 26%, var(--ui-tint)), #090817 94%) !important;
+  box-shadow: var(--ui-button-shadow), 0 0 12px color-mix(in srgb, var(--ui-accent) 30%, transparent) !important;
+}
+body #app button:hover, body #resultModal button:hover {
+  border-color: var(--ui-accent) !important;
+  box-shadow: var(--ui-button-shadow), 0 0 18px color-mix(in srgb, var(--ui-accent) 25%, transparent) !important;
+}
+body #app button:focus-visible, body #resultModal button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+body #app button:disabled, body #resultModal button:disabled { opacity: .45; cursor: default; }
+/* One surface material for frames, drawers and dialogs. */
+body #app :is(.control-group, .responsive-drawer, .circle-selector, .circle-wheel-panel, .circle-info-panel, .circle-fretboard-panel, .circle-info-card, .quiz-hud, .home-instruments, .select-popover, .circle-help-popover, .rank-ladder-summary, .rank-ladder-item, .degree-chord, .quiz-intro-rules > div),
+body #resultModal .result-modal {
+  background: var(--ui-surface) !important;
+  border-color: color-mix(in srgb, var(--ui-accent) 22%, #26354c) !important;
+}
+body #app .topbar { background: var(--ui-surface) !important; }
+body #resultModal { background: #030b17bf; }
+@keyframes stage-spotlight {
+  from { transform: rotate(-14deg); opacity: .12; }
+  to { transform: rotate(18deg); opacity: .28; }
+}
+@media (orientation: portrait) {
+  .app-stage { background-size: auto max(600px, 100dvh); background-position: right top; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-light { animation: none !important; }
+  body #app button, body #resultModal button { transition: none !important; }
+}

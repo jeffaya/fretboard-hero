@@ -1,3 +1,34 @@
+## V10.6.3 — Instrument artwork
+
+- Replaced hand-drawn instrument symbols with a single transparent WebP sprite reconstructed from the reference screenshot using image generation. It follows the reference silhouettes but is not a pixel-identical extraction of original assets.
+- All four cells use the same fixed aspect ratio, avoiding the detached/offset necks in the earlier SVG drawings. Active glow remains CSS.
+
+## V10.6.2 — Home cleanup
+
+- Removed Settings/Statistics buttons, home dialog, related icon symbols and styles.
+- Removed local progress counters, persistence, quiz/navigation tracking hooks and their obsolete tests. Quiz scoring remains unchanged.
+- Home lights run automatically while the home is active; system reduced motion still disables them. Previous local animation preferences no longer affect the home.
+- `home.js` now only handles the instrument dock.
+
+## V10.6.1 — Refined concert artwork and responsive home
+
+- Replaced CSS guitar/crowd approximations with one compressed WebP illustration and a transparent brush-lettered wordmark. Shared SVG symbol sprite adds filled gradient menu icons and distinct instrument silhouettes.
+- Two locally hosted, Latin-subset Barlow Condensed WOFF2 fonts prevent the home typography from depending on third-party requests.
+- No home streak/score tiles or footer slogan. Icon-to-copy spacing is 18px on phones, 24px on portrait tablets, and at least 10px in compact landscape.
+- Portrait phone/tablet/monitor layouts remain centered. Landscape iPad/desktop layouts place the brand on the left and menu on the right. Short landscape phones use a two-column card grid. Small viewports scroll vertically when needed.
+- Only two ambient lights animate transform/opacity, paused off-home; reduced motion and the home toggle disable animation. No animation framework, videos or canvas.
+- Verified in headless Chromium at 393×873, 844×390, 768×1024, 1024×768, 1440×900, 900×1440 and 320×640. All four instrument navigation paths, settings and progress dialog passed without runtime errors.
+
+## V10.6.0 — Neon backstage home
+
+- Concert-style home drawn with CSS/SVG: moving lights, marker lettering, neon cards and instrument dock.
+- Practice, Map, Quiz and Circle retain their existing engines. Play Mode opens the same 60-second Quiz; it is a shortcut, not a new game.
+- Home counters and footer slogan are omitted; card icons have a dedicated 80px column plus text spacing.
+- Settings toggle home animation; system reduced motion is always honored. Progress dialog shows real device-local statistics.
+- Day streak counts opening Practice/Map/Circle or completing a quiz, using local calendar dates. Total/best score and run count update only once per completed quiz. No invented sample statistics or historical migration.
+- Instrument choices survive reloads within the session; the deployed `site.config.json` remains the default for a new session. Product/instrument profiles, branding and metadata are reapplied on reload.
+- Phone, landscape and desktop layouts scroll when needed. No edits to generated `app/www/`.
+
 # Fretboard Hero — configuration de déploiement
 
 Le même package peut être déployé sur les différents sites. Pour changer d'instrument, modifier **uniquement** `site.config.json`.

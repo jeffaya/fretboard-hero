@@ -174,7 +174,7 @@ Quiz.
 
 ## Current state
 
-The latest site version is **V10.5.8**.
+The latest site version is **V10.7.0**.
 
 Fretboard Hero is no longer just a pentatonic visualizer. There are three
 complementary layers: **Learn** with Practice -> **Understand** with

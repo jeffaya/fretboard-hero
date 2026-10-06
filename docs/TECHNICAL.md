@@ -331,3 +331,21 @@ version number, it does not duplicate the changelog.
 - `tools/verify-webview-navigation.py` is a manual diagnostic tool, not
   wired into any automated test suite — running it is a manual step during
   verification, not part of `build-instrument.ps1`.
+
+## Shared neon theme (V10.7.0)
+
+`web/theme.css` is the canonical shared appearance layer, loaded after legacy styles and `web/home.css`. It owns self-hosted typography, the single concert background, color tokens, gloss, button states and frame surfaces across Home, Practice, Fretboard Map, Circle and Quiz. Geometry remains in existing screen styles. `body[data-screen]` follows navigation; exercises dim the shared scene for readability. `web/home.js` loads before `app.js` and only handles the instrument dock. Settings, stats dialogs and their progress tracking were removed; the home does not read or write localStorage. Existing legacy progress data is inert. Motion runs automatically while home is active and honors prefers-reduced-motion.
+
+The instrument dock stores `fretboard-home-instrument` in sessionStorage and reloads bootstrap. Bootstrap validates the key against CATALOG, otherwise uses `site.config.json`. It binds the selected profile key into the active product so 12-string selection resolves `guitar12` rather than the guitar product default. This does not alter build configuration or native app ID.
+
+Play Mode and Quiz are two entry points to the existing quiz intro, not independent game modes. Quiz scoring and the results screen remain unchanged.
+
+### Home artwork and responsive layout (V10.6.1)
+
+`assets/theme/concert-stage.webp` and `assets/home/hero-wordmark.webp` contain only illustration/lettering; controls and text remain native DOM. `icons.svg` is a shared symbol sprite referenced with SVG use. Barlow Condensed 500/800 are self-hosted subset WOFF2 fonts in `assets/theme`, licensed under the bundled OFL. No remote font request is needed. Asset payload (illustration, logo, sprite and fonts) is approximately 210 KB uncompressed on disk. `ProductShell` preserves the home wordmark and derives the Practice description from the active profile's registered modes.
+
+Portrait layout is a centered column; landscape ≥700px is a two-column composition; short landscape ≥740px uses two columns inside the card menu. Media rules live in `home.css`, scoped to `#home`, without changing fretboard layouts. Native app/www must still be rebuilt from web. Small screens allow vertical scrolling.
+
+Artwork source prompts and provenance: `web/assets/home/ASSETS.md`. Browser validation uses the built-in product routes, not mocked fretboard engines. The in-conversation gallery consists of actual Chromium screenshots.
+
+V10.7.0 validation: Chromium checked shared font/background/gloss on all four modes, Practice root/degree controls, Quiz launch, six portrait/landscape viewport sizes (phone, tablet and desktop), and reduced-motion behavior. No runtime errors or horizontal overflow were observed.
