@@ -210,14 +210,10 @@
     for(let f=0;f<=maxFret;f++){
       const p=fretPos(f),isNut=f===0&&fretOffset===0;premiumFret(svg,isP,p,W,H,isNut,prefix);
       const actualFret=fretOffset===0?f:(fretOffset+f-1);
-      if(fretOffset===0?(f===0||[3,5,7,9,12,15,17,19,21].includes(f)):(f>0&&[3,5,7,9,12,15,17,19,21].includes(actualFret))){
-        const lp=fretOffset===0&&f===0?fretPos(0):(fretPos(Math.max(0,f-1))+fretPos(f))/2;
-        const isOctave=actualFret===12;
-        const label=String(actualFret),fontSize=isP?(isOctave?24:22):(isOctave?21:19);
-        const labelX=isP?20:lp,labelY=isP?lp:(H-16);
-        const padX=label.length>1?14:11,padY=isOctave?14:12;
-        svg.append(svgEl('rect',{x:labelX-padX,y:labelY-padY,width:padX*2,height:padY*2,rx:7,fill:'#071016',stroke:isOctave?'#27d7ff':'#6d8290','stroke-width':isOctave?1.4:.8,opacity:.94}));
-        svg.append(svgEl('text',{x:labelX,y:labelY+1,fill:isOctave?'#f8fbff':'#dce9f0','font-size':fontSize,'font-weight':1000,'text-anchor':'middle','dominant-baseline':'middle'},label));
+      if(fretOffset===0||f>0){
+        const lp=f===0?fretPos(0):(fretPos(f-1)+fretPos(f))/2;
+        const landmark=[3,5,7,9,12,15,17,19,21].includes(actualFret);
+        svg.append(svgEl('text',{x:isP?22:lp,y:isP?lp:42,fill:landmark?'#f5edff':'#b5b8cf','font-size':isP?24:24,'font-weight':landmark?800:500,'text-anchor':'middle','dominant-baseline':'central','data-fret-label':actualFret},String(actualFret)));
       }
     }
     // Standard markers: singles are centred between D/G. At fret 12, the two markers
@@ -227,12 +223,7 @@
     const singleInlayCenter=centerBetween(middleLo,middleHi);
     const drawInlay=(f,cross)=>{
       const p=(fretPos(f-1)+fretPos(f))/2;
-      const base=isP?{cx:cross,cy:p}:{cx:p,cy:cross};
-      const marker=svgEl('g',{'data-inlay-fret':fretOffset===0?f:fretOffset+f-1,'pointer-events':'none'});
-      marker.append(svgEl('circle',{...base,r:13,fill:'#b495ff',opacity:.1}));
-      marker.append(svgEl('circle',{...base,r:9.5,fill:`url(#${prefix}Inlay)`,stroke:'#c9bdff','stroke-width':1.1}));
-      marker.append(svgEl('circle',{...base,r:6.2,fill:'none',stroke:'#fff','stroke-width':.65,opacity:.5}));
-      svg.append(marker);
+      appearance.inlay(svg,{x:isP?cross:p,y:isP?p:cross,fret:fretOffset===0?f:fretOffset+f-1});
     };
     [3,5,7,9,12,15,17,19,21].filter(actual=>actual>=fretOffset&&actual<=(fretOffset===0?maxFret:fretOffset+maxFret-1)).forEach(actual=>{
       const f=fretOffset===0?actual:(actual-fretOffset+1);
@@ -246,7 +237,7 @@
     tuning.forEach((st,s)=>{
       const p=visualStringPos(s);
       premiumString(svg,isP,p,fretStart,fretEnd,s,prefix);
-      appearance.tuning(svg,{x:isP?p:24,y:isP?35:p,label:st.name});
+      appearance.tuning(svg,{x:isP?p:35,y:isP?35:p,label:st.name});
     });
     return {svg,isP,W,H,fretStart,fretEnd,stringStart,stringEnd,fretPos,stringPos,visualStringPos,maxFret};
   }
