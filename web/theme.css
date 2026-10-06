@@ -253,3 +253,30 @@ body :is(#app,#resultModal) button.ui-back:hover {
   color: #d4dced !important;
 }
 body :is(#app,#resultModal) button.ui-back:hover { color: #fff !important; }
+
+/* Arcade HUD material: existing responsive geometry and game state classes are reused. */
+body #app .quiz-hud {
+  background: linear-gradient(105deg,#043646ed,#11162bf2 42%,#281039ed 78%,#101c35f2) !important;
+  border-color: #ba65ff !important;
+  box-shadow: inset 0 1px 0 #ffffff55,inset 0 -1px 0 #27d7ff55,0 0 16px #ae27ff55,0 7px 20px #0006 !important;
+}
+body #app .quiz-hud .hud-stat {
+  background: linear-gradient(180deg,#ffffff0b,transparent 52%,#00000020) !important;
+}
+body #app .quiz-hud .hud-stat > span { color:#d6e5ff; text-shadow:0 0 8px #8ebcff66; }
+body #app .quiz-hud .hud-score strong { color:#70f7ff !important; text-shadow:0 0 7px #27d7ff88,0 0 18px #27d7ff55 !important; }
+body #app .quiz-hud .hud-combo strong { color:#ffdd70 !important; text-shadow:0 0 8px #ff981488,0 0 18px #ff981444 !important; }
+body #app .quiz-hud .hud-rank strong { color:#f4e5ff !important; text-shadow:0 0 8px #d784ff88 !important; }
+body #app .quiz-hud .rank-meter { background:#050b1ecc; box-shadow:inset 0 1px 3px #0009,0 0 5px #ae27ff33; }
+body #app .quiz-hud .rank-meter i {
+  background:linear-gradient(90deg,#27d7ff,#9b6cff 58%,#ff3ec9);
+  box-shadow:0 0 9px #bd64ff88;
+}
+body #app .quiz-hud.hud-hot { border-color:#ffbc4f !important; box-shadow:inset 0 1px 0 #ffffff55,0 0 18px #ff981466 !important; }
+body #app .quiz-hud.hud-on-fire { border-color:#ff56dc !important; box-shadow:inset 0 1px 0 #ffffff66,0 0 24px #ff3ec988,0 0 9px #ff981455 !important; }
+body #app .quiz-hud.hud-on-fire .hud-combo strong { color:#fff3b5 !important; text-shadow:0 0 7px #ffbc4f,0 0 20px #ff3ec9 !important; }
+body #app .quiz-hud .hud-time.time-warning { background:linear-gradient(180deg,#ff981422,#ff981408) !important; }
+body #app .quiz-hud .hud-time.time-critical { background:linear-gradient(180deg,#ff3e6e33,#ff3e6e0a) !important; }
+body #app .quiz-hud .hud-time.time-warning strong { color:#ffd66b !important; text-shadow:0 0 12px #ff9814aa !important; }
+body #app .quiz-hud .hud-time.time-critical strong { color:#ff739a !important; text-shadow:0 0 14px #ff3e6eaa !important; }
+body #app .quiz-hud .hud-gain-pop { color:#9affca; text-shadow:0 0 10px #5cffb2aa; }
