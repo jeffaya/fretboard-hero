@@ -103,7 +103,7 @@ body #app button:focus-visible, body #resultModal button:focus-visible {
 }
 body #app button:disabled, body #resultModal button:disabled { opacity: .45; cursor: default; }
 /* One surface material for frames, drawers and dialogs. */
-body #app :is(.circle-selector, .circle-wheel-panel, .circle-info-panel, .circle-fretboard-panel, .circle-info-card, .quiz-hud, .home-instruments, .select-popover, .circle-help-popover, .rank-ladder-summary, .rank-ladder-item, .degree-chord, .quiz-intro-rules > div),
+body #app :is(.circle-selector, .circle-wheel-panel, .circle-info-panel, .circle-fretboard-panel, .circle-info-card, .quiz-hud, .home-instruments, .select-popover, .circle-help-popover, .rank-ladder-summary, .rank-ladder-item, .degree-chord),
 body #resultModal .result-modal {
   background: var(--ui-surface) !important;
   border-color: color-mix(in srgb, var(--ui-accent) 22%, #26354c) !important;
@@ -225,3 +225,46 @@ body #app .topbar > button:is(.nav-back,.mobile-menu-btn):is(:hover,[aria-expand
   box-shadow: inset 0 1px 1px #ffffff40,0 0 9px #ffffff24 !important;
 }
 body #app .topbar > .mobile-menu-btn > span { background: #fff !important; }
+
+/* Quiz dialogs: one primary action, quiet secondary actions, text-only home navigation. */
+body #resultModal :is(#quizIntroView,#quizResultView) {
+  background: linear-gradient(150deg,#10162df5,#060b1bf7) !important;
+  border-color: #ac94dda6 !important;
+  box-shadow: 0 16px 48px #0009,0 0 16px #9b6cff22 !important;
+}
+body #resultModal :is(#quizIntroView,#quizResultView) h2 {
+  color: #f4f3ff !important;
+  text-shadow: none !important;
+}
+body #resultModal .quiz-intro-rules > div {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: #d4dced;
+}
+body #resultModal :is(#quizIntroView,#quizResultView) .modal-primary {
+  background: linear-gradient(180deg,#fa0cd9,#c600b6) !important;
+  border-color: #ff63ea !important;
+  box-shadow: inset 0 1px 1px #ffffff40,0 0 14px #ed05cb30 !important;
+}
+body #resultModal :is(#quizIntroView,#quizResultView) .modal-secondary {
+  background: linear-gradient(180deg,#1c2337b3,#090f20cc) !important;
+  border-color: #c5b5e38c !important;
+  box-shadow: inset 0 1px 1px #ffffff1a !important;
+}
+body #resultModal :is(#quizIntroView,#quizResultView) .quiz-back-home {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: #b8c7df !important;
+}
+body #resultModal :is(#quizIntroView,#quizResultView) .quiz-back-home:hover {
+  color: #fff !important;
+}
+.quiz-secondary-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+body #resultModal .quiz-secondary-actions button { min-width:0; margin-top:10px !important; margin-bottom:0 !important; }
+body #resultModal .quiz-secondary-actions .modal-action { font-size:clamp(11px,2.6vw,15px); }
+body #resultModal :is(#quizIntroView,#quizResultView) .modal-action svg { flex-shrink:0; }
+@media (max-width:350px) {
+  .quiz-secondary-actions { grid-template-columns:1fr; gap:0; }
+}

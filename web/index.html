@@ -41,7 +41,7 @@
   <link rel="apple-touch-icon" sizes="180x180">
   <link rel="stylesheet" href="./styles.css?v=10.9.9">
   <link rel="stylesheet" href="./home.css?v=10.9.8">
-  <link rel="stylesheet" href="./theme.css?v=10.10.1">
+  <link rel="stylesheet" href="./theme.css?v=10.11.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
 </head>
 <body data-loading="true" aria-busy="true">
@@ -182,8 +182,8 @@
         <div><b class="icon-cross">×</b><span>A wrong answer resets your multiplier to <strong>×1</strong>.</span></div>
         <div><b>⚡</b><span>Score as many points as possible in <strong>60 seconds</strong>.</span></div>
       </div>
-      <button id="startQuizButton" class="modal-primary quiz-start-button">START QUIZ</button>
-      <button id="introRankLadder" class="modal-secondary rank-ladder-open">VIEW RANK LADDER</button>
+      <button id="startQuizButton" class="modal-primary modal-action quiz-start-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 4 12 8-12 8Z"/></svg><span>START QUIZ</span></button>
+      <button id="introRankLadder" class="modal-secondary modal-action rank-ladder-open"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v7a5 5 0 0 1-10 0V3Zm0 2H3v3a4 4 0 0 0 4 4m10-7h4v3a4 4 0 0 1-4 4M12 15v6m-4 0h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>VIEW RANK LADDER</span></button>
       <button id="introBackHome" class="modal-secondary modal-action quiz-back-home">← BACK TO HOME</button>
     </div>
     <div id="quizResultView" class="result-modal">
@@ -191,9 +191,11 @@
       <h2 id="resultRank">VIRTUOSO</h2>
       <div class="result-score"><strong id="resultScore">0</strong><span>points</span></div>
       <p id="resultCopy">Perfect run. You know your neck.</p>
-      <button id="viewRankLadder" class="modal-secondary rank-ladder-open">VIEW RANK LADDER</button>
-      <button id="shareScore" class="modal-primary modal-action"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a3 3 0 1 0-2.83-4A3 3 0 0 0 15 5c0 .22.02.43.07.63L8.91 9.1A3 3 0 0 0 7 8.42a3 3 0 1 0 1.91 5.48l6.16 3.47A3 3 0 0 0 15 18a3 3 0 1 0 .83-2.07L9.67 12.5c.04-.16.06-.33.06-.5s-.02-.34-.06-.5l6.16-3.43c.55.58 1.32.93 2.17.93Z"/></svg><span>SHARE MY SCORE</span></button>
-      <button id="replayQuiz" class="modal-secondary modal-action"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 1-2.34-5.66L20 7.68V3h2v8h-8V9h4.54l-2.3-2.25A6 6 0 1 0 18 11h2Z"/></svg><span>PLAY AGAIN</span></button>
+      <button id="replayQuiz" class="modal-primary modal-action"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 1-2.34-5.66L20 7.68V3h2v8h-8V9h4.54l-2.3-2.25A6 6 0 1 0 18 11h2Z"/></svg><span>PLAY AGAIN</span></button>
+      <div class="quiz-secondary-actions">
+      <button id="shareScore" class="modal-secondary modal-action"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a3 3 0 1 0-2.83-4A3 3 0 0 0 15 5c0 .22.02.43.07.63L8.91 9.1A3 3 0 0 0 7 8.42a3 3 0 1 0 1.91 5.48l6.16 3.47A3 3 0 0 0 15 18a3 3 0 1 0 .83-2.07L9.67 12.5c.04-.16.06-.33.06-.5s-.02-.34-.06-.5l6.16-3.43c.55.58 1.32.93 2.17.93Z"/></svg><span>SHARE MY SCORE</span></button>
+      <button id="viewRankLadder" class="modal-secondary modal-action rank-ladder-open"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v7a5 5 0 0 1-10 0V3Zm0 2H3v3a4 4 0 0 0 4 4m10-7h4v3a4 4 0 0 1-4 4M12 15v6m-4 0h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>VIEW RANK LADDER</span></button>
+      </div>
       <button id="resultBackHome" class="modal-secondary modal-action quiz-back-home">← BACK TO HOME</button>
     </div>
     <div id="rankLadderView" class="result-modal rank-ladder-modal" hidden>
