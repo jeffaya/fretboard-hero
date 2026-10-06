@@ -367,17 +367,7 @@ body{
   cursor: pointer;
 }
 
-.modal-primary{
-  background: linear-gradient(90deg,#ff32c7,#7f43ff);
-  border: 0;
-  color: #fff;
-}
 
-.modal-secondary{
-  background: #0a1520;
-  border: 1px solid #2d455a;
-  color: #fff;
-}
 
 .result-modal a{
   display: block;
