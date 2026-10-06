@@ -169,3 +169,43 @@ body[data-loading='true'] #app { visibility: hidden; }
 .neck-pill-label { display:block; flex:none; width:100%; height:100%; overflow:visible; }
 .circle-note-pills span.neck-note-pill { display:inline-flex; align-items:center; justify-content:center; }
 .circle-note-pills .neck-pill-label { width:28px; height:24px; }
+
+/* Control menu appearance; responsive geometry and interactions stay in styles.css/app.js. */
+body #app .control-panel button {
+  --ui-button-border: #bfc5d77a;
+  --ui-button-fill: linear-gradient(180deg,#1d2337d9,#080d1de8);
+  --ui-button-shadow: inset 0 1px 1px #ffffff26,0 2px 6px #0005;
+  --ui-gloss: linear-gradient(180deg,#ffffff0d,transparent 50%);
+}
+body #app .control-panel button:is(.active,[aria-selected='true'],[aria-pressed='true']) {
+  background: var(--ui-gloss),linear-gradient(180deg,#30364bea,#10182beb) !important;
+  border-color: #f4f3ff !important;
+  box-shadow: inset 0 1px 1px #ffffff40,0 0 9px #ffffff24 !important;
+}
+body #app .control-panel button:hover {
+  border-color: #fff !important;
+  box-shadow: inset 0 1px 1px #ffffff40,0 0 10px #ffffff20 !important;
+}
+body #app .control-panel .control-group > label {
+  position: relative;
+  color: #f4f3ff !important;
+}
+body #app .control-panel .control-group > label::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  -webkit-mask: var(--control-menu-icon) center / contain no-repeat;
+  mask: var(--control-menu-icon) center / contain no-repeat;
+  pointer-events: none;
+}
+[data-control-group="root"] { --control-menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%2018V5l10-2v13M9%208l10-2%22%2F%3E%3Ccircle%20cx%3D%226%22%20cy%3D%2218%22%20r%3D%223%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%223%22%2F%3E%3C%2Fsvg%3E"); }
+[data-control-group="note"] { --control-menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%2018V5l10-2v13M9%208l10-2%22%2F%3E%3Ccircle%20cx%3D%226%22%20cy%3D%2218%22%20r%3D%223%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%223%22%2F%3E%3C%2Fsvg%3E"); }
+[data-control-group="quality"] { --control-menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%204v8a4%204%200%200%200%208%200V4M12%2016v5M9%2021h6%22%2F%3E%3C%2Fsvg%3E"); }
+[data-control-group="mode"] { --control-menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m13%202-8%2012h6l-1%208%209-13h-6z%22%2F%3E%3C%2Fsvg%3E"); }
+[data-control-group="context"] { --control-menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%224%22%2F%3E%3C%2Fsvg%3E"); }
+[data-control-group="fretboard"] { --control-menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%2218%22%20height%3D%2214%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%205v14M14%205v14M3%2010h18M3%2014h18%22%2F%3E%3C%2Fsvg%3E"); }
