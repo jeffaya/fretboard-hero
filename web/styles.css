@@ -133,36 +133,6 @@ body{
   color: #51758f;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .home-actions{
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -223,13 +193,7 @@ body{
   color: var(--cyan);
 }
 
-.topbar{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: max(14px,var(--sa-top)) max(16px,var(--sa-right)) 10px max(16px,var(--sa-left));
-  gap: 10px;
-}
+.topbar{ justify-content: space-between; }
 
 .icon-btn{
   border: 1px solid #25384a;
@@ -244,10 +208,6 @@ body{
 .icon-btn{
   width: 42px;
 }
-
-
-
-
 
 .practice-screen,.quiz-screen{
   flex-direction: column;
@@ -299,12 +259,6 @@ body{
   box-shadow: 0 0 14px #ff38c844;
 }
 
-
-
-
-
-
-
 .legend-inline{
   display: flex;
   gap: 6px;
@@ -327,26 +281,6 @@ body{
   justify-content: center;
   font-weight: 900;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .fretboard-wrap{
   margin: 0 16px;
@@ -388,8 +322,6 @@ body{
   padding: 4px 16px 12px;
 }
 
-
-
 .quiz-head h2{
   font-size: clamp(30px,8vw,56px);
   margin: 8px 0 2px;
@@ -412,10 +344,6 @@ body{
   font-size: 12px;
   min-height: 18px;
 }
-
-
-
-
 
 .modal-backdrop{
   position: fixed;
@@ -503,8 +431,6 @@ body{
     grid-template-columns: 1fr;
   }
 
-
-
   .control-panel{
     grid-template-columns: 1fr;
   }
@@ -512,8 +438,6 @@ body{
   .control-group{
     padding: 8px;
   }
-
-
 
   .legend-inline{
     justify-content: flex-start;
@@ -530,10 +454,6 @@ body{
   .hero-logo{
     margin-top: 6vh;
   }
-
-
-
-
 
   .control-options{
     flex-wrap: nowrap;
@@ -599,8 +519,6 @@ button{
   border-width: 2px;
 }
 
-
-
 .icon-btn{
   border-width: 2px;
   display: inline-flex;
@@ -616,10 +534,6 @@ button{
   height: 44px;
   font-size: 22px;
 }
-
-
-
-
 
 .home-screen{
   position: relative;
@@ -660,9 +574,6 @@ button{
   display: contents;
 }
 
-
-
-
 @media (max-width:800px) {
   .practice-screen{
     height: 100dvh;
@@ -670,10 +581,7 @@ button{
     overflow: hidden;
   }
 
-  .practice-screen .topbar{
-    flex: 0 0 auto;
-    padding-bottom: 7px;
-  }
+  .practice-screen .topbar{ flex: 0 0 auto; }
 
   .desktop-back{
     display: none;
@@ -760,10 +668,6 @@ button{
     border-width: 2px;
   }
 
-
-
-
-
   .control-options{
     display: grid;
     grid-template-columns: repeat(4,1fr);
@@ -784,12 +688,6 @@ button{
   #qualityControls{
     grid-template-columns: 1fr 1fr;
   }
-
-
-
-
-
-
 
   .legend-inline{
     width: 100%;
@@ -818,10 +716,6 @@ button{
     font-size: 10px;
   }
 
-
-
-
-
   .practice-board{
     flex: 1 1 auto;
     min-height: 0;
@@ -831,10 +725,6 @@ button{
   .practice-hint{
     display: none;
   }
-
-
-
-
 
   .home-screen{
     justify-content: flex-start;
@@ -878,8 +768,6 @@ button{
   justify-content: center;
 }
 
-
-
 .hero-btn:hover{
   transform: none;
 }
@@ -895,8 +783,6 @@ button{
 .practice-pick svg>path{
   fill: currentColor;
 }
-
-
 
 @media (hover:hover) {
   .hero-btn.primary:hover{
@@ -933,10 +819,6 @@ button{
   filter: drop-shadow(0 0 6px currentColor);
 }
 
-
-
-
-
 .hero-icon circle{
   fill: currentColor;
 }
@@ -944,20 +826,6 @@ button{
 .hero-icon .icon-q{
   fill: currentColor;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .control-panel{
   grid-template-columns: 2fr .9fr 1.35fr;
@@ -1008,15 +876,6 @@ button{
 }
 
 @media (max-width:800px) {
-
-
-
-
-
-
-
-
-
 
   .control-group{
     position: static;
@@ -1078,23 +937,11 @@ button{
   fill: currentColor;
 }
 
-
-
 .fretmap-screen{
   flex-direction: column;
   height: 100dvh;
   overflow: hidden;
 }
-
-
-
-
-
-
-
-
-
-
 
 .control-group{
   display: flex;
@@ -1135,22 +982,10 @@ button{
   margin-bottom: 0;
 }
 
-
-
 @media (max-width:800px) {
   .home-actions{
     grid-template-columns: 1fr;
   }
-
-  .fretmap-screen .topbar{
-    padding-bottom: 5px;
-  }
-
-
-
-
-
-
 
   .control-group{
     justify-content: center;
@@ -1172,7 +1007,6 @@ button{
     margin: 0 10px;
   }
 
-
 }
 
 .hero-btn{
@@ -1186,8 +1020,6 @@ button{
 .fretmap-screen .topbar{
   justify-content: flex-start;
 }
-
-
 
 .home-actions{
   grid-template-columns: 1fr !important;
@@ -1339,21 +1171,6 @@ button{
   border: 0 !important;
 }
 
-.practice-screen .topbar,.quiz-screen .topbar,.fretmap-screen .topbar{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-
-
-
-
-
-
-
-
-
 .topbar > .icon-btn:not(.mobile-menu-btn){
   border: 2px solid #2a4054;
   border-radius: 12px;
@@ -1395,7 +1212,6 @@ button:hover,button:active,a:hover,a:active{
     display: inline-flex;
   }
 }
-
 
 .legend-filter.filter-dimmed{
   opacity: .28 !important;
@@ -1562,7 +1378,6 @@ button:hover,button:active,a:hover,a:active{
 
 /* V6.9: Fretboard Map uses the canonical control component rules (same as Practice). */
 
-
 @media (min-width:801px) and (max-width:1100px) and (orientation:portrait) {
   .practice-screen{
     height: 100dvh;
@@ -1570,10 +1385,7 @@ button:hover,button:active,a:hover,a:active{
     overflow: hidden;
   }
 
-  .practice-screen .topbar{
-    flex: 0 0 auto;
-    padding-bottom: 7px;
-  }
+  .practice-screen .topbar{ flex: 0 0 auto; }
 
   .desktop-back{
     display: none !important;
@@ -2094,10 +1906,6 @@ body{
   --control-active: #ff57d7;
 }
 
-
-
-
-
 .responsive-drawer .control-group>label{
   display: block;
   margin: 0 0 5px !important;
@@ -2213,14 +2021,6 @@ body{
 .responsive-drawer{
   display: contents;
 }
-
-
-
-
-
-
-
-
 
 @media (min-width:1200px) {
   .practice-screen .responsive-drawer{
@@ -2417,23 +2217,9 @@ body{
     padding: 0 !important;
   }
 
-
-
-
-
-
-
-
 }
 
 @media (max-width:767px) {
-  .topbar{
-    display: grid !important;
-    grid-template-columns: 42px 42px minmax(0,1fr) 42px;
-    align-items: center;
-    padding: max(8px,var(--sa-top)) 8px 6px !important;
-    gap: 6px !important;
-  }
 
   .topbar>.icon-btn[data-go="home"]{
     grid-column: 1;
@@ -2443,12 +2229,6 @@ body{
     display: inline-flex !important;
     grid-column: 2;
   }
-
-
-
-
-
-
 
   .responsive-drawer{
     display: block !important;
@@ -2500,7 +2280,6 @@ body{
     padding-top: 2px !important;
     padding-bottom: 5px !important;
   }
-
 
 }
 
@@ -2637,8 +2416,6 @@ body{
 
 /* Shared semantic select degradation. */
 
-
-
 /* Quiz is information-only: no drawer, ever. */
 .quiz-screen .mobile-menu-btn{display:none!important}
 .quiz-hud{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:min(920px,calc(100% - 32px));margin:4px auto 8px}
@@ -2677,13 +2454,6 @@ body{
   .responsive-drawer{overflow:visible!important}
   .control-options button,.select-trigger{min-height:var(--control-min-h)!important;min-width:52px!important;font-size:14px!important}
 
-
-
-
-
-
-
-
 }
 
 /* Mobile: Practice-style drawer is canonical. Map order is NOTES -> FRETBOARD in DOM. */
@@ -2695,7 +2465,7 @@ body{
   .control-panel .control-group .control-options{grid-template-columns:repeat(4,minmax(0,1fr))!important}
   .control-panel .control-options button{width:100%!important;min-width:0!important;min-height:54px!important}
   .quiz-screen{overflow:hidden!important}
-  .quiz-screen .topbar{min-height:64px!important}
+
   .quiz-hud{width:calc(100% - 24px);gap:6px;margin:4px auto 6px}
   .hud-stat{min-height:48px;padding:7px 9px;border-radius:11px;flex-direction:column;justify-content:center;gap:1px}
   .hud-stat span{font-size:10px}.hud-stat strong{font-size:19px}
@@ -2707,7 +2477,6 @@ body{
 
 /* Mobile landscape: game HUD becomes a thin strip and the horizontal neck gets the rest. */
 @media (max-width:767px) and (orientation:landscape){
-  .quiz-screen .topbar{min-height:48px!important;height:48px!important;padding:3px 10px!important}
 
   .quiz-screen .icon-btn{width:42px!important;height:42px!important}
   .quiz-hud{position:absolute;top:50px;left:50%;transform:translateX(-50%);z-index:5;width:min(520px,64vw);height:40px;margin:0;gap:5px}
@@ -2774,10 +2543,6 @@ body{
 
 /* Unified section heading hierarchy. */
 
-
-
-
-
 /* Cleaner game HUD: one slim instrument panel, not three cards. */
 .quiz-hud{
   display:flex!important;align-items:center!important;justify-content:center!important;gap:0!important;
@@ -2831,7 +2596,6 @@ body{
   .responsive-drawer .control-options button{width:100%!important;min-width:0!important;min-height:52px!important;padding:0 6px!important;font-size:15px!important}
   .quiz-screen .mobile-menu-btn{display:none!important}
 
-
 }
 
 /* Tablet portrait: selects remain deliberate and the neck gets all remaining height. */
@@ -2865,7 +2629,6 @@ body{
   .control-group .control-options button{min-width:clamp(56px,3.5vw,78px)!important}
 
 }
-
 
 /* ==========================================================================
    V6.4 — CANONICAL UI COMPONENTS
@@ -3030,11 +2793,11 @@ body{
    exceed 767px after rotation. It intentionally overrides the toolbar above. */
 @media (max-width:767px), (orientation:landscape) and (max-width:1000px) and (max-height:599px){
   .desktop-back{display:inline-flex!important}
-  .practice-screen .topbar,.fretmap-screen .topbar,.quiz-screen .topbar{display:grid!important;grid-template-columns:42px minmax(0,1fr) 42px!important;align-items:center!important}
+
   .topbar>.icon-btn[data-go="home"]{grid-column:1!important}
-  .topbar>.section-heading{grid-column:2!important}
+
   .mobile-menu-btn{display:inline-flex!important}
-  .practice-screen .topbar>.mobile-menu-btn,.fretmap-screen .topbar>.mobile-menu-btn{grid-column:3!important;justify-self:end!important;margin-left:0!important}
+
   .responsive-drawer{
     display:block!important;position:fixed!important;left:auto!important;top:0!important;bottom:0!important;right:0!important;
     width:min(92vw,430px)!important;max-width:430px!important;height:auto!important;z-index:40!important;
@@ -3273,7 +3036,6 @@ body{
 .quiz-back-home:hover{color:#fff!important}
 @media(max-width:600px){.rank-ladder-modal{padding:18px 12px 14px}.rank-ladder-list{height:min(52dvh,420px);min-height:250px;scroll-padding-block:calc(5 * 50px)}.rank-ladder-item{min-height:46px;margin:4px 0;padding:6px 8px}.rank-ladder-name b{font-size:13px}.rank-ladder-threshold{font-size:10px}.rank-ladder-summary strong{font-size:21px}}
 
-
 /* V8.5.5 — QUIZ ONLY: larger string-segment hit zones + neutral hover preview. */
 #quizFretboard .quiz-hit-zone{
   cursor:pointer;
@@ -3297,7 +3059,6 @@ body{
 
 /* V8.5.6 — Rank ladder cleanup: one aligned row = position, rank, minimum score. */
 
-
 /* V8.5.7 — QUIZ ONLY: stronger target cue + correct-hit reward. */
 #quizChord{color:var(--pink);text-shadow:0 0 8px rgba(255,62,201,.7),0 0 22px rgba(255,62,201,.35)}
 #quizPrompt strong{color:var(--cyan);text-shadow:0 0 8px rgba(39,215,255,.8),0 0 18px rgba(39,215,255,.35)}
@@ -3309,7 +3070,6 @@ body{
 @keyframes quizCorrectZone{0%{fill:rgba(74,255,151,.75)}100%{fill:rgba(74,255,151,.38)}}
 @keyframes quizHitScore{0%{opacity:0;transform:translateY(7px) scale(.75)}18%{opacity:1;transform:translateY(0) scale(1.14)}100%{opacity:0;transform:translateY(-24px) scale(1)}}
 @media(prefers-reduced-motion:reduce){#quizChord.quiz-target-change,#quizPrompt strong.quiz-target-change,#quizFretboard .quiz-hit-zone.quiz-hit-correct,#quizFretboard .quiz-hit-score{animation:none!important}}
-
 
 /* QUIZ — 60-second arcade HUD + countdown pressure. */
 .quiz-hud{grid-template-columns:1.15fr .85fr 1.55fr .85fr!important}
@@ -3402,7 +3162,7 @@ body{
   display:grid!important;grid-template-columns:42px minmax(0,1fr) 42px!important;align-items:center!important;
   width:100%!important;min-height:var(--screen-nav-h)!important;height:var(--screen-nav-h)!important;
   padding:max(6px,var(--sa-top)) max(10px,var(--sa-right)) 6px max(10px,var(--sa-left))!important;gap:8px!important;
-  border-bottom:1px solid rgba(64,115,148,.22)!important;background:linear-gradient(180deg,rgba(7,16,27,.96),rgba(3,9,16,.9))!important;box-sizing:border-box!important
+  box-sizing:border-box!important
 }
 .topbar>.nav-back{grid-column:1!important;grid-row:1!important;position:static!important;inset:auto!important;transform:none!important;justify-self:start!important;align-self:center!important;display:grid!important;place-items:center!important;width:42px!important;height:42px!important;margin:0!important;padding:0!important;box-sizing:border-box!important;color:#fff!important}
 .back-icon{display:grid!important;place-items:center!important;width:24px!important;height:24px!important;margin:0!important;color:#fff!important;font:400 27px/24px Arial,sans-serif!important;text-align:center!important}
