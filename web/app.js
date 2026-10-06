@@ -31,13 +31,17 @@
     return [...src.querySelectorAll('button')].filter(b=>!b.classList.contains('select-trigger'));
   }
   function refreshSelect(host){
-    const buttons=sourceButtonsFor(host); if(!buttons.length){host.innerHTML='';return;}
+    const buttons=sourceButtonsFor(host); if(!buttons.length){host.innerHTML='';delete host.dataset.selectSignature;host._selectSources=null;return;}
     let trigger=host.querySelector('.select-trigger'), menu=host.querySelector('.select-popover');
     if(!trigger){
       trigger=document.createElement('button');trigger.type='button';trigger.className='select-trigger';trigger.setAttribute('aria-expanded','false');
       menu=document.createElement('div');menu.className='select-popover';host.append(trigger,menu);
       trigger.addEventListener('click',e=>{e.stopPropagation();const open=host.classList.toggle('select-open');trigger.setAttribute('aria-expanded',String(open));});
     }
+    const signature=JSON.stringify(buttons.map(b=>[b.textContent.trim(),b.classList.contains('active')]));
+    if(host.dataset.selectSignature===signature&&buttons.every((button,i)=>host._selectSources?.[i]===button))return;
+    host._selectSources=buttons;
+    host.dataset.selectSignature=signature;
     menu.innerHTML='';
     const active=buttons.find(b=>b.classList.contains('active'))||buttons[0];
     trigger.innerHTML=`<span>${active?.textContent?.trim()||'SELECT'}</span><b aria-hidden="true">⌄</b>`;
@@ -72,9 +76,16 @@
       }
     });
   }
-  const adaptiveObserver=new ResizeObserver(()=>requestAnimationFrame(()=>{refreshAllSelects();updateAdaptiveControls()}));
+  let controlsRefreshFrame=0;
+  const scheduleControlsRefresh=()=>{if(controlsRefreshFrame)return;controlsRefreshFrame=requestAnimationFrame(()=>{controlsRefreshFrame=0;refreshAllSelects()})};
+  const panelWidths=new WeakMap();
+  const adaptiveObserver=new ResizeObserver(entries=>{
+    let changed=false;
+    for(const entry of entries){const width=entry.contentRect.width,previous=panelWidths.get(entry.target);if(previous===undefined||Math.abs(width-previous)>.5){panelWidths.set(entry.target,width);changed=true}}
+    if(changed)scheduleControlsRefresh();
+  });
   $$('.control-panel').forEach(el=>adaptiveObserver.observe(el));
-  window.addEventListener('resize',()=>requestAnimationFrame(()=>{refreshAllSelects();updateAdaptiveControls()}));
+  window.addEventListener('resize',scheduleControlsRefresh);
 
   // Build instrument-dependent controls from the active profile.
   const modeHost=$('#modeControls');if(modeHost){modeHost.innerHTML='';ModeRegistry.list(instrument).forEach((m,i)=>{const b=document.createElement('button');b.type='button';b.dataset.mode=m.id;b.textContent=m.label;b.classList.toggle('active',m.id===state.mode||(i===0&&!instrument.modes[state.mode]));modeHost.appendChild(b)});if(!instrument.modes[state.mode])state.mode=ModeRegistry.list(instrument)[0]?.id||'';}
