@@ -9,7 +9,7 @@
   const tuning=engine.tuning,STRING_COUNT=engine.stringCount;
   const defaultFretCount=()=>window.innerWidth<=800?12:((navigator.maxTouchPoints||0)>1&&window.innerWidth<=1366?15:21);
   const firstMode=ModeRegistry.list(instrument)[0]?.id||'';
-  const state={screen:'home',mode:firstMode,root:'A',quality:'minor',pattern:ModeRegistry.context(instrument,'penta')?.defaultValue||'all',triadStrings:instrument.defaultTriadSet||ModeRegistry.context(instrument,'triad')?.defaultValue||'all',chordShape:ModeRegistry.context(instrument,'chord')?.defaultValue||'all',arpeggioType:ModeRegistry.context(instrument,'arpeggio')?.defaultValue||'triad',maxFret:defaultFretCount(),fretManual:false,degreeFilter:'all',mapMaxFret:defaultFretCount(),mapFretManual:false,mapNote:'all',quiz:null,quizReveal:null,circleKey:0,circleMaxFret:15};
+  const state={screen:'home',mode:firstMode,root:'A',quality:'minor',pattern:ModeRegistry.context(instrument,'penta')?.defaultValue||'all',triadStrings:instrument.defaultTriadSet||ModeRegistry.context(instrument,'triad')?.defaultValue||'all',chordShape:ModeRegistry.context(instrument,'chord')?.defaultValue||'all',arpeggioType:ModeRegistry.context(instrument,'arpeggio')?.defaultValue||'triad',maxFret:defaultFretCount(),fretManual:false,degreeFilter:'all',mapMaxFret:defaultFretCount(),mapFretManual:false,mapNote:'all',quiz:null,quizReveal:null,circleKey:0};
   const modeKind=()=>ModeRegistry.kind(instrument,state.mode);
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   document.body.dataset.screen='home';
@@ -19,7 +19,7 @@
   function go(screen){document.body.dataset.screen=screen;state.screen=screen;$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+screen).classList.add('active');if(screen==='practice') renderPractice();if(screen==='fretmap') renderFretboardMap();if(screen==='circle') renderCircle();if(screen==='quiz') prepareQuiz();}
   $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
   // Shared controls live in core/controls.js.
-  ['practice','map','circle'].forEach(name=>FretboardControls.bindDrawer({name}));
+  ['practice','map'].forEach(name=>FretboardControls.bindDrawer({name}));
 
   // V6 custom select-buttons. They proxy the existing buttons, so gameplay has
   // one source of truth regardless of responsive presentation.
@@ -131,53 +131,19 @@
     FretboardMap.render({svg,engine,appearance,maxFret,selectedNote:state.mapNote,renderCore:renderFretboardCore,svgEl,noteName});
   }
 
-  function closeCircleHelp(except=null){
-    $$('.circle-help-popover').forEach(pop=>{if(pop===except)return;pop.hidden=true});
-    $$('.circle-help-btn').forEach(btn=>{if(except&&btn.dataset.circleHelp===except.dataset.circleHelpPopover)return;btn.setAttribute('aria-expanded','false')});
-  }
-  document.addEventListener('click',e=>{
-    const btn=e.target.closest('.circle-help-btn');
-    if(btn){
-      const pop=$(`.circle-help-popover[data-circle-help-popover="${btn.dataset.circleHelp}"]`);
-      if(!pop)return;
-      const opening=pop.hidden;closeCircleHelp(opening?pop:null);pop.hidden=!opening;btn.setAttribute('aria-expanded',String(opening));return;
-    }
-    if(!e.target.closest('.circle-help-popover'))closeCircleHelp();
-  });
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCircleHelp()});
-
+  $('#circlePrevious').addEventListener('click',()=>selectCircleKey(state.circleKey-1));
+  $('#circleNext').addEventListener('click',()=>selectCircleKey(state.circleKey+1));
+  function selectCircleKey(index){state.circleKey=((index%12)+12)%12;renderCircle()}
   function renderCircle(){
     const wheel=$('#circleWheel');if(!wheel)return;
     const key=CircleOfFifths.getKey(state.circleKey);
-    CircleRenderer.render({svg:wheel,selected:state.circleKey,onSelect:index=>{state.circleKey=index;renderCircle()}});
+    CircleRenderer.render({svg:wheel,selected:state.circleKey,onSelect:selectCircleKey});
     $('#circleKeyTitle').textContent=`${key.name} MAJOR`;
     $('#circleRelative').textContent=`Relative minor • ${key.minor}`;
     $('#circleSignature').textContent=key.accidentals;
-    $('#circleScale').innerHTML=key.scale.map((n,i)=>`<span class="neck-note-pill${i===0?' root':''}" style="--note-color:${FretboardAppearance.SCALE_COLORS[i]}">${n}</span>`).join('');
-    [...$('#circleScale').children].forEach((pill,i)=>appearance.pill(pill,key.scale[i]));
     const degreeChord=(degree,name)=>`<div class="degree-chord"><small>${degree}</small><strong>${name}</strong></div>`;
     const degreeToChord=new Map(key.chords.map(c=>[c.degree,c.name]));
-    $('#circleChords').innerHTML=key.chords.map(c=>degreeChord(c.degree,c.name)).join('');
-    $('#circleProgressions').innerHTML=key.progressions.map(p=>`<div>${p.map(d=>degreeChord(d,degreeToChord.get(d)||d)).join('<b>→</b>')}</div>`).join('');
-    const firstProgression=key.progressions[0];
-    const example=firstProgression.map(d=>degreeToChord.get(d)||d);
-    const progressionExample=$('#circleProgressionExample');
-    if(progressionExample)progressionExample.textContent=`For example ${firstProgression.join('–')} in ${key.name} major means ${example.join('–')}.`;
-    $('#circleFretboardTitle').textContent=`${key.name} MAJOR ON THE FRETBOARD`;
-    renderCircleFretboard(key);
-  }
-  function renderCircleFretboard(key){
-    const svg=$('#circleFretboard');if(!svg)return;
-    const maxFret=Math.min(engine.maxFret,state.circleMaxFret);
-    const core=renderFretboardCore(svg,{prefix:'circle',maxFret});
-    const {isP,fretPos,visualStringPos}=core,pcs=new Set(key.scalePCs);
-    const palette=FretboardAppearance.SCALE_COLORS;
-    for(let string=0;string<STRING_COUNT;string++)for(let fret=0;fret<=maxFret;fret++){
-      const pc=engine.noteAt(string,fret),degree=key.scalePCs.indexOf(pc);if(!pcs.has(pc)||degree<0)continue;
-      const centerF=FretboardLayout.fretCenter(fret,fretPos),centerS=visualStringPos(string),x=isP?centerS:centerF,y=isP?centerF:centerS;
-      const root=degree===0,col=palette[degree];
-      appearance.note(svg,{x,y,isP,color:col,label:key.scale[degree],target:root,attrs:{'data-string':string,'data-fret':fret}});
-    }
+    $('#circleProgressions').innerHTML=key.progressions.map(p=>`<div>${p.map(d=>degreeChord(d,degreeToChord.get(d))).join('<b aria-hidden="true">→</b>')}</div>`).join('');
   }
 
 
