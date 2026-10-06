@@ -39,10 +39,10 @@
   <link rel="icon" type="image/png" sizes="192x192">
   <link rel="icon" type="image/png" sizes="512x512">
   <link rel="apple-touch-icon" sizes="180x180">
-  <link rel="stylesheet" href="./styles.css?v=10.17.0">
-  <link rel="stylesheet" href="./home.css?v=10.17.0">
-  <link rel="stylesheet" href="./theme.css?v=10.17.0">
-  <link rel="stylesheet" href="./play.css?v=10.17.0">
+  <link rel="stylesheet" href="./styles.css?v=10.18.0">
+  <link rel="stylesheet" href="./home.css?v=10.18.0">
+  <link rel="stylesheet" href="./theme.css?v=10.18.0">
+  <link rel="stylesheet" href="./play.css?v=10.18.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
 </head>
 <body data-loading="true" aria-busy="true">
@@ -92,8 +92,8 @@
           <span id="playLickKicker" class="play-kicker">DAILY LICK</span>
           <h2 id="playLickTitle">Back to the root</h2>
           <p id="playLickContext"></p>
-          <div id="playTabScroll" class="play-tab-scroll" tabindex="0" aria-label="Tablature. Scroll horizontally to read the full phrase"><svg id="playTab" role="img" aria-label="Exercise tablature"></svg></div>
-          <p class="play-rhythm-help">Read left to right. Below each note: bar:beat, then its length. Count four beats per bar. Scroll the tab if needed.</p>
+          <div id="playTabScroll" class="play-tab-scroll" aria-label="Full exercise tablature"><svg id="playTab" role="img" aria-label="Exercise tablature"></svg></div>
+          <p class="play-rhythm-help">Read left to right · Bar:beat above note length · ¼, ½, 1 or 2 beats · Count four beats per bar.</p>
           <div class="play-exercise-footer"><div id="playTechniques" class="play-techniques"></div><p id="playTip"></p><span id="playNoteCount"></span></div>
         </article>
         <div class="play-actions"><button id="playGotIt" class="ui-primary" type="button">✓ Got it</button><button id="playPracticing" class="ui-secondary" type="button">Still practicing</button></div>
@@ -230,7 +230,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.17.0" defer></script>
+  <script src="./bootstrap.js?v=10.18.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>
