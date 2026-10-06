@@ -351,3 +351,7 @@ V10.7.0 validation: Chromium checked shared font/background/gloss on all four mo
 ## Three-product home (V10.8.0)
 
 The selector contains Guitar, Bass and Ukulele only. The configured product comes first, followed by remaining instruments in canonical Guitar/Bass/Ukulele order; session selection never changes this order. Each product declares its own transparent brush-neon logo. A single instrument-free concert crowd image is shared by every mode. Instrument illustrations use a three-cell sprite with measured independent viewports. The engine draws one physical string per tuning entry.
+
+## Startup readiness (V10.8.3)
+
+The page shows a single loading status until the chosen product, interaction handlers and decoded logo are ready. Classic scripts use async=false: requests are queued concurrently while execution follows dependency order. If a logo request fails, a readable product title replaces it and the app remains usable. Switching instruments still reloads bootstrap with the saved session selection.
