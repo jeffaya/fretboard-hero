@@ -1,12 +1,12 @@
 (() => {
   'use strict';
   const CATALOG={
-    'guitar':{instrumentKey:'guitar',instrument:'./instruments/guitar.js?v=10.8.0',productKey:'guitar',product:'./products/guitar-fretboard-hero.js?v=10.8.0'},
-    'bass-4':{instrumentKey:'bass4',instrument:'./instruments/bass-4.js?v=10.8.0',productKey:'bass',product:'./products/bass-fretboard-hero.js?v=10.8.0'},
-    'ukulele':{instrumentKey:'ukulele',instrument:'./instruments/ukulele.js?v=10.8.0',productKey:'ukulele',product:'./products/ukulele-fretboard-hero.js?v=10.8.0'},
+    'guitar':{instrumentKey:'guitar',instrument:'./instruments/guitar.js?v=10.8.2',productKey:'guitar',product:'./products/guitar-fretboard-hero.js?v=10.8.2'},
+    'bass-4':{instrumentKey:'bass4',instrument:'./instruments/bass-4.js?v=10.8.2',productKey:'bass',product:'./products/bass-fretboard-hero.js?v=10.8.2'},
+    'ukulele':{instrumentKey:'ukulele',instrument:'./instruments/ukulele.js?v=10.8.2',productKey:'ukulele',product:'./products/ukulele-fretboard-hero.js?v=10.8.2'},
   };
-  const CORE=['music-theory','circle-of-fifths','circle-renderer','tuning','fretboard-engine','fretboard-layout','fretboard-map','pentatonic-renderer','triad-engine','arpeggio-engine','chord-engine','quiz-engine','controls','mode-registry','product-shell'].map(n=>`./core/${n}.js?v=10.8.0`);
-  const MODES=['pentatonic','triads','chords','arpeggios'].map(n=>`./modes/${n}.js?v=10.8.0`);
+  const CORE=['music-theory','circle-of-fifths','circle-renderer','tuning','fretboard-engine','fretboard-layout','fretboard-map','pentatonic-renderer','triad-engine','arpeggio-engine','chord-engine','quiz-engine','controls','mode-registry','product-shell'].map(n=>`./core/${n}.js?v=10.8.2`);
+  const MODES=['pentatonic','triads','chords','arpeggios'].map(n=>`./modes/${n}.js?v=10.8.2`);
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error(`Unable to load ${src}`));document.head.appendChild(s);});
   const fail=err=>{console.error(err);document.body.innerHTML=`<main style="min-height:100vh;display:grid;place-items:center;background:#05080b;color:#f8fbff;font-family:system-ui;padding:24px"><div><h1 style="color:#ff3ec9">CONFIGURATION ERROR</h1><p>${String(err.message||err)}</p><p>Check <code>site.config.json</code> and README.md.</p></div></main>`;};
   (async()=>{
@@ -30,8 +30,8 @@
       window.FRETBOARD_ACTIVE_PRODUCT={...product,instrument:entry.instrumentKey};window.FRETBOARD_ACTIVE_INSTRUMENT=instrument;
       document.documentElement.dataset.instrument=config.instrument;
       window.ProductShell.apply(product,instrument);
-      await load('./home.js?v=10.8.0');
-      await load('./app.js?v=10.8.0');
+      await load('./home.js?v=10.8.2');
+      await load('./app.js?v=10.8.2');
     }catch(err){fail(err);}
   })();
 })();
