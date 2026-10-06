@@ -39,9 +39,9 @@
   <link rel="icon" type="image/png" sizes="192x192">
   <link rel="icon" type="image/png" sizes="512x512">
   <link rel="apple-touch-icon" sizes="180x180">
-  <link rel="stylesheet" href="./styles.css?v=10.9.9">
+  <link rel="stylesheet" href="./styles.css?v=10.12.0">
   <link rel="stylesheet" href="./home.css?v=10.9.8">
-  <link rel="stylesheet" href="./theme.css?v=10.11.0">
+  <link rel="stylesheet" href="./theme.css?v=10.12.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
 </head>
 <body data-loading="true" aria-busy="true">
@@ -73,7 +73,7 @@
 
     <section id="practice" class="screen practice-screen" aria-label="Practice">
       <header class="topbar">
-        <button class="icon-btn nav-back" data-go="home" aria-label="Back home"><span class="back-icon icon-arrow-left" aria-hidden="true">←</span></button>
+        <button class="icon-btn nav-back ui-back" data-go="home" aria-label="Back home"><span class="back-icon icon-arrow-left" aria-hidden="true">←</span></button>
         <div class="section-heading" aria-live="polite"><strong id="practiceTitle">A MINOR</strong><small id="practiceFormula" class="screen-context">PENTATONIC</small></div>
         <button id="practiceMenuBtn" class="icon-btn mobile-menu-btn" aria-label="Open practice menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
@@ -107,7 +107,7 @@
 
     <section id="fretmap" class="screen fretmap-screen" aria-label="Fretboard Map">
       <header class="topbar">
-        <button class="icon-btn nav-back" data-go="home" aria-label="Back home"><span class="back-icon icon-arrow-left" aria-hidden="true">←</span></button>
+        <button class="icon-btn nav-back ui-back" data-go="home" aria-label="Back home"><span class="back-icon icon-arrow-left" aria-hidden="true">←</span></button>
         <div class="section-heading"><strong>FRETBOARD MAP</strong><small class="screen-context">EVERY NOTE • ONE NECK</small></div>
         <button id="mapMenuBtn" class="icon-btn mobile-menu-btn" aria-label="Open map menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
@@ -125,7 +125,7 @@
 
     <section id="circle" class="screen circle-screen" aria-label="Circle of Fifths">
       <header class="topbar">
-        <button class="icon-btn nav-back" data-go="home" aria-label="Back home"><span class="back-icon icon-arrow-left" aria-hidden="true">←</span></button>
+        <button class="icon-btn nav-back ui-back" data-go="home" aria-label="Back home"><span class="back-icon icon-arrow-left" aria-hidden="true">←</span></button>
         <div class="section-heading"><strong>CIRCLE OF FIFTHS</strong><small class="screen-context">KEYS • CHORDS • HARMONY</small></div>
         <button id="circleMenuBtn" class="icon-btn mobile-menu-btn" aria-label="Open Circle of Fifths menu" aria-expanded="false"><span></span><span></span><span></span></button>
       </header>
@@ -153,7 +153,7 @@
 
     <section id="quiz" class="screen quiz-screen" aria-label="Quiz">
       <header class="topbar">
-        <button class="icon-btn nav-back" data-go="home" aria-label="Back home"><span class="back-icon icon-arrow-left" aria-hidden="true">←</span></button>
+        <button class="icon-btn nav-back ui-back" data-go="home" aria-label="Back home"><span class="back-icon icon-arrow-left" aria-hidden="true">←</span></button>
         <div class="section-heading"><strong>FRETBOARD QUIZ</strong><small class="screen-context">KNOW THE NECK • OWN THE NECK</small></div>
         <span class="topbar-spacer" aria-hidden="true"></span>
 </header>
@@ -184,7 +184,7 @@
       </div>
       <button id="startQuizButton" class="modal-primary modal-action quiz-start-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 4 12 8-12 8Z"/></svg><span>START QUIZ</span></button>
       <button id="introRankLadder" class="modal-secondary modal-action rank-ladder-open"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v7a5 5 0 0 1-10 0V3Zm0 2H3v3a4 4 0 0 0 4 4m10-7h4v3a4 4 0 0 1-4 4M12 15v6m-4 0h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>VIEW RANK LADDER</span></button>
-      <button id="introBackHome" class="modal-secondary modal-action quiz-back-home">← BACK TO HOME</button>
+      <button id="introBackHome" class="modal-secondary modal-action quiz-back-home ui-back">← BACK TO HOME</button>
     </div>
     <div id="quizResultView" class="result-modal">
       <div class="result-kicker">60 SECOND RUN COMPLETE</div>
@@ -196,14 +196,14 @@
       <button id="shareScore" class="modal-secondary modal-action"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a3 3 0 1 0-2.83-4A3 3 0 0 0 15 5c0 .22.02.43.07.63L8.91 9.1A3 3 0 0 0 7 8.42a3 3 0 1 0 1.91 5.48l6.16 3.47A3 3 0 0 0 15 18a3 3 0 1 0 .83-2.07L9.67 12.5c.04-.16.06-.33.06-.5s-.02-.34-.06-.5l6.16-3.43c.55.58 1.32.93 2.17.93Z"/></svg><span>SHARE MY SCORE</span></button>
       <button id="viewRankLadder" class="modal-secondary modal-action rank-ladder-open"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v7a5 5 0 0 1-10 0V3Zm0 2H3v3a4 4 0 0 0 4 4m10-7h4v3a4 4 0 0 1-4 4M12 15v6m-4 0h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>VIEW RANK LADDER</span></button>
       </div>
-      <button id="resultBackHome" class="modal-secondary modal-action quiz-back-home">← BACK TO HOME</button>
+      <button id="resultBackHome" class="modal-secondary modal-action quiz-back-home ui-back">← BACK TO HOME</button>
     </div>
     <div id="rankLadderView" class="result-modal rank-ladder-modal" hidden>
       <div id="rankLadderKicker" class="result-kicker">YOUR PLACE ON THE NECK</div>
       <h2>RANK LADDER</h2>
       <div id="rankLadderSummary" class="rank-ladder-summary"></div>
       <div id="rankLadderList" class="rank-ladder-list" role="list" aria-label="All quiz ranks"></div>
-      <button id="backToScore" class="modal-secondary rank-ladder-back">← BACK TO MY SCORE</button>
+      <button id="backToScore" class="modal-secondary rank-ladder-back ui-back">← BACK TO MY SCORE</button>
     </div>
   </div>
 

@@ -171,21 +171,7 @@ body[data-loading='true'] #app { visibility: hidden; }
 .circle-note-pills .neck-pill-label { width:28px; height:24px; }
 
 /* Control menu appearance; responsive geometry and interactions stay in styles.css/app.js. */
-body #app .control-panel button {
-  --ui-button-border: #bfc5d77a;
-  --ui-button-fill: linear-gradient(180deg,#1d2337d9,#080d1de8);
-  --ui-button-shadow: inset 0 1px 1px #ffffff26,0 2px 6px #0005;
-  --ui-gloss: linear-gradient(180deg,#ffffff0d,transparent 50%);
-}
-body #app .control-panel button:is(.active,[aria-selected='true'],[aria-pressed='true']) {
-  background: var(--ui-gloss),linear-gradient(180deg,#30364bea,#10182beb) !important;
-  border-color: #f4f3ff !important;
-  box-shadow: inset 0 1px 1px #ffffff40,0 0 9px #ffffff24 !important;
-}
-body #app .control-panel button:hover {
-  border-color: #fff !important;
-  box-shadow: inset 0 1px 1px #ffffff40,0 0 10px #ffffff20 !important;
-}
+
 body #app .control-panel .control-group > label {
   position: relative;
   color: #f4f3ff !important;
@@ -210,57 +196,17 @@ body #app .control-panel .control-group > label::after {
 [data-control-group="context"] { --control-menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%224%22%2F%3E%3C%2Fsvg%3E"); }
 [data-control-group="fretboard"] { --control-menu-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%225%22%20width%3D%2218%22%20height%3D%2214%22%20rx%3D%222%22%2F%3E%3Cpath%20d%3D%22M8%205v14M14%205v14M3%2010h18M3%2014h18%22%2F%3E%3C%2Fsvg%3E"); }
 
-/* Navigation follows the same white glass finish as the control menus. */
-body #app .topbar > button:is(.nav-back,.mobile-menu-btn) {
-  --ui-button-border: #bfc5d77a;
-  --ui-button-fill: linear-gradient(180deg,#1d2337d9,#080d1de8);
-  --ui-button-shadow: inset 0 1px 1px #ffffff26,0 2px 6px #0005;
-  --ui-gloss: linear-gradient(180deg,#ffffff0d,transparent 50%);
-  border-radius: 50% !important;
-  color: #fff !important;
-}
-body #app .topbar > button:is(.nav-back,.mobile-menu-btn):is(:hover,[aria-expanded='true']) {
-  border-color: #fff !important;
-  background: var(--ui-gloss),linear-gradient(180deg,#30364bea,#10182beb) !important;
-  box-shadow: inset 0 1px 1px #ffffff40,0 0 9px #ffffff24 !important;
-}
 body #app .topbar > .mobile-menu-btn > span { background: #fff !important; }
 
-/* Quiz dialogs: one primary action, quiet secondary actions, text-only home navigation. */
-body #resultModal :is(#quizIntroView,#quizResultView) {
-  background: linear-gradient(150deg,#10162df5,#060b1bf7) !important;
-  border-color: #ac94dda6 !important;
-  box-shadow: 0 16px 48px #0009,0 0 16px #9b6cff22 !important;
-}
-body #resultModal :is(#quizIntroView,#quizResultView) h2 {
-  color: #f4f3ff !important;
-  text-shadow: none !important;
-}
+/* Quiz composition; button and dialog materials use shared variants below. */
+
 body #resultModal .quiz-intro-rules > div {
   background: transparent !important;
   border-color: transparent !important;
   box-shadow: none !important;
   color: #d4dced;
 }
-body #resultModal :is(#quizIntroView,#quizResultView) .modal-primary {
-  background: linear-gradient(180deg,#fa0cd9,#c600b6) !important;
-  border-color: #ff63ea !important;
-  box-shadow: inset 0 1px 1px #ffffff40,0 0 14px #ed05cb30 !important;
-}
-body #resultModal :is(#quizIntroView,#quizResultView) .modal-secondary {
-  background: linear-gradient(180deg,#1c2337b3,#090f20cc) !important;
-  border-color: #c5b5e38c !important;
-  box-shadow: inset 0 1px 1px #ffffff1a !important;
-}
-body #resultModal :is(#quizIntroView,#quizResultView) .quiz-back-home {
-  background: transparent !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  color: #b8c7df !important;
-}
-body #resultModal :is(#quizIntroView,#quizResultView) .quiz-back-home:hover {
-  color: #fff !important;
-}
+
 .quiz-secondary-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
 body #resultModal .quiz-secondary-actions button { min-width:0; margin-top:10px !important; margin-bottom:0 !important; }
 body #resultModal .quiz-secondary-actions .modal-action { font-size:clamp(11px,2.6vw,15px); }
@@ -268,3 +214,42 @@ body #resultModal :is(#quizIntroView,#quizResultView) .modal-action svg { flex-s
 @media (max-width:350px) {
   .quiz-secondary-actions { grid-template-columns:1fr; gap:0; }
 }
+
+/* Shared design system roles. Existing modal classes alias the same variants. */
+body :is(#app,#resultModal) button:is(.ui-primary,.modal-primary) {
+  --ui-accent: #e927ff;
+  background: var(--ui-gloss),linear-gradient(110deg,#790970,#210c30 94%) !important;
+  border-color: #e927ff !important;
+  box-shadow: inset 0 0 18px #e927ff28,0 0 14px #e927ff55 !important;
+  color: #fff !important;
+}
+body :is(#app,#resultModal) button:is(.ui-primary,.modal-primary):hover {
+  border-color: #ff91f5 !important;
+  box-shadow: inset 0 0 20px #e927ff38,0 0 20px #e927ff80 !important;
+}
+body :is(#app,#resultModal) button:is(.ui-secondary,.modal-secondary,.mobile-menu-btn),
+body #app .control-panel button {
+  background: var(--ui-gloss),linear-gradient(180deg,#1d2337d9,#080d1de8) !important;
+  border-color: #d9dcec9c !important;
+  box-shadow: inset 0 1px 1px #ffffff26,0 0 7px #ffffff18 !important;
+  color: #fff !important;
+}
+body :is(#app,#resultModal) button:is(.ui-secondary,.modal-secondary,.mobile-menu-btn):is(:hover,.active,[aria-expanded='true'],[aria-selected='true']),
+body #app .control-panel button:is(:hover,.active,[aria-pressed='true'],[aria-selected='true']) {
+  border-color: #fff !important;
+  box-shadow: inset 0 1px 1px #ffffff40,0 0 10px #ffffff38 !important;
+}
+body #resultModal .result-modal {
+  background: var(--ui-surface) !important;
+  border-color: #e927ff !important;
+  box-shadow: 0 16px 48px #0009,0 0 20px #e927ff44,inset 0 0 24px #e927ff0f !important;
+}
+body #resultModal .result-modal h2 { color: #f4f3ff !important; text-shadow: none !important; }
+body :is(#app,#resultModal) button.ui-back,
+body :is(#app,#resultModal) button.ui-back:hover {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: #d4dced !important;
+}
+body :is(#app,#resultModal) button.ui-back:hover { color: #fff !important; }
