@@ -9,7 +9,7 @@
     const step=(width-left-12)/exercise.notes.length,height=top+(engine.stringCount-1)*row+(compact?62:100);
     const font=compact?24:26;
     svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.style.minWidth='0';
-    const title=el('title',{},`${exercise.root} minor tablature: ${exercise.notes.map(n=>`${engine.tuning[n.string].name} string fret ${n.fret}${n.technique?' '+PlayExercises.techniques[n.technique]:''}`).join(', ')}`);svg.append(title);
+    const title=el('title',{},`${exercise.root} ${exercise.quality} tablature: ${exercise.notes.map(n=>`${engine.tuning[n.string].name} string fret ${n.fret}${n.technique?' '+PlayExercises.techniques[n.technique]:''}`).join(', ')}`);svg.append(title);
     engine.tuning.forEach((course,i)=>{const y=top+(engine.stringCount-1-i)*row;svg.append(el('text',{x:12,y:y+5,fill:'#c6d3e6','font-size':18},engine.stringCount===6&&i===5?'e':course.name),el('line',{x1:left,y1:y,x2:width-12,y2:y,stroke:'#b8c7dc','stroke-width':1.4}))});
     let beat=0;
     exercise.notes.forEach((n,i)=>{const x=left+step/2+i*step,y=top+(engine.stringCount-1-n.string)*row,last=i===exercise.notes.length-1;
