@@ -24,7 +24,7 @@
   --ui-accent: var(--ui-purple);
   --ui-tint: #2b073e;
   --ui-radius: 12px;
-  --ui-scene: url('./assets/theme/concert-stage.webp');
+  --ui-scene: url('./assets/theme/concert-crowd.webp');
   --ui-surface: linear-gradient(180deg, #ffffff08, #ffffff00 45%), #050e1de8;
   --ui-gloss: linear-gradient(180deg, #ffffff16 0%, #ffffff04 42%, transparent 43%);
   --ui-button-fill: linear-gradient(110deg, var(--ui-tint), #090817 94%);
@@ -50,21 +50,21 @@ body[data-screen='home'] { --ui-scene-shade: .22; }
   overflow: hidden;
   background-image: linear-gradient(rgb(3 11 23 / var(--ui-scene-shade)), rgb(3 11 23 / var(--ui-scene-shade))), var(--ui-scene);
   background-size: cover;
-  background-position: right center;
+  background-position: center center;
 }
 .stage-light {
   position: absolute;
-  width: 180px;
-  height: 300px;
-  top: 80px;
+  width: clamp(240px, 32vw, 460px);
+  height: min(75dvh, 700px);
+  top: 20px;
   transform-origin: center top;
   background: radial-gradient(ellipse, var(--light), transparent 70%);
-  animation: stage-spotlight 12s ease-in-out infinite alternate;
-  opacity: .16;
+  animation: stage-spotlight 8s ease-in-out infinite alternate;
+  opacity: .38;
 }
-.stage-light-pink { --light: #fd02c1; left: 3%; }
-.stage-light-blue { --light: #06d6ff; right: 7%; animation-delay: -6s; }
-body[data-screen]:not([data-screen='home']) .stage-light { opacity: .08; animation-play-state: paused; }
+.stage-light-pink { --light: #fd02c1; left: -5%; }
+.stage-light-blue { --light: #06d6ff; right: -5%; animation-delay: -4s; }
+body[data-screen]:not([data-screen='home']) .stage-light { opacity: .08; animation: none; }
 #app { position: relative; z-index: 1; }
 #app .screen { background: transparent !important; }
 .practice-screen { --ui-accent: var(--ui-purple); --ui-tint: #2b073e; }
@@ -111,11 +111,11 @@ body #resultModal .result-modal {
 body #app .topbar { background: var(--ui-surface) !important; }
 body #resultModal { background: #030b17bf; }
 @keyframes stage-spotlight {
-  from { transform: rotate(-14deg); opacity: .12; }
-  to { transform: rotate(18deg); opacity: .28; }
+  from { transform: translateX(-12px) rotate(-24deg); opacity: .32; }
+  to { transform: translateX(24px) rotate(26deg); opacity: .62; }
 }
 @media (orientation: portrait) {
-  .app-stage { background-size: auto max(600px, 100dvh); background-position: right top; }
+  .app-stage { background-size: auto max(600px, 100dvh); background-position: center top; }
 }
 @media (prefers-reduced-motion: reduce) {
   .stage-light { animation: none !important; }

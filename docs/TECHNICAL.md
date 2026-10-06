@@ -44,7 +44,7 @@ web/
 ├── instruments/    # Per-instrument profiles (tuning, fret range, ...).
 ├── products/       # Per-instrument product identity (branding, SEO, copy).
 ├── modes/          # Reusable practice modes (pentatonic/triads/chords/...).
-├── site.config.json  # { "instrument": "guitar" | "bass-4" | "ukulele" | "guitar-12" }
+├── site.config.json  # { "instrument": "guitar" | "bass-4" | "ukulele" }
 ├── bootstrap.js     # Reads site.config.json, wires instrument -> product -> core.
 ├── index.html / app.js / styles.css / sw.js
 └── README.md        # Site changelog + config reference (V10.3 -> V10.5.8+).
@@ -73,9 +73,7 @@ different instrument.
 
 Known product identities (see `web/README.md` for full changelog):
 `guitar` → Guitar Fretboard Hero, `bass-4` → Bass Fretboard Hero,
-`ukulele` → Ukulele Fretboard Hero, `guitar-12` → uses the Guitar product
-identity but renders 12 physical strings (6 courses, lower 4 octave pairs,
-upper 2 unison pairs).
+`ukulele` → Ukulele Fretboard Hero.
 
 ## 3. Android wrapper architecture (inside `app/`)
 
@@ -336,16 +334,20 @@ version number, it does not duplicate the changelog.
 
 `web/theme.css` is the canonical shared appearance layer, loaded after legacy styles and `web/home.css`. It owns self-hosted typography, the single concert background, color tokens, gloss, button states and frame surfaces across Home, Practice, Fretboard Map, Circle and Quiz. Geometry remains in existing screen styles. `body[data-screen]` follows navigation; exercises dim the shared scene for readability. `web/home.js` loads before `app.js` and only handles the instrument dock. Settings, stats dialogs and their progress tracking were removed; the home does not read or write localStorage. Existing legacy progress data is inert. Motion runs automatically while home is active and honors prefers-reduced-motion.
 
-The instrument dock stores `fretboard-home-instrument` in sessionStorage and reloads bootstrap. Bootstrap validates the key against CATALOG, otherwise uses `site.config.json`. It binds the selected profile key into the active product so 12-string selection resolves `guitar12` rather than the guitar product default. This does not alter build configuration or native app ID.
+The instrument dock stores `fretboard-home-instrument` in sessionStorage and reloads bootstrap. Bootstrap validates the key against CATALOG, otherwise uses `site.config.json`. The original configuration is retained as `defaultInstrument`; it controls dock order independently of the active session selection. Unknown saved selections are cleared and fall back to the configured instrument. This does not alter build configuration or native app ID.
 
 Play Mode and Quiz are two entry points to the existing quiz intro, not independent game modes. Quiz scoring and the results screen remain unchanged.
 
 ### Home artwork and responsive layout (V10.6.1)
 
-`assets/theme/concert-stage.webp` and `assets/home/hero-wordmark.webp` contain only illustration/lettering; controls and text remain native DOM. `icons.svg` is a shared symbol sprite referenced with SVG use. Barlow Condensed 500/800 are self-hosted subset WOFF2 fonts in `assets/theme`, licensed under the bundled OFL. No remote font request is needed. Asset payload (illustration, logo, sprite and fonts) is approximately 210 KB uncompressed on disk. `ProductShell` preserves the home wordmark and derives the Practice description from the active profile's registered modes.
+`assets/theme/concert-crowd.webp` and the three `assets/home/*-wordmark.webp` logos contain only illustration/lettering; controls and text remain native DOM. `icons.svg` is a shared symbol sprite referenced with SVG use. Barlow Condensed 500/800 are self-hosted subset WOFF2 fonts in `assets/theme`, licensed under the bundled OFL. No remote font request is needed. Asset payload (illustration, logo, sprite and fonts) is approximately 415 KB across all variants on disk; only the selected logo is requested. `ProductShell` loads the active product’s wordmark via `assets.heroLogo` and derives the Practice description from the active profile's registered modes.
 
 Portrait layout is a centered column; landscape ≥700px is a two-column composition; short landscape ≥740px uses two columns inside the card menu. Media rules live in `home.css`, scoped to `#home`, without changing fretboard layouts. Native app/www must still be rebuilt from web. Small screens allow vertical scrolling.
 
 Artwork source prompts and provenance: `web/assets/home/ASSETS.md`. Browser validation uses the built-in product routes, not mocked fretboard engines. The in-conversation gallery consists of actual Chromium screenshots.
 
 V10.7.0 validation: Chromium checked shared font/background/gloss on all four modes, Practice root/degree controls, Quiz launch, six portrait/landscape viewport sizes (phone, tablet and desktop), and reduced-motion behavior. No runtime errors or horizontal overflow were observed.
+
+## Three-product home (V10.8.0)
+
+The selector contains Guitar, Bass and Ukulele only. The configured product comes first, followed by remaining instruments in canonical Guitar/Bass/Ukulele order; session selection never changes this order. Each product declares its own transparent brush-neon logo. A single instrument-free concert crowd image is shared by every mode. Instrument illustrations use a three-cell sprite with measured independent viewports. The engine draws one physical string per tuning entry.

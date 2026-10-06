@@ -310,8 +310,8 @@
       }else drawInlay(f,singleInlayCenter);
     });
     tuning.forEach((st,s)=>{
-      const p=visualStringPos(s),physicalCount=Math.max(1,st.physicalStrings||st.pairIntervals?.length||1),pairGap=physicalCount>1?5:0;
-      for(let i=0;i<physicalCount;i++)premiumString(svg,isP,p+(i-(physicalCount-1)/2)*pairGap,fretStart,fretEnd,s,prefix);
+      const p=visualStringPos(s);
+      premiumString(svg,isP,p,fretStart,fretEnd,s,prefix);
       svg.append(svgEl('text',isP?{x:p,y:35,fill:'#dbe8ef','font-size':18,'font-weight':800,'text-anchor':'middle'}:{x:24,y:p+6,fill:'#dbe8ef','font-size':18,'font-weight':800,'text-anchor':'middle'},st.name));
     });
     return {svg,isP,W,H,fretStart,fretEnd,stringStart,stringEnd,fretPos,stringPos,visualStringPos,maxFret};

@@ -9,7 +9,7 @@ organized, how musical shapes are built, and be able to find them quickly
 on the neck.
 
 The app runs on a shared multi-instrument engine: guitar, 4-string bass,
-ukulele and 12-string guitar. The same code ships both as a **website** and
+and ukulele. The same code ships both as a **website** and
 as **3 native Android apps** (Guitar, Bass, Ukulele), via
 [Capacitor](https://capacitorjs.com/).
 
@@ -138,7 +138,6 @@ Instruments are configuration profiles. This lets the same engine power:
 - Guitar Fretboard Hero
 - Bass Fretboard Hero
 - Ukulele Fretboard Hero
-- 12-string Guitar
 
 Fretboard rendering -- frets, strings, nut, numbers, inlays, portrait
 orientation, etc. -- is shared through the Fretboard Core. That means an
@@ -174,7 +173,7 @@ Quiz.
 
 ## Current state
 
-The latest site version is **V10.7.0**.
+The latest site version is **V10.8.0**.
 
 Fretboard Hero is no longer just a pentatonic visualizer. There are three
 complementary layers: **Learn** with Practice -> **Understand** with

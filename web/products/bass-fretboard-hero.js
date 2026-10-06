@@ -17,6 +17,6 @@ window.FRETBOARD_PRODUCTS.bass={
     featureList:['4-string bass fretboard note map','Standard E–A–D–G tuning','Major and minor pentatonic positions','Bass triads','Bass arpeggios','Circle of Fifths and key harmony','60-second fretboard quiz']
   },
   pwa:{manifest:'manifests/bass.webmanifest',name:'Bass Fretboard Hero',shortName:'Bass Hero',description:'Interactive bass fretboard trainer for pentatonics, triads, arpeggios, note mapping and quizzes.'},
-  assets:{ogImage:'assets/og/bass.jpg'},
+  assets:{heroLogo:'assets/home/bass-wordmark.webp',ogImage:'assets/og/bass.jpg'},
   quiz:{durationMs:60000,basePoints:100,scoreTable:[100,250,500,800,1200],maxMultiplier:5,maxFret:15,targets:['root','third','fifth']},ranks:[[10000,'🏆','BASS VIRTUOSO',''],[9000,'🎸','BASS LEGEND',''],[8000,'🧙','NECK MASTER',''],[7000,'✨','FRET WIZARD',''],[6000,'👑','BASS HERO',''],[5300,'⭐','GROOVE MASTER',''],[4700,'⚡','LOW-END SHREDDER',''],[4200,'🎛️','TONE MASTER',''],[3800,'🌀','STRING BENDER',''],[3450,'🔥','FRET MASTER',''],[3150,'💀','BASS SOLO MASTER',''],[2900,'🤘','RIFF LORD',''],[2650,'🎤','HEADLINER',''],[2450,'🎪','STAGE PLAYER',''],[2250,'🎵','LEAD BASSIST',''],[2000,'🪓','LOW-END SLINGER',''],[1800,'🏄','GROOVE RIDER',''],[1600,'🎸','GIG PLAYER',''],[1400,'🎶','JAMMER',''],[1200,'🎼','BASS PLAYER',''],[1000,'🎧','PRACTICER',''],[850,'🌱','ROOKIE',''],[700,'🎸','BEGINNER',''],[550,'🎵','GROOVE CHASER',''],[400,'🧭','FRET EXPLORER',''],[300,'🧠','NOTE HUNTER',''],[200,'🗺️','NECK TOURIST',''],[100,'🙈','FRET GUESSER',''],[50,'😬','NEEDS A TUNER',''],[0,'💀','AIR BASSIST','']]
 };
