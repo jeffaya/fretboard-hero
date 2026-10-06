@@ -7,6 +7,7 @@
     const stringPos=s=>stringStart+(stringEnd-stringStart)*(s/Math.max(1,stringCount-1));
     return {isP:portrait,W,H,fretStart,fretEnd,stringStart,stringEnd,fretPos,stringPos,maxFret};
   }
-  const fretCenter=(fret,fretPos)=>fret===0?fretPos(0)-54:(fretPos(fret-1)+fretPos(fret))/2;
-  window.FretboardLayout={create,fretCenter};
+  const OPEN_CENTER=35;
+  const fretCenter=(fret,fretPos)=>fret===0?OPEN_CENTER:(fretPos(fret-1)+fretPos(fret))/2;
+  window.FretboardLayout={create,fretCenter,OPEN_CENTER};
 })();
