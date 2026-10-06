@@ -3053,7 +3053,7 @@ body{
 .circle-screen{flex-direction:column!important;min-height:100dvh;overflow:auto;padding-bottom:max(22px,var(--sa-bottom))}
 .circle-content{box-sizing:border-box;width:min(1200px,100%);margin:auto;padding:16px 20px 30px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:24px;align-items:center}
 .circle-wheel-panel{min-width:0;padding:12px;border:1px solid #ba65ff70;border-radius:24px;background:#0710219c}
-.circle-wheel-svg{display:block;width:100%;height:auto;touch-action:pan-y;user-select:none;cursor:grab;font-family:var(--ui-font)}
+.circle-wheel-svg{display:block;width:100%;height:auto;touch-action:none;user-select:none;cursor:grab;font-family:var(--ui-font)}
 .circle-wheel-svg:active{cursor:grabbing}.circle-wheel-svg:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:50%}
 .circle-navigation{display:flex;align-items:center;justify-content:space-between;gap:10px}.circle-navigation button{width:44px;height:44px;border-radius:50%;font-size:24px}.circle-navigation p{margin:0;text-align:center;color:#bcc9df;font-size:14px}
 .circle-info-panel{min-width:0;padding:22px;border:1px solid #ba65ff70;border-radius:24px;background:#071021b8}
