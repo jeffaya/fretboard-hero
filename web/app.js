@@ -108,7 +108,7 @@
   });
 
   // Fretboard Map: all notes by default, or isolate one pitch class while learning it.
-  NOTES.forEach(n=>{const b=document.createElement('button');b.type='button';b.textContent=n;b.dataset.mapNote=n;$('#mapNoteControls')?.appendChild(b)});
+  NOTES.forEach(n=>{const b=document.createElement('button');b.type='button';b.textContent=n;b.dataset.mapNote=n;b.classList.add('neck-note-pill');b.style.setProperty('--note-color',FretboardMap.DEFAULT_COLORS[n]);$('#mapNoteControls')?.appendChild(b)});
   $('#mapNoteControls')?.addEventListener('click',e=>{const b=e.target.closest('button[data-map-note]');if(!b)return;state.mapNote=b.dataset.mapNote;renderFretboardMap()});
   requestAnimationFrame(refreshAllSelects);
   function renderFretboardMap(){
@@ -117,7 +117,7 @@
     const maxFret=Math.min(engine.maxFret,state.mapMaxFret);
     $$('#mapFretControls button[data-map-frets]').forEach(b=>b.classList.toggle('active',Number(b.dataset.mapFrets)===maxFret));
     $$('#mapNoteControls button[data-map-note]').forEach(b=>{const on=b.dataset.mapNote===state.mapNote;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});
-    FretboardMap.render({svg,engine,maxFret,selectedNote:state.mapNote,renderCore:renderFretboardCore,svgEl,noteName});
+    FretboardMap.render({svg,engine,appearance,maxFret,selectedNote:state.mapNote,renderCore:renderFretboardCore,svgEl,noteName});
   }
 
   function closeCircleHelp(except=null){
@@ -142,7 +142,7 @@
     $('#circleKeyTitle').textContent=`${key.name} MAJOR`;
     $('#circleRelative').textContent=`Relative minor • ${key.minor}`;
     $('#circleSignature').textContent=key.accidentals;
-    $('#circleScale').innerHTML=key.scale.map((n,i)=>`<span${i===0?' class="root"':''}>${n}</span>`).join('');
+    $('#circleScale').innerHTML=key.scale.map((n,i)=>`<span class="neck-note-pill${i===0?' root':''}" style="--note-color:${FretboardAppearance.SCALE_COLORS[i]}">${n}</span>`).join('');
     const degreeChord=(degree,name)=>`<div class="degree-chord"><small>${degree}</small><strong>${name}</strong></div>`;
     const degreeToChord=new Map(key.chords.map(c=>[c.degree,c.name]));
     $('#circleChords').innerHTML=key.chords.map(c=>degreeChord(c.degree,c.name)).join('');
@@ -159,13 +159,12 @@
     const maxFret=Math.min(engine.maxFret,state.circleMaxFret);
     const core=renderFretboardCore(svg,{prefix:'circle',maxFret});
     const {isP,fretPos,visualStringPos}=core,pcs=new Set(key.scalePCs);
-    const palette=['#27d7ff','#5cffb2','#ff3ec9','#ff9d3f','#ffd14f','#9b6cff','#35d1b0'];
+    const palette=FretboardAppearance.SCALE_COLORS;
     for(let string=0;string<STRING_COUNT;string++)for(let fret=0;fret<=maxFret;fret++){
       const pc=engine.noteAt(string,fret),degree=key.scalePCs.indexOf(pc);if(!pcs.has(pc)||degree<0)continue;
-      const centerF=fret===0?fretPos(0)-17:(fretPos(fret-1)+fretPos(fret))/2,centerS=visualStringPos(string),x=isP?centerS:centerF,y=isP?centerF:centerS;
+      const centerF=FretboardLayout.fretCenter(fret,fretPos),centerS=visualStringPos(string),x=isP?centerS:centerF,y=isP?centerF:centerS;
       const root=degree===0,col=palette[degree];
-      svg.append(svgEl('circle',{cx:x,cy:y,r:isP?20:13,fill:root?'#f8fbff':'#0a1118',stroke:col,'stroke-width':root?4:2.4}));
-      svg.append(svgEl('text',{x,y,fill:root?'#071016':col,'font-size':isP?18:10,'font-weight':1000,'text-anchor':'middle','dominant-baseline':'middle'},key.scale[degree]));
+      appearance.note(svg,{x,y,isP,color:col,label:key.scale[degree],target:root});
     }
   }
 
@@ -175,6 +174,12 @@
   function pentaPCs(){return intervals[state.quality].penta.map(i=>mod(rootPC()+i))}
   function formula(){const ints=state.quality==='minor'?['1','♭3','4','5','♭7']:['1','2','3','5','6'];return pentaPCs().map(noteName).join(' • ')+'   '+ints.join(' • ')}
   function updatePracticeLegend(){
+    $$('.practice-legend [data-degree-filter]').forEach(button=>{
+      const degree=button.dataset.degreeFilter,pill=button.querySelector('.legend');
+      const pc={root:rootPC(),third:thirdPC(),fourth:mod(rootPC()+5),fifth:fifthPC(),seventh:mod(rootPC()+(state.quality==='minor'?10:11))}[degree];
+      pill.classList.add('neck-note-pill');pill.style.setProperty('--note-color',FretboardAppearance.DEGREE_COLORS[degree]);
+      pill.textContent=noteName(pc);button.setAttribute('aria-label',`${button.querySelector('small').textContent}: ${noteName(pc)}`);
+    });
     const fourth=$('#legendFourth'),seventh=$('#legendSeventh');
     if(!fourth||!seventh)return;
     const showFourth=modeKind()==='pentatonic'&&state.quality==='minor';
@@ -189,79 +194,8 @@
   function degreeLabel(pc){return noteName(pc)}
   function portrait(){return matchMedia('(max-width:1199px) and (orientation:portrait)').matches}
   function svgEl(tag,attrs={},text=''){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(text)e.textContent=text;return e}
-  function premiumDefs(svg,prefix){
-    const defs=svgEl('defs');
-    const wood=svgEl('linearGradient',{id:prefix+'Wood',x1:'0%',y1:'0%',x2:'0%',y2:'100%'});
-    [['0%','#172431'],['10%','#071018'],['27%','#18232d'],['48%','#05090d'],['70%','#14212b'],['90%','#080d12'],['100%','#1b2833']].forEach(([offset,stop])=>wood.append(svgEl('stop',{offset,'stop-color':stop})));
-    const neckLight=svgEl('linearGradient',{id:prefix+'NeckLight',x1:'0%',y1:'0%',x2:'0%',y2:'100%'});
-    [['0%','#79dcff'],['8%','#174d66'],['30%','#ffffff'],['47%','#17232d'],['72%','#05080b'],['94%','#14455c'],['100%','#4ed7ff']].forEach(([offset,stop])=>neckLight.append(svgEl('stop',{offset,'stop-color':stop,'stop-opacity':offset==='30%'?.13:.28})));
-    const steel=svgEl('linearGradient',{id:prefix+'Steel',x1:'0%',y1:'0%',x2:'100%',y2:'0%'});
-    [['0%','#4d5154'],['18%','#eef4f6'],['42%','#8b9296'],['63%','#f9ffff'],['100%','#3f4447']].forEach(([offset,stop])=>steel.append(svgEl('stop',{offset,'stop-color':stop})));
-    const wound=svgEl('pattern',{id:prefix+'Wound',width:5,height:5,patternUnits:'userSpaceOnUse',patternTransform:'rotate(28)'});
-    wound.append(svgEl('rect',{width:5,height:5,fill:'#78838b'}),svgEl('line',{x1:0,y1:0,x2:0,y2:5,stroke:'#e8f0f4','stroke-width':1.25}),svgEl('line',{x1:2.8,y1:0,x2:2.8,y2:5,stroke:'#424b52','stroke-width':.9}));
-    const grain=svgEl('filter',{id:prefix+'Grain',x:'-10%',y:'-10%',width:'120%',height:'120%'});
-    grain.append(svgEl('feTurbulence',{type:'fractalNoise',baseFrequency:'.012 .18',numOctaves:'3',seed:'19',result:'noise'}));
-    grain.append(svgEl('feColorMatrix',{in:'noise',type:'matrix',values:'0.25 0 0 0 0  0 0.18 0 0 0  0 0 0.12 0 0  0 0 0 .42 0',result:'grain'}));
-    const blend=svgEl('feBlend',{in:'SourceGraphic',in2:'grain',mode:'soft-light'});grain.append(blend);
-    const shadow=svgEl('filter',{id:prefix+'StringShadow',x:'-30%',y:'-100%',width:'160%',height:'300%'});
-    shadow.append(svgEl('feGaussianBlur',{stdDeviation:'1.8'}));
-    const fretGlow=svgEl('filter',{id:prefix+'FretGlow',x:'-100%',y:'-30%',width:'300%',height:'160%'});
-    fretGlow.append(svgEl('feGaussianBlur',{stdDeviation:'1.15',result:'blur'}));
-    const fm=svgEl('feMerge');fm.append(svgEl('feMergeNode',{in:'blur'}),svgEl('feMergeNode',{in:'SourceGraphic'}));fretGlow.append(fm);
-    // V7.1.1 restrained gunmetal nail-head inlays: readable landmarks without competing with learning notes.
-    const inlay=svgEl('radialGradient',{id:prefix+'Inlay',cx:'36%',cy:'32%',r:'70%'});
-    [['0%','#b7bec3'],['24%','#858d93'],['58%','#596168'],['82%','#3b4248'],['100%','#242a2f']].forEach(([offset,stop])=>inlay.append(svgEl('stop',{offset,'stop-color':stop})));
-    const inlayShadow=svgEl('filter',{id:prefix+'InlayShadow',x:'-80%',y:'-80%',width:'260%',height:'260%'});
-    inlayShadow.append(svgEl('feDropShadow',{dx:'1.1',dy:'1.5',stdDeviation:'1.15','flood-color':'#000','flood-opacity':'.62'}));
-    defs.append(wood,neckLight,steel,wound,grain,shadow,fretGlow,inlay,inlayShadow);svg.append(defs);
-  }
-  function premiumSurface(svg,isP,W,H,prefix){
-    premiumDefs(svg,prefix);
-    svg.append(svgEl('rect',{x:0,y:0,width:W,height:H,fill:'#08090b'}));
-    const neck=isP?{x:48,y:72,width:W-96,height:H-112,rx:14}:{x:54,y:34,width:W-92,height:H-70,rx:14};
-    svg.append(svgEl('rect',{...neck,fill:`url(#${prefix}Wood)`,filter:`url(#${prefix}Grain)`,stroke:'#19394b','stroke-width':2}));
-    svg.append(svgEl('rect',{...neck,fill:`url(#${prefix}NeckLight)`,opacity:.34}));
-    const edgeA=isP?{x1:neck.x,y1:neck.y,x2:neck.x+neck.width,y2:neck.y}:{x1:neck.x,y1:neck.y,x2:neck.x,y2:neck.y+neck.height};
-    const edgeB=isP?{x1:neck.x,y1:neck.y+neck.height,x2:neck.x+neck.width,y2:neck.y+neck.height}:{x1:neck.x+neck.width,y1:neck.y,x2:neck.x+neck.width,y2:neck.y+neck.height};
-    svg.append(svgEl('line',{...edgeA,stroke:'#27d7ff','stroke-width':1.4,opacity:.55}));
-    svg.append(svgEl('line',{...edgeB,stroke:'#ff3ec9','stroke-width':1.05,opacity:.25}));
-    // irregular longitudinal grain highlights
-    for(let i=0;i<9;i++){
-      const pos=(i+1)/10,op=.035+(i%3)*.018;
-      svg.append(svgEl('path',isP?{d:`M ${neck.x+neck.width*pos} ${neck.y} C ${neck.x+neck.width*(pos+.035)} ${neck.y+neck.height*.27}, ${neck.x+neck.width*(pos-.025)} ${neck.y+neck.height*.68}, ${neck.x+neck.width*(pos+.012)} ${neck.y+neck.height}`,fill:'none',stroke:'#91b9cc','stroke-width':1.15,opacity:op*.72}:{d:`M ${neck.x} ${neck.y+neck.height*pos} C ${neck.x+neck.width*.28} ${neck.y+neck.height*(pos+.035)}, ${neck.x+neck.width*.68} ${neck.y+neck.height*(pos-.025)}, ${neck.x+neck.width} ${neck.y+neck.height*(pos+.012)}`,fill:'none',stroke:'#91b9cc','stroke-width':1.15,opacity:op*.72}));
-    }
-    // subtle edge light
-    svg.append(svgEl('rect',{...neck,fill:'none',stroke:'#a8bed0','stroke-width':1,opacity:.16}));
-  }
-  function premiumFret(svg,isP,p,W,H,isNut,prefix){
-    const attrs=isP?{x1:52,x2:W-48,y1:p,y2:p}:{y1:48,y2:H-42,x1:p,x2:p};
-    if(!isNut){
-      svg.append(svgEl('line',{...attrs,stroke:'#000','stroke-width':8.5,opacity:.58}));
-      svg.append(svgEl('line',{...attrs,stroke:'#0a1015','stroke-width':6.4,opacity:.7}));
-      svg.append(svgEl('line',{...attrs,stroke:`url(#${prefix}Steel)`,'stroke-width':4.4,filter:`url(#${prefix}FretGlow)`}));
-      svg.append(svgEl('line',{...attrs,stroke:'#eaffff','stroke-width':1.05,opacity:.88}));
-      svg.append(svgEl('line',{...attrs,stroke:'#27d7ff','stroke-width':.45,opacity:.28}));
-    }else{
-      svg.append(svgEl('line',{...attrs,stroke:'#2a2118','stroke-width':11,opacity:.7}));
-      svg.append(svgEl('line',{...attrs,stroke:'#eee1c4','stroke-width':8}));
-      svg.append(svgEl('line',{...attrs,stroke:'#fff8df','stroke-width':1.2,opacity:.9}));
-    }
-  }
-  function premiumString(svg,isP,p,start,end,s,prefix){
-    const gaugeMax=4.15,gaugeMin=1.15,g=gaugeMax-(gaugeMax-gaugeMin)*(s/Math.max(1,STRING_COUNT-1));
-    const attrs=isP?{x1:p,x2:p,y1:start,y2:end}:{x1:start,x2:end,y1:p,y2:p};
-    const far=isP?{...attrs,x1:p+4.6,x2:p+4.6}:{...attrs,y1:p+4.6,y2:p+4.6};
-    const near=isP?{...attrs,x1:p+2.2,x2:p+2.2}:{...attrs,y1:p+2.2,y2:p+2.2};
-    // Contact shadows create the visual gap between string and fretboard.
-    svg.append(svgEl('line',{...far,stroke:'#000','stroke-width':g+5.5,opacity:.24,filter:`url(#${prefix}StringShadow)`}));
-    svg.append(svgEl('line',{...near,stroke:'#000','stroke-width':g+2.4,opacity:.52}));
-    // Metallic body.
-    svg.append(svgEl('line',{...attrs,stroke:s<(instrument.woundStrings||0)?`url(#${prefix}Wound)`:'#aebbc3','stroke-width':g+1.15,'stroke-linecap':'round'}));
-    svg.append(svgEl('line',{...attrs,stroke:s<(instrument.woundStrings||0)?'#dce8ed':'#f0f8fb','stroke-width':Math.max(.72,g*.30),opacity:s<(instrument.woundStrings||0)?.56:.82,'stroke-linecap':'round'}));
-    // Razor specular reflection on the crown.
-    const hi=isP?{...attrs,x1:p-.55,x2:p-.55}:{...attrs,y1:p-.55,y2:p-.55};
-    svg.append(svgEl('line',{...hi,stroke:'#fff','stroke-width':.42,opacity:.9,'stroke-linecap':'round'}));
-  }
+  const appearance=FretboardAppearance.create({svgEl,stringCount:STRING_COUNT,instrument});
+  const {surface:premiumSurface,fret:premiumFret,string:premiumString}=appearance;
 
 
   // V7 FRETBOARD CORE — one structural/visual neck renderer for Practice, Map and Quiz.
@@ -279,9 +213,9 @@
       if(fretOffset===0?(f===0||[3,5,7,9,12,15,17,19,21].includes(f)):(f>0&&[3,5,7,9,12,15,17,19,21].includes(actualFret))){
         const lp=fretOffset===0&&f===0?fretPos(0):(fretPos(Math.max(0,f-1))+fretPos(f))/2;
         const isOctave=actualFret===12;
-        const label=String(actualFret),fontSize=isP?(isOctave?18:16):(isOctave?17:15);
+        const label=String(actualFret),fontSize=isP?(isOctave?24:22):(isOctave?21:19);
         const labelX=isP?20:lp,labelY=isP?lp:(H-16);
-        const padX=label.length>1?10:8,padY=isOctave?10:9;
+        const padX=label.length>1?14:11,padY=isOctave?14:12;
         svg.append(svgEl('rect',{x:labelX-padX,y:labelY-padY,width:padX*2,height:padY*2,rx:7,fill:'#071016',stroke:isOctave?'#27d7ff':'#6d8290','stroke-width':isOctave?1.4:.8,opacity:.94}));
         svg.append(svgEl('text',{x:labelX,y:labelY+1,fill:isOctave?'#f8fbff':'#dce9f0','font-size':fontSize,'font-weight':1000,'text-anchor':'middle','dominant-baseline':'middle'},label));
       }
@@ -294,17 +228,17 @@
     const drawInlay=(f,cross)=>{
       const p=(fretPos(f-1)+fretPos(f))/2;
       const base=isP?{cx:cross,cy:p}:{cx:p,cy:cross};
-      svg.append(svgEl('circle',{...base,r:9.1,fill:'#090c0f',opacity:.58,filter:`url(#${prefix}InlayShadow)`}));
-      svg.append(svgEl('circle',{...base,r:7.8,fill:`url(#${prefix}Inlay)`,stroke:'#8c969d','stroke-width':.8,opacity:.88}));
-      svg.append(svgEl('circle',{...base,r:5.55,fill:'none',stroke:'#20262b','stroke-width':.9,opacity:.64}));
-      const highlight=isP?{cx:cross-1.8,cy:p-1.9}:{cx:p-1.8,cy:cross-1.9};
-      svg.append(svgEl('circle',{...highlight,r:1.25,fill:'#dce2e6',opacity:.42}));
+      const marker=svgEl('g',{'data-inlay-fret':fretOffset===0?f:fretOffset+f-1,'pointer-events':'none'});
+      marker.append(svgEl('circle',{...base,r:13,fill:'#b495ff',opacity:.1}));
+      marker.append(svgEl('circle',{...base,r:9.5,fill:`url(#${prefix}Inlay)`,stroke:'#c9bdff','stroke-width':1.1}));
+      marker.append(svgEl('circle',{...base,r:6.2,fill:'none',stroke:'#fff','stroke-width':.65,opacity:.5}));
+      svg.append(marker);
     };
     [3,5,7,9,12,15,17,19,21].filter(actual=>actual>=fretOffset&&actual<=(fretOffset===0?maxFret:fretOffset+maxFret-1)).forEach(actual=>{
       const f=fretOffset===0?actual:(actual-fretOffset+1);
       if(actual===12){
         const upperA=Math.max(0,Math.floor((STRING_COUNT-1)*.25)),upperB=Math.min(STRING_COUNT-1,upperA+1);
-        const lowerA=Math.max(0,Math.floor((STRING_COUNT-1)*.75)-1),lowerB=Math.min(STRING_COUNT-1,lowerA+1);
+        const lowerA=Math.max(0,Math.ceil((STRING_COUNT-1)*.75)-1),lowerB=Math.min(STRING_COUNT-1,lowerA+1);
         drawInlay(f,centerBetween(upperA,upperB));
         drawInlay(f,centerBetween(lowerA,lowerB));
       }else drawInlay(f,singleInlayCenter);
@@ -312,7 +246,7 @@
     tuning.forEach((st,s)=>{
       const p=visualStringPos(s);
       premiumString(svg,isP,p,fretStart,fretEnd,s,prefix);
-      svg.append(svgEl('text',isP?{x:p,y:35,fill:'#dbe8ef','font-size':18,'font-weight':800,'text-anchor':'middle'}:{x:24,y:p+6,fill:'#dbe8ef','font-size':18,'font-weight':800,'text-anchor':'middle'},st.name));
+      appearance.tuning(svg,{x:isP?p:24,y:isP?35:p,label:st.name});
     });
     return {svg,isP,W,H,fretStart,fretEnd,stringStart,stringEnd,fretPos,stringPos,visualStringPos,maxFret};
   }
@@ -373,11 +307,11 @@
     renderFretboard($('#practiceFretboard'),{interactive:false,mode:state.mode,visibleKeys:selectedNoteKeys(shapes),shapes});
   }
 
-  const DEGREE_COLORS={root:'#00bfff',third:'#ff2fb3',fourth:'#ff6b00',fifth:'#d99a00',seventh:'#20b94b',second:'#7357ff',sixth:'#008f8f'};
+  const DEGREE_COLORS=FretboardAppearance.DEGREE_COLORS;
   // Pentatonic positions deliberately reuse the site's degree-legend palette.
   // P1 Root cyan, P2 3rd pink, P3 4th orange, P4 5th yellow, P5 7th green.
   const PENTA_POSITION_COLORS=[DEGREE_COLORS.root,DEGREE_COLORS.third,DEGREE_COLORS.fourth,DEGREE_COLORS.fifth,DEGREE_COLORS.seventh];
-  function fretCenter(fret,fretPos){return fret===0?fretPos(0)-15:(fretPos(fret-1)+fretPos(fret))/2}
+  function fretCenter(fret,fretPos){return FretboardLayout.fretCenter(fret,fretPos)}
   function visiblePentaWindows(maxFret){return patternWindows().filter(w=>w.minFret<=maxFret&&(state.pattern==='all'||String(w.id)===String(state.pattern)))}
   // Instrument-specific position geometry is supplied by the active profile.
   const PENTA_STRING_PAIRS=instrument.pentatonic?.stringPairs;
@@ -415,11 +349,7 @@
       const d=degreeFor(pc);if(!d)continue;if(state.degreeFilter!=='all'&&d!==state.degreeFilter)continue;
       if(ModeRegistry.kind(instrument,opt.mode)!=='pentatonic'&&visibleKeys&&!visibleKeys.has(s+':'+f))continue;
       const degreeColor=DEGREE_COLORS[d]||'#52606b';
-      if(ModeRegistry.kind(instrument,opt.mode)==='pentatonic'){
-        const g=svgEl('g',{opacity:1});g.append(svgEl('circle',{cx:x,cy:y,r:isP?20:13,fill:'#fff',stroke:'#dce8ef','stroke-width':2.2,'data-string':s,'data-fret':f}));g.append(svgEl('text',{x,y,fill:degreeColor,'font-size':isP?20:(noteName(pc).length>1?8.5:10.5),'font-weight':1000,'text-anchor':'middle','dominant-baseline':'middle','pointer-events':'none'},degreeLabel(pc)));svg.append(g)
-      }else{
-        const col=degreeColor,g=svgEl('g',{opacity:1});const c=svgEl('circle',{cx:x,cy:y,r:isP?20:13,fill:col,stroke:'#ffffffb0','stroke-width':1.6,'data-string':s,'data-fret':f});g.append(c);g.append(svgEl('text',{x,y:isP?y:y+4,fill:d==='fifth'?'#3c2b00':'#06131b','font-size':isP?20:(noteName(pc).length>1?8.5:10.5),'font-weight':1000,'text-anchor':'middle','dominant-baseline':isP?'middle':'auto','pointer-events':'none'},degreeLabel(pc)));svg.append(g)
-      }
+      appearance.note(svg,{x,y,isP,color:degreeColor,label:degreeLabel(pc),target:d==='root',attrs:{'data-string':s,'data-fret':f,'data-degree':d}});
     }
   }
 
