@@ -15,5 +15,6 @@
       "android": "",
       "ios": ""
     }
-  }
+  },
+  "publicUrl": "https://fretboard-hero.jf-seignemorte.workers.dev/"
 }

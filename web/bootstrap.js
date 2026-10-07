@@ -41,7 +41,7 @@
       window.ProductShell.apply(product,instrument);
       await load('./home.js?v=10.19.2');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
-      await load('./app.js?v=10.20.2');
+      await load('./app.js?v=10.20.3');
       if(!await artworkReady){
         logo.setAttribute('hidden','');
         const fallback=document.createElement('span');
