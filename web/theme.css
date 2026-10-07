@@ -232,7 +232,7 @@ body #app .control-panel button {
   color: #fff !important;
 }
 body :is(#app,#resultModal) button:is(.ui-secondary,.modal-secondary,.mobile-menu-btn):is(:hover,.active,[aria-expanded='true'],[aria-selected='true']),
-body #app .control-panel button:is(:hover,.active,[aria-pressed='true'],[aria-selected='true']) {
+body #app .control-panel button:hover {
   border-color: #fff !important;
   box-shadow: inset 0 1px 1px #ffffff40,0 0 10px #ffffff38 !important;
 }
@@ -322,3 +322,44 @@ body #app .control-select .select-trigger:focus-visible{outline:2px solid #fff;o
 [data-control-group="level"]{--control-menu-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M3 16h4v5H3zM10 10h4v11h-4zM17 3h4v18h-4z'/%3E%3C/svg%3E")}
 .ui-panel{background:var(--ui-surface);border:1px solid #e927ff99;box-shadow:0 0 18px #e927ff20,inset 0 1px 1px #ffffff18}
 body[data-screen='play']{--ui-scene-shade:.55}
+
+/* Shared toolbar states: leave unselected controls unchanged. */
+body #app .control-panel .control-options > button:is(.active,[aria-pressed='true'],[aria-selected='true']) {
+  color: #fff !important;
+  border-color: #25efff !important;
+  background: var(--ui-gloss),linear-gradient(180deg,#08657d,#092637) !important;
+  box-shadow: inset 0 0 0 1px #a8faff66,inset 0 1px 8px #ffffff30,0 0 14px #00e5ff66 !important;
+}
+body #app .control-select .select-popover {
+  border-color: #e5eaf4cc !important;
+  background: #0b1425fa !important;
+  box-shadow: 0 16px 36px #0009 !important;
+}
+body #app .control-select .select-option {
+  border: 0 !important;
+  border-radius: 5px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #edf3fa !important;
+}
+body #app .control-select .select-option:is(:hover,:focus-visible) {
+  background: #ffffff12 !important;
+}
+body #app .control-select .select-option:is(.active,[aria-selected='true']) {
+  color: #72f5ff !important;
+  background: #00dfff24 !important;
+  box-shadow: inset 3px 0 #25efff !important;
+}
+/* Only inline selects hide their duplicated heading; drawer headings stay. */
+@media (min-width:768px) {
+  body #app .control-panel > .control-group.is-select > label { display:none !important; }
+}
+@media (min-width:768px) and (max-width:1199px) and (orientation:portrait) {
+  body #app .control-panel > .control-group > label { display:none !important; }
+}
+@media (min-width:1200px) {
+  body #app .responsive-drawer > .control-panel { gap:clamp(24px,2vw,40px) !important; }
+}
+@media (orientation:landscape) and (max-width:1000px) and (max-height:599px) {
+  body #app .responsive-drawer .control-panel > .control-group > label { display:flex !important; }
+}
