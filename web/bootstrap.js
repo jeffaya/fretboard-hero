@@ -12,7 +12,7 @@
     'bass-4':{instrumentKey:'bass4',instrument:'./instruments/bass-4.js?v=10.19.2',productKey:'bass',product:'./products/bass-fretboard-hero.js?v=10.19.2'},
     'ukulele':{instrumentKey:'ukulele',instrument:'./instruments/ukulele.js?v=10.19.2',productKey:'ukulele',product:'./products/ukulele-fretboard-hero.js?v=10.19.2'},
   };
-  const CORE=['music-theory','circle-of-fifths','circle-renderer','play-exercises','play-renderer','play-session','tuning','fretboard-engine','fretboard-layout','fretboard-appearance','fretboard-map','pentatonic-renderer','triad-engine','arpeggio-engine','chord-engine','quiz-engine','controls','mode-registry','product-shell'].map(n=>`./core/${n}.js?v=${n==='play-session'?'10.19.3':'10.19.2'}`);
+  const CORE=['music-theory','circle-of-fifths','circle-renderer','play-exercises','play-renderer','play-session','tuning','fretboard-engine','fretboard-layout','fretboard-appearance','fretboard-map','pentatonic-renderer','triad-engine','arpeggio-engine','chord-engine','quiz-engine','controls','mode-registry','product-shell'].map(n=>`./core/${n}.js?v=${['play-session','circle-renderer','fretboard-map'].includes(n)?'10.20.0':'10.19.2'}`);
   const MODES=['pentatonic','triads','chords','arpeggios'].map(n=>`./modes/${n}.js?v=10.19.2`);
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.async=false;s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error(`Unable to load ${src}`));document.head.appendChild(s);});
   const fail=err=>{document.body.setAttribute('aria-busy','false');console.error(err);document.body.innerHTML=`<main style="min-height:100vh;display:grid;place-items:center;background:#05080b;color:#f8fbff;font-family:system-ui;padding:24px"><div><h1 style="color:#ff3ec9">CONFIGURATION ERROR</h1><p>${String(err.message||err)}</p><p>Check <code>site.config.json</code> and README.md.</p></div></main>`;};
@@ -20,6 +20,8 @@
     try{
       const response=await fetch('./site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
+      await load('./core/access.js?v=10.20.0');
+      window.FRETBOARD_ACCESS=FretboardAccess.create(await FretboardAccess.resolve(config,location.search));
       const defaultInstrument=config.instrument;
       if(!CATALOG[defaultInstrument])throw new Error(`Unknown instrument "${defaultInstrument}". Supported: ${Object.keys(CATALOG).join(', ')}`);
       // Session-only choice preserves the default identity of each native build.
@@ -39,7 +41,7 @@
       window.ProductShell.apply(product,instrument);
       await load('./home.js?v=10.19.2');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
-      await load('./app.js?v=10.19.2');
+      await load('./app.js?v=10.20.0');
       if(!await artworkReady){
         logo.setAttribute('hidden','');
         const fallback=document.createElement('span');

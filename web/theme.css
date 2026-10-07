@@ -213,14 +213,14 @@ body #resultModal :is(#quizIntroView,#quizResultView) .modal-action svg { flex-s
 }
 
 /* Shared design system roles. Existing modal classes alias the same variants. */
-body :is(#app,#resultModal) button:is(.ui-primary,.modal-primary) {
+body :is(#app,#resultModal) :is(button,a):is(.ui-primary,.modal-primary) {
   --ui-accent: #e927ff;
   background: var(--ui-gloss),linear-gradient(110deg,#790970,#210c30 94%) !important;
   border-color: #e927ff !important;
   box-shadow: inset 0 0 18px #e927ff28,0 0 14px #e927ff55 !important;
   color: #fff !important;
 }
-body :is(#app,#resultModal) button:is(.ui-primary,.modal-primary):hover {
+body :is(#app,#resultModal) :is(button,a):is(.ui-primary,.modal-primary):hover {
   border-color: #ff91f5 !important;
   box-shadow: inset 0 0 20px #e927ff38,0 0 20px #e927ff80 !important;
 }
