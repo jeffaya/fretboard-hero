@@ -84,7 +84,7 @@ try {
 
     # 3b. Generate the Android launcher icon for this instrument from its web icon
     $iconKey = if ($entry.iconKey) { $entry.iconKey } else { $Instrument }
-    $iconSource = Join-Path $RepoPath "web\assets\icons\$iconKey\icon-1024.png"
+    $iconSource = Join-Path $RepoPath "web\assets\instruments\$iconKey\icon-1024.png"
     if (-not (Test-Path $iconSource)) {
         throw "Missing icon source for instrument '$Instrument' at $iconSource"
     }

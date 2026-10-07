@@ -3,7 +3,6 @@
   const q=(sel)=>document.querySelector(sel);
   const setAttr=(sel,attr,value)=>{const el=q(sel);if(el&&value!=null)el.setAttribute(attr,String(value));};
   const setMeta=(selector,value)=>setAttr(selector,'content',value);
-  const absolute=(base,path)=>{try{return new URL(path,base.endsWith('/')?base:`${base}/`).href}catch{return path}};
   const setText=(sel,value)=>{const el=q(sel);if(el&&value!=null)el.textContent=String(value)};
   const setAria=(sel,value)=>setAttr(sel,'aria-label',value);
 
@@ -13,7 +12,7 @@
     const seo=product.seo||{};
     const pwa=product.pwa||{};
     const iconKey=(product.id||'').replace(/-fretboard-hero$/,'')||'guitar';
-    const iconBase=`assets/icons/${iconKey}/`;
+    const iconBase=`assets/instruments/${iconKey}/`;
     const assets={
       faviconIco:`${iconBase}favicon.ico`,
       favicon16:`${iconBase}favicon-16.png`,
@@ -27,8 +26,8 @@
     };
     const home=product.home||{};
     const name=branding.name||product.name||'Fretboard Hero';
-    const url=(seo.canonical||product.url||location.href).replace(/\/$/,'')+'/';
-    const ogImage=absolute(url,assets.ogImage||'og.jpg');
+    const url=seo.canonical||product.url||location.href;
+    const ogImage=new URL(assets.ogImage||'assets/instruments/guitar/og.jpg','https://fretboard-hero.com/').href;
 
     document.title=seo.title||name;
     setMeta('meta[name="application-name"]',name);
@@ -74,6 +73,7 @@
     setAria('#quizFretboard',`Quiz ${instrumentLabel} fretboard`);
 
     const iconMap={
+      'link[rel="icon"][sizes="16x16 32x32 48x48"]':assets.faviconIco,
       'link[rel="shortcut icon"]':assets.faviconIco,
       'link[rel="icon"][type="image/svg+xml"]':assets.faviconSvg,
       'link[rel="icon"][sizes="16x16"]':assets.favicon16,
@@ -81,7 +81,10 @@
       'link[rel="icon"][sizes="48x48"]':assets.favicon48,
       'link[rel="icon"][sizes="192x192"]':assets.icon192,
       'link[rel="icon"][sizes="512x512"]':assets.icon512,
-      'link[rel="apple-touch-icon"]':assets.appleTouchIcon
+      'link[rel="apple-touch-icon"][sizes="120x120"]':`${iconBase}apple-touch-icon-120.png`,
+      'link[rel="apple-touch-icon"][sizes="152x152"]':`${iconBase}apple-touch-icon-152.png`,
+      'link[rel="apple-touch-icon"][sizes="167x167"]':`${iconBase}apple-touch-icon-167.png`,
+      'link[rel="apple-touch-icon"][sizes="180x180"]':`${iconBase}apple-touch-icon-180.png`
     };
     Object.entries(iconMap).forEach(([sel,href])=>{if(href)setAttr(sel,'href',href)});
 

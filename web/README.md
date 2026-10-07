@@ -226,3 +226,31 @@ Run the music and self-assessment checks from the repository root:
 ```sh
 node --test web/tests/play-exercises.test.cjs
 ```
+
+### Instrument identity assets (10.22)
+
+Production: https://fretboard-hero.com/. Guitar uses `/`, bass uses
+`/?instrument=bass-4`, and ukulele uses `/?instrument=ukulele`. Explicit links
+select the instrument before session preferences. Score sharing removes testing
+keys and preserves only the selected instrument.
+
+`assets/instruments/{guitar,bass,ukulele}/` owns each approved pick icon source,
+16–1024 px icon exports, iPhone/iPad touch icons (120/152/167/180), maskable PWA
+icons, lightweight loader WebP and 1200×630 OG JPEG. Rebuild icons with
+`python tools/generate-instrument-icons.py` from the repository root (Pillow).
+An optional instrument argument also refreshes checked-in native icons.
+Android builds use each instrument's 1024 px source; `sync-web.ps1` copies the
+selected source to the universal iOS AppIcon and Capacitor resource.
+
+The approved guitar OG is reused; bass/ukulele variants were produced with the
+built-in image generator, preserving the five menus, concert setting and neon
+composition while changing the instrument name, tagline and neck to four strings.
+
+The loader crossfades the three picks with a small rotation and neon halo. It is
+hidden by the existing bootstrap completion signal, without a minimum delay.
+Reduced-motion mode shows three static icons. Application layout rules are unchanged.
+
+`worker.js` rewrites the initial HTML metadata for social crawlers, which do not
+execute client JavaScript. Wrangler's `ASSETS` binding serves all other files.
+Deploy through the existing main-branch Cloudflare workflow; a plain static
+server only provides the default guitar metadata until JavaScript runs.
