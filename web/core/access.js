@@ -10,7 +10,7 @@
     return Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('')===config.testKeyHash;
   }
   function create(unlocked){
-    const allows=(feature,value)=>unlocked||({root:value==='A',quality:value==='minor',mapNote:value==='all'||DEMO_NOTES.includes(value),play:false,playRoot:value==='A',playQuality:value==='minor',playStyle:value==='Blues',playLevel:value==='Beginner',circle:false,mode:value==='pentatonic'}[feature]===true);
+    const allows=(feature,value)=>unlocked||({root:value==='A',quality:value==='minor',mapNote:value==='all'||DEMO_NOTES.includes(value),play:false,playRoot:value==='A',playQuality:value==='minor',playStyle:value==='Blues',playLevel:value==='Beginner',circle:false,position:String(value)==='1',mode:value==='pentatonic'}[feature]===true);
     return Object.freeze({unlocked,allows,notes:unlocked?null:DEMO_NOTES});
   }
   function mount(config,access){
