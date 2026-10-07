@@ -4,16 +4,16 @@
   "testKeyHash": "0290a7d691e69e8264cd0f7176be13bfdac503059eed426e2892fb04cbf2028b",
   "stores": {
     "guitar": {
-      "android": "",
-      "ios": ""
+      "android": "https://play.google.com/store/apps/details?id=com.guitar.fretboardhero",
+      "ios": "https://apps.apple.com/fr/app/guitar-fretboard-hero/id000000000"
     },
     "bass-4": {
-      "android": "",
-      "ios": ""
+      "android": "https://play.google.com/store/apps/details?id=com.bass.fretboardhero",
+      "ios": "https://apps.apple.com/fr/app/bass-fretboard-hero/id000000000"
     },
     "ukulele": {
-      "android": "",
-      "ios": ""
+      "android": "https://play.google.com/store/apps/details?id=com.ukulele.fretboardhero",
+      "ios": "https://apps.apple.com/fr/app/ukulele-fretboard-hero/id000000000"
     }
   },
   "publicUrl": "https://fretboard-hero.jf-seignemorte.workers.dev/"
