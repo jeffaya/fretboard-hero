@@ -491,7 +491,9 @@
   function quizShareUrl(){
     // Use the public website even in native builds; never share the testing key.
     let url;try{url=new URL(FRETBOARD_SITE_CONFIG.publicUrl||location.href);if(!['https:','http:'].includes(url.protocol))throw new Error('Invalid public URL')}catch{url=new URL(location.href)}
-    url.search='';url.hash='';return url.href;
+    url.search='';url.hash='';
+    if(FRETBOARD_SITE_CONFIG.instrument!=='guitar')url.searchParams.set('instrument',FRETBOARD_SITE_CONFIG.instrument);
+    return url.href;
   }
   $('#shareScore').addEventListener('click',async()=>{const qz=state.quiz||{score:0,correct:0},{emoji,rank}=quizRank(qz.score);const text=`${emoji} I reached ${rank} with ${qz.score.toLocaleString('en-US')} points and ${qz.correct} correct answers in ${quizSeconds()} seconds on ${product.name} ${product.shareEmoji||''}\nCan you beat my score? Try the free fretboard quiz!`,url=quizShareUrl();try{if(navigator.share)await navigator.share({title:product.name,text,url});else{await navigator.clipboard.writeText(`${text}\n${url}`);const shareLabel=$('#shareScore span');if(shareLabel){shareLabel.textContent='COPIED!';setTimeout(()=>shareLabel.textContent='SHARE MY SCORE',1400)}}}catch{}});
   renderPractice();

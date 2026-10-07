@@ -17,7 +17,9 @@
         window.alert('Allow session storage to change instruments on this device.');
         return;
       }
-      location.reload();
+      const destination=new URL(location.href);
+      destination.searchParams.set('instrument',instrument);
+      location.assign(destination.href);
     });
   });
 })();
