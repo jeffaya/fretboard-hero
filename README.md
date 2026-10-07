@@ -269,3 +269,13 @@ same instrument-specific HTTPS URL as its button, without detection or a
 redirect page. The local MIT QR encoder is loaded once, only when the dialog
 needs QR codes. Empty store URLs leave buttons disabled without “Coming soon”
 copy and omit QR codes; fill `stores` before releasing.
+
+## Production branding and social sharing
+
+The public website is **https://fretboard-hero.com/**. `web/site.config.json` contains its `publicUrl`, which is used by the quiz, runtime metadata and Cloudflare social renderer. Share the bass version with `?instrument=bass-4` or the ukulele version with `?instrument=ukulele`; the root URL defaults to guitar. Private testing parameters never enter the shared URL.
+
+`server/social.mjs` serves instrument-specific Open Graph, Twitter, canonical and icon metadata in the initial HTML, so link previews work without executing JavaScript. Wrangler invokes it only for `/` and `/index.html`; other assets retain normal static serving. No business/access restrictions run on the server.
+
+Approved artwork and regeneration instructions are in [`artwork/README.md`](artwork/README.md). Native variant builds use the same icon master for Android and iOS. The startup/switch loader is an instrument GIF, with a static reduced-motion fallback and an accessible status label.
+
+Validation (Node 22+): `node --test web/tests/*.test.cjs`. Validate Cloudflare packaging without deploying with `npx wrangler deploy --dry-run`. An actual APK/iOS build still requires the normal native toolchains.

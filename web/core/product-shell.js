@@ -3,7 +3,7 @@
   const q=(sel)=>document.querySelector(sel);
   const setAttr=(sel,attr,value)=>{const el=q(sel);if(el&&value!=null)el.setAttribute(attr,String(value));};
   const setMeta=(selector,value)=>setAttr(selector,'content',value);
-  const absolute=(base,path)=>{try{return new URL(path,base.endsWith('/')?base:`${base}/`).href}catch{return path}};
+  const absolute=(base,path)=>{try{return new URL(path,base).href}catch{return path}};
   const setText=(sel,value)=>{const el=q(sel);if(el&&value!=null)el.textContent=String(value)};
   const setAria=(sel,value)=>setAttr(sel,'aria-label',value);
 
@@ -27,8 +27,12 @@
     };
     const home=product.home||{};
     const name=branding.name||product.name||'Fretboard Hero';
-    const url=(seo.canonical||product.url||location.href).replace(/\/$/,'')+'/';
-    const ogImage=absolute(url,assets.ogImage||'og.jpg');
+    const publicUrl=window.FRETBOARD_SITE_CONFIG?.publicUrl||seo.canonical||product.url||location.href;
+    const canonical=new URL(publicUrl);
+    const selected=window.FRETBOARD_SITE_CONFIG?.instrument;
+    if(selected&&selected!=='guitar')canonical.searchParams.set('instrument',selected);
+    const url=canonical.href;
+    const ogImage=absolute(publicUrl,(assets.ogImage||'assets/og/guitar.jpg')+'?v=10.22.0');
 
     document.title=seo.title||name;
     setMeta('meta[name="application-name"]',name);
@@ -83,7 +87,13 @@
       'link[rel="icon"][sizes="512x512"]':assets.icon512,
       'link[rel="apple-touch-icon"]':assets.appleTouchIcon
     };
-    Object.entries(iconMap).forEach(([sel,href])=>{if(href)setAttr(sel,'href',href)});
+    Object.entries(iconMap).forEach(([sel,href])=>{if(href)setAttr(sel,'href',href+'?v=10.22.0')});
+
+    document.querySelectorAll('link[rel="apple-touch-icon"]').forEach(link=>{
+      const size=link.getAttribute('sizes')?.split('x')[0]||'180';
+      link.href=(size==='180'?assets.appleTouchIcon:`${iconBase}favicon-${size}.png`)+'?v=10.22.0';
+    });
+    setMeta('meta[name="msapplication-TileImage"]',`${iconBase}favicon-144.png?v=10.22.0`);
 
     const manifest={
       name:pwa.name||name,short_name:pwa.shortName||'Fretboard Hero',description:pwa.description||seo.description||'Interactive fretboard trainer.',
@@ -96,7 +106,7 @@
     };
     let manifestLink=q('link[rel="manifest"]');
     if(!manifestLink){manifestLink=document.createElement('link');manifestLink.rel='manifest';document.head.appendChild(manifestLink)}
-    manifestLink.href=pwa.manifest||'manifest.webmanifest';
+    manifestLink.href=(pwa.manifest||'manifest.webmanifest')+'?v=10.22.0';
     document.documentElement.dataset.productReady='true';
     window.FRETBOARD_ACTIVE_BRANDING=Object.freeze({name,url,ogImage,manifest});
   }

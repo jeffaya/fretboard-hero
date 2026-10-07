@@ -60,6 +60,12 @@ $indexPath = Join-Path $wwwPath "index.html"
 # UTF-8 characters (emoji, arrows) in the source HTML.
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 $indexContent = [System.IO.File]::ReadAllText($indexPath, [System.Text.Encoding]::UTF8)
+# The static first-load head must use this native build's instrument too.
+$instrumentCatalog = Get-Content (Join-Path $appRoot "instruments.json") -Raw | ConvertFrom-Json
+$iconKey = $instrumentCatalog.$Instrument.iconKey
+$indexContent = $indexContent.Replace("assets/icons/guitar/", "assets/icons/$iconKey/")
+$indexContent = $indexContent.Replace("assets/og/guitar.jpg", "assets/og/$iconKey.jpg")
+$indexContent = $indexContent.Replace("manifests/guitar.webmanifest", "manifests/$iconKey.webmanifest")
 $bridgeTag = "  <script src=`"./core/capacitor-bridge.js`" defer></script>`r`n"
 $indexContent = $indexContent -replace '(?=</body>)', $bridgeTag
 [System.IO.File]::WriteAllText($indexPath, $indexContent, $utf8NoBom)

@@ -11,13 +11,22 @@
     button.setAttribute('aria-pressed', String(active));
     button.addEventListener('click', () => {
       if (active) return;
+      document.body.setAttribute('data-loading','true');
+      document.body.setAttribute('aria-busy','true');
+      document.querySelector('#startupLoader').hidden=false;
       try {
         sessionStorage.setItem('fretboard-home-instrument', instrument);
       } catch {
+        document.body.removeAttribute('data-loading');
+        document.body.setAttribute('aria-busy','false');
+        document.querySelector('#startupLoader').hidden=true;
         window.alert('Allow session storage to change instruments on this device.');
         return;
       }
-      location.reload();
+      const url=new URL(location.href);
+      if(instrument==='guitar')url.searchParams.delete('instrument');
+      else url.searchParams.set('instrument',instrument);
+      location.assign(url.href);
     });
   });
 })();

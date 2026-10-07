@@ -82,7 +82,7 @@ try {
     }
     $stringsXml.Save($stringsPath)
 
-    # 3b. Generate the Android launcher icon for this instrument from its web icon
+    # 3b. Generate Android and iOS launcher icons for this instrument from its web icon
     $iconKey = if ($entry.iconKey) { $entry.iconKey } else { $Instrument }
     $iconSource = Join-Path $RepoPath "web\assets\icons\$iconKey\icon-1024.png"
     if (-not (Test-Path $iconSource)) {
@@ -94,10 +94,11 @@ try {
     if (Test-Path $assetsTemp) { Remove-Item $assetsTemp -Recurse -Force }
     New-Item -ItemType Directory -Path $assetsTemp -Force | Out-Null
     Copy-Item $iconSource (Join-Path $assetsTemp "logo.png")
+    Copy-Item $iconSource (Join-Path $appRoot "resources\icon.png")
 
     $previousEap = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
-    npx @capacitor/assets generate --android --iconBackgroundColor "#05070b" --iconBackgroundColorDark "#05070b" --assetPath "assets"
+    npx @capacitor/assets generate --android --ios --iconBackgroundColor "#05070b" --iconBackgroundColorDark "#05070b" --assetPath "assets"
     $assetsExitCode = $LASTEXITCODE
     $ErrorActionPreference = $previousEap
     Remove-Item $assetsTemp -Recurse -Force -ErrorAction SilentlyContinue

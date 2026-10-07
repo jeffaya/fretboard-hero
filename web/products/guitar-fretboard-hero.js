@@ -1,16 +1,16 @@
 window.FRETBOARD_PRODUCTS=window.FRETBOARD_PRODUCTS||{};
 window.FRETBOARD_PRODUCTS.guitar={
-  id:'guitar-fretboard-hero',instrument:'guitar',name:'Guitar Fretboard Hero',shareEmoji:'🎸',url:'https://guitar-fretboard-hero.seignemorte.com',
+  id:'guitar-fretboard-hero',instrument:'guitar',name:'Guitar Fretboard Hero',shareEmoji:'🎸',url:'https://fretboard-hero.com/',
   branding:{name:'Guitar Fretboard Hero',instrumentName:'Guitar',heroWords:['GUITAR','FRETBOARD','HERO']},
   home:{taglineHtml:'SEE IT <span>•</span> LEARN IT <span>•</span> PLAY IT',practiceDescription:'Pentatonics, triads & chords in every key',mapDescription:'Every note. One neck.',circleDescription:'Keys, chords & harmonic relationships',quizDescription:'Prove you know the neck. No excuses.'},
   seo:{
     title:'Guitar Fretboard Hero — Learn Guitar Fretboard Notes, Pentatonic Scales, Triads & Chords',
     description:'Learn the guitar fretboard with interactive note maps, major and minor pentatonic positions, triads, CAGED chord shapes and a 60-second fretboard quiz. Free, mobile-first and no account required.',
     keywords:['guitar fretboard','guitar fretboard notes','learn guitar fretboard','guitar notes','guitar neck notes','fretboard trainer','guitar fretboard trainer','minor pentatonic guitar','major pentatonic guitar','pentatonic positions guitar','guitar triads','CAGED chords','guitar chord shapes','fretboard quiz','guitar music theory'],
-    canonical:'https://guitar-fretboard-hero.seignemorte.com/',
+    canonical:'https://fretboard-hero.com/',
     ogTitle:'Guitar Fretboard Hero — Learn the Guitar Fretboard',
     ogDescription:'Learn every note, visualize pentatonic positions, triads and CAGED chords, then test your fretboard knowledge in a 60-second quiz.',
-    ogImageAlt:'Guitar Fretboard Hero interactive guitar fretboard with Practice, Fretboard Map and Quiz',
+    ogImageAlt:'Guitar Fretboard Hero interactive guitar fretboard home with Practice, Play, Fretboard Map, Quiz and Circle of Fifths',
     twitterTitle:'Guitar Fretboard Hero — Learn the Guitar Fretboard',
     twitterDescription:'Interactive guitar fretboard notes, pentatonic positions, triads, CAGED chords and a fast fretboard quiz. Free and no account required.',
     structuredDescription:'Free interactive guitar fretboard learning tool with note mapping, major and minor pentatonic positions, triads, CAGED chord shapes and a timed fretboard quiz.',
