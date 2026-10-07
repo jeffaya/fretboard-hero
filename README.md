@@ -260,3 +260,12 @@ mode. Remove `testKeyHash` to disable the override. The raw key is not committed
 This client-side preview gate is not a payment system or secure access control.
 
 Validation: `node --test web/tests/*.test.cjs`.
+
+The unlock dialog uses the shared `ui-modal` neon outline and the existing home
+SVG icons. On phones and portrait touch tablets the two store buttons stack;
+on wider landscape tablets they sit side by side. QR codes are desktop-only
+(minimum width 1024px with hover/fine-pointer capability). Each QR encodes the
+same instrument-specific HTTPS URL as its button, without detection or a
+redirect page. The local MIT QR encoder is loaded once, only when the dialog
+needs QR codes. Empty store URLs leave buttons disabled without “Coming soon”
+copy and omit QR codes; fill `stores` before releasing.

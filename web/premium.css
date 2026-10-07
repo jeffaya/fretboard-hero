@@ -1,12 +1,22 @@
 /* Demo affordances use the same shared primary, back and panel materials. */
 .premium-lock{display:inline-block;width:14px;height:14px;flex:0 0 14px;margin-left:5px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:2}
 .premium-overlay[hidden]{display:none}.premium-overlay{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;overflow:auto;padding:16px;background:#020614b8;box-sizing:border-box}
-.premium-dialog{box-sizing:border-box;width:min(520px,100%);max-height:calc(100dvh - 32px);overflow:auto;padding:clamp(20px,4vw,32px);border-radius:24px;text-align:center}
-.premium-dialog h2{margin:0 0 16px;font-size:clamp(26px,5vw,36px);color:#fff}.premium-dialog p{font-size:19px;line-height:1.4;color:var(--ui-muted)}.premium-dialog strong{display:block;color:#fff;font-size:18px}
-.premium-stores{display:grid;gap:12px;margin:22px 0 14px}
-body #app .premium-store{display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:10px;border:1px solid;border-radius:14px;text-decoration:none;font-size:20px}
-.premium-store svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7}
-.premium-close{margin:auto;padding:10px;font-size:18px}body[data-access='demo'] .circle-wheel-svg{touch-action:pan-y;cursor:default}
+.premium-dialog{box-sizing:border-box;width:min(850px,100%);max-height:calc(100dvh - 32px);overflow:auto;padding:clamp(20px,3vw,36px);border-radius:24px;text-align:center}
+.premium-dialog h2{margin:0;font-size:clamp(30px,4.2vw,56px);line-height:1.08;font-weight:800;color:#fff}.premium-dialog h2 span,.premium-dialog h2 em{display:block}.premium-dialog h2 em{font-style:normal;color:#fff0ff;text-shadow:0 0 4px #ff6df4,0 0 15px #e927ff,0 0 28px #e927ff80}
+.premium-pitch{margin:14px auto 18px;max-width:620px;font-size:clamp(16px,2vw,22px);line-height:1.35;color:#f2f4ff}
+.premium-neck{display:block;width:100%;height:auto;margin:0 auto 12px}
+.premium-skills{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;list-style:none;padding:0 0 18px;margin:0;border-bottom:1px solid #8998c360}
+.premium-skills li{display:flex;flex-direction:column;align-items:center;gap:5px;color:#fff;font-size:18px}.premium-skills svg{width:32px;height:32px}
+.premium-stores{display:grid;grid-template-columns:1fr;gap:14px;margin:20px 0 18px}.premium-store-column{min-width:0}
+body #app .premium-store{box-sizing:border-box;display:flex;width:100%;align-items:center;justify-content:center;gap:14px;min-height:74px;padding:10px 20px;border:1px solid;border-radius:18px;text-decoration:none;color:#fff}
+.premium-store>svg{width:38px;height:38px;flex-shrink:0}.premium-store>span{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1}.premium-store small{font-family:system-ui,sans-serif;font-size:13px}.premium-store b{font-family:system-ui,sans-serif;font-size:25px;font-weight:600}
+.premium-qr{display:none;margin:16px 0 0}.premium-qr svg{display:block;width:132px;height:132px;margin:auto;border-radius:8px}.premium-qr figcaption{margin-top:8px;color:var(--ui-muted);font-size:16px}
+.premium-promise{margin:0 0 8px;font-size:19px;line-height:1.3;color:#fff}.premium-close{margin:auto;padding:8px;font-size:18px}
+@media(min-width:700px){.premium-stores{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:700px) and (orientation:portrait) and (any-pointer:coarse){.premium-stores{grid-template-columns:1fr}}
+@media(min-width:1024px) and (any-hover:hover) and (any-pointer:fine){.premium-qr:not([hidden]){display:block}}
+@media(max-width:480px){.premium-overlay{padding:12px}.premium-dialog{padding:20px 14px;max-height:calc(100dvh - 24px)}.premium-dialog h2{font-size:clamp(27px,8.2vw,38px)}.premium-skills li{font-size:14px}.premium-skills svg{width:27px;height:27px}.premium-stores{margin:16px 0 12px;gap:10px}.premium-store b{font-size:23px}.premium-promise{font-size:17px}}
+body[data-access='demo'] .circle-wheel-svg{touch-action:pan-y;cursor:default}
 
 [data-premium-icon-only][data-premium-locked='true']{display:inline-flex;align-items:center;justify-content:center}
 [data-premium-icon-only] .premium-lock{width:22px;height:22px;flex-basis:22px;margin:0}
