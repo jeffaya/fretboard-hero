@@ -38,13 +38,13 @@
       function tick(now){const t=duration?Math.min(1,(now-time)/duration):1;dial.angle=start+(target-start)*(1-Math.pow(1-t,3));paint();if(t<1)dial.frame=requestAnimationFrame(tick)}dial.frame=requestAnimationFrame(tick);
     };
     const angle=e=>{const rect=svg.getBoundingClientRect();return Math.atan2(e.clientX-(rect.left+rect.width/2),-(e.clientY-(rect.top+rect.height/2)))*180/Math.PI};
-    svg.addEventListener('pointerdown',e=>{if(e.button!==0)return;cancelAnimationFrame(dial.frame);dial.drag={id:e.pointerId,last:angle(e),start:dial.angle};svg.setPointerCapture(e.pointerId)});
+    svg.addEventListener('pointerdown',e=>{if(e.button!==0||!dial.interactive)return;cancelAnimationFrame(dial.frame);dial.drag={id:e.pointerId,last:angle(e),start:dial.angle};svg.setPointerCapture(e.pointerId)});
     svg.addEventListener('pointermove',e=>{if(dial.drag?.id!==e.pointerId)return;const a=angle(e);let delta=a-dial.drag.last;if(delta>180)delta-=360;if(delta< -180)delta+=360;dial.angle+=delta;dial.drag.last=a;paint()});
     const finish=e=>{if(dial.drag?.id!==e.pointerId)return;dial.drag=null;const index=((Math.round(-dial.angle/30)%12)+12)%12;dial.onSelect(index)};
     svg.addEventListener('pointerup',finish);svg.addEventListener('pointercancel',finish);svg.addEventListener('lostpointercapture',finish);
-    svg.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();dial.onSelect((dial.selected+(e.key==='ArrowRight'?1:11))%12)}});
+    svg.addEventListener('keydown',e=>{if(dial.interactive&&(e.key==='ArrowRight'||e.key==='ArrowLeft')){e.preventDefault();dial.onSelect((dial.selected+(e.key==='ArrowRight'?1:11))%12)}});
     paint();return dial;
   }
-  function render({svg,selected=0,onSelect}){let dial=instances.get(svg);if(!dial){dial=mount(svg);instances.set(svg,dial)}dial.onSelect=onSelect;dial.update(selected)}
+  function render({svg,selected=0,onSelect,interactive=true}){let dial=instances.get(svg);if(!dial){dial=mount(svg);instances.set(svg,dial)}dial.interactive=interactive;dial.onSelect=onSelect;dial.update(selected)}
   window.CircleRenderer=Object.freeze({render});
 })();

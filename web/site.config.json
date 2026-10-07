@@ -1,3 +1,19 @@
 {
-  "instrument": "guitar"
+  "instrument": "guitar",
+  "unlocked": false,
+  "testKeyHash": "0290a7d691e69e8264cd0f7176be13bfdac503059eed426e2892fb04cbf2028b",
+  "stores": {
+    "guitar": {
+      "android": "",
+      "ios": ""
+    },
+    "bass-4": {
+      "android": "",
+      "ios": ""
+    },
+    "ukulele": {
+      "android": "",
+      "ios": ""
+    }
+  }
 }

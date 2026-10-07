@@ -36,7 +36,15 @@ Copy-Item -Path (Join-Path $webSource "*") -Destination $wwwPath -Recurse -Force
 
 # 2. Force the instrument selection for this build
 $siteConfigPath = Join-Path $wwwPath "site.config.json"
-@{ instrument = $Instrument } | ConvertTo-Json | Set-Content -Path $siteConfigPath -Encoding UTF8
+$siteConfig = Get-Content $siteConfigPath -Raw | ConvertFrom-Json
+$siteConfig.instrument = $Instrument
+$siteConfig | Add-Member -NotePropertyName unlocked -NotePropertyValue $true -Force
+$siteConfig.PSObject.Properties.Remove("testKeyHash")
+$utf8Config = New-Object System.Text.UTF8Encoding $false
+[System.IO.File]::WriteAllText($siteConfigPath, ($siteConfig | ConvertTo-Json -Depth 8), $utf8Config)
+if ((Get-Content $siteConfigPath -Raw | ConvertFrom-Json).unlocked -ne $true) {
+    throw "Native bundle must have unlocked=true."
+}
 
 # 3. Copy the native bridge script and inject its <script> tag before </body>
 $bridgeSource = Join-Path $appRoot "native-assets\capacitor-bridge.js"

@@ -13,6 +13,7 @@
   const modeKind=()=>ModeRegistry.kind(instrument,state.mode);
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   document.body.dataset.screen='home';
+  const access=window.FRETBOARD_ACCESS,premium=FretboardAccess.mount(FRETBOARD_SITE_CONFIG,access);window.FRETBOARD_PREMIUM=premium;
   const rootPC=()=>PC[state.root];
   const thirdPC=()=>mod(rootPC()+intervals[state.quality].third);
   const fifthPC=()=>mod(rootPC()+7);
@@ -43,7 +44,7 @@
         e.preventDefault();host.classList.add('select-open');trigger.setAttribute('aria-expanded','true');const options=[...menu.querySelectorAll('button')],index=options.indexOf(document.activeElement);options[(index+(e.key==='ArrowDown'?1:options.length-1)+options.length)%options.length]?.focus();
       });
     }
-    const signature=JSON.stringify(buttons.map(b=>[b.textContent.trim(),b.classList.contains('active')]));
+    const signature=JSON.stringify(buttons.map(b=>[b.textContent.trim(),b.classList.contains('active'),b.dataset.premiumLocked]));
     if(host.dataset.selectSignature===signature&&buttons.every((button,i)=>host._selectSources?.[i]===button))return;
     host._selectSources=buttons;
     host.dataset.selectSignature=signature;
@@ -51,7 +52,7 @@
     const active=buttons.find(b=>b.classList.contains('active'))||buttons[0];
     trigger.setAttribute('aria-label',`${host.closest('.control-group')?.querySelector('label')?.textContent||'Choose'}: ${active.textContent.trim()}`);
     trigger.innerHTML=`<span class="select-value"><i class="select-icon" aria-hidden="true"></i><span>${active.textContent.trim()}</span></span><b aria-hidden="true">⌄</b>`;
-    buttons.forEach(b=>{const o=document.createElement('button');o.type='button';o.className='select-option'+(b.classList.contains('active')?' active':'');o.textContent=b.textContent.trim();o.setAttribute('role','option');o.setAttribute('aria-selected',String(b.classList.contains('active')));o.addEventListener('click',()=>{b.click();host.classList.remove('select-open');trigger.setAttribute('aria-expanded','false');requestAnimationFrame(refreshAllSelects)});menu.append(o)});
+    buttons.forEach(b=>{const o=document.createElement('button');o.type='button';o.className='select-option'+(b.classList.contains('active')?' active':'');o.textContent=b.textContent.trim();if(b.dataset.premiumLocked==='true'){o.dataset.premiumLocked='true';o.classList.add('premium-locked');o.insertAdjacentHTML('beforeend',b.querySelector('.premium-lock').outerHTML)}o.setAttribute('role','option');o.setAttribute('aria-selected',String(b.classList.contains('active')));o.addEventListener('click',()=>{b.click();host.classList.remove('select-open');trigger.setAttribute('aria-expanded','false');requestAnimationFrame(refreshAllSelects)});menu.append(o)});
   }
   function refreshAllSelects(){ $$('.control-select').forEach(refreshSelect); requestAnimationFrame(updateAdaptiveControls); }
   document.addEventListener('click',e=>{if(!e.target.closest('.control-select'))$$('.control-select.select-open').forEach(x=>{x.classList.remove('select-open');x.querySelector('.select-trigger')?.setAttribute('aria-expanded','false')})});
@@ -100,9 +101,9 @@
   const fretHost=$('#fretCountControls .control-options');if(fretHost){fretHost.innerHTML='';engine.fretOptions.forEach(f=>{const b=document.createElement('button');b.type='button';b.dataset.frets=String(f);b.textContent=`${f} FT`;fretHost.appendChild(b)});}
   state.triadStrings=instrument.defaultTriadSet||state.triadStrings;
   NOTES.forEach(n=>{const b=document.createElement('button');b.textContent=n;b.dataset.root=n;if(n==='A')b.classList.add('active');$('#rootControls').appendChild(b)});
-  $('#rootControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;state.root=b.dataset.root;$$('#rootControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
-  $('#modeControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;state.mode=b.dataset.mode;const key=ModeRegistry.stateKey(instrument,state.mode),ctx=ModeRegistry.context(instrument,state.mode);state[key]=(key==='triadStrings'?instrument.defaultTriadSet:null)||ctx?.defaultValue||ctx?.values?.[0]||'all';$$('#modeControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
-  $('#qualityControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;state.quality=b.dataset.quality;$$('#qualityControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
+  $('#rootControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('root',b.dataset.root)){premium.open();return}state.root=b.dataset.root;$$('#rootControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
+  $('#modeControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('mode',ModeRegistry.kind(instrument,b.dataset.mode))){premium.open();return}state.mode=b.dataset.mode;const key=ModeRegistry.stateKey(instrument,state.mode),ctx=ModeRegistry.context(instrument,state.mode);state[key]=(key==='triadStrings'?instrument.defaultTriadSet:null)||ctx?.defaultValue||ctx?.values?.[0]||'all';$$('#modeControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
+  $('#qualityControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('quality',b.dataset.quality)){premium.open();return}state.quality=b.dataset.quality;$$('#qualityControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
   $('#fretCountControls').addEventListener('click',e=>{const b=e.target.closest('button[data-frets]');if(!b)return;state.maxFret=Number(b.dataset.frets);state.fretManual=true;renderPractice()});
   $('#practicePositionButtons').addEventListener('click',e=>{const b=e.target.closest('button[data-value]');if(!b)return;state[ModeRegistry.stateKey(instrument,state.mode)]=b.dataset.value;renderPractice()});
   let resizeRenderFrame=0;
@@ -129,7 +130,13 @@
 
   // Fretboard Map: all notes by default, or isolate one pitch class while learning it.
   NOTES.forEach(n=>{const b=document.createElement('button');b.type='button';b.textContent=n;b.dataset.mapNote=n;b.classList.add('neck-note-pill');b.style.setProperty('--note-color',FretboardMap.DEFAULT_COLORS[n]);$('#mapNoteControls')?.appendChild(b)});
-  $('#mapNoteControls')?.addEventListener('click',e=>{const b=e.target.closest('button[data-map-note]');if(!b)return;state.mapNote=b.dataset.mapNote;renderFretboardMap()});
+  $('#mapNoteControls')?.addEventListener('click',e=>{const b=e.target.closest('button[data-map-note]');if(!b)return;if(!access.allows('mapNote',b.dataset.mapNote)){premium.open();return}state.mapNote=b.dataset.mapNote;renderFretboardMap()});
+  $$('#rootControls button').forEach(b=>premium.mark(b,'root',b.dataset.root));
+  $$('#qualityControls button').forEach(b=>premium.mark(b,'quality',b.dataset.quality));
+  $$('#modeControls button').forEach(b=>premium.mark(b,'mode',ModeRegistry.kind(instrument,b.dataset.mode)));
+  $$('#mapNoteControls button').forEach(b=>premium.mark(b,'mapNote',b.dataset.mapNote));
+  premium.mark($('#circlePrevious'),'circle');premium.mark($('#circleNext'),'circle');
+  if(!access.unlocked){$('#circleWheel').setAttribute('aria-label','C major and A minor preview. Unlock the app to rotate.');$('.circle-navigation p').textContent='C major · A minor preview · Unlock to rotate';$('#circleWheel').addEventListener('click',premium.open);$('#circleWheel').addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Enter',' '].includes(e.key)){e.preventDefault();premium.open()}})}
   requestAnimationFrame(refreshAllSelects);
   function renderFretboardMap(){
     requestAnimationFrame(refreshAllSelects);
@@ -137,16 +144,16 @@
     const maxFret=Math.min(engine.maxFret,state.mapMaxFret);
     $$('#mapFretControls button[data-map-frets]').forEach(b=>b.classList.toggle('active',Number(b.dataset.mapFrets)===maxFret));
     $$('#mapNoteControls button[data-map-note]').forEach(b=>{const on=b.dataset.mapNote===state.mapNote;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});
-    FretboardMap.render({svg,engine,appearance,maxFret,selectedNote:state.mapNote,renderCore:renderFretboardCore,svgEl,noteName});
+    FretboardMap.render({svg,engine,appearance,maxFret,selectedNote:state.mapNote,allowedNotes:access.notes,renderCore:renderFretboardCore,svgEl,noteName});
   }
 
   $('#circlePrevious').addEventListener('click',()=>selectCircleKey(state.circleKey-1));
   $('#circleNext').addEventListener('click',()=>selectCircleKey(state.circleKey+1));
-  function selectCircleKey(index){state.circleKey=((index%12)+12)%12;renderCircle()}
+  function selectCircleKey(index){if(!access.allows('circle')){premium.open();return}state.circleKey=((index%12)+12)%12;renderCircle()}
   function renderCircle(){
     const wheel=$('#circleWheel');if(!wheel)return;
     const key=CircleOfFifths.getKey(state.circleKey);
-    CircleRenderer.render({svg:wheel,selected:state.circleKey,onSelect:selectCircleKey});
+    CircleRenderer.render({svg:wheel,selected:state.circleKey,onSelect:selectCircleKey,interactive:access.unlocked});
     $('#circleKeyTitle').textContent=`${key.name} MAJOR`;
     $('#circleRelative').textContent=`Relative minor • ${key.minor}`;
     $('#circleSignature').textContent=key.accidentals;

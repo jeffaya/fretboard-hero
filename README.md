@@ -237,3 +237,25 @@ Output APKs land in `dist/fretboard-hero-<instrument>-debug.apk`.
 `app/native-assets/capacitor-bridge.js` makes the Android hardware/gesture
 Back button navigate to Home first, then exit the app from Home. Covered by
 unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-bridge.test.js`).
+## Web demo and full app
+
+`web/site.config.json` is the central configuration:
+
+- `unlocked: false`: web preview, A minor pentatonic in Practice and Map,
+  one A minor Blues Beginner lick in Play, and the C major / A minor circle preview.
+  The Quiz and all three instruments remain available.
+- `unlocked: true`: complete access.
+- `stores`: Android and iOS HTTPS store URLs for each instrument. Empty URLs
+  show disabled “Coming soon” buttons in the shared unlock dialog.
+
+The native `scripts/sync-web.ps1` step always sets `unlocked: true` in
+`app/www/site.config.json` and removes `testKeyHash`. It leaves the web
+configuration untouched. Run the existing build scripts to regenerate the bundle;
+never edit `app/www` by hand. This sync step can also feed a future iOS build.
+
+A temporary web testing override accepts `?key=<test-key>` when its SHA-256
+hex digest matches `testKeyHash`. Without a matching key the site stays in demo
+mode. Remove `testKeyHash` to disable the override. The raw key is not committed.
+This client-side preview gate is not a payment system or secure access control.
+
+Validation: `node --test web/tests/*.test.cjs`.
