@@ -7,13 +7,20 @@
 
 .PARAMETER RepoPath
     Root of the fretoboard-hero repo. Default: the repo root (two levels up from this script).
+
+.PARAMETER BuildType
+    "Debug" (default, unsigned, for local testing) or "Release" (signed, requires
+    app/android/keystore.properties -- see docs/TECHNICAL.md).
 #>
 param(
     [Parameter(Mandatory = $true)]
     [ValidateSet("guitar", "bass-4", "ukulele")]
     [string]$Instrument,
 
-    [string]$RepoPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+    [string]$RepoPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
+
+    [ValidateSet("Debug", "Release")]
+    [string]$BuildType = "Debug"
 )
 
 $ErrorActionPreference = "Stop"
@@ -109,12 +116,13 @@ try {
         throw "npx cap sync android failed with exit code $LASTEXITCODE"
     }
 
-    # 5. Build the debug APK
+    # 5. Build the APK (debug or signed release)
+    $gradleTask = if ($BuildType -eq "Release") { "assembleRelease" } else { "assembleDebug" }
     Push-Location (Join-Path $appRoot "android")
     try {
-        & .\gradlew.bat assembleDebug
+        & .\gradlew.bat $gradleTask
         if ($LASTEXITCODE -ne 0) {
-            throw "gradlew assembleDebug failed with exit code $LASTEXITCODE"
+            throw "gradlew $gradleTask failed with exit code $LASTEXITCODE"
         }
     } finally {
         Pop-Location
@@ -122,11 +130,12 @@ try {
     }
 
     # 6. Copy the output APK into dist/ with an instrument-specific name
-    $builtApk = Join-Path $appRoot "android\app\build\outputs\apk\debug\app-debug.apk"
+    $buildTypeLower = $BuildType.ToLower()
+    $builtApk = Join-Path $appRoot "android\app\build\outputs\apk\$buildTypeLower\app-$buildTypeLower.apk"
     if (-not (Test-Path $builtApk)) {
-        throw "Build did not produce app-debug.apk at $builtApk"
+        throw "Build did not produce app-$buildTypeLower.apk at $builtApk"
     }
-    $outputApk = Join-Path $distDir "fretboard-hero-$Instrument-debug.apk"
+    $outputApk = Join-Path $distDir "fretboard-hero-$Instrument-$buildTypeLower.apk"
     Copy-Item -Path $builtApk -Destination $outputApk -Force
     Write-Host "Built $outputApk" -ForegroundColor Green
 } finally {
