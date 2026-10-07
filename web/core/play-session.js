@@ -3,7 +3,8 @@
   const STORAGE='fretboard-play-v1';
   function create({root=document,engine,refreshControls}){
     const $=s=>root.querySelector(s),family=engine.profile.family;
-    const state={root:'A',quality:'minor',style:'Blues',level:'Beginner',index:0,daily:true};
+    const access=window.FRETBOARD_ACCESS||{unlocked:true},premium=window.FRETBOARD_PREMIUM;
+    const state={root:'A',quality:'minor',style:'Blues',level:'Beginner',index:0,daily:access.unlocked};
     let completed=new Set(),storageAvailable=true;
     try{const saved=JSON.parse(localStorage.getItem(STORAGE)||'[]');if(Array.isArray(saved))completed=new Set(saved.filter(x=>typeof x==='string').slice(-2000))}catch{storageAvailable=false}
     function current(){const choices=PlayExercises.list(family,state.style,state.level,state.quality);return PlayExercises.transpose(choices[state.index%choices.length],state.root,engine)}
@@ -24,17 +25,18 @@
       $('#playGotIt').textContent=done?'✓ Next lick':'✓ Got it';
       $('#playProgress').textContent=`Your practice · ${[...completed].filter(x=>x.startsWith(family+'-')).length} licks completed${storageAvailable?'':' · Saving unavailable on this device'}`;
       $('#playStatus').textContent=done?`✓ ${exercise.title} — completed`:'';
-      $('#playSimpler').hidden=state.level==='Beginner';
+      $('#playSimpler').hidden=!access.unlocked||state.level==='Beginner';
       PlayRenderer.render($('#playTab'),exercise,engine);
       refreshControls();
     }
-    function setup(id,values,key){const host=$('#'+id);values.forEach(value=>{const b=document.createElement('button');b.type='button';b.textContent=key==='quality'?value.toUpperCase():value;b.classList.toggle('active',state[key]===value);b.setAttribute('aria-pressed',String(state[key]===value));b.addEventListener('click',()=>{state[key]=value;state.index=PlayExercises.dailyIndex();state.daily=true;host.querySelectorAll('button').forEach(n=>{n.classList.toggle('active',n===b);n.setAttribute('aria-pressed',String(n===b))});render()});host.append(b)})}
+    function setup(id,values,key){const host=$('#'+id);values.forEach(value=>{const b=document.createElement('button');b.type='button';b.textContent=key==='quality'?value.toUpperCase():value;b.classList.toggle('active',state[key]===value);b.setAttribute('aria-pressed',String(state[key]===value));const feature='play'+key[0].toUpperCase()+key.slice(1);if(!access.unlocked)premium.mark(b,feature,value);b.addEventListener('click',()=>{if(!access.unlocked&&!access.allows(feature,value)){premium.open();return}state[key]=value;state.index=access.unlocked?PlayExercises.dailyIndex():0;state.daily=access.unlocked;host.querySelectorAll('button').forEach(n=>{n.classList.toggle('active',n===b);n.setAttribute('aria-pressed',String(n===b))});render()});host.append(b)})}
     setup('playRootControls',MusicTheory.NOTES,'root');setup('playQualityControls',['major','minor'],'quality');setup('playStyleControls',PlayExercises.styles,'style');setup('playLevelControls',PlayExercises.levels,'level');
-    const next=()=>{state.index++;state.daily=false;render()};
+    if(!access.unlocked){premium.mark($('#playAnother'),'play');$('#playSimpler').hidden=true}
+    const next=()=>{if(!access.unlocked){premium.open();return}state.index++;state.daily=false;render()};
     $('#playAnother').addEventListener('click',next);
     $('#playGotIt').addEventListener('click',()=>{const id=identity(current());if(completed.has(id)){next();return}completed.add(id);save();render();$('#playStatus').textContent=`✓ ${current().title} — completed`});
     $('#playSimpler').addEventListener('click',()=>{state.level=PlayExercises.levels[Math.max(0,PlayExercises.levels.indexOf(state.level)-1)];$('#playLevelControls').querySelectorAll('button').forEach(b=>{const active=b.textContent===state.level;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});render()});
-    return {resize(){PlayRenderer.render($('#playTab'),current(),engine)},enter(){if(state.daily)state.index=PlayExercises.dailyIndex();render()}};
+    return {resize(){PlayRenderer.render($('#playTab'),current(),engine)},enter(){if(state.daily)state.index=access.unlocked?PlayExercises.dailyIndex():0;render()}};
   }
   window.PlaySession=Object.freeze({create});
 })();

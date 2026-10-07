@@ -1,0 +1,10 @@
+/* Demo affordances use the same shared primary, back and panel materials. */
+.premium-lock{display:inline-block;width:14px;height:14px;flex:0 0 14px;margin-left:5px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:2}
+.premium-overlay[hidden]{display:none}.premium-overlay{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;overflow:auto;padding:16px;background:#020614b8;box-sizing:border-box}
+.premium-dialog{box-sizing:border-box;width:min(520px,100%);max-height:calc(100dvh - 32px);overflow:auto;padding:clamp(20px,4vw,32px);border-radius:24px;text-align:center}
+.premium-dialog h2{margin:0 0 16px;font-size:clamp(26px,5vw,36px);color:#fff}.premium-dialog p{font-size:19px;line-height:1.4;color:var(--ui-muted)}.premium-dialog strong{display:block;color:#fff;font-size:18px}
+.premium-stores{display:grid;gap:12px;margin:22px 0 14px}
+body #app .premium-store{display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:10px;border:1px solid;border-radius:14px;text-decoration:none;font-size:20px}
+.premium-store svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7}
+.premium-close{margin:auto;padding:10px;font-size:18px}.premium-home{display:grid;gap:7px;text-align:center;width:100%;margin:16px auto 20px;flex-shrink:0}.premium-home strong{color:#fff;font-size:22px}.premium-home span{color:var(--ui-muted);font-size:16px}.premium-home button{border-radius:14px;min-height:46px;font-size:19px}
+body[data-access='demo'] .circle-wheel-svg{touch-action:pan-y;cursor:default}
