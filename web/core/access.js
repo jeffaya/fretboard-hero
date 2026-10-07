@@ -42,9 +42,14 @@
     </section>`;
     document.querySelector('#app').append(overlay);
     const dialog=overlay.querySelector('section'),stores=overlay.querySelector('.premium-stores');
-    // Reuse the exact home sprite rather than a second icon library.
-    for(const [label,symbol] of [['Notes','map'],['Scales','practice'],['Triads','circle'],['Chords','map'],['Licks','play']]){
-      const item=document.createElement('li');item.innerHTML=`<svg viewBox="0 0 64 64" aria-hidden="true"><use href="./assets/home/icons.svg#${symbol}"/></svg><span>${label}</span>`;overlay.querySelector('.premium-skills').append(item);
+    // Home is the single source for menu order, labels and artwork.
+    for(const menu of document.querySelectorAll('#home .hero-btn[data-go]')){
+      const icon=menu.querySelector('.hero-icon img'),title=menu.querySelector('.home-card-copy strong');
+      if(!icon||!title)continue;
+      const item=document.createElement('li'),label=document.createElement('span');
+      label.textContent=title.textContent.trim();
+      item.append(icon.cloneNode(true));item.append(label);
+      overlay.querySelector('.premium-skills').append(item);
     }
     const icons={android:'<path fill="#32d477" d="M3 2v20l12-10Z"/><path fill="#46c5ff" d="m3 2 15 8-3 2Z"/><path fill="#ffce45" d="m15 12 3-2 4 2-4 2Z"/><path fill="#fa5b75" d="m3 22 15-8-3-2Z"/>',ios:'<path fill="currentColor" d="M15 3c-2 0-3 2-3 4 2 0 3-2 3-4ZM12 9c-3-3-8-1-8 3 0 4 3 9 5 9l3-1 3 1c2 0 4-3 5-5-4-2-4-5-1-7-2-2-4-2-7 0Z"/>'};
     const qrTargets=[];
