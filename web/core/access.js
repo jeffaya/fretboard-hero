@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const DEMO_NOTES=['A','C','D','E','G'];
+  const DEMO_MAP_NOTES=Object.freeze(['A']);
   async function resolve(config,search=''){
     if(typeof config.unlocked!=='boolean')throw new Error('site.config.json: unlocked must be true or false');
     if(config.unlocked)return true;
@@ -10,8 +10,8 @@
     return Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('')===config.testKeyHash;
   }
   function create(unlocked){
-    const allows=(feature,value)=>unlocked||({root:value==='A',quality:value==='minor',mapNote:value==='all'||DEMO_NOTES.includes(value),play:false,playRoot:value==='A',playQuality:value==='minor',playStyle:value==='Blues',playLevel:value==='Beginner',circle:false,mode:value==='pentatonic'}[feature]===true);
-    return Object.freeze({unlocked,allows,notes:unlocked?null:DEMO_NOTES});
+    const allows=(feature,value)=>unlocked||({root:value==='A',quality:value==='minor',mapNote:value==='A',play:false,playRoot:value==='A',playQuality:value==='minor',playStyle:value==='Blues',playLevel:value==='Beginner',circle:false,position:String(value)==='1',mode:value==='pentatonic'}[feature]===true);
+    return Object.freeze({unlocked,allows,notes:unlocked?null:DEMO_MAP_NOTES});
   }
   function mount(config,access){
     if(access.unlocked)return {open(){},mark(){}};
@@ -33,10 +33,8 @@
     const open=()=>{if(!overlay.hidden)return;previous=document.activeElement;background=[...overlay.parentElement.children].filter(n=>n!==overlay).map(n=>[n,n.inert]);background.forEach(([n])=>n.inert=true);overlay.hidden=false;dialog.focus()};
     overlay.querySelector('.premium-close').addEventListener('click',close);overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
     overlay.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();close()}if(e.key==='Tab'){const nodes=[...dialog.querySelectorAll('a[href],button:not(:disabled)')];const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&(document.activeElement===first||document.activeElement===dialog)){e.preventDefault();last.focus()}else if(!e.shiftKey&&(document.activeElement===last||document.activeElement===dialog)){e.preventDefault();first.focus()}}});
-    const mark=(button,feature,value)=>{if(!button)return;const locked=!access.allows(feature,value);button.classList.toggle('premium-locked',locked);button.dataset.premiumLocked=String(locked);button.querySelector('.premium-lock')?.remove();if(locked)button.insertAdjacentHTML('beforeend',lock)};
-    document.addEventListener('click',e=>{const button=e.target.closest('[data-premium-locked="true"],[data-premium-open]');if(button){e.preventDefault();e.stopImmediatePropagation();open()}},true);
-    const banner=document.createElement('div');banner.className='premium-home';banner.innerHTML='<strong>Unlock your fretboard skills.</strong><span>The complete app — for the price of a coffee.</span><button class="ui-primary" type="button" data-premium-open>Get the app · €2.99</button>';
-    document.querySelector('#home .home-menu').append(banner);
+    const mark=(button,feature,value)=>{if(!button)return;const locked=!access.allows(feature,value);button.classList.toggle('premium-locked',locked);button.dataset.premiumLocked=String(locked);button.querySelector('.premium-lock')?.remove();if(locked){if(button.hasAttribute('data-premium-icon-only'))button.textContent='';button.insertAdjacentHTML('beforeend',lock)}};
+    document.addEventListener('click',e=>{const button=e.target.closest('[data-premium-locked="true"]');if(button){e.preventDefault();e.stopImmediatePropagation();open()}},true);
     document.body.dataset.access='demo';
     return {open,mark};
   }
