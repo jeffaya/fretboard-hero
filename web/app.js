@@ -9,7 +9,7 @@
   const tuning=engine.tuning,STRING_COUNT=engine.stringCount;
   const defaultFretCount=()=>window.innerWidth<=800?12:((navigator.maxTouchPoints||0)>1&&window.innerWidth<=1366?15:21);
   const firstMode=ModeRegistry.list(instrument)[0]?.id||'';
-  const state={screen:'home',mode:firstMode,root:'A',quality:'minor',pattern:ModeRegistry.context(instrument,'penta')?.defaultValue||'all',triadStrings:instrument.defaultTriadSet||ModeRegistry.context(instrument,'triad')?.defaultValue||'all',chordShape:ModeRegistry.context(instrument,'chord')?.defaultValue||'all',arpeggioType:ModeRegistry.context(instrument,'arpeggio')?.defaultValue||'triad',maxFret:defaultFretCount(),fretManual:false,degreeFilter:'all',mapMaxFret:defaultFretCount(),mapFretManual:false,mapNote:'all',quiz:null,quizReveal:null,circleKey:0};
+  const state={screen:'home',mode:firstMode,root:'A',quality:'minor',pattern:window.FRETBOARD_ACCESS.unlocked?(ModeRegistry.context(instrument,'penta')?.defaultValue||'all'):'1',triadStrings:instrument.defaultTriadSet||ModeRegistry.context(instrument,'triad')?.defaultValue||'all',chordShape:ModeRegistry.context(instrument,'chord')?.defaultValue||'all',arpeggioType:ModeRegistry.context(instrument,'arpeggio')?.defaultValue||'triad',maxFret:defaultFretCount(),fretManual:false,degreeFilter:'all',mapMaxFret:defaultFretCount(),mapFretManual:false,mapNote:'all',quiz:null,quizReveal:null,circleKey:0};
   const modeKind=()=>ModeRegistry.kind(instrument,state.mode);
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   document.body.dataset.screen='home';
@@ -102,10 +102,10 @@
   state.triadStrings=instrument.defaultTriadSet||state.triadStrings;
   NOTES.forEach(n=>{const b=document.createElement('button');b.textContent=n;b.dataset.root=n;if(n==='A')b.classList.add('active');$('#rootControls').appendChild(b)});
   $('#rootControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('root',b.dataset.root)){premium.open();return}state.root=b.dataset.root;$$('#rootControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
-  $('#modeControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('mode',ModeRegistry.kind(instrument,b.dataset.mode))){premium.open();return}state.mode=b.dataset.mode;const key=ModeRegistry.stateKey(instrument,state.mode),ctx=ModeRegistry.context(instrument,state.mode);state[key]=(key==='triadStrings'?instrument.defaultTriadSet:null)||ctx?.defaultValue||ctx?.values?.[0]||'all';$$('#modeControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
+  $('#modeControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('mode',ModeRegistry.kind(instrument,b.dataset.mode))){premium.open();return}state.mode=b.dataset.mode;const key=ModeRegistry.stateKey(instrument,state.mode),ctx=ModeRegistry.context(instrument,state.mode);state[key]=!access.unlocked&&key==='pattern'?'1':((key==='triadStrings'?instrument.defaultTriadSet:null)||ctx?.defaultValue||ctx?.values?.[0]||'all');$$('#modeControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
   $('#qualityControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('quality',b.dataset.quality)){premium.open();return}state.quality=b.dataset.quality;$$('#qualityControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
   $('#fretCountControls').addEventListener('click',e=>{const b=e.target.closest('button[data-frets]');if(!b)return;state.maxFret=Number(b.dataset.frets);state.fretManual=true;renderPractice()});
-  $('#practicePositionButtons').addEventListener('click',e=>{const b=e.target.closest('button[data-value]');if(!b)return;state[ModeRegistry.stateKey(instrument,state.mode)]=b.dataset.value;renderPractice()});
+  $('#practicePositionButtons').addEventListener('click',e=>{const b=e.target.closest('button[data-value]');if(!b)return;if(modeKind()==='pentatonic'&&!access.allows('position',b.dataset.value)){premium.open();return}state[ModeRegistry.stateKey(instrument,state.mode)]=b.dataset.value;renderPractice()});
   let resizeRenderFrame=0;
   window.addEventListener('resize',()=>{
     if(resizeRenderFrame)return;
@@ -273,7 +273,7 @@
     const label=$('#practicePositionLabel'),wrap=$('#practicePositionButtons');if(!label||!wrap)return;
     const ctx=FretboardControls.context(instrument,state.mode);if(!ctx)return;
     label.textContent=ctx.label;let current=state[ModeRegistry.stateKey(instrument,state.mode)];
-    wrap.innerHTML='';ctx.values.forEach(v=>{const b=document.createElement('button');b.type='button';b.dataset.value=v;b.textContent=v==='all'?'ALL':v;b.classList.toggle('active',v===current);wrap.appendChild(b)});
+    wrap.innerHTML='';ctx.values.forEach(v=>{const b=document.createElement('button');b.type='button';b.dataset.value=v;b.textContent=v==='all'?'ALL':v;b.classList.toggle('active',v===current);if(modeKind()==='pentatonic')premium.mark(b,'position',v);wrap.appendChild(b)});
   }
 
   function renderPractice(){
@@ -285,7 +285,7 @@
     $$('#fretCountControls button').forEach(b=>b.classList.toggle('active',Number(b.dataset.frets)===state.maxFret));
     renderContextControls();updatePracticeLegend();updateDegreeFilterUI();
     const shapes=selectedPracticeShapes();
-    if(kind==='pentatonic')$('#practiceHint').textContent='All connected positions are visible. Select one to isolate it.';
+    if(kind==='pentatonic')$('#practiceHint').textContent=state.pattern==='all'?'All connected positions are visible. Select one to isolate it.':`Position ${state.pattern} · ${access.unlocked?'Select another position to explore the neck.':'Unlock the app to explore all five positions.'}`;
     else if(kind==='triads'){const groups=Object.keys(instrument.triadSets||{});$('#practiceHint').textContent=state.triadStrings==='all'?`All close-voicing triads across ${groups.join(', ')}.`:`All root, 1st and 2nd inversion triads on ${state.triadStrings}.`;}
     else if(kind==='chords'){const label=(instrument.chords||instrument.caged)?.systemLabel||'chord';$('#practiceHint').textContent=state.chordShape==='all'?`All available ${label} shapes across the fretboard.`:`${state.chordShape} ${label} shape across the fretboard.`;}
     else if(kind==='arpeggios')$('#practiceHint').textContent='Chord tones across the full visible fretboard.';

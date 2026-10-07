@@ -241,7 +241,7 @@ unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-br
 
 `web/site.config.json` is the central configuration:
 
-- `unlocked: false`: web preview, A minor pentatonic in Practice and Map,
+- `unlocked: false`: web preview, A minor pentatonic position 1 in Practice, A minor pentatonic notes in Map,
   one A minor Blues Beginner lick in Play, and the C major / A minor circle preview.
   The Quiz and all three instruments remain available.
 - `unlocked: true`: complete access.
