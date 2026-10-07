@@ -15,39 +15,48 @@
   <meta name="keywords" content="fretboard trainer, fretboard notes, music theory, fretboard quiz">
   <meta name="author" content="Jean-François Seignemorte">
   <meta name="creator" content="Jean-François Seignemorte">
-  <link rel="canonical" href="./">
+  <link rel="canonical" href="https://fretboard-hero.com/">
   <meta property="og:title" content="Fretboard Hero — Master the Neck">
   <meta property="og:description" content="See it. Learn it. Play it. Explore the fretboard, then prove it in the quiz.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Fretboard Hero">
   <meta property="og:locale" content="en_US">
-  <meta property="og:url" content="./">
-  <meta property="og:image" content="./og.jpg">
+  <meta property="og:url" content="https://fretboard-hero.com/">
+  <meta property="og:image" content="https://fretboard-hero.com/assets/instruments/guitar/og.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Fretboard Hero — neon fretboard trainer with Practice, Quiz and Fretboard Map">
+  <meta property="og:image:alt" content="Fretboard Hero — neon fretboard trainer with Practice, Play, Fretboard Map, Quiz and Circle of Fifths">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fretboard Hero — Master the Neck">
   <meta name="twitter:description" content="Interactive fretboard training, note map and quiz. Free. No account. Just play.">
-  <meta name="twitter:image" content="./og.jpg">
-  <link rel="icon" sizes="16x16 32x32 48x48">
-  <link rel="shortcut icon">
-  <link rel="icon" type="image/png" sizes="16x16">
-  <link rel="icon" type="image/png" sizes="32x32">
-  <link rel="icon" type="image/png" sizes="48x48">
-  <link rel="icon" type="image/png" sizes="192x192">
-  <link rel="icon" type="image/png" sizes="512x512">
-  <link rel="apple-touch-icon" sizes="180x180">
+  <meta name="twitter:image" content="https://fretboard-hero.com/assets/instruments/guitar/og.jpg">
+  <link rel="icon" sizes="16x16 32x32 48x48" href="./assets/instruments/guitar/favicon.ico">
+  <link rel="shortcut icon" href="./assets/instruments/guitar/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/instruments/guitar/favicon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/instruments/guitar/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="./assets/instruments/guitar/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/instruments/guitar/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./assets/instruments/guitar/icon-512.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="./assets/instruments/guitar/apple-touch-icon-120.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="./assets/instruments/guitar/apple-touch-icon-152.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="./assets/instruments/guitar/apple-touch-icon-167.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/instruments/guitar/apple-touch-icon-180.png">
   <link rel="stylesheet" href="./styles.css?v=10.19.5">
   <link rel="stylesheet" href="./home.css?v=10.21.1">
-  <link rel="stylesheet" href="./theme.css?v=10.21.0">
+  <link rel="stylesheet" href="./theme.css?v=10.22.0">
   <link rel="stylesheet" href="./play.css?v=10.19.1">
   <link rel="stylesheet" href="./premium.css?v=10.21.1">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
 </head>
 <body data-loading="true" aria-busy="true">
-  <div id="startupLoader" class="startup-loader" role="status">Loading your instrument…</div>
+  <div id="startupLoader" class="startup-loader" role="status" aria-label="Loading your instrument">
+    <div class="instrument-loader" aria-hidden="true">
+      <img src="./assets/instruments/guitar/loader.webp" alt="" width="160" height="160">
+      <img src="./assets/instruments/bass/loader.webp" alt="" width="160" height="160">
+      <img src="./assets/instruments/ukulele/loader.webp" alt="" width="160" height="160">
+    </div>
+  </div>
   <div class="app-stage" aria-hidden="true"><i class="stage-light stage-light-pink"></i><i class="stage-light stage-light-blue"></i></div>
   <main id="app" class="app-shell">
     <section id="home" class="screen active home-screen" aria-label="Fretboard Hero home">
@@ -233,7 +242,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.21.1" defer></script>
+  <script src="./bootstrap.js?v=10.22.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

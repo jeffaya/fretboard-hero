@@ -9,3 +9,5 @@ app/android/captures/
 app/ios/App/Pods/
 app/ios/App/build/
 *.apk
+
+.wrangler/

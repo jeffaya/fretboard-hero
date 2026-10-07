@@ -2,8 +2,8 @@
   "name": "Ukulele Fretboard Hero",
   "short_name": "Ukulele Hero",
   "description": "Interactive ukulele fretboard trainer for scales, triads, chords, arpeggios, note mapping and quizzes.",
-  "id": "../",
-  "start_url": "../",
+  "id": "../?instrument=ukulele",
+  "start_url": "../?instrument=ukulele",
   "scope": "../",
   "display": "standalone",
   "orientation": "any",
@@ -16,19 +16,19 @@
   ],
   "icons": [
     {
-      "src": "../assets/icons/ukulele/icon-192.png",
+      "src": "../assets/instruments/ukulele/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "../assets/icons/ukulele/icon-512.png",
+      "src": "../assets/instruments/ukulele/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "../assets/icons/ukulele/icon-maskable-512.png",
+      "src": "../assets/instruments/ukulele/icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

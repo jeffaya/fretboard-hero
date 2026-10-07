@@ -46,6 +46,12 @@ if ((Get-Content $siteConfigPath -Raw | ConvertFrom-Json).unlocked -ne $true) {
     throw "Native bundle must have unlocked=true."
 }
 
+# Keep the universal iOS App Store icon and Capacitor source aligned with this build.
+$iconKey = if ($Instrument -eq "bass-4") { "bass" } else { $Instrument }
+$iconSource = Join-Path $webSource "assets\instruments\$iconKey\icon-1024.png"
+Copy-Item $iconSource (Join-Path $appRoot "resources\icon.png") -Force
+Copy-Item $iconSource (Join-Path $appRoot "ios\App\App\Assets.xcassets\AppIcon.appiconset\AppIcon-512@2x.png") -Force
+
 # 3. Copy the native bridge script and inject its <script> tag before </body>
 $bridgeSource = Join-Path $appRoot "native-assets\capacitor-bridge.js"
 $wwwCoreDir = Join-Path $wwwPath "core"
