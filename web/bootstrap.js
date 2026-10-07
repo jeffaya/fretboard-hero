@@ -20,7 +20,7 @@
     try{
       const response=await fetch('./site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
-      await load('./core/access.js?v=10.20.5');
+      await load('./core/access.js?v=10.21.0');
       window.FRETBOARD_ACCESS=FretboardAccess.create(await FretboardAccess.resolve(config,location.search));
       const defaultInstrument=config.instrument;
       if(!CATALOG[defaultInstrument])throw new Error(`Unknown instrument "${defaultInstrument}". Supported: ${Object.keys(CATALOG).join(', ')}`);
