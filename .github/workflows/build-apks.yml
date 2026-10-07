@@ -22,9 +22,7 @@ jobs:
           java-version: "21"
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          skip-license-acceptance: true
+        uses: android-actions/setup-android@v4
 
       - name: Install Android SDK packages
         shell: pwsh
