@@ -18,11 +18,13 @@
       $('#playTip').textContent=exercise.tip;
       $('#playTechniques').replaceChildren();
       exercise.techniques.forEach(code=>{const span=document.createElement('span');span.textContent=`${code} · ${PlayExercises.techniques[code]}`;$('#playTechniques').append(span)});
-      $('#playNoteCount').textContent=`${exercise.notes.length} notes · ${exercise.techniques.length} technique${exercise.techniques.length===1?'':'s'}`;
+      $('#playNotesCount').textContent=String(exercise.notes.length);
+      $('#playTechniquesCount').textContent=String(exercise.techniques.length);
+      $('#playTechniquesLabel').textContent=exercise.techniques.length===1?'technique':'techniques';
       $('#playGotIt').textContent=done?'✓ Next lick':'✓ Got it';
       $('#playProgress').textContent=`Your practice · ${[...completed].filter(x=>x.startsWith(family+'-')).length} licks completed${storageAvailable?'':' · Saving unavailable on this device'}`;
-      $('#playStatus').textContent=done?'Completed. Move on when you feel ready.':'';
-      $('#playSimpler').hidden=true;
+      $('#playStatus').textContent=done?`✓ ${exercise.title} — completed`:'';
+      $('#playSimpler').hidden=state.level==='Beginner';
       PlayRenderer.render($('#playTab'),exercise,engine);
       refreshControls();
     }
@@ -30,8 +32,7 @@
     setup('playRootControls',MusicTheory.NOTES,'root');setup('playQualityControls',['major','minor'],'quality');setup('playStyleControls',PlayExercises.styles,'style');setup('playLevelControls',PlayExercises.levels,'level');
     const next=()=>{state.index++;state.daily=false;render()};
     $('#playAnother').addEventListener('click',next);
-    $('#playGotIt').addEventListener('click',()=>{const id=identity(current());if(completed.has(id)){next();return}completed.add(id);save();render();$('#playStatus').textContent='Nice work. This lick is marked as completed.'});
-    $('#playPracticing').addEventListener('click',()=>{$('#playStatus').textContent='Take your time. Keep this lick and practise it again.';$('#playSimpler').hidden=state.level==='Beginner'});
+    $('#playGotIt').addEventListener('click',()=>{const id=identity(current());if(completed.has(id)){next();return}completed.add(id);save();render();$('#playStatus').textContent=`✓ ${current().title} — completed`});
     $('#playSimpler').addEventListener('click',()=>{state.level=PlayExercises.levels[Math.max(0,PlayExercises.levels.indexOf(state.level)-1)];$('#playLevelControls').querySelectorAll('button').forEach(b=>{const active=b.textContent===state.level;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});render()});
     return {resize(){PlayRenderer.render($('#playTab'),current(),engine)},enter(){if(state.daily)state.index=PlayExercises.dailyIndex();render()}};
   }
