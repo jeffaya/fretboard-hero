@@ -9,7 +9,7 @@
   const tuning=engine.tuning,STRING_COUNT=engine.stringCount;
   const defaultFretCount=()=>window.innerWidth<=800?12:((navigator.maxTouchPoints||0)>1&&window.innerWidth<=1366?15:21);
   const firstMode=ModeRegistry.list(instrument)[0]?.id||'';
-  const state={screen:'home',mode:firstMode,root:'A',quality:'minor',pattern:window.FRETBOARD_ACCESS.unlocked?(ModeRegistry.context(instrument,'penta')?.defaultValue||'all'):'1',triadStrings:instrument.defaultTriadSet||ModeRegistry.context(instrument,'triad')?.defaultValue||'all',chordShape:ModeRegistry.context(instrument,'chord')?.defaultValue||'all',arpeggioType:ModeRegistry.context(instrument,'arpeggio')?.defaultValue||'triad',maxFret:defaultFretCount(),fretManual:false,degreeFilter:'all',mapMaxFret:defaultFretCount(),mapFretManual:false,mapNote:'all',quiz:null,quizReveal:null,circleKey:0};
+  const state={screen:'home',mode:firstMode,root:'A',quality:'minor',pattern:window.FRETBOARD_ACCESS.unlocked?(ModeRegistry.context(instrument,'penta')?.defaultValue||'all'):'1',triadStrings:instrument.defaultTriadSet||ModeRegistry.context(instrument,'triad')?.defaultValue||'all',chordShape:ModeRegistry.context(instrument,'chord')?.defaultValue||'all',arpeggioType:ModeRegistry.context(instrument,'arpeggio')?.defaultValue||'triad',maxFret:defaultFretCount(),fretManual:false,degreeFilter:'all',mapMaxFret:defaultFretCount(),mapFretManual:false,mapNote:window.FRETBOARD_ACCESS.unlocked?'all':'A',quiz:null,quizReveal:null,circleKey:0};
   const modeKind=()=>ModeRegistry.kind(instrument,state.mode);
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   document.body.dataset.screen='home';
