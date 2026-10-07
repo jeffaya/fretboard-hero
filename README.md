@@ -245,6 +245,7 @@ unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-br
   one A minor Blues Beginner lick in Play, and the C major / A minor circle preview.
   The Quiz and all three instruments remain available.
 - `unlocked: true`: complete access.
+- `publicUrl`: public website URL included in Quiz score sharing, including native builds. Change it when moving to a new domain. Query parameters and fragments are omitted.
 - `stores`: Android and iOS HTTPS store URLs for each instrument. Empty URLs
   show disabled “Coming soon” buttons in the shared unlock dialog.
 
