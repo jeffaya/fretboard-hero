@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const DEMO_NOTES=['A','C','D','E','G'];
+  const DEMO_MAP_NOTES=Object.freeze(['A']);
   async function resolve(config,search=''){
     if(typeof config.unlocked!=='boolean')throw new Error('site.config.json: unlocked must be true or false');
     if(config.unlocked)return true;
@@ -10,8 +10,8 @@
     return Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('')===config.testKeyHash;
   }
   function create(unlocked){
-    const allows=(feature,value)=>unlocked||({root:value==='A',quality:value==='minor',mapNote:value==='all'||DEMO_NOTES.includes(value),play:false,playRoot:value==='A',playQuality:value==='minor',playStyle:value==='Blues',playLevel:value==='Beginner',circle:false,position:String(value)==='1',mode:value==='pentatonic'}[feature]===true);
-    return Object.freeze({unlocked,allows,notes:unlocked?null:DEMO_NOTES});
+    const allows=(feature,value)=>unlocked||({root:value==='A',quality:value==='minor',mapNote:value==='A',play:false,playRoot:value==='A',playQuality:value==='minor',playStyle:value==='Blues',playLevel:value==='Beginner',circle:false,position:String(value)==='1',mode:value==='pentatonic'}[feature]===true);
+    return Object.freeze({unlocked,allows,notes:unlocked?null:DEMO_MAP_NOTES});
   }
   function mount(config,access){
     if(access.unlocked)return {open(){},mark(){}};
