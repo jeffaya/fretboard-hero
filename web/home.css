@@ -72,7 +72,7 @@
   color: var(--ui-accent);
   filter: none;
 }
-#home .hero-icon svg {
+#home .hero-icon img {
   width: 48px;
   height: 48px;
   filter: drop-shadow(0 0 5px var(--ui-accent));
@@ -133,7 +133,7 @@
   #home.home-screen { padding-right: 14px !important; padding-left: 14px !important; }
   #home .hero-btn { grid-template-columns: 62px minmax(0, 1fr) 12px !important; gap: 12px; padding-right: 10px !important; }
   #home .hero-btn .hero-icon { width: 62px !important; }
-  #home .hero-icon svg { width: 40px; height: 40px; }
+  #home .hero-icon img { width: 40px; height: 40px; }
   #home .hero-btn strong { font-size: 18px !important; }
   #home .hero-btn small { font-size: 14px !important; }
 }
@@ -161,7 +161,7 @@
   #home .home-actions { gap: 8px !important; }
   #home .hero-btn { min-height: 62px !important; grid-template-columns: 64px minmax(0, 1fr) 14px !important; gap: 14px; }
   #home .hero-btn .hero-icon { width: 64px !important; height: 60px !important; }
-  #home .hero-icon svg { width: 38px; height: 38px; }
+  #home .hero-icon img { width: 38px; height: 38px; }
   #home .hero-btn strong { font-size: 18px !important; }
   #home .hero-btn small { font-size: 14px !important; }
   #home .home-instruments { margin-top: 12px; }
@@ -174,7 +174,7 @@
   #home .home-actions { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   #home .hero-btn { grid-template-columns: 48px minmax(0, 1fr) 10px !important; gap: 10px; padding-right: 8px !important; }
   #home .hero-btn .hero-icon { width: 48px !important; }
-  #home .hero-icon svg { width: 32px; height: 32px; }
+  #home .hero-icon img { width: 32px; height: 32px; }
   #home .hero-btn strong { font-size: 17px !important; }
   #home .hero-btn small { font-size: 13px !important; }
   #home .tagline { font-size: 13px !important; }
