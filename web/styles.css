@@ -3030,7 +3030,7 @@ body{
    exactly --sa-top instead of the inset eating into the fixed-height box
    (which previously crushed the title/menu button — see padding-top below). */
 :root{--screen-nav-h:calc(66px + var(--sa-top))}
-.learn-screen>.topbar,.fretmap-screen>.topbar,.quiz-screen>.topbar,.circle-screen>.topbar,.play-screen>.topbar{
+.learn-screen>.topbar,.fretmap-screen>.topbar,.quiz-screen>.topbar,.circle-screen>.topbar,.routine-screen>.topbar{
   display:grid!important;grid-template-columns:42px minmax(0,1fr) 42px!important;align-items:center!important;
   width:100%!important;min-height:var(--screen-nav-h)!important;height:var(--screen-nav-h)!important;
   padding:max(6px,var(--sa-top)) max(10px,var(--sa-right)) 6px max(10px,var(--sa-left))!important;gap:8px!important;

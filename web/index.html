@@ -42,10 +42,10 @@
   <link rel="apple-touch-icon" sizes="152x152" href="./assets/instruments/guitar/apple-touch-icon-152.png">
   <link rel="apple-touch-icon" sizes="167x167" href="./assets/instruments/guitar/apple-touch-icon-167.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/instruments/guitar/apple-touch-icon-180.png">
-  <link rel="stylesheet" href="./styles.css?v=10.23.0">
+  <link rel="stylesheet" href="./styles.css?v=10.24.0">
   <link rel="stylesheet" href="./home.css?v=10.21.1">
-  <link rel="stylesheet" href="./theme.css?v=10.23.0">
-  <link rel="stylesheet" href="./play.css?v=10.19.1">
+  <link rel="stylesheet" href="./theme.css?v=10.24.0">
+  <link rel="stylesheet" href="./routine.css?v=10.24.0">
   <link rel="stylesheet" href="./premium.css?v=10.21.1">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
 </head>
@@ -68,7 +68,7 @@
         <div class="home-menu">
           <nav class="home-actions" aria-label="Choose your session">
             <button class="hero-btn learn-card" data-go="learn"><span class="hero-icon"><img src="./assets/home/learn.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>LEARN</strong><small>Notes · Triads · Scales · Chords</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-            <button class="hero-btn play-card" data-go="play"><span class="hero-icon"><img src="./assets/home/play.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>PLAY</strong><small>Learn by playing · Daily licks</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+            <button class="hero-btn routine-card" data-go="routine"><span class="hero-icon"><img src="./assets/home/play.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>DAILY ROUTINE</strong><small>One key · Five guided exercises</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn map-card" data-go="fretmap"><span class="hero-icon"><img src="./assets/home/map.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>FRETBOARD MAP</strong><small>Explore the neck</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn quiz-card" data-go="quiz"><span class="hero-icon"><img src="./assets/home/quiz.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>QUIZ</strong><small>Test your knowledge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn circle-card" data-go="circle"><span class="hero-icon"><img src="./assets/home/circle.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>CIRCLE OF FIFTHS</strong><small>Visualize & practice</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
@@ -82,36 +82,31 @@
       </div>
     </section>
 
-    <section id="play" class="screen play-screen" aria-label="Play">
+    <section id="routine" class="screen routine-screen" aria-label="Daily Routine">
       <header class="topbar">
         <button class="icon-btn nav-back ui-back" data-go="home" aria-label="Back home"><span class="back-icon" aria-hidden="true">←</span></button>
-        <div class="section-heading"><strong>PLAY</strong><small class="screen-context">LEARN BY PLAYING</small></div>
-        <button id="playMenuBtn" class="icon-btn mobile-menu-btn" aria-label="Open Play setup" aria-expanded="false"><span></span><span></span><span></span></button>
+        <div class="section-heading"><strong>DAILY ROUTINE</strong></div>
+        <button id="routineMenuBtn" class="icon-btn mobile-menu-btn" aria-label="Open Routine setup" aria-expanded="false"><span></span><span></span><span></span></button>
       </header>
-      <div id="playDrawer" class="responsive-drawer" aria-hidden="true">
-        <div class="drawer-head"><strong>PLAY SETUP</strong><button id="playMenuClose" class="icon-btn" aria-label="Close menu">×</button></div>
+      <ol id="routineSteps" class="routine-steps" aria-label="Routine progress"></ol>
+      <div id="routineDrawer" class="responsive-drawer" aria-hidden="true">
+        <div class="drawer-head"><strong>ROUTINE SETUP</strong><button id="routineMenuClose" class="icon-btn" aria-label="Close menu">×</button></div>
         <section class="control-panel">
-          <div class="control-group is-select" data-control-group="style"><label>STYLE</label><div id="playStyleControls" class="control-options"></div><div class="control-select" data-select-for="playStyleControls"></div></div>
-          <div class="control-group is-select" data-control-group="root"><label>NOTE</label><div id="playRootControls" class="control-options"></div><div class="control-select" data-select-for="playRootControls"></div></div>
-          <div class="control-group is-select" data-control-group="quality"><label>KEY</label><div id="playQualityControls" class="control-options"></div><div class="control-select" data-select-for="playQualityControls"></div></div>
-          <div class="control-group is-select" data-control-group="level"><label>LEVEL</label><div id="playLevelControls" class="control-options"></div><div class="control-select" data-select-for="playLevelControls"></div></div>
+          <div class="control-group is-select" data-control-group="root"><label>NOTE</label><div id="routineRootControls" class="control-options"></div><div class="control-select" data-select-for="routineRootControls"></div></div>
+          <div class="control-group is-select" data-control-group="quality"><label>KEY</label><div id="routineQualityControls" class="control-options"></div><div class="control-select" data-select-for="routineQualityControls"></div></div>
         </section>
       </div>
-      <div id="playDrawerBackdrop" class="drawer-backdrop"></div>
-      <div class="play-content">
-        <article class="play-exercise ui-panel">
-          <span id="playLickKicker" class="play-kicker">DAILY LICK</span>
-          <h2 id="playLickTitle">Back to the root</h2>
-          <p id="playLickContext"></p>
-          <div class="play-stats" aria-label="Lick details"><span><strong id="playNotesCount">0</strong> notes</span><span><strong id="playTechniquesCount">0</strong> <span id="playTechniquesLabel">techniques</span></span></div>
-          <div id="playTabScroll" class="play-tab-scroll" aria-label="Full exercise tablature"><svg id="playTab" role="img" aria-label="Exercise tablature"></svg></div>
-          <p class="play-rhythm-help">Read left to right · Bar:beat above note length · ¼, ½, 1 or 2 beats · Count four beats per bar.</p>
-          <div class="play-exercise-footer"><div id="playTechniques" class="play-techniques"></div><p id="playTip"></p></div>
+      <div id="routineDrawerBackdrop" class="drawer-backdrop"></div>
+      <div class="routine-content">
+        <article class="routine-exercise ui-panel">
+          <span id="routineKicker" class="routine-kicker">EXERCISE 1 OF 5</span>
+          <h2 id="routineTitle" tabindex="-1">Find the root note</h2>
+          <p id="routineContext"></p>
+          <p id="routineInstruction"></p>
+          <div id="routineTabScroll" class="routine-tab-scroll"><svg id="routineTab" role="img"></svg></div>
+          <p id="routineLegend" class="routine-legend">Read left to right · <span>Cyan = root note</span> · Play at your own pace</p>
         </article>
-        <div class="play-actions"><button id="playGotIt" class="ui-primary" type="button">✓ Got it</button><button id="playAnother" class="ui-secondary" type="button">Try another →</button></div>
-        <p id="playStatus" class="play-status" role="status"></p>
-        <div class="play-links"><button id="playSimpler" class="ui-back" type="button" hidden>Try an easier level →</button></div>
-        <p id="playProgress" class="play-progress"></p>
+        <div class="routine-actions"><button id="routineNext" class="ui-primary" type="button">Next →</button><button id="routineFinish" class="ui-primary" type="button" data-go="home" hidden>Back home</button></div>
       </div>
     </section>
 
@@ -242,7 +237,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.23.0" defer></script>
+  <script src="./bootstrap.js?v=10.24.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>
