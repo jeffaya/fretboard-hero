@@ -3,19 +3,21 @@
   const NS='http://www.w3.org/2000/svg';
   const el=(tag,attrs={},text='')=>{const n=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,v);if(text)n.textContent=text;return n};
   function render(svg,exercise,engine){
+    const t=value=>window.FretboardI18n?.text(value)||value;
+    exercise={...exercise,title:t(exercise.title),detail:t(exercise.detail),columns:exercise.columns.map(column=>({...column,label:column.label?t(column.label):''}))};
     svg.replaceChildren();
     const width=Math.max(240,Math.round(svg.parentElement.clientWidth)),compact=width<600;
-    const labelled=exercise.columns.some(c=>c.label),left=24,right=10,row=compact?25:32;
-    const minimum=labelled?102:30,capacity=Math.max(1,Math.floor((width-left-right)/minimum));
+    const labelled=exercise.columns.some(c=>c.label),left=42,right=10,row=compact?25:32;
+    const minimum=labelled?Math.max(102,...exercise.columns.map(c=>(c.label||'').length*8+20)):30,capacity=Math.max(1,Math.floor((width-left-right)/minimum));
     const lines=Math.ceil(exercise.columns.length/capacity),count=Math.ceil(exercise.columns.length/lines);
     const top=labelled?34:20,lineHeight=top+(engine.stringCount-1)*row+26,height=lines*lineHeight;
     svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.style.minWidth='0';
-    const description=exercise.columns.map(c=>`${c.label?c.label+': ':''}${c.notes.map(n=>`${engine.tuning[n.string].name} string ${engine.stringCount-n.string}, fret ${n.fret}`).join(', ')}`).join('; ');
+    const description=exercise.columns.map(c=>`${c.label?c.label+': ':''}${c.notes.map(n=>t(`${engine.tuning[n.string].name} string ${engine.stringCount-n.string}, fret ${n.fret}`)).join(', ')}`).join('; ');
     svg.append(el('title',{},`${exercise.title}. ${exercise.detail}. ${description}`));
     for(let line=0;line<lines;line++){
       const columns=exercise.columns.slice(line*count,(line+1)*count),step=(width-left-right)/columns.length,offset=line*lineHeight;
       engine.tuning.forEach((course,string)=>{const y=offset+top+(engine.stringCount-1-string)*row;
-        svg.append(el('text',{x:8,y:y+5,fill:'#c6d3e6','font-size':14},engine.stringCount===6&&string===5?'e':course.name),el('line',{x1:left,y1:y,x2:width-right,y2:y,stroke:'#899bb3','stroke-width':1}));
+        svg.append(el('text',{x:4,y:y+5,fill:'#c6d3e6','font-size':12,'data-no-i18n':''},window.FretboardI18n?.note(course.name)||course.name),el('line',{x1:left,y1:y,x2:width-right,y2:y,stroke:'#899bb3','stroke-width':1}));
       });
       columns.forEach((column,i)=>{
         const x=left+(i+.5)*step;
