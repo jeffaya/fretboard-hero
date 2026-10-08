@@ -62,13 +62,13 @@
     setAria('#home .hero-logo svg',name);
     setAria('#home',`${name} home`);
     setText('.tagline',`MASTER THE ${(branding.instrumentName||instrument?.label||'INSTRUMENT').toUpperCase()} NECK`);
-    setText('#home .practice-card small',ModeRegistry.list(instrument).map(m=>m.label.charAt(0)+m.label.slice(1).toLowerCase()).join(' · '));
+    setText('#home .learn-card small',ModeRegistry.list(instrument).map(m=>m.label.charAt(0)+m.label.slice(1).toLowerCase()).join(' · '));
     setText('#home .map-card small','Explore the neck');
     setText('#home .circle-card small','Visualize & practice');
     setText('#home .quiz-card small','Test your knowledge');
 
     const instrumentLabel=(instrument?.label||branding.instrumentName||'instrument').toLowerCase();
-    setAria('#practiceFretboard',`Interactive ${instrumentLabel} fretboard`);
+    setAria('#learnFretboard',`Interactive ${instrumentLabel} fretboard`);
     setAria('#mapFretboard',`All ${instrumentLabel} notes on the fretboard`);
     setAria('#quizFretboard',`Quiz ${instrumentLabel} fretboard`);
 

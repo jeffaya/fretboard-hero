@@ -170,7 +170,7 @@ body{
   width: 42px;
 }
 
-.practice-screen,.quiz-screen{
+.learn-screen,.quiz-screen{
   flex-direction: column;
 }
 
@@ -253,7 +253,7 @@ body{
   box-shadow: inset 0 0 30px #000,0 0 24px #00c8ff0c;
 }
 
-.practice-board{
+.learn-board{
   flex: 1;
   min-height: 330px;
 }
@@ -271,7 +271,7 @@ body{
   user-select: none;
 }
 
-.practice-hint{
+.learn-hint{
   padding: 9px 16px max(14px,var(--sa-bottom));
   text-align: center;
   color: #718b9e;
@@ -394,7 +394,7 @@ body{
     justify-content: flex-start;
   }
 
-  .practice-board{
+  .learn-board{
     min-height: 56dvh;
   }
 
@@ -418,7 +418,7 @@ body{
 }
 
 @media (min-width:801px) {
-  .practice-screen .fretboard-wrap,.quiz-screen .fretboard-wrap{
+  .learn-screen .fretboard-wrap,.quiz-screen .fretboard-wrap{
     max-height: 60vh;
   }
 
@@ -514,13 +514,13 @@ button{
 }
 
 @media (max-width:800px) {
-  .practice-screen{
+  .learn-screen{
     height: 100dvh;
     min-height: 100dvh;
     overflow: hidden;
   }
 
-  .practice-screen .topbar{ flex: 0 0 auto; }
+  .learn-screen .topbar{ flex: 0 0 auto; }
 
   .desktop-back{
     display: none;
@@ -655,13 +655,13 @@ button{
     font-size: 10px;
   }
 
-  .practice-board{
+  .learn-board{
     flex: 1 1 auto;
     min-height: 0;
     margin: 0 10px 6px;
   }
 
-  .practice-hint{
+  .learn-hint{
     display: none;
   }
 
@@ -775,13 +775,13 @@ button{
   box-shadow: 0 0 14px #27d7ff44;
 }
 
-.practice-legend{
+.learn-legend{
   padding: 9px 18px 2px;
   justify-content: flex-end;
   flex: 0 0 auto;
 }
 
-.practice-legend small{
+.learn-legend small{
   white-space: nowrap;
 }
 
@@ -806,7 +806,7 @@ button{
     padding: 9px 5px;
   }
 
-  .practice-legend{
+  .learn-legend{
     width: auto;
     max-width: 100%;
     margin: 0 10px;
@@ -817,7 +817,7 @@ button{
     scrollbar-width: none;
   }
 
-  .practice-legend::-webkit-scrollbar{
+  .learn-legend::-webkit-scrollbar{
     display: none;
   }
 }
@@ -939,7 +939,7 @@ button{
   filter: saturate(.35);
 }
 
-.practice-legend .legend-filter{
+.learn-legend .legend-filter{
   appearance: none;
   border: 0;
   background: transparent;
@@ -954,20 +954,20 @@ button{
   transition: background .16s ease,box-shadow .16s ease,opacity .16s ease,transform .16s ease;
 }
 
-.practice-legend .legend-filter:hover{
+.learn-legend .legend-filter:hover{
   background: #ffffff0b;
 }
 
-.practice-legend .legend-filter.active{
+.learn-legend .legend-filter.active{
   background: #101d2a;
   box-shadow: inset 0 0 0 2px #ffffff25,0 0 18px #26d8ff18;
 }
 
-.practice-legend .legend-filter.active .legend{
+.learn-legend .legend-filter.active .legend{
   transform: scale(1.08);
 }
 
-.practice-legend .legend-filter.legend-muted{
+.learn-legend .legend-filter.legend-muted{
   pointer-events: none;
 }
 
@@ -1051,7 +1051,7 @@ button{
     padding: 8px 10px;
   }
 
-  .practice-legend .legend-filter{
+  .learn-legend .legend-filter{
     flex: 0 0 auto;
   }
 }
@@ -1116,7 +1116,7 @@ button:hover,button:active,a:hover,a:active{
   box-shadow: none !important;
 }
 
-.practice-legend-row{
+.learn-legend-row{
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -1124,7 +1124,7 @@ button:hover,button:active,a:hover,a:active{
   padding: 7px 18px max(10px,var(--sa-bottom));
 }
 
-.practice-legend-row .practice-hint{
+.learn-legend-row .learn-hint{
   padding: 0;
   margin: 0;
   flex: 0 1 auto;
@@ -1132,7 +1132,7 @@ button:hover,button:active,a:hover,a:active{
   white-space: nowrap;
 }
 
-.practice-legend-row .practice-legend{
+.learn-legend-row .learn-legend{
   padding: 0;
   margin: 0;
   flex: 0 0 auto;
@@ -1204,42 +1204,42 @@ button:hover,button:active,a:hover,a:active{
     display: block !important;
   }
 
-  .practice-screen .control-panel{
+  .learn-screen .control-panel{
     display: flex !important;
     align-items: flex-end !important;
     gap: 8px !important;
     padding: 2px 12px 4px !important;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     padding: 2px 0 !important;
     margin: 0 !important;
     min-width: 0 !important;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     flex: 1 1 470px;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     flex: 0 0 auto;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     flex: 0 0 auto;
   }
 
-  .practice-screen .control-group label{
+  .learn-screen .control-group label{
     margin-bottom: 4px !important;
     font-size: 9px !important;
   }
 
-  .practice-screen .control-options{
+  .learn-screen .control-options{
     gap: 4px !important;
     flex-wrap: nowrap !important;
   }
 
-  .practice-screen .control-options button,.practice-screen .control-group button{
+  .learn-screen .control-options button,.learn-screen .control-group button{
     min-height: 28px !important;
     height: 28px !important;
     min-width: 0 !important;
@@ -1248,7 +1248,7 @@ button:hover,button:active,a:hover,a:active{
     line-height: 26px !important;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     display: flex !important;
     align-items: center !important;
     gap: 4px !important;
@@ -1256,21 +1256,21 @@ button:hover,button:active,a:hover,a:active{
     flex-wrap: nowrap !important;
   }
 
-  .practice-screen .practice-board{
+  .learn-screen .learn-board{
     min-height: 0 !important;
   }
 }
 
-/* V6.9: Fretboard Map uses the canonical control component rules (same as Practice). */
+/* V6.9: Fretboard Map uses the canonical control component rules (same as Learn). */
 
 @media (min-width:801px) and (max-width:1100px) and (orientation:portrait) {
-  .practice-screen{
+  .learn-screen{
     height: 100dvh;
     min-height: 100dvh;
     overflow: hidden;
   }
 
-  .practice-screen .topbar{ flex: 0 0 auto; }
+  .learn-screen .topbar{ flex: 0 0 auto; }
 
   .desktop-back{
     display: none !important;
@@ -1368,22 +1368,22 @@ button:hover,button:active,a:hover,a:active{
     margin: 0 0 2px !important;
   }
 
-  .practice-board{
+  .learn-board{
     flex: 1 1 auto !important;
     min-height: 0 !important;
     margin: 0 10px 6px !important;
   }
 
-  .practice-legend-row{
+  .learn-legend-row{
     padding: 4px 10px max(8px,var(--sa-bottom));
     gap: 6px;
   }
 
-  .practice-legend-row .practice-hint{
+  .learn-legend-row .learn-hint{
     display: none !important;
   }
 
-  .practice-legend-row .practice-legend{
+  .learn-legend-row .learn-legend{
     width: 100%;
     overflow-x: auto;
     justify-content: flex-start;
@@ -1391,7 +1391,7 @@ button:hover,button:active,a:hover,a:active{
     scrollbar-width: none;
   }
 
-  .practice-legend-row .practice-legend::-webkit-scrollbar{
+  .learn-legend-row .learn-legend::-webkit-scrollbar{
     display: none;
   }
 }
@@ -1503,14 +1503,14 @@ button:hover,button:active,a:hover,a:active{
   box-shadow: 0 0 14px #ff38c844;
 }
 
-.practice-screen .control-options button,.practice-screen .control-group button{
+.learn-screen .control-options button,.learn-screen .control-group button{
   min-width: 42px;
   padding: 7px 10px;
   line-height: normal;
 }
 
 @media (min-width:768px) and (orientation:landscape) {
-  .practice-screen .responsive-drawer{
+  .learn-screen .responsive-drawer{
     display: grid !important;
     grid-template-columns: minmax(430px,1.8fr) auto auto;
     grid-template-areas: "core context frets";
@@ -1519,7 +1519,7 @@ button:hover,button:active,a:hover,a:active{
     padding: 2px 12px 7px !important;
   }
 
-  .practice-screen .responsive-drawer .control-panel{
+  .learn-screen .responsive-drawer .control-panel{
     grid-area: core;
     display: grid !important;
     grid-template-columns: minmax(300px,1.5fr) auto auto !important;
@@ -1528,47 +1528,47 @@ button:hover,button:active,a:hover,a:active{
     align-items: end !important;
   }
 
-  .practice-screen .responsive-drawer .control-group{
+  .learn-screen .responsive-drawer .control-group{
     padding: 0 !important;
     margin: 0 !important;
   }
 
-  .practice-screen .responsive-drawer .control-group{
+  .learn-screen .responsive-drawer .control-group{
     min-width: 0 !important;
   }
 
-  .practice-screen .responsive-drawer .control-options{
+  .learn-screen .responsive-drawer .control-options{
     gap: 5px !important;
     flex-wrap: nowrap !important;
   }
 
-  .practice-screen .responsive-drawer .control-group label,.practice-screen .control-group>label,.practice-screen .control-group label{
+  .learn-screen .responsive-drawer .control-group label,.learn-screen .control-group>label,.learn-screen .control-group label{
     font-size: 10px !important;
     margin: 0 0 5px !important;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     grid-area: context;
     padding: 0 !important;
     display: block !important;
   }
 
-  .practice-screen .control-options{
+  .learn-screen .control-options{
     gap: 5px !important;
     flex-wrap: nowrap !important;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     grid-area: frets;
     padding: 0 !important;
     display: block !important;
   }
 
-  .practice-screen .control-group button{
+  .learn-screen .control-group button{
     margin-right: 3px;
   }
 
-  .practice-screen .control-options button,.practice-screen .control-group button{
+  .learn-screen .control-options button,.learn-screen .control-group button{
     min-height: 32px !important;
     height: 32px !important;
     min-width: 40px !important;
@@ -1577,7 +1577,7 @@ button:hover,button:active,a:hover,a:active{
     line-height: normal !important;
   }
 
-  .practice-screen #modeControls button{
+  .learn-screen #modeControls button{
     min-width: auto !important;
   }
 }
@@ -1664,7 +1664,7 @@ button:hover,button:active,a:hover,a:active{
   }
 }
 
-.fretboard-wrap,.practice-board.fretboard-wrap,.fretboard-wrap.practice-board{
+.fretboard-wrap,.learn-board.fretboard-wrap,.fretboard-wrap.learn-board{
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -1672,7 +1672,7 @@ button:hover,button:active,a:hover,a:active{
   padding: 0 !important;
 }
 
-.practice-board,.map-board,.quiz-board{
+.learn-board,.map-board,.quiz-board{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1680,30 +1680,30 @@ button:hover,button:active,a:hover,a:active{
   margin-right: auto !important;
 }
 
-.practice-board svg,.map-board svg,.quiz-board svg{
+.learn-board svg,.map-board svg,.quiz-board svg{
   display: block;
   margin: auto;
   max-width: 100%;
   max-height: 100%;
 }
 
-.practice-board svg,.map-board svg,.quiz-board svg{
+.learn-board svg,.map-board svg,.quiz-board svg{
   filter: saturate(.94) contrast(1.07) drop-shadow(0 12px 20px #0008);
 }
 
 @media (orientation:landscape) {
-  .practice-board,.map-board,.quiz-board{
+  .learn-board,.map-board,.quiz-board{
     width: min(100%,1800px);
   }
 }
 
 @media (orientation:portrait) {
-  .practice-board,.map-board,.quiz-board{
+  .learn-board,.map-board,.quiz-board{
     width: 100%;
     min-height: 0;
   }
 
-  .practice-board svg,.map-board svg,.quiz-board svg{
+  .learn-board svg,.map-board svg,.quiz-board svg{
     filter: saturate(.96) contrast(1.05) drop-shadow(0 7px 13px #0007);
   }
 }
@@ -1719,14 +1719,14 @@ body{
     #07090d;
 }
 
-.practice-board,.map-board,.quiz-board{
+.learn-board,.map-board,.quiz-board{
   width: var(--fretboard-desktop-width) !important;
   max-width: none !important;
   margin-inline: calc((100% - var(--fretboard-desktop-width))/2) !important;
   overflow: visible;
 }
 
-.practice-board svg,.map-board svg,.quiz-board svg{
+.learn-board svg,.map-board svg,.quiz-board svg{
   width: 100% !important;
   max-width: none !important;
   height: auto;
@@ -1734,19 +1734,19 @@ body{
 }
 
 @media (max-width:1024px), (orientation:portrait) {
-  .practice-board,.map-board,.quiz-board{
+  .learn-board,.map-board,.quiz-board{
     width: 100% !important;
     max-width: 100% !important;
     margin-inline: auto !important;
   }
 
-  .practice-board svg,.map-board svg,.quiz-board svg{
+  .learn-board svg,.map-board svg,.quiz-board svg{
     width: 100% !important;
     max-width: 100% !important;
   }
 }
 
-.practice-board,.map-board,.quiz-board{
+.learn-board,.map-board,.quiz-board{
   width: 100vw !important;
   max-width: none !important;
   margin-left: calc(50% - 50vw) !important;
@@ -1755,7 +1755,7 @@ body{
   padding-right: 0 !important;
 }
 
-.practice-board svg,.map-board svg,.quiz-board svg{
+.learn-board svg,.map-board svg,.quiz-board svg{
   width: 100% !important;
   max-width: none !important;
   margin: 0 !important;
@@ -1898,7 +1898,7 @@ body{
 }
 
 @media (min-width:1200px) {
-  .practice-screen .responsive-drawer{
+  .learn-screen .responsive-drawer{
     display: flex !important;
     align-items: flex-end !important;
     gap: 14px !important;
@@ -1906,7 +1906,7 @@ body{
     flex-wrap: wrap !important;
   }
 
-  .practice-screen .responsive-drawer .control-panel{
+  .learn-screen .responsive-drawer .control-panel{
     display: flex !important;
     align-items: flex-end !important;
     gap: 14px !important;
@@ -1915,15 +1915,15 @@ body{
     min-width: 0 !important;
   }
 
-  .practice-screen .responsive-drawer .control-group{
+  .learn-screen .responsive-drawer .control-group{
     flex: 1 1 500px;
   }
 
-  .practice-screen .responsive-drawer .control-group{
+  .learn-screen .responsive-drawer .control-group{
     flex: 0 0 auto;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     display: block !important;
     padding: 0 !important;
     flex: 0 0 auto;
@@ -1957,7 +1957,7 @@ body{
 }
 
 @media (min-width:768px) and (max-width:1199px) and (orientation:portrait) {
-  .practice-screen .responsive-drawer{
+  .learn-screen .responsive-drawer{
     display: flex !important;
     position: static !important;
     transform: none !important;
@@ -1972,31 +1972,31 @@ body{
     align-items: flex-end !important;
   }
 
-  .practice-screen .responsive-drawer .drawer-head{
+  .learn-screen .responsive-drawer .drawer-head{
     display: none !important;
   }
 
-  .practice-screen .responsive-drawer .control-panel{
+  .learn-screen .responsive-drawer .control-panel{
     display: contents !important;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     display: block !important;
     padding: 0 !important;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     flex: 1 1 0 !important;
     min-width: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
   }
 
-  .practice-screen .control-options{
+  .learn-screen .control-options{
     display: none !important;
   }
 
-  .practice-screen .control-select{
+  .learn-screen .control-select{
     display: block !important;
     min-width: 0;
     width: 100%;
@@ -2033,7 +2033,7 @@ body{
 }
 
 @media (min-width:768px) and (max-width:1199px) and (orientation:landscape) {
-  .practice-screen .responsive-drawer{
+  .learn-screen .responsive-drawer{
     display: flex !important;
     align-items: flex-end !important;
     gap: 9px !important;
@@ -2042,7 +2042,7 @@ body{
     overflow: visible !important;
   }
 
-  .practice-screen .responsive-drawer .control-panel{
+  .learn-screen .responsive-drawer .control-panel{
     display: flex !important;
     align-items: flex-end !important;
     gap: 9px !important;
@@ -2051,22 +2051,22 @@ body{
     flex: 1 1 auto !important;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     display: block !important;
     padding: 0 !important;
     flex: 0 0 auto !important;
   }
 
-  .practice-screen .control-group{
+  .learn-screen .control-group{
     min-width: 0 !important;
     flex: 1 1 auto !important;
   }
 
-  .practice-screen .control-options{
+  .learn-screen .control-options{
     gap: 4px !important;
   }
 
-  .practice-screen .control-options button{
+  .learn-screen .control-options button{
     min-width: 36px !important;
     padding: 0 7px !important;
     font-size: 10px !important;
@@ -2158,20 +2158,20 @@ body{
 
 }
 
-.practice-learning-area{
+.learn-learning-area{
   min-height: 0;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
 }
 
-.practice-board,.map-board,.quiz-board{
+.learn-board,.map-board,.quiz-board{
   min-height: 0 !important;
   flex: 1 1 auto !important;
 }
 
 @media (orientation:portrait) {
-  .practice-learning-area{
+  .learn-learning-area{
     display: grid !important;
     grid-template-columns: minmax(0,1fr) auto;
     grid-template-rows: minmax(0,1fr);
@@ -2180,7 +2180,7 @@ body{
     min-height: 0;
   }
 
-  .practice-learning-area .practice-board{
+  .learn-learning-area .learn-board{
     grid-column: 1;
     grid-row: 1;
     width: 100% !important;
@@ -2189,14 +2189,14 @@ body{
     margin: 0 !important;
   }
 
-  .practice-learning-area .practice-board svg{
+  .learn-learning-area .learn-board svg{
     width: 100% !important;
     height: 100% !important;
     max-height: 100% !important;
     object-fit: contain;
   }
 
-  .practice-learning-area .practice-legend-row{
+  .learn-learning-area .learn-legend-row{
     grid-column: 2;
     grid-row: 1;
     width: 76px;
@@ -2206,11 +2206,11 @@ body{
     justify-content: center !important;
   }
 
-  .practice-learning-area .practice-hint{
+  .learn-learning-area .learn-hint{
     display: none !important;
   }
 
-  .practice-learning-area .practice-legend{
+  .learn-learning-area .learn-legend{
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
@@ -2221,13 +2221,13 @@ body{
     padding: 0 !important;
   }
 
-  .practice-learning-area .legend-filter{
+  .learn-learning-area .legend-filter{
     width: max-content;
     padding: 3px !important;
     gap: 4px !important;
   }
 
-  .practice-learning-area .legend-filter small{
+  .learn-learning-area .legend-filter small{
     font-size: 9px !important;
     margin: 0 !important;
   }
@@ -2248,23 +2248,23 @@ body{
 }
 
 @media (orientation:landscape) {
-  .practice-learning-area{
+  .learn-learning-area{
     display: flex !important;
     flex-direction: column !important;
     flex: 1 1 auto;
     min-height: 0;
   }
 
-  .practice-learning-area .practice-board{
+  .learn-learning-area .learn-board{
     flex: 1 1 auto !important;
     min-height: 0 !important;
   }
 
-  .practice-learning-area .practice-legend-row{
+  .learn-learning-area .learn-legend-row{
     flex: 0 0 auto !important;
   }
 
-  .practice-board,.map-board,.quiz-board{
+  .learn-board,.map-board,.quiz-board{
     width: 100vw !important;
     max-width: none !important;
     margin-left: calc(50% - 50vw) !important;
@@ -2273,7 +2273,7 @@ body{
 }
 
 @media (max-width:767px) {
-  .practice-screen .desktop-back{
+  .learn-screen .desktop-back{
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
@@ -2298,17 +2298,17 @@ body{
 .hud-stat span{font-family:var(--ui-font);font-weight:800;letter-spacing:.14em;color:#8da8b9;font-size:14px}
 .hud-stat strong{font-family:var(--ui-font);font-size:24px;color:#fff}.hud-combo strong{color:#27d7ff}
 
-/* Portrait: Map geometry is the canonical fretboard geometry for Practice + Quiz.
+/* Portrait: Map geometry is the canonical fretboard geometry for Learn + Quiz.
    Legend is an overlay and never participates in fretboard centering/sizing. */
 @media (orientation:portrait) and (max-width:1199px){
-  .practice-learning-area{position:relative;display:block!important;width:100%;min-height:0}
-  .practice-board,.map-board,.quiz-board{width:100vw!important;max-width:none!important;margin-left:calc(50% - 50vw)!important;margin-right:calc(50% - 50vw)!important;display:flex!important;justify-content:center!important;align-items:center!important}
-  .practice-board svg,.map-board svg,.quiz-board svg{display:block!important;width:auto!important;max-width:88vw!important;height:min(72dvh,1500px)!important;max-height:72dvh!important;margin:0 auto!important}
-  .practice-legend-row{position:absolute!important;right:max(6px,var(--sa-right))!important;top:50%!important;transform:translateY(-50%)!important;z-index:6!important;width:auto!important;margin:0!important;pointer-events:none}
-  .practice-legend{display:flex!important;flex-direction:column!important;gap:7px!important;pointer-events:auto;background:rgba(3,10,18,.55);backdrop-filter:blur(5px);border-radius:16px;padding:7px 5px!important}
-  .practice-legend .legend-filter{width:max-content!important;min-width:76px!important;box-sizing:border-box!important;padding:2px 8px 2px 4px!important;display:flex!important;align-items:center!important;gap:6px!important}
-  .practice-legend .legend-filter small{font-size:10px!important}
-  .practice-hint{display:none!important}
+  .learn-learning-area{position:relative;display:block!important;width:100%;min-height:0}
+  .learn-board,.map-board,.quiz-board{width:100vw!important;max-width:none!important;margin-left:calc(50% - 50vw)!important;margin-right:calc(50% - 50vw)!important;display:flex!important;justify-content:center!important;align-items:center!important}
+  .learn-board svg,.map-board svg,.quiz-board svg{display:block!important;width:auto!important;max-width:88vw!important;height:min(72dvh,1500px)!important;max-height:72dvh!important;margin:0 auto!important}
+  .learn-legend-row{position:absolute!important;right:max(6px,var(--sa-right))!important;top:50%!important;transform:translateY(-50%)!important;z-index:6!important;width:auto!important;margin:0!important;pointer-events:none}
+  .learn-legend{display:flex!important;flex-direction:column!important;gap:7px!important;pointer-events:auto;background:rgba(3,10,18,.55);backdrop-filter:blur(5px);border-radius:16px;padding:7px 5px!important}
+  .learn-legend .legend-filter{width:max-content!important;min-width:76px!important;box-sizing:border-box!important;padding:2px 8px 2px 4px!important;display:flex!important;align-items:center!important;gap:6px!important}
+  .learn-legend .legend-filter small{font-size:10px!important}
+  .learn-hint{display:none!important}
 }
 
 /* Tablet portrait: selects are the intentional primary UI, not tiny radios. */
@@ -2331,7 +2331,7 @@ body{
 
 }
 
-/* Mobile: Practice-style drawer is canonical. Map order is NOTES -> FRETBOARD in DOM. */
+/* Mobile: Learn-style drawer is canonical. Map order is NOTES -> FRETBOARD in DOM. */
 @media (max-width:767px){
   .responsive-drawer{width:min(88vw,610px)!important}
   .control-panel{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:22px!important}
@@ -2371,12 +2371,12 @@ body{
   .control-options{gap:var(--control-gap)!important}.control-options button{min-height:var(--control-min-h)!important;min-width:clamp(58px,4.2vw,92px)!important;padding:0 clamp(13px,1vw,22px)!important;font-size:clamp(15px,1vw,22px)!important;border-radius:clamp(11px,.8vw,17px)!important}
   .control-group .control-options button{min-width:clamp(52px,3.5vw,78px)!important}
   .topbar>.icon-btn{width:clamp(58px,4.2vw,82px)!important;height:clamp(58px,4.2vw,82px)!important}
-  .practice-board,.map-board,.quiz-board{margin-top:4px!important}
+  .learn-board,.map-board,.quiz-board{margin-top:4px!important}
 }
 
 /* ==========================================================================
    V6.3 — SHARED CONTROL + FRETBOARD SYSTEM
-   Practice / Map / Quiz share one visual language. Screen-specific rules may
+   Learn / Map / Quiz share one visual language. Screen-specific rules may
    place components, but must not redefine the components themselves.
    ========================================================================== */
 :root{
@@ -2406,7 +2406,7 @@ body{
 }
 .control-group .control-options button:hover{transform:none!important}
 
-/* Fret count is the same component in Practice and Map. */
+/* Fret count is the same component in Learn and Map. */
 .control-group{
   padding:0!important;margin:0!important;display:block!important;background:transparent!important;border:0!important;box-shadow:none!important;
 }
@@ -2435,25 +2435,25 @@ body{
 
 /* Shared portrait neck geometry. The legend is an overlay and never consumes width. */
 @media (orientation:portrait) and (max-width:1199px){
-  .practice-learning-area{position:relative!important;display:flex!important;flex:1 1 auto!important;min-height:0!important;width:100%!important}
-  .practice-board,.map-board,.quiz-board{
+  .learn-learning-area{position:relative!important;display:flex!important;flex:1 1 auto!important;min-height:0!important;width:100%!important}
+  .learn-board,.map-board,.quiz-board{
     flex:1 1 auto!important;min-height:0!important;width:100vw!important;max-width:none!important;
     margin:0 calc(50% - 50vw)!important;display:flex!important;align-items:center!important;justify-content:center!important;
   }
-  .practice-board svg,.map-board svg,.quiz-board svg{
+  .learn-board svg,.map-board svg,.quiz-board svg{
     display:block!important;width:auto!important;height:100%!important;max-height:100%!important;max-width:94vw!important;margin:auto!important;
   }
-  .practice-legend-row{
+  .learn-legend-row{
     position:absolute!important;right:max(7px,var(--sa-right))!important;top:50%!important;transform:translateY(-50%)!important;
     z-index:8!important;width:auto!important;padding:0!important;margin:0!important;pointer-events:none!important;
   }
-  .practice-legend{pointer-events:auto!important}
+  .learn-legend{pointer-events:auto!important}
 
 }
 
-/* Mobile drawers: roomy, readable, same component layout for Practice and Map. */
+/* Mobile drawers: roomy, readable, same component layout for Learn and Map. */
 @media (max-width:767px){
-  .practice-screen .mobile-menu-btn,.fretmap-screen .mobile-menu-btn{display:inline-flex!important}
+  .learn-screen .mobile-menu-btn,.fretmap-screen .mobile-menu-btn{display:inline-flex!important}
   .responsive-drawer{width:min(92vw,430px)!important;padding:16px 16px max(20px,var(--sa-bottom))!important}
   .drawer-head{margin-bottom:20px!important}
   .responsive-drawer .control-panel,.control-panel{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:20px!important}
@@ -2464,7 +2464,7 @@ body{
   .responsive-drawer #rootControls{grid-template-columns:repeat(6,minmax(0,1fr))!important}
   .responsive-drawer #qualityControls{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   .responsive-drawer #modeControls{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-  .responsive-drawer #practicePositionButtons{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .responsive-drawer #learnPositionButtons{grid-template-columns:repeat(3,minmax(0,1fr))!important}
   .responsive-drawer #fretCountControls .control-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   .responsive-drawer #mapNoteControls{grid-template-columns:repeat(4,minmax(0,1fr))!important}
   .responsive-drawer .control-group .control-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}
@@ -2476,10 +2476,10 @@ body{
 /* Tablet portrait: selects remain deliberate and the neck gets all remaining height. */
 @media (min-width:768px) and (max-width:1199px) and (orientation:portrait){
   .mobile-menu-btn{display:none!important}
-  .practice-screen,.fretmap-screen,.quiz-screen{height:100dvh!important;overflow:hidden!important}
+  .learn-screen,.fretmap-screen,.quiz-screen{height:100dvh!important;overflow:hidden!important}
   .responsive-drawer{flex:0 0 auto!important}
-  .practice-learning-area,.map-board,.quiz-board{min-height:0!important}
-  .practice-board svg,.map-board svg,.quiz-board svg{max-width:92vw!important}
+  .learn-learning-area,.map-board,.quiz-board{min-height:0!important}
+  .learn-board svg,.map-board svg,.quiz-board svg{max-width:92vw!important}
 }
 
 /* Tablet landscape: show readable controls; progressively select, then drawer. */
@@ -2516,7 +2516,7 @@ body{
   --ui-drawer-control-h:54px;
 }
 
-/* ONE heading component for Practice / Map / Quiz. */
+/* ONE heading component for Learn / Map / Quiz. */
 .section-heading{
   flex:1 1 auto!important;min-width:0!important;text-align:center!important;line-height:1.02!important;
   display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
@@ -2568,7 +2568,7 @@ body{
   .responsive-drawer .control-options{
     display:grid!important;gap:9px!important;width:100%!important;overflow:visible!important;
   }
-  /* NOTE is literally the same 2x6 component in Practice and Map. */
+  /* NOTE is literally the same 2x6 component in Learn and Map. */
   .responsive-drawer [data-control-group="root"] .control-options,.responsive-drawer [data-control-group="note"] .control-options{grid-template-columns:repeat(6,minmax(0,1fr))!important}
   .responsive-drawer [data-control-group="quality"] .control-options{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   .responsive-drawer [data-control-group="mode"] .control-options{grid-template-columns:repeat(3,minmax(0,1fr))!important}
@@ -2587,7 +2587,7 @@ body{
 
 /* Desktop: same controls, same labels, same sizing; no hamburger unless JS proves overflow. */
 @media (min-width:1200px){
-  .practice-screen .mobile-menu-btn,.fretmap-screen .mobile-menu-btn{display:none!important}
+  .learn-screen .mobile-menu-btn,.fretmap-screen .mobile-menu-btn{display:none!important}
   .responsive-drawer .control-group>label{font-size:clamp(14px,.9vw,19px)!important}
   .responsive-drawer .control-group>.control-options>button{
     min-height:clamp(54px,4vw,76px)!important;min-width:clamp(62px,4.1vw,92px)!important;
@@ -2598,7 +2598,7 @@ body{
 
 /* ==========================================================================
    V9.3 — UNIFIED RESPONSIVE CONTROLS
-   One component and one interaction model for Practice + Fretboard Map.
+   One component and one interaction model for Learn + Fretboard Map.
    Compact viewports use the same hamburger drawer in portrait and landscape.
    Larger viewports use the same adaptive toolbar; groups collapse to selects
    only when available width requires it. No page-specific menu layout.
@@ -2643,16 +2643,16 @@ body{
 /* Tablet portrait keeps the validated select-only toolbar and fretboard sizing. */
 @media (min-width:768px) and (max-width:1199px) and (orientation:portrait){
   .section-heading strong{font-size:28px!important}.section-heading span{font-size:9px!important}
-  .practice-screen,.fretmap-screen,.quiz-screen{height:100dvh!important;min-height:100dvh!important;overflow:hidden!important}
-  .practice-screen .topbar,.fretmap-screen .topbar,.quiz-screen .topbar{flex:0 0 auto!important}
+  .learn-screen,.fretmap-screen,.quiz-screen{height:100dvh!important;min-height:100dvh!important;overflow:hidden!important}
+  .learn-screen .topbar,.fretmap-screen .topbar,.quiz-screen .topbar{flex:0 0 auto!important}
   .responsive-drawer{flex:0 0 auto!important;padding:4px 10px 7px!important}
   .responsive-drawer>.control-panel{gap:8px!important;padding-top:2px!important}
   .control-panel>.control-group{flex:1 1 0!important;min-width:0!important}
   .control-panel>.control-group>.control-options{display:none!important}
   .control-panel>.control-group>.control-select{display:block!important;width:100%!important;min-width:0!important}
-  .practice-learning-area{flex:1 1 0!important;min-height:0!important;display:flex!important;align-items:stretch!important}
-  .practice-learning-area .practice-board{flex:1 1 0!important;min-height:0!important;margin:0!important}
-  .practice-learning-area .practice-board svg{height:100%!important;max-height:none!important;width:auto!important;max-width:96vw!important}
+  .learn-learning-area{flex:1 1 0!important;min-height:0!important;display:flex!important;align-items:stretch!important}
+  .learn-learning-area .learn-board{flex:1 1 0!important;min-height:0!important;margin:0!important}
+  .learn-learning-area .learn-board svg{height:100%!important;max-height:none!important;width:auto!important;max-width:96vw!important}
 }
 
 /* Tablet landscape: same toolbar, slightly denser. */
@@ -2703,7 +2703,7 @@ body{
 /* ==========================================================================
    V7.2 — SHARED FRETBOARD STAGE / TABLET PORTRAIT
    The board stage owns every remaining pixel below each mode's chrome.
-   Practice legend is an overlay and never participates in stage sizing.
+   Learn legend is an overlay and never participates in stage sizing.
    Fretboard Core rendering and validated V6.9.2 controls are untouched.
    ========================================================================== */
 .fretboard-stage{
@@ -2712,7 +2712,7 @@ body{
 }
 
 @media (min-width:768px) and (max-width:1199px) and (orientation:portrait){
-  .practice-screen,.fretmap-screen,.quiz-screen{
+  .learn-screen,.fretmap-screen,.quiz-screen{
     display:none;
     flex-direction:column!important;
     height:100dvh!important;
@@ -2720,14 +2720,14 @@ body{
     max-height:100dvh!important;
     overflow:hidden!important;
   }
-  .practice-screen.active,.fretmap-screen.active,.quiz-screen.active{display:flex!important}
+  .learn-screen.active,.fretmap-screen.active,.quiz-screen.active{display:flex!important}
 
-  .practice-screen>.topbar,.fretmap-screen>.topbar,.quiz-screen>.topbar,.practice-screen>.responsive-drawer,.fretmap-screen>.responsive-drawer,.quiz-screen>.quiz-hud,.quiz-screen>.quiz-head{
+  .learn-screen>.topbar,.fretmap-screen>.topbar,.quiz-screen>.topbar,.learn-screen>.responsive-drawer,.fretmap-screen>.responsive-drawer,.quiz-screen>.quiz-hud,.quiz-screen>.quiz-head{
     flex:0 0 auto!important;
   }
 
-  /* Practice has one extra wrapper because its legend belongs to the mode layer. */
-  .practice-learning-area{
+  /* Learn has one extra wrapper because its legend belongs to the mode layer. */
+  .learn-learning-area{
     position:relative!important;
     display:flex!important;
     flex:1 1 0!important;
@@ -2739,7 +2739,7 @@ body{
   }
 
   /* One sizing contract for all three modes. Overrides the historical 60/72vh rules. */
-  .fretboard-stage,.practice-screen .fretboard-stage,.fretmap-screen .fretboard-stage,.quiz-screen .fretboard-stage{
+  .fretboard-stage,.learn-screen .fretboard-stage,.fretmap-screen .fretboard-stage,.quiz-screen .fretboard-stage{
     position:relative!important;
     flex:1 1 0!important;
     width:100vw!important;
@@ -2755,7 +2755,7 @@ body{
     overflow:hidden!important;
   }
 
-  .fretboard-stage>svg,.practice-screen .fretboard-stage>svg,.fretmap-screen .fretboard-stage>svg,.quiz-screen .fretboard-stage>svg{
+  .fretboard-stage>svg,.learn-screen .fretboard-stage>svg,.fretmap-screen .fretboard-stage>svg,.quiz-screen .fretboard-stage>svg{
     display:block!important;
     flex:0 1 auto!important;
     width:auto!important;
@@ -2766,7 +2766,7 @@ body{
     margin:0 auto!important;
   }
 
-  .practice-learning-area>.practice-legend-row{
+  .learn-learning-area>.learn-legend-row{
     position:absolute!important;
     right:max(7px,var(--sa-right))!important;
     top:50%!important;
@@ -2778,7 +2778,7 @@ body{
     padding:0!important;
     pointer-events:none!important;
   }
-  .practice-learning-area>.practice-legend-row .practice-legend{pointer-events:auto!important}
+  .learn-learning-area>.learn-legend-row .learn-legend{pointer-events:auto!important}
 }
 
 /* =========================================================
@@ -2810,7 +2810,7 @@ body{
   .home-screen .home-actions{gap:16px !important;}
 }
 
-/* V8.3 — Quiz gamification only. Practice / Map / Home remain untouched. */
+/* V8.3 — Quiz gamification only. Learn / Map / Home remain untouched. */
 .quiz-hud{width:min(1120px,calc(100% - 24px))!important;overflow:visible!important}
 .quiz-hud .hud-stat{position:relative;min-width:0!important;padding:7px 12px!important}
 .quiz-hud .hud-rank{flex:1.55 1 0!important}
@@ -2953,7 +2953,7 @@ body{
 
 /* ==========================================================================
    QUIZ — MOBILE COMPACT HUD
-   Quiz-only mobile portrait refinement. Practice, Map and Fretboard Core are
+   Quiz-only mobile portrait refinement. Learn, Map and Fretboard Core are
    intentionally untouched. One-line HUD returns vertical space to the board.
    ========================================================================== */
 @media (max-width:767px) and (orientation:portrait){
@@ -3030,7 +3030,7 @@ body{
    exactly --sa-top instead of the inset eating into the fixed-height box
    (which previously crushed the title/menu button — see padding-top below). */
 :root{--screen-nav-h:calc(66px + var(--sa-top))}
-.practice-screen>.topbar,.fretmap-screen>.topbar,.quiz-screen>.topbar,.circle-screen>.topbar,.play-screen>.topbar{
+.learn-screen>.topbar,.fretmap-screen>.topbar,.quiz-screen>.topbar,.circle-screen>.topbar,.play-screen>.topbar{
   display:grid!important;grid-template-columns:42px minmax(0,1fr) 42px!important;align-items:center!important;
   width:100%!important;min-height:var(--screen-nav-h)!important;height:var(--screen-nav-h)!important;
   padding:max(6px,var(--sa-top)) max(10px,var(--sa-right)) 6px max(10px,var(--sa-left))!important;gap:8px!important;
@@ -3064,10 +3064,10 @@ body{
 
 /* Phone portrait: a compact legend dock below the neck, never an overlay. */
 @media (max-width:767px) and (orientation:portrait){
-  .practice-learning-area{flex-direction:column!important;align-items:stretch!important}
-  .practice-learning-area .practice-board{flex:1 1 0!important;min-height:0!important}
-  .practice-learning-area>.practice-legend-row{position:static!important;inset:auto!important;transform:none!important;flex:0 0 auto!important;width:100%!important;display:flex!important;justify-content:center!important;padding:6px 8px max(6px,var(--sa-bottom))!important;box-sizing:border-box!important;pointer-events:auto!important}
-  .practice-learning-area .practice-legend{flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:8px!important;padding:0!important;background:transparent;backdrop-filter:none}
-  .practice-learning-area .practice-legend .legend-filter{width:48px!important;min-width:48px!important;flex-direction:column!important;gap:3px!important;padding:4px!important;box-sizing:border-box!important}
-  .practice-learning-area .practice-legend .legend-filter small{font-size:10px!important;line-height:1!important}
+  .learn-learning-area{flex-direction:column!important;align-items:stretch!important}
+  .learn-learning-area .learn-board{flex:1 1 0!important;min-height:0!important}
+  .learn-learning-area>.learn-legend-row{position:static!important;inset:auto!important;transform:none!important;flex:0 0 auto!important;width:100%!important;display:flex!important;justify-content:center!important;padding:6px 8px max(6px,var(--sa-bottom))!important;box-sizing:border-box!important;pointer-events:auto!important}
+  .learn-learning-area .learn-legend{flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:8px!important;padding:0!important;background:transparent;backdrop-filter:none}
+  .learn-learning-area .learn-legend .legend-filter{width:48px!important;min-width:48px!important;flex-direction:column!important;gap:3px!important;padding:4px!important;box-sizing:border-box!important}
+  .learn-learning-area .learn-legend .legend-filter small{font-size:10px!important;line-height:1!important}
 }
