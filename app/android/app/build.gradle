@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 // Release signing: populated from keystore.properties (gitignored), itself
-// written out by CI from GitHub Secrets. Falls back to unsigned if absent,
-// so local debug builds keep working without a keystore.
+// written out by CI from GitHub Secrets. Debug builds need no release key;
+// release builds fail rather than silently producing an unsigned store package.
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 if (keystorePropertiesFile.exists()) {
@@ -16,8 +16,8 @@ android {
         applicationId "com.ukulele.fretboardhero"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode (project.findProperty("appVersionCode") ?: "1").toInteger()
+        versionName (project.findProperty("appVersionName") ?: "1.0")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -75,4 +75,18 @@ try {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
 }
 
-
+// Covers both assembleRelease and bundleRelease, including direct Gradle use.
+tasks.configureEach { task ->
+    if (task.name == 'preReleaseBuild') {
+        task.doFirst {
+            ['storeFile', 'storePassword', 'keyAlias', 'keyPassword'].each { key ->
+                if (!keystoreProperties[key]) {
+                    throw new GradleException("Missing release signing property: " + key)
+                }
+            }
+            if (!file(keystoreProperties['storeFile']).isFile()) {
+                throw new GradleException("Release keystore file is missing")
+            }
+        }
+    }
+}
