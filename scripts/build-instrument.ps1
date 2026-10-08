@@ -66,7 +66,7 @@ if (-not (Test-Path $distDir)) {
 }
 
 # 1. Sync the web engine for this instrument
-& (Join-Path $RepoPath "scripts\sync-web.ps1") -Instrument $Instrument -RepoPath $RepoPath
+& (Join-Path $RepoPath "scripts\sync-web.ps1") -Instrument $Instrument -RepoPath $RepoPath -Platform Android
 
 # 2. Write capacitor.config.json for this instrument
 $capacitorConfig = @{
