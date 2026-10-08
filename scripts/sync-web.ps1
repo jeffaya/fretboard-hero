@@ -41,9 +41,9 @@ Copy-Item -Path (Join-Path $webSource "*") -Destination $wwwPath -Recurse -Force
 $siteConfigPath = Join-Path $wwwPath "site.config.json"
 $siteConfig = Get-Content $siteConfigPath -Raw | ConvertFrom-Json
 $siteConfig.instrument = $Instrument
-# Android uses Play Billing. iOS retains its existing behavior until StoreKit is integrated.
-$siteConfig | Add-Member -NotePropertyName unlocked -NotePropertyValue ($Platform -eq "iOS") -Force
-$siteConfig | Add-Member -NotePropertyName nativeBilling -NotePropertyValue ($Platform -eq "Android") -Force
+# Both native platforms use their store entitlement; no native bundle is pre-unlocked.
+$siteConfig | Add-Member -NotePropertyName unlocked -NotePropertyValue $false -Force
+$siteConfig | Add-Member -NotePropertyName nativeBilling -NotePropertyValue $true -Force
 $siteConfig.PSObject.Properties.Remove("testKeyHash")
 $utf8Config = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllText($siteConfigPath, ($siteConfig | ConvertTo-Json -Depth 8), $utf8Config)

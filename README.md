@@ -249,16 +249,16 @@ unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-br
 - `stores`: Android and iOS HTTPS store URLs for each instrument. Empty URLs
   show disabled “Coming soon” buttons in the shared unlock dialog.
 
-The native `scripts/sync-web.ps1` step defaults to Android and sets
+The native `scripts/sync-web.ps1` step sets
 `unlocked: false`, `nativeBilling: true`, and removes `testKeyHash` in
-`app/www/site.config.json`. Google Play purchase verification controls access.
+`app/www/site.config.json`. Google Play or StoreKit purchase verification controls access.
 One non-consumable purchase unlocks all three instruments within the installed
 app; purchases are separate between the three app packages. The web configuration
 is untouched. Run the existing build scripts to regenerate the bundle; never edit
-`app/www` by hand. Explicit `-Platform iOS` retains the previous unlocked bundle;
-StoreKit purchases are not implemented.
+`app/www` by hand. Use `scripts/prepare-ios.ps1 -Instrument guitar` to prepare the iPhone/iPad variant.
 
-Before distributing the Android build, follow [Google Play billing setup](docs/GOOGLE_PLAY_BILLING.md).
+Before distributing, follow [Google Play billing setup](docs/GOOGLE_PLAY_BILLING.md)
+or [App Store billing setup](docs/APPLE_BILLING.md).
 
 A temporary web testing override accepts `?key=<test-key>` when its SHA-256
 hex digest matches `testKeyHash`. Without a matching key the site stays in demo
