@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const { shouldGoHome, markNativeApp, attach } = require('../native-assets/capacitor-bridge.js');
 
 // shouldGoHome: pure decision logic
-assert.equal(shouldGoHome('practice'), true);
+assert.equal(shouldGoHome('learn'), true);
 assert.equal(shouldGoHome('quiz'), true);
 assert.equal(shouldGoHome('home'), false);
 

@@ -1,7 +1,7 @@
 """Verify an installed Fretboard Hero app via Chrome DevTools Protocol (CDP).
 
 Drives the running app's WebView to click through all 4 screens
-(practice/fretmap/circle/quiz) and reports the active screen after each
+(learn/fretmap/circle/quiz) and reports the active screen after each
 click plus any console errors/warnings raised during navigation. Useful to
 smoke-test offline mode, instrument branding, or pinch-zoom config without
 manual interaction.
@@ -61,7 +61,7 @@ send("Runtime.enable")
 title = eval_js("document.title")
 print(f"Page title: {title}")
 
-screens = ["practice", "fretmap", "circle", "quiz"]
+screens = ["learn", "fretmap", "circle", "quiz"]
 for s in screens:
     eval_js(f"document.querySelector('[data-go=\"{s}\"]').click()")
     time.sleep(1.2)

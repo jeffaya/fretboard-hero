@@ -22,10 +22,10 @@
 ## V10.6.0 — Neon backstage home
 
 - Concert-style home drawn with CSS/SVG: moving lights, marker lettering, neon cards and instrument dock.
-- The yellow Play card opens daily tablature practice. The Quiz card opens the separate 60-second challenge.
+- The yellow Play card opens daily tablature learn. The Quiz card opens the separate 60-second challenge.
 - Home counters and footer slogan are omitted; card icons have a dedicated 80px column plus text spacing.
 - Settings toggle home animation; system reduced motion is always honored. Progress dialog shows real device-local statistics.
-- Day streak counts opening Practice/Map/Circle or completing a quiz, using local calendar dates. Total/best score and run count update only once per completed quiz. No invented sample statistics or historical migration.
+- Day streak counts opening Learn/Map/Circle or completing a quiz, using local calendar dates. Total/best score and run count update only once per completed quiz. No invented sample statistics or historical migration.
 - Instrument choices survive reloads within the session; the deployed `site.config.json` remains the default for a new session. Product/instrument profiles, branding and metadata are reapplied on reload.
 - Phone, landscape and desktop layouts scroll when needed. No edits to generated `app/www/`.
 
@@ -86,7 +86,7 @@ Si la valeur `instrument` est inconnue, le bootstrap affiche une erreur de confi
 
 The application shell is shared. Instrument selection remains controlled only by `site.config.json`.
 
-Reusable practice modes live in `/modes`. Instrument profiles only declare which plugins they expose and their instrument-specific context. Fretboard Map is rendered by `/core/fretboard-map.js`. Quiz timing/scoring limits and ranks belong to the product profile.
+Reusable learn modes live in `/modes`. Instrument profiles only declare which plugins they expose and their instrument-specific context. Fretboard Map is rendered by `/core/fretboard-map.js`. Quiz timing/scoring limits and ranks belong to the product profile.
 
 Architecture rule: adding or switching an instrument must not require an `if (instrument === ...)` branch in `/core`.
 
@@ -127,11 +127,11 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 - Bass and Ukulele instrument profiles are supported from the same package through `site.config.json`.
 
 ### V10.4.7
-- Fixed the V10.4.6 regression that forced Practice and Fretboard Map controls into the hamburger drawer on tablet/desktop.
+- Fixed the V10.4.6 regression that forced Learn and Fretboard Map controls into the hamburger drawer on tablet/desktop.
 - Restored the V9.3/V10.4.5 adaptive control contract: full buttons when space allows, progressive per-group selects when width tightens, hamburger drawer only on compact/mobile viewports.
 - Kept the universal compact header without overriding responsive drawer/toolbar behavior.
 - Fixed Back alignment by making Back, title and contextual hamburger real cells of the same header grid; removed absolute positioning from those header items.
-- Practice keeps the simplified key title and active-mode context line.
+- Learn keeps the simplified key title and active-mode context line.
 
 
 
@@ -148,12 +148,12 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 - No changes to fretboard, theory, instruments, modes, products, or quiz mechanics.
 
 ### V10.5.0 — Circle of Fifths
-- Added Circle of Fifths as the fourth learning area on Home: Practice → Fretboard Map → Circle of Fifths → Quiz.
+- Added Circle of Fifths as the fourth learning area on Home: Learn → Fretboard Map → Circle of Fifths → Quiz.
 - Added a reusable pure theory core for the 12 major keys, relative minors, key signatures, major scales, diatonic chords and common progressions.
 - Added a responsive interactive SVG Circle of Fifths renderer.
 - Added selected-key information and a shared Fretboard Core scale view for the active instrument.
 - Responsive layout: vertical learning flow on mobile/tablet portrait; Circle + harmony information side-by-side on wider tablet/desktop; fretboard below.
-- Existing V10.4.9 Practice, Map, Quiz, header and adaptive controls behavior remain unchanged.
+- Existing V10.4.9 Learn, Map, Quiz, header and adaptive controls behavior remain unchanged.
 
 
 ## V10.5.1 — Circle responsive integration
@@ -168,13 +168,13 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 - Added tap/click help bubbles for Key Signature, Major Scale, Diatonic Chords and Common Progressions.
 - Help works with mouse, touch and keyboard; only one explanation stays open and Escape/click outside closes it.
 - Common Progressions includes a live example translated from Roman numerals to the actual chords of the selected key.
-- No changes to Circle theory, fretboard engines, instrument profiles, Practice, Map or Quiz.
+- No changes to Circle theory, fretboard engines, instrument profiles, Learn, Map or Quiz.
 
 ## V10.5.4 — Shared degree/chord component
 
 - Diatonic Chords and Common Progressions now reuse the same degree/chord visual component.
 - Common Progressions displays both the Roman-numeral degree and its actual chord for the selected key, while preserving the pink progression arrows.
-- No changes to Circle theory, fretboard rendering, responsive drawer behavior, Practice, Map, or Quiz.
+- No changes to Circle theory, fretboard rendering, responsive drawer behavior, Learn, Map, or Quiz.
 
 ## V10.5.4 — Circle structural integration
 - Circle now uses the exact shared application topbar contract; no Circle-specific header positioning.
@@ -196,7 +196,7 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 - The question remains random inside the currently unlocked neck area.
 - Keeps the V10.5.5 multiplier scoring unchanged.
 ## V10.5.7 — Fret number readability
-- Shared Fretboard Core: fret numbers are larger, heavier and high-contrast across Practice, Fretboard Map, Circle of Fifths and Quiz.
+- Shared Fretboard Core: fret numbers are larger, heavier and high-contrast across Learn, Fretboard Map, Circle of Fifths and Quiz.
 - Added compact dark badges behind fret labels for immediate recognition on mobile and desktop.
 - Fret 12 is emphasized as the main octave landmark.
 - Fretboard geometry, note positions, strings and inlays are unchanged.
@@ -215,7 +215,7 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 - Invalid saved instrument selections are cleared before bootstrap.
 - Supported profiles, manifests, metadata, icon artwork and fretboard rendering now cover the three products only.
 
-## Play — daily tablature practice
+## Play — daily tablature learn
 
 The yellow home card opens Play; Quiz remains available through its own card. Play provides self-assessed major/minor pentatonic licks for Guitar, Bass and Ukulele, with Blues/Rock/Melodic variations and four levels. The initial catalog contains four authored base phrases per instrument and quality. Style/level transformations and uniform fret transposition preserve the phrase's fingering; these are original exercises, not transcriptions of songs. There is no audio, microphone or automatic assessment.
 
@@ -254,3 +254,13 @@ Reduced-motion mode shows three static icons. Application layout rules are uncha
 execute client JavaScript. Wrangler's `ASSETS` binding serves all other files.
 Deploy through the existing main-branch Cloudflare workflow; a plain static
 server only provides the default guitar metadata until JavaScript runs.
+
+### Learn menu (10.23)
+
+The former Practice section is now Learn throughout its screen IDs, navigation,
+JavaScript helpers and CSS selectors. `assets/home/learn.svg` is the shared pink
+neon graduation cap. The locked-mode dialog copies this icon and the Learn label
+from the home menu through `FretboardAccess.mount`; no duplicate menu list exists.
+OG bitmap artwork is intentionally deferred to a separate update. The generic
+practice wording inside Play and Circle of Fifths is independent of the renamed
+section.

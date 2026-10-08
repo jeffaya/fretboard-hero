@@ -26,7 +26,7 @@
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Fretboard Hero — neon fretboard trainer with Practice, Play, Fretboard Map, Quiz and Circle of Fifths">
+  <meta property="og:image:alt" content="Fretboard Hero — neon fretboard trainer with Learn, Play, Fretboard Map, Quiz and Circle of Fifths">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fretboard Hero — Master the Neck">
   <meta name="twitter:description" content="Interactive fretboard training, note map and quiz. Free. No account. Just play.">
@@ -42,9 +42,9 @@
   <link rel="apple-touch-icon" sizes="152x152" href="./assets/instruments/guitar/apple-touch-icon-152.png">
   <link rel="apple-touch-icon" sizes="167x167" href="./assets/instruments/guitar/apple-touch-icon-167.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/instruments/guitar/apple-touch-icon-180.png">
-  <link rel="stylesheet" href="./styles.css?v=10.19.5">
+  <link rel="stylesheet" href="./styles.css?v=10.23.0">
   <link rel="stylesheet" href="./home.css?v=10.21.1">
-  <link rel="stylesheet" href="./theme.css?v=10.22.0">
+  <link rel="stylesheet" href="./theme.css?v=10.23.0">
   <link rel="stylesheet" href="./play.css?v=10.19.1">
   <link rel="stylesheet" href="./premium.css?v=10.21.1">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
@@ -67,7 +67,7 @@
         </div>
         <div class="home-menu">
           <nav class="home-actions" aria-label="Choose your session">
-            <button class="hero-btn practice-card" data-go="practice"><span class="hero-icon"><img src="./assets/home/practice.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>PRACTICE</strong><small>Notes · Triads · Scales · Chords</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+            <button class="hero-btn learn-card" data-go="learn"><span class="hero-icon"><img src="./assets/home/learn.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>LEARN</strong><small>Notes · Triads · Scales · Chords</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn play-card" data-go="play"><span class="hero-icon"><img src="./assets/home/play.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>PLAY</strong><small>Learn by playing · Daily licks</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn map-card" data-go="fretmap"><span class="hero-icon"><img src="./assets/home/map.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>FRETBOARD MAP</strong><small>Explore the neck</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn quiz-card" data-go="quiz"><span class="hero-icon"><img src="./assets/home/quiz.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>QUIZ</strong><small>Test your knowledge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
@@ -115,29 +115,29 @@
       </div>
     </section>
 
-    <section id="practice" class="screen practice-screen" aria-label="Practice">
+    <section id="learn" class="screen learn-screen" aria-label="Learn">
       <header class="topbar">
         <button class="icon-btn nav-back ui-back" data-go="home" aria-label="Back home"><span class="back-icon icon-arrow-left" aria-hidden="true">←</span></button>
-        <div class="section-heading" aria-live="polite"><strong id="practiceTitle">A MINOR</strong><small id="practiceFormula" class="screen-context">PENTATONIC</small></div>
-        <button id="practiceMenuBtn" class="icon-btn mobile-menu-btn" aria-label="Open practice menu" aria-expanded="false"><span></span><span></span><span></span></button>
+        <div class="section-heading" aria-live="polite"><strong id="learnTitle">A MINOR</strong><small id="learnFormula" class="screen-context">PENTATONIC</small></div>
+        <button id="learnMenuBtn" class="icon-btn mobile-menu-btn" aria-label="Open learn menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
-      <div id="practiceDrawer" class="responsive-drawer" aria-hidden="true">
-        <div class="drawer-head"><strong>PRACTICE SETUP</strong><button id="practiceMenuClose" class="icon-btn" aria-label="Close menu">×</button></div>
+      <div id="learnDrawer" class="responsive-drawer" aria-hidden="true">
+        <div class="drawer-head"><strong>LEARN SETUP</strong><button id="learnMenuClose" class="icon-btn" aria-label="Close menu">×</button></div>
       <section class="control-panel">
         <div class="control-group" data-control-group="root"><label>NOTE</label><div class="control-options" id="rootControls"></div><div class="control-select" data-select-for="rootControls"></div></div>
         <div class="control-group" data-control-group="quality"><label>KEY</label><div class="control-options" id="qualityControls"><button data-quality="major">MAJOR</button><button data-quality="minor" class="active">MINOR</button></div><div class="control-select" data-select-for="qualityControls"></div></div>
         <div class="control-group" data-control-group="mode"><label>MODE</label><div class="control-options" id="modeControls"><button data-mode="penta" class="active">PENTATONIC</button><button data-mode="triad">TRIADS</button><button data-mode="chord">CHORDS</button></div><div class="control-select" data-select-for="modeControls"></div></div>
-      <div id="practicePositionControls" class="control-group" data-control-group="context"><label id="practicePositionLabel">POSITIONS</label><div id="practicePositionButtons" class="control-options"></div><div class="control-select" data-select-for="practicePositionButtons"></div></div>
+      <div id="learnPositionControls" class="control-group" data-control-group="context"><label id="learnPositionLabel">POSITIONS</label><div id="learnPositionButtons" class="control-options"></div><div class="control-select" data-select-for="learnPositionButtons"></div></div>
       <div id="fretCountControls" class="control-group" data-control-group="fretboard"><label>FRETBOARD</label><div class="control-options"><button data-frets="12">12 FT</button><button data-frets="15">15 FT</button><button data-frets="17">17 FT</button><button data-frets="21">21 FT</button></div><div class="control-select" data-select-for="fretCountControls"></div></div>
       </section>
       </div>
-      <div id="practiceDrawerBackdrop" class="drawer-backdrop"></div>
+      <div id="learnDrawerBackdrop" class="drawer-backdrop"></div>
 
-      <div class="practice-learning-area">
-      <div class="fretboard-wrap fretboard-stage practice-board"><svg id="practiceFretboard" role="img" aria-label="Interactive fretboard"></svg></div>
-      <div class="practice-legend-row">
-        <div id="practiceHint" class="practice-hint">All 5 connected positions are visible. Select one to isolate it.</div>
-        <div class="legend-inline practice-legend" aria-label="Filter notes by degree">
+      <div class="learn-learning-area">
+      <div class="fretboard-wrap fretboard-stage learn-board"><svg id="learnFretboard" role="img" aria-label="Interactive fretboard"></svg></div>
+      <div class="learn-legend-row">
+        <div id="learnHint" class="learn-hint">All 5 connected positions are visible. Select one to isolate it.</div>
+        <div class="legend-inline learn-legend" aria-label="Filter notes by degree">
           <button class="legend-filter" type="button" data-degree-filter="root" aria-pressed="false"><span class="legend root">R</span><small>Root</small></button>
           <button class="legend-filter" type="button" data-degree-filter="third" aria-pressed="false"><span class="legend third">3</span><small>3rd</small></button>
           <button id="legendFourth" class="legend-pair legend-filter" type="button" data-degree-filter="fourth" aria-pressed="false"><span class="legend fourth">4</span><small>4th</small></button>
@@ -242,7 +242,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.22.0" defer></script>
+  <script src="./bootstrap.js?v=10.23.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

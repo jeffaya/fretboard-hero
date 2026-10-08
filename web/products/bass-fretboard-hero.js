@@ -2,7 +2,7 @@ window.FRETBOARD_PRODUCTS=window.FRETBOARD_PRODUCTS||{};
 window.FRETBOARD_PRODUCTS.bass={
   id:'bass-fretboard-hero',instrument:'bass4',name:'Bass Fretboard Hero',shareEmoji:'🎸',url:'https://fretboard-hero.com/?instrument=bass-4',
   branding:{name:'Bass Fretboard Hero',instrumentName:'Bass',heroWords:['BASS','FRETBOARD','HERO']},
-  home:{taglineHtml:'SEE IT <span>•</span> LEARN IT <span>•</span> PLAY IT',practiceDescription:'Pentatonics, triads & arpeggios in every key',mapDescription:'Every note. One neck.',circleDescription:'Keys, chords & harmonic relationships',quizDescription:'Prove you know the neck. No excuses.'},
+  home:{taglineHtml:'SEE IT <span>•</span> LEARN IT <span>•</span> PLAY IT',learnDescription:'Pentatonics, triads & arpeggios in every key',mapDescription:'Every note. One neck.',circleDescription:'Keys, chords & harmonic relationships',quizDescription:'Prove you know the neck. No excuses.'},
   seo:{
     title:'Bass Fretboard Hero — Learn Bass Fretboard Notes, Pentatonic Scales, Triads & Arpeggios',
     description:'Learn the bass fretboard with interactive note maps, major and minor pentatonic positions, triads, arpeggios and a 60-second fretboard quiz. Built for 4-string bass in standard E–A–D–G tuning.',
@@ -10,7 +10,7 @@ window.FRETBOARD_PRODUCTS.bass={
     canonical:'https://fretboard-hero.com/?instrument=bass-4',
     ogTitle:'Bass Fretboard Hero — Learn the Bass Fretboard',
     ogDescription:'Learn every bass note, visualize pentatonic positions, triads and arpeggios, then test your fretboard knowledge in a 60-second quiz.',
-    ogImageAlt:'Bass Fretboard Hero interactive 4-string bass fretboard with Practice, Play, Fretboard Map, Quiz and Circle of Fifths',
+    ogImageAlt:'Bass Fretboard Hero interactive 4-string bass fretboard with Learn, Play, Fretboard Map, Quiz and Circle of Fifths',
     twitterTitle:'Bass Fretboard Hero — Learn the Bass Fretboard',
     twitterDescription:'Interactive bass fretboard notes, pentatonic positions, triads, arpeggios and a fast quiz for standard 4-string bass.',
     structuredDescription:'Free interactive 4-string bass fretboard learning tool for standard E–A–D–G tuning with note mapping, pentatonic positions, triads, arpeggios and a timed quiz.',

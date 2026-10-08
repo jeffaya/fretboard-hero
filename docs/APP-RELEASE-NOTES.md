@@ -15,7 +15,7 @@ APKs built from the same `web/` code:
   (`com.bass.fretboardhero`), **Ukulele Fretboard Hero**
   (`com.ukulele.fretboardhero`).
 - **100% offline**: all assets are bundled into the APK, no network request
-  is needed to use Practice, Map, Circle of Fifths or Quiz.
+  is needed to use Learn, Map, Circle of Fifths or Quiz.
 - **Hardware/gesture Back button** mapped to in-app navigation: goes to
   Home from any screen, then exits the app from Home (instead of killing
   the app immediately).
