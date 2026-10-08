@@ -1,7 +1,7 @@
 # Fretboard Hero
 
 Fretboard Hero is a web app for learning the fretboard, designed to teach
-guitar visually and through practice rather than acting as a plain note
+guitar visually and through learn rather than acting as a plain note
 dictionary.
 
 The core idea: progressively understand where notes are, how intervals are
@@ -16,7 +16,7 @@ as **3 native Android apps** (Guitar, Bass, Ukulele), via
 > 🔧 **Technical doc**: detailed architecture, build pipeline, gotchas and
 > verification procedures -> [`docs/TECHNICAL.md`](docs/TECHNICAL.md).
 
-## PRACTICE
+## LEARN
 
 This is the learning/exploration area.
 
@@ -157,7 +157,7 @@ selects -> hamburger.
 Content, on the other hand, never becomes a menu. That's the rule set in
 particular with the Circle of Fifths: header always on top, Back on the
 left, title centered, controls on the right when needed, then the real
-content below. The same principle structures Practice, Map, Circle and
+content below. The same principle structures Learn, Map, Circle and
 Quiz.
 
 ## Web vs native app (Android)
@@ -176,7 +176,7 @@ Quiz.
 The latest site version is **V10.8.0**.
 
 Fretboard Hero is no longer just a pentatonic visualizer. There are three
-complementary layers: **Learn** with Practice -> **Understand** with
+complementary layers: **Learn** with Learn -> **Understand** with
 Map/Circle -> **Prove it** with Quiz.
 
 That's probably what sits at the core of the product: see -> understand ->
@@ -241,7 +241,7 @@ unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-br
 
 `web/site.config.json` is the central configuration:
 
-- `unlocked: false`: web preview, A minor pentatonic position 1 in Practice, the A note only in Map,
+- `unlocked: false`: web preview, A minor pentatonic position 1 in Learn, the A note only in Map,
   one A minor Blues Beginner lick in Play, and the C major / A minor circle preview.
   The Quiz and all three instruments remain available.
 - `unlocked: true`: complete access.

@@ -2,7 +2,7 @@ window.FRETBOARD_PRODUCTS=window.FRETBOARD_PRODUCTS||{};
 window.FRETBOARD_PRODUCTS.ukulele={
   id:'ukulele-fretboard-hero',instrument:'ukulele',name:'Ukulele Fretboard Hero',shareEmoji:'🎶',url:'https://fretboard-hero.com/?instrument=ukulele',
   branding:{name:'Ukulele Fretboard Hero',instrumentName:'Ukulele',heroWords:['UKULELE','FRETBOARD','HERO']},
-  home:{taglineHtml:'SEE IT <span>•</span> LEARN IT <span>•</span> PLAY IT',practiceDescription:'Pentatonics, triads, chords & arpeggios in every key',mapDescription:'Every note. One neck.',circleDescription:'Keys, chords & harmonic relationships',quizDescription:'Prove you know the neck. No excuses.'},
+  home:{taglineHtml:'SEE IT <span>•</span> LEARN IT <span>•</span> PLAY IT',learnDescription:'Pentatonics, triads, chords & arpeggios in every key',mapDescription:'Every note. One neck.',circleDescription:'Keys, chords & harmonic relationships',quizDescription:'Prove you know the neck. No excuses.'},
   seo:{
     title:'Ukulele Fretboard Hero — Learn Ukulele Fretboard Notes, Scales, Triads & Chords',
     description:'Learn the ukulele fretboard with an interactive G–C–E–A note map, pentatonic positions, triads, chords, arpeggios and a 60-second fretboard quiz. Designed for standard reentrant high-G tuning.',
@@ -10,7 +10,7 @@ window.FRETBOARD_PRODUCTS.ukulele={
     canonical:'https://fretboard-hero.com/?instrument=ukulele',
     ogTitle:'Ukulele Fretboard Hero — Learn the Ukulele Fretboard',
     ogDescription:'Learn every ukulele note, explore pentatonic positions, triads, chords and arpeggios in G–C–E–A tuning, then test yourself in the quiz.',
-    ogImageAlt:'Ukulele Fretboard Hero interactive G C E A ukulele fretboard with Practice, Play, Fretboard Map, Quiz and Circle of Fifths',
+    ogImageAlt:'Ukulele Fretboard Hero interactive G C E A ukulele fretboard with Learn, Play, Fretboard Map, Quiz and Circle of Fifths',
     twitterTitle:'Ukulele Fretboard Hero — Learn the Ukulele Fretboard',
     twitterDescription:'Interactive G–C–E–A ukulele fretboard notes, scales, triads, chords, arpeggios and a fast quiz.',
     structuredDescription:'Free interactive ukulele fretboard learning tool for standard reentrant high-G G–C–E–A tuning with note mapping, pentatonic positions, triads, chords, arpeggios and quizzes.',
