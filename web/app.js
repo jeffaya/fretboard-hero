@@ -397,14 +397,14 @@
     if(remaining<=0)finishQuiz();
   }
   function animateHud(el,cls,duration=650){if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),duration)}
-  function animateScore(el,from,to){if(!el)return;const safeFrom=Math.min(from,to),token=String((Number(el.dataset.scoreAnim)||0)+1);el.dataset.scoreAnim=token;const start=performance.now(),duration=460;function tick(now){if(el.dataset.scoreAnim!==token)return;const t=Math.min(1,(now-start)/duration),ease=1-Math.pow(1-t,3),v=Math.max(safeFrom,Math.round(safeFrom+(to-safeFrom)*ease));el.textContent=v.toLocaleString('en-US');if(t<1)requestAnimationFrame(tick);else el.textContent=to.toLocaleString('en-US')}requestAnimationFrame(tick)}
+  function animateScore(el,from,to){if(!el)return;const safeFrom=Math.min(from,to),token=String((Number(el.dataset.scoreAnim)||0)+1);el.dataset.scoreAnim=token;const start=performance.now(),duration=460;function tick(now){if(el.dataset.scoreAnim!==token)return;const t=Math.min(1,(now-start)/duration),ease=1-Math.pow(1-t,3),v=Math.max(safeFrom,Math.round(safeFrom+(to-safeFrom)*ease));el.textContent=v.toLocaleString(window.FretboardI18n?.locale||'en-US');if(t<1)requestAnimationFrame(tick);else el.textContent=to.toLocaleString(window.FretboardI18n?.locale||'en-US')}requestAnimationFrame(tick)}
   function quizRankProgress(score){if(score<=0)return 0;const current=quizRank(score);const idx=QUIZ_RANKS.findIndex(r=>r[2]===current.rank);if(idx<=0)return 100;const next=QUIZ_RANKS[idx-1][0],floor=current.min;return Math.max(0,Math.min(100,((score-floor)/(next-floor))*100))}
   function updateQuizStats({scoreGain=0,rankChanged=false,multiplierChanged=false,previousScore=null,error=false}={}){
     if(!state.quiz)return;const qz=state.quiz;
     const score=$('#scoreCount'),combo=$('#comboCount'),rank=$('#liveRank'),meter=$('#rankProgress'),hud=$('.quiz-hud');
-    if(score){if(scoreGain&&previousScore!==null)animateScore(score,previousScore,qz.score);else score.textContent=qz.score.toLocaleString('en-US')}if(combo)combo.textContent=qz.multiplier;
+    if(score){if(scoreGain&&previousScore!==null)animateScore(score,previousScore,qz.score);else score.textContent=qz.score.toLocaleString(window.FretboardI18n?.locale||'en-US')}if(combo)combo.textContent=qz.multiplier;
     const r=qz.score>0?quizRank(qz.score):null;if(rank)rank.textContent=r?`${r.emoji} ${r.rank}`:'—';if(meter)meter.style.width=`${quizRankProgress(qz.score)}%`;
-    if(scoreGain){const gain=$('#scoreGain');if(gain){gain.textContent=`+${scoreGain.toLocaleString('en-US')}`;animateHud(gain,'hud-gain-pop',720)}animateHud(score,'hud-score-pop',520)}
+    if(scoreGain){const gain=$('#scoreGain');if(gain){gain.textContent=`+${scoreGain.toLocaleString(window.FretboardI18n?.locale||'en-US')}`;animateHud(gain,'hud-gain-pop',720)}animateHud(score,'hud-score-pop',520)}
     if(multiplierChanged){animateHud($('#comboWrap'),error?'hud-combo-break':'hud-flip',620);animateHud($('.hud-combo'),error?'hud-cell-break':'hud-cell-charge',620)}
     if(rankChanged){animateHud($('.hud-rank'),'hud-rank-card-up',900);animateHud(rank,'hud-rank-up',900);animateHud(hud,'hud-rank-flash',900)}
     hud?.classList.toggle('hud-hot',qz.multiplier===4);hud?.classList.toggle('hud-on-fire',qz.multiplier>=5);
@@ -436,7 +436,7 @@
       svg.append(hit);
       if(isCorrectReveal){
         const scoreX=isP?Math.min(sb-4,x+Math.max(25,(sb-sa)*.28)):x,scoreY=isP?y-30:Math.max(sa+12,y-22);
-        svg.append(svgEl('text',{x:scoreX,y:scoreY,class:'quiz-hit-score','font-size':isP?18:15},`+${reveal.gain.toLocaleString('en-US')}`));
+        svg.append(svgEl('text',{x:scoreX,y:scoreY,class:'quiz-hit-score','font-size':isP?18:15},`+${reveal.gain.toLocaleString(window.FretboardI18n?.locale||'en-US')}`));
       }
     }
     const renderedQuestionId=state.quiz?.questionId;svg.onclick=e=>{const qz=state.quiz,c=e.target.closest('.quiz-hit-zone[data-string]');if(!qz||!c||qz.locked||qz.questionId!==renderedQuestionId||performance.now()<qz.inputEnabledAt)return;answerQuiz(+c.dataset.string,+c.dataset.fret,c,renderedQuestionId)};
@@ -446,7 +446,7 @@
     if(pc===targetPC(q)){
       qz.locked=true;qz.correct++;const oldRank=qz.score>0?quizRank(qz.score).rank:null,usedMultiplier=qz.multiplier,gain=QuizEngine.scoreGain(usedMultiplier,QUIZ_BASE_POINTS,QUIZ_SCORE_TABLE),previousScore=qz.score;qz.score+=gain;
       const oldMultiplier=qz.multiplier;qz.multiplier=Math.min(QUIZ_MAX_MULTIPLIER,qz.multiplier+1);const newRank=quizRank(qz.score).rank;
-      state.quizReveal={string:s,fret:f,gain};$('#quizFeedback').textContent=`Correct — ${noteName(pc)} • +${gain.toLocaleString('en-US')} pts`;
+      state.quizReveal={string:s,fret:f,gain};$('#quizFeedback').textContent=`Correct — ${noteName(pc)} • +${gain.toLocaleString(window.FretboardI18n?.locale||'en-US')} pts`;
       renderQuizBoard();updateQuizStats({scoreGain:gain,rankChanged:newRank!==oldRank,multiplierChanged:qz.multiplier!==oldMultiplier,previousScore});
       setTimeout(()=>{if(!state.quiz||state.quiz!==qz||qz.finished)return;state.quizReveal=null;nextQuestion()},250);
     }else{
@@ -457,11 +457,11 @@
   function renderRankLadder(preview=false){
     const qz=state.quiz||{score:0,correct:0},current=quizRank(qz.score),currentIndex=QUIZ_RANKS.findIndex(r=>r[2]===current.rank),list=$('#rankLadderList'),summary=$('#rankLadderSummary');
     if(!list||!summary||currentIndex<0)return;
-    summary.hidden=preview;summary.innerHTML=preview?'':`<span>YOUR RANK</span><strong>${qz.score.toLocaleString('en-US')} PTS</strong><b>${current.emoji} ${current.rank}</b><em>${qz.correct.toLocaleString('en-US')} CORRECT ANSWERS</em>`;
+    summary.hidden=preview;summary.innerHTML=preview?'':`<span>YOUR RANK</span><strong>${qz.score.toLocaleString(window.FretboardI18n?.locale||'en-US')} PTS</strong><b>${current.emoji} ${current.rank}</b><em>${qz.correct.toLocaleString(window.FretboardI18n?.locale||'en-US')} CORRECT ANSWERS</em>`;
     list.innerHTML='';
     QUIZ_RANKS.forEach((row,index)=>{
       const item=document.createElement('div');item.className=`rank-ladder-item${!preview&&index===currentIndex?' is-current':''}`;item.setAttribute('role','listitem');item.dataset.rankIndex=index;
-      const position=index+1,threshold=row[0].toLocaleString('en-US');
+      const position=index+1,threshold=row[0].toLocaleString(window.FretboardI18n?.locale||'en-US');
       item.innerHTML=`<span class="rank-ladder-position">${String(position).padStart(2,'0')}</span><span class="rank-ladder-name"><b>${row[1]} ${row[2]}</b></span><span class="rank-ladder-threshold">${threshold}</span>`;
       list.append(item);
     });
@@ -472,7 +472,7 @@
   function backFromRankLadder(){if(rankLadderReturn==='intro')showQuizIntro();else showScoreResult()}
   function finishQuiz(){
     const qz=state.quiz;if(!qz||qz.finished)return;qz.finished=true;qz.locked=true;if(qz.timer){clearInterval(qz.timer);qz.timer=null}state.quizReveal=null;const time=$('#quizTime');if(time)time.textContent='0.0';const {emoji,rank,copy}=quizRank(qz.score);
-    $('#resultRank').textContent=`${emoji} ${rank}`;$('#resultScore').textContent=qz.score.toLocaleString('en-US');
+    $('#resultRank').textContent=`${emoji} ${rank}`;$('#resultScore').textContent=qz.score.toLocaleString(window.FretboardI18n?.locale||'en-US');
     $('#resultCopy').textContent=`${copy} ${qz.correct} ${qz.correct===1?'correct answer':'correct answers'} in ${quizSeconds()} seconds.`;
     rankLadderReturn='score';showScoreResult();$('#resultModal').classList.add('show');$('#resultModal').setAttribute('aria-hidden','false');
   }
@@ -495,6 +495,6 @@
     if(FRETBOARD_SITE_CONFIG.instrument!=='guitar')url.searchParams.set('instrument',FRETBOARD_SITE_CONFIG.instrument);
     return url.href;
   }
-  $('#shareScore').addEventListener('click',async()=>{const qz=state.quiz||{score:0,correct:0},{emoji,rank}=quizRank(qz.score);const text=`${emoji} I reached ${rank} with ${qz.score.toLocaleString('en-US')} points and ${qz.correct} correct answers in ${quizSeconds()} seconds on ${product.name} ${product.shareEmoji||''}\nCan you beat my score? Try the free fretboard quiz!`,url=quizShareUrl();try{if(navigator.share)await navigator.share({title:product.name,text,url});else{await navigator.clipboard.writeText(`${text}\n${url}`);const shareLabel=$('#shareScore span');if(shareLabel){shareLabel.textContent='COPIED!';setTimeout(()=>shareLabel.textContent='SHARE MY SCORE',1400)}}}catch{}});
+  $('#shareScore').addEventListener('click',async()=>{const qz=state.quiz||{score:0,correct:0},{emoji,rank}=quizRank(qz.score);const text=`${emoji} I reached ${rank} with ${qz.score.toLocaleString(window.FretboardI18n?.locale||'en-US')} points and ${qz.correct} correct answers in ${quizSeconds()} seconds on ${product.name} ${product.shareEmoji||''}\nCan you beat my score? Try the free fretboard quiz!`,url=quizShareUrl();try{const localized=window.FretboardI18n?.text(text)||text;if(navigator.share)await navigator.share({title:product.name,text:localized,url});else{await navigator.clipboard.writeText(`${localized}\n${url}`);const shareLabel=$('#shareScore span');if(shareLabel){shareLabel.textContent='COPIED!';setTimeout(()=>shareLabel.textContent='SHARE MY SCORE',1400)}}}catch{}});
   renderLearn();
 })();
