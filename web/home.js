@@ -14,7 +14,7 @@
       try {
         sessionStorage.setItem('fretboard-home-instrument', instrument);
       } catch {
-        window.alert('Allow session storage to change instruments on this device.');
+        window.alert(window.FretboardI18n?.text('Allow session storage to change instruments on this device.')||'Allow session storage to change instruments on this device.');
         return;
       }
       const destination=new URL(location.href);
