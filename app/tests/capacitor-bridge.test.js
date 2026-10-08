@@ -4,6 +4,7 @@ const { shouldGoHome, markNativeApp, attach } = require('../native-assets/capaci
 // shouldGoHome: pure decision logic
 assert.equal(shouldGoHome('learn'), true);
 assert.equal(shouldGoHome('quiz'), true);
+assert.equal(shouldGoHome('routine'), true);
 assert.equal(shouldGoHome('home'), false);
 
 // markNativeApp: adds a class to <html> only, never touches anything else

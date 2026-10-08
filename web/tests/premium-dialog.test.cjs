@@ -1,7 +1,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 function runtime(desktop=false){
  class Node{constructor(){this.children=[];this.style={};this.events={};this.dataset={};this.classList={toggle(){}};this.hidden=false;this.inert=false;this.innerHTML='';this.attrs={};this.selected={}}append(n){this.children.push(n);n.parentElement=this}querySelector(s){return this.selected[s]??=new Node()}querySelectorAll(){return this.children}setAttribute(k,v){this.attrs[k]=v}addEventListener(k,f){this.events[k]=f}cloneNode(){const n=new Node();n.src=this.src;return n}focus(){c.document.activeElement=this}}
- const menus=['Learn','Play','Fretboard Map','Quiz','Circle of Fifths'].map((title,i)=>{const n=new Node();n.querySelector('.home-card-copy strong').textContent=title;n.querySelector('.hero-icon img').src='icon-'+i;return n});
+ const menus=['Learn','Daily Routine','Fretboard Map','Quiz','Circle of Fifths'].map((title,i)=>{const n=new Node();n.querySelector('.home-card-copy strong').textContent=title;n.querySelector('.hero-icon img').src='icon-'+i;return n});
  const app=new Node(),media={matches:desktop,addEventListener(){}};
  const c={window:{},URL,URLSearchParams,TextEncoder,console,matchMedia:()=>media,document:{head:new Node(),body:{dataset:{}},createElement:()=>new Node(),querySelector:()=>app,querySelectorAll:()=>menus,addEventListener(){}}};vm.createContext(c);for(const file of ['web/vendor/qrcode.js','web/core/access.js'])vm.runInContext(fs.readFileSync(file,'utf8'),c);return {c,app,menus,Access:c.window.FretboardAccess};
 }
