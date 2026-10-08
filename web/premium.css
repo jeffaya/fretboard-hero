@@ -20,3 +20,14 @@ body[data-access='demo'] .circle-wheel-svg{touch-action:pan-y;cursor:default}
 
 [data-premium-icon-only][data-premium-locked='true']{display:inline-flex;align-items:center;justify-content:center}
 [data-premium-icon-only] .premium-lock{width:22px;height:22px;flex-basis:22px;margin:0}
+
+/* Native purchase actions use the same modal and button roles as the website. */
+.premium-stores.premium-billing{display:flex;flex-direction:column;gap:10px}
+.premium-billing .premium-store{width:100%;justify-content:center}
+.billing-status,.billing-scope{font-size:14px;line-height:1.4;text-align:center;color:#c6d3e6;margin:0}
+.billing-status:empty{display:none}.billing-scope{color:#ffe38a}
+.home-billing{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px}
+.home-billing button{font-size:14px;padding:8px 12px;min-height:40px}
+.home-billing button[hidden]{display:none!important}
+.home-billing p{flex-basis:100%;text-align:center;color:#c6d3e6;font-size:13px;margin:0}
+.home-billing p:empty{display:none}

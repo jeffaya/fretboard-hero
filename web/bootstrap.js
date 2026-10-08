@@ -20,8 +20,10 @@
     try{
       const response=await fetch('./site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
-      await load('./core/access.js?v=10.24.2');
-      window.FRETBOARD_ACCESS=FretboardAccess.create(await FretboardAccess.resolve(config,location.search));
+      await load('./core/native-billing.js?v=10.25.0');
+      const nativeUnlocked=await FretboardBilling.initialize(config);
+      await load('./core/access.js?v=10.25.0');
+      window.FRETBOARD_ACCESS=FretboardAccess.create(config.nativeBilling===true?nativeUnlocked:await FretboardAccess.resolve(config,location.search));
       const defaultInstrument=config.instrument;
       if(!CATALOG[defaultInstrument])throw new Error(`Unknown instrument "${defaultInstrument}". Supported: ${Object.keys(CATALOG).join(', ')}`);
       // Session-only choice preserves the default identity of each native build.
@@ -44,6 +46,7 @@
       await load('./home.js?v=10.24.2');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
       await load('./app.js?v=10.24.2');
+      FretboardBilling.attach();
       if(!await artworkReady){
         logo.setAttribute('hidden','');
         const fallback=document.createElement('span');

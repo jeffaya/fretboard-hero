@@ -52,8 +52,10 @@
       overlay.querySelector('.premium-skills').append(item);
     }
     const icons={android:'<path fill="#32d477" d="M3 2v20l12-10Z"/><path fill="#46c5ff" d="m3 2 15 8-3 2Z"/><path fill="#ffce45" d="m15 12 3-2 4 2-4 2Z"/><path fill="#fa5b75" d="m3 22 15-8-3-2Z"/>',ios:'<path fill="currentColor" d="M15 3c-2 0-3 2-3 4 2 0 3-2 3-4ZM12 9c-3-3-8-1-8 3 0 4 3 9 5 9l3-1 3 1c2 0 4-3 5-5-4-2-4-5-1-7-2-2-4-2-7 0Z"/>'};
+    const billing=window.FretboardBilling?.native?window.FretboardBilling:null;
+    if(billing){billing.mountPaywall(stores);overlay.querySelector('.premium-promise').textContent='One purchase. Three instruments. Every skill unlocked.'}
     const qrTargets=[];
-    for(const platform of ['android','ios']){
+    for(const platform of (billing?[]:['android','ios'])){
       const url=storeUrl(config,platform),column=document.createElement('div');column.className='premium-store-column';
       const el=document.createElement(url?'a':'button');el.className='ui-primary premium-store';
       el.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true">${icons[platform]}</svg><span><small>${platform==='android'?'Get it on':'Download on the'}</small><b>${platform==='android'?'Google Play':'App Store'}</b></span>`;
@@ -68,7 +70,7 @@
     desktop.addEventListener('change',()=>{if(!overlay.hidden)prepareQR()});
     let previous,background=[];
     const close=()=>{overlay.hidden=true;background.forEach(([node,inert])=>node.inert=inert);previous?.focus()};
-    const open=()=>{if(!overlay.hidden)return;previous=document.activeElement;background=[...overlay.parentElement.children].filter(n=>n!==overlay).map(n=>[n,n.inert]);background.forEach(([n])=>n.inert=true);overlay.hidden=false;dialog.focus();prepareQR()};
+    const open=()=>{if(!overlay.hidden)return;previous=document.activeElement;background=[...overlay.parentElement.children].filter(n=>n!==overlay).map(n=>[n,n.inert]);background.forEach(([n])=>n.inert=true);overlay.hidden=false;dialog.focus();prepareQR();if(billing)billing.refreshPrice()};
     overlay.querySelector('.premium-close').addEventListener('click',close);overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
     overlay.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();close()}if(e.key==='Tab'){const nodes=[...dialog.querySelectorAll('a[href],button:not(:disabled)')];const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&(document.activeElement===first||document.activeElement===dialog)){e.preventDefault();last.focus()}else if(!e.shiftKey&&(document.activeElement===last||document.activeElement===dialog)){e.preventDefault();first.focus()}}});
     const mark=(button,feature,value)=>{if(!button)return;const locked=!access.allows(feature,value);button.classList.toggle('premium-locked',locked);button.dataset.premiumLocked=String(locked);button.querySelector('.premium-lock')?.remove();if(locked){if(button.hasAttribute('data-premium-icon-only'))button.textContent='';button.insertAdjacentHTML('beforeend',lock)}};
