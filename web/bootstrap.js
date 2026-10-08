@@ -20,7 +20,7 @@
     try{
       const response=await fetch('./site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
-      await load('./core/play-billing.js?v=10.25.0');
+      await load('./core/native-billing.js?v=10.25.0');
       const nativeUnlocked=await FretboardBilling.initialize(config);
       await load('./core/access.js?v=10.25.0');
       window.FRETBOARD_ACCESS=FretboardAccess.create(config.nativeBilling===true?nativeUnlocked:await FretboardAccess.resolve(config,location.search));

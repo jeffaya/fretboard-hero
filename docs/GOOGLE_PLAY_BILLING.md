@@ -96,9 +96,10 @@ Developer Notifications. A device clock rollback before the verification time
 invalidates the cache. Like other client-side content gates, this does not claim
 to make bundled static content impossible to extract from a modified APK.
 
-The web demo and its store links are unchanged. iOS StoreKit is not implemented;
-explicit `sync-web.ps1 -Platform iOS` retains the existing unlocked bundle and
-must not be treated as an iOS freemium purchase implementation.
+The web demo and its store links are unchanged. iPhone/iPad use a separate
+StoreKit implementation with the same commercial model; see
+[App Store billing setup](APPLE_BILLING.md). Both native bundles start in demo
+mode. Purchases are not automatically shared across stores.
 
 ## Build and validation
 

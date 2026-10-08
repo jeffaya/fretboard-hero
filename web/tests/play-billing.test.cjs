@@ -1,11 +1,11 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-function setup(initial=false){
+function setup(initial=false,platform='android'){
  const elements=[];const el=()=>({children:[],classList:{add(){}},setAttribute(){},append(...children){this.children.push(...children)},addEventListener(event,fn){this[event]=fn}});
  const home=el();let reloads=0,owned=initial,result={unlocked:initial,status:initial?'purchased':'not_owned'},calls=0;
  const plugin={cachedState:async()=>({unlocked:owned}),restore:async()=>result,price:async()=>({price:'€9.99'}),purchase:async()=>{calls++;return result},addListener:()=>({remove(){}})};
- const window={Capacitor:{getPlatform:()=> 'android',Plugins:{PlayBilling:plugin}}};
+ const window={Capacitor:{getPlatform:()=> platform,Plugins:{[platform==='ios'?'StoreBilling':'PlayBilling']:plugin}}};
  const ctx={window,document:{createElement:()=>{const e=el();elements.push(e);return e},querySelector:()=>home,visibilityState:'visible'},location:{reload(){reloads++}},setTimeout,clearTimeout,setInterval(){}};
- vm.runInNewContext(fs.readFileSync('web/core/play-billing.js','utf8'),ctx);
+ vm.runInNewContext(fs.readFileSync('web/core/native-billing.js','utf8'),ctx);
  return {api:window.FretboardBilling,plugin,home,el,get reloads(){return reloads},get calls(){return calls},setResult(value){result=value},setOwned(value){owned=value}};
 }
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
@@ -27,4 +27,22 @@ test('Refund clears access; outage preserves valid cache but expires stale acces
 });
 test('Native static bridge listener handles work and quiet demo restore stays unobtrusive',async()=>{
  const s=setup();await s.api.initialize({nativeBilling:true});s.api.attach();await flush();assert.equal(s.home.children[0].children[2].textContent,'');
+});
+test('Apple uses StoreBilling and silent refresh; explicit restore alone synchronizes the account',async()=>{
+ const s=setup(false,'ios');let refreshes=0,restores=0;
+ s.plugin.refresh=async()=>{refreshes++;return {unlocked:false,status:'not_owned'}};
+ s.plugin.restore=async()=>{restores++;return {unlocked:true,status:'purchased'}};
+ assert.equal(await s.api.initialize({nativeBilling:true}),false);s.api.attach();await flush();assert.equal(refreshes,1);assert.equal(restores,0);
+ const host=s.el();s.api.mountPaywall(host);await s.api.refreshPrice();s.setResult({unlocked:false,status:'pending'});host.children[0].click();await flush();assert.match(host.children[3].textContent,/App Store/);assert.equal(s.reloads,0);
+ host.children[1].click();await flush();assert.equal(restores,1);assert.equal(s.reloads,1);
+});
+test('Apple transaction update during a purchase is replayed after pending completion',async()=>{
+ const s=setup(false,'ios');let changed,finish,refreshes=0;
+ s.plugin.addListener=(_,fn)=>{changed=fn;return {remove(){}}};
+ s.plugin.refresh=async()=>{refreshes++;return {unlocked:refreshes>1,status:'purchased'}};
+ s.plugin.purchase=()=>new Promise(resolve=>{finish=resolve});
+ await s.api.initialize({nativeBilling:true});s.api.attach();await flush();const host=s.el();s.api.mountPaywall(host);await s.api.refreshPrice();host.children[0].click();changed();finish({unlocked:false,status:'pending'});await flush();assert.equal(refreshes,2);assert.equal(s.reloads,1);
+});
+test('Missing Apple bridge never unlocks from config flags or calls Android billing',async()=>{
+ const s=setup(false,'web');assert.equal(await s.api.initialize({nativeBilling:true,unlocked:true}),false);assert.equal(s.calls,0);
 });

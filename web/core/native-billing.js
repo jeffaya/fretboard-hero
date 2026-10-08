@@ -1,44 +1,48 @@
 (() => {
   'use strict';
   const timeout=(promise,ms)=>new Promise((resolve,reject)=>{
-    const timer=setTimeout(()=>reject(new Error('Google Play is not responding. Please try again.')),ms);
+    const timer=setTimeout(()=>reject(new Error('The store is not responding. Please try again.')),ms);
     promise.then(value=>{clearTimeout(timer);resolve(value)},error=>{clearTimeout(timer);reject(error)});
   });
-  let native=false,plugin,unlocked=false,busy=false,price='',message='',listeners=[];
+  let native=false,plugin,platform,storeName='the store',unlocked=false,busy=false,price='',message='',listeners=[],refreshQueued=false;
   const notify=()=>listeners.forEach(fn=>fn({unlocked,busy,price,message}));
   const update=result=>{
     if(typeof result?.unlocked!=='boolean')throw new Error('Could not check your purchase.');
     if(result.unlocked!==unlocked){unlocked=result.unlocked;location.reload();return}
-    message=result.status==='pending'?'Payment pending. Full access will unlock after Google confirms it.':result.status==='cancelled'?'Purchase cancelled. You can keep exploring.':result.unlocked?'Your full access is restored.':'No completed purchase found for this app and Google Play account.';
+    message=result.status==='pending'?`Payment pending. Full access will unlock after ${storeName} confirms it.`:result.status==='cancelled'?'Purchase cancelled. You can keep exploring.':result.unlocked?'Your full access is restored.':`No completed purchase found for this app and ${storeName} account.`;
   };
   async function run(method,quiet=false){
-    if(busy||!plugin)return;
-    busy=true;message=method==='purchase'?'Opening Google Play…':'Checking purchases…';notify();
+    if(!plugin)return;
+    if(busy){if(quiet)refreshQueued=true;return}
+    busy=true;message=method==='purchase'?`Opening ${storeName}…`:'Checking purchases…';notify();
     try{
-      // A user may spend several minutes inside Google's purchase sheet.
-      const request=plugin[method]();
-      update(await (method==='purchase'?request:timeout(request,45000)));
+      // A user may spend several minutes inside the store's purchase or account sheet.
+      const request=plugin[quiet&&platform==='ios'?'refresh':method]();
+      update(await (method==='purchase'||(method==='restore'&&!quiet&&platform==='ios')?request:timeout(request,45000)));
     }catch(error){
-      message=error?.message||'Google Play is unavailable. Please try again.';
+      message=error?.message||`${storeName} is unavailable. Please try again.`;
       // Do not extend offline access when verification fails.
       try{const cached=await timeout(plugin.cachedState(),2000);if(unlocked&&!cached.unlocked){unlocked=false;location.reload()}}catch{}
-    }finally{busy=false;if(quiet&&(unlocked||message.startsWith('No completed purchase')))message='';notify()}
+    }finally{busy=false;if(quiet&&(unlocked||message.startsWith('No completed purchase')))message='';notify();if(refreshQueued){refreshQueued=false;run('restore',true)}}
   }
   async function refreshPrice(){
     if(!plugin)return;
-    try{const result=await timeout(plugin.price(),15000);price=result.price||'';if(!price)throw new Error('Price unavailable');message=''}catch(error){price='';message=error?.message||'Connect to Google Play to see the price.'}
+    try{const result=await timeout(plugin.price(),15000);price=result.price||'';if(!price)throw new Error('Price unavailable');if(!busy)message=''}catch(error){price='';if(!busy)message=error?.message||`Connect to ${storeName} to see the price.`}
     notify();
   }
   async function initialize(config){
     native=config.nativeBilling===true;
     if(!native)return false;
     const capacitor=window.Capacitor;
-    if(capacitor?.getPlatform?.()!=='android'){message='Purchases are available in the Android app from Google Play.';return false}
+    platform=capacitor?.getPlatform?.();
+    if(!['android','ios'].includes(platform)){message='Purchases are available in the app installed from its store.';return false}
+    storeName=platform==='ios'?'the App Store':'Google Play';
     try{
-      plugin=capacitor.Plugins?.PlayBilling||capacitor.registerPlugin?.('PlayBilling');
+      const name=platform==='ios'?'StoreBilling':'PlayBilling';
+      plugin=capacitor.Plugins?.[name]||capacitor.registerPlugin?.(name);
       if(!plugin)throw new Error('Billing plugin missing');
       const cached=await timeout(plugin.cachedState(),2000);unlocked=cached.unlocked===true;
-    }catch{message='Google Play billing is unavailable. Please update the app.'}
+    }catch{message=`${storeName} billing is unavailable. Please update the app.`}
     return unlocked;
   }
   function mountPaywall(host){
