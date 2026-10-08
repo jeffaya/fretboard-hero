@@ -269,3 +269,16 @@ same instrument-specific HTTPS URL as its button, without detection or a
 redirect page. The local MIT QR encoder is loaded once, only when the dialog
 needs QR codes. Empty store URLs leave buttons disabled without “Coming soon”
 copy and omit QR codes; fill `stores` before releasing.
+
+
+### Build signed APKs and Google Play bundles
+
+```powershell
+.\scripts\build-all.ps1 -BuildType Release -Format Both -VersionCode 2 -VersionName 1.1.0
+```
+
+This produces one APK and one AAB per instrument in `dist/`. Set the version
+code above your last Play upload (the command uses an example). The existing
+APK-only debug command still works. Signing setup and the manual **Build
+Android APKs and AABs** GitHub workflow are documented in
+[Android distribution](docs/TECHNICAL.md#android-distribution-apk--aab).
