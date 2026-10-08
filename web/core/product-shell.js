@@ -27,7 +27,7 @@
     const home=product.home||{};
     const name=branding.name||product.name||'Fretboard Hero';
     const url=seo.canonical||product.url||location.href;
-    const ogImage=new URL(assets.ogImage||'assets/instruments/guitar/og.jpg','https://fretboard-hero.com/').href;
+    const ogImage=new URL(assets.ogImage||'assets/instruments/guitar/og.jpg?v=10.24.2','https://fretboard-hero.com/').href;
 
     document.title=seo.title||name;
     setMeta('meta[name="application-name"]',name);

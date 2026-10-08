@@ -10,13 +10,13 @@ window.FRETBOARD_PRODUCTS.ukulele={
     canonical:'https://fretboard-hero.com/?instrument=ukulele',
     ogTitle:'Ukulele Fretboard Hero — Learn the Ukulele Fretboard',
     ogDescription:'Learn every ukulele note, explore pentatonic positions, triads, chords and arpeggios in G–C–E–A tuning, then test yourself in the quiz.',
-    ogImageAlt:'Ukulele Fretboard Hero interactive G C E A ukulele fretboard with Learn, Play, Fretboard Map, Quiz and Circle of Fifths',
+    ogImageAlt:'Ukulele Fretboard Hero interactive G C E A ukulele fretboard with Learn, Daily Routine, Fretboard Map, Circle of Fifths and Quiz',
     twitterTitle:'Ukulele Fretboard Hero — Learn the Ukulele Fretboard',
     twitterDescription:'Interactive G–C–E–A ukulele fretboard notes, scales, triads, chords, arpeggios and a fast quiz.',
     structuredDescription:'Free interactive ukulele fretboard learning tool for standard reentrant high-G G–C–E–A tuning with note mapping, pentatonic positions, triads, chords, arpeggios and quizzes.',
     featureList:['G–C–E–A ukulele fretboard note map','Reentrant high-G tuning','Pentatonic positions','Ukulele triads and chords','Ukulele arpeggios','Circle of Fifths and key harmony','60-second fretboard quiz']
   },
   pwa:{manifest:'manifests/ukulele.webmanifest',name:'Ukulele Fretboard Hero',shortName:'Ukulele Hero',description:'Interactive ukulele fretboard trainer for scales, triads, chords, arpeggios, note mapping and quizzes.'},
-  assets:{heroLogoViewport:'1800 0 900 550',ogImage:'assets/instruments/ukulele/og.jpg'},
+  assets:{heroLogoViewport:'1800 0 900 550',ogImage:'assets/instruments/ukulele/og.jpg?v=10.24.2'},
   quiz:{durationMs:60000,basePoints:100,scoreTable:[100,250,500,800,1200],maxMultiplier:5,maxFret:15,targets:['root','third','fifth']},ranks:[[10000,'🏆','UKULELE VIRTUOSO',''],[9000,'🎸','UKULELE LEGEND',''],[8000,'🧙','NECK MASTER',''],[7000,'✨','FRET WIZARD',''],[6000,'👑','UKULELE HERO',''],[5300,'⭐','ISLAND ROCKSTAR',''],[4700,'⚡','FAST STRUMMER',''],[4200,'🎛️','TONE MASTER',''],[3800,'🌀','STRING BENDER',''],[3450,'🔥','FRET MASTER',''],[3150,'💀','SOLO MASTER',''],[2900,'🤘','RIFF LORD',''],[2650,'🎤','HEADLINER',''],[2450,'🎪','STAGE PLAYER',''],[2250,'🎵','LEAD PLAYER',''],[2000,'🪓','UKE SLINGER',''],[1800,'🏄','RHYTHM RIDER',''],[1600,'🎸','GIG PLAYER',''],[1400,'🎶','JAMMER',''],[1200,'🎼','UKULELE PLAYER',''],[1000,'🎧','PRACTICER',''],[850,'🌱','ROOKIE',''],[700,'🎸','BEGINNER',''],[550,'🎵','CHORD CHASER',''],[400,'🧭','FRET EXPLORER',''],[300,'🧠','NOTE HUNTER',''],[200,'🗺️','NECK TOURIST',''],[100,'🙈','FRET GUESSER',''],[50,'😬','NEEDS A TUNER',''],[0,'💀','AIR UKULELE','']]
 };
