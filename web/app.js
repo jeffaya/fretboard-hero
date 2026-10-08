@@ -100,7 +100,7 @@
   const modeHost=$('#modeControls');if(modeHost){modeHost.innerHTML='';ModeRegistry.list(instrument).forEach((m,i)=>{const b=document.createElement('button');b.type='button';b.dataset.mode=m.id;b.textContent=m.label;b.classList.toggle('active',m.id===state.mode||(i===0&&!instrument.modes[state.mode]));modeHost.appendChild(b)});if(!instrument.modes[state.mode])state.mode=ModeRegistry.list(instrument)[0]?.id||'';}
   const fretHost=$('#fretCountControls .control-options');if(fretHost){fretHost.innerHTML='';engine.fretOptions.forEach(f=>{const b=document.createElement('button');b.type='button';b.dataset.frets=String(f);b.textContent=`${f} FT`;fretHost.appendChild(b)});}
   state.triadStrings=instrument.defaultTriadSet||state.triadStrings;
-  NOTES.forEach(n=>{const b=document.createElement('button');b.textContent=n;b.dataset.root=n;if(n==='A')b.classList.add('active');$('#rootControls').appendChild(b)});
+  NOTES.forEach(n=>{const b=document.createElement('button');b.textContent=window.FretboardI18n?.note(n)||n;b.dataset.root=n;if(n==='A')b.classList.add('active');$('#rootControls').appendChild(b)});
   $('#rootControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('root',b.dataset.root)){premium.open();return}state.root=b.dataset.root;$$('#rootControls button').forEach(x=>x.classList.toggle('active',x===b));renderLearn()});
   $('#modeControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('mode',ModeRegistry.kind(instrument,b.dataset.mode))){premium.open();return}state.mode=b.dataset.mode;const key=ModeRegistry.stateKey(instrument,state.mode),ctx=ModeRegistry.context(instrument,state.mode);state[key]=!access.unlocked&&key==='pattern'?'1':((key==='triadStrings'?instrument.defaultTriadSet:null)||ctx?.defaultValue||ctx?.values?.[0]||'all');$$('#modeControls button').forEach(x=>x.classList.toggle('active',x===b));renderLearn()});
   $('#qualityControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('quality',b.dataset.quality)){premium.open();return}state.quality=b.dataset.quality;$$('#qualityControls button').forEach(x=>x.classList.toggle('active',x===b));renderLearn()});
@@ -129,7 +129,7 @@
   });
 
   // Fretboard Map: all notes by default, or isolate one pitch class while learning it.
-  NOTES.forEach(n=>{const b=document.createElement('button');b.type='button';b.textContent=n;b.dataset.mapNote=n;b.classList.add('neck-note-pill');b.style.setProperty('--note-color',FretboardMap.DEFAULT_COLORS[n]);$('#mapNoteControls')?.appendChild(b)});
+  NOTES.forEach(n=>{const b=document.createElement('button');b.type='button';b.textContent=window.FretboardI18n?.note(n)||n;b.dataset.mapNote=n;b.classList.add('neck-note-pill');b.style.setProperty('--note-color',FretboardMap.DEFAULT_COLORS[n]);$('#mapNoteControls')?.appendChild(b)});
   $('#mapNoteControls')?.addEventListener('click',e=>{const b=e.target.closest('button[data-map-note]');if(!b)return;if(!access.allows('mapNote',b.dataset.mapNote)){premium.open();return}state.mapNote=b.dataset.mapNote;renderFretboardMap()});
   $$('#rootControls button').forEach(b=>premium.mark(b,'root',b.dataset.root));
   $$('#qualityControls button').forEach(b=>premium.mark(b,'quality',b.dataset.quality));
@@ -172,7 +172,7 @@
       const degree=button.dataset.degreeFilter,pill=button.querySelector('.legend');
       const pc={root:rootPC(),third:thirdPC(),fourth:mod(rootPC()+5),fifth:fifthPC(),seventh:mod(rootPC()+(state.quality==='minor'?10:11))}[degree];
       pill.classList.add('neck-note-pill');pill.style.setProperty('--note-color',FretboardAppearance.DEGREE_COLORS[degree]);
-      appearance.pill(pill,noteName(pc));button.setAttribute('aria-label',`${button.querySelector('small').textContent}: ${noteName(pc)}`);
+      appearance.pill(pill,noteName(pc));button.setAttribute('aria-label',`${button.querySelector('small').textContent}: ${window.FretboardI18n?.note(noteName(pc))||noteName(pc)}`);
     });
     const fourth=$('#legendFourth'),seventh=$('#legendSeventh');
     if(!fourth||!seventh)return;
@@ -273,7 +273,7 @@
     const label=$('#learnPositionLabel'),wrap=$('#learnPositionButtons');if(!label||!wrap)return;
     const ctx=FretboardControls.context(instrument,state.mode);if(!ctx)return;
     label.textContent=ctx.label;let current=state[ModeRegistry.stateKey(instrument,state.mode)];
-    wrap.innerHTML='';ctx.values.forEach(v=>{const b=document.createElement('button');b.type='button';b.dataset.value=v;b.textContent=v==='all'?'ALL':v;b.classList.toggle('active',v===current);if(modeKind()==='pentatonic')premium.mark(b,'position',v);wrap.appendChild(b)});
+    wrap.innerHTML='';ctx.values.forEach(v=>{const b=document.createElement('button');b.type='button';b.dataset.value=v;b.textContent=v==='all'?'ALL':(window.FretboardI18n?.music(v)||v);b.classList.toggle('active',v===current);if(modeKind()==='pentatonic')premium.mark(b,'position',v);wrap.appendChild(b)});
   }
 
   function renderLearn(){

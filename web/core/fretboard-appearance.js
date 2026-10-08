@@ -6,14 +6,17 @@
   function create({svgEl,stringCount,instrument}){
     const metrics=new Map(),measure=document.createElement('canvas').getContext('2d');
     function centeredLabel({x,y,label,size,color='#f4f3ff'}){
+      label=window.FretboardI18n?.note(label)||label;
+      const maxWidth=size*1.6;
       const family=getComputedStyle(document.body).fontFamily,key=`${family}:${size}:${label}`;
       if(!metrics.has(key)){
         measure.font=`800 ${size}px ${family}`;
         metrics.set(key,measure.measureText(label));
       }
-      const m=metrics.get(key);
+      let m=metrics.get(key);
+      if(m.width>maxWidth){size*=maxWidth/m.width;measure.font=`800 ${size}px ${family}`;m=measure.measureText(label)}
       // Center the visible glyph ink, not the font's em box or advance width.
-      return svgEl('text',{x:x+(m.actualBoundingBoxLeft-m.actualBoundingBoxRight)/2,y:y+(m.actualBoundingBoxAscent-m.actualBoundingBoxDescent)/2,fill:color,'font-size':size,'font-weight':800,'text-anchor':'start','dominant-baseline':'alphabetic','pointer-events':'none','data-label-center-x':x,'data-label-center-y':y},label);
+      return svgEl('text',{x:x+(m.actualBoundingBoxLeft-m.actualBoundingBoxRight)/2,y:y+(m.actualBoundingBoxAscent-m.actualBoundingBoxDescent)/2,fill:color,'font-size':size,'font-weight':800,'text-anchor':'start','dominant-baseline':'alphabetic','pointer-events':'none','data-no-i18n':'','data-label-center-x':x,'data-label-center-y':y},label);
     }
     function gradient(defs,id,stops,radial=false,isP=false){
       const node=svgEl(radial?'radialGradient':'linearGradient',radial?{id,cx:'32%',cy:'22%',r:'85%'}:{id,x1:'0%',y1:'0%',x2:isP?'100%':'0%',y2:isP?'0%':'100%'});
@@ -84,7 +87,7 @@
     function pill(host,label){
       const svg=svgEl('svg',{viewBox:'0 0 28 28',width:28,height:28,'aria-hidden':'true',class:'neck-pill-label'});
       svg.append(centeredLabel({x:14,y:14,label,size:16,color:'#f4f3ff'}));
-      host.replaceChildren(svg);host.dataset.noteInk='#f4f3ff';host.setAttribute('aria-label',label);
+      host.replaceChildren(svg);host.dataset.noteInk='#f4f3ff';host.setAttribute('aria-label',window.FretboardI18n?.note(label)||label);
     }
     function tuning(svg,{x,y,label,string}){
       const group=svgEl('g',{class:'neck-tuning','data-string':string,'pointer-events':'none'});

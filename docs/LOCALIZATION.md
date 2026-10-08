@@ -33,9 +33,20 @@ store prices remain controlled by Apple/Google and the customer's store account.
 Catalogs cover home menus, Learn controls and hints, Map, Circle of Fifths,
 all five Routine steps/instructions, completion, quiz instructions/results/ranks,
 share text, unlock dialogs, native billing feedback and accessibility labels.
-Numbers in quiz scores use the selected locale. Product brand names and musical
-notation remain unchanged: A, C#, chord symbols, Roman degrees, CAGED, strings
-and fret numbers are not replaced with solfège or localized identifiers.
+Numbers and displayed note names use the selected locale. French, Spanish,
+Portuguese and Indonesian use Do–Si (with local accents); Japanese uses ド–シ,
+Korean 도–시, Hindi transliterated letter names सी–बी. English and Simplified
+Chinese retain international letter names. German uses H for B natural and B
+for B flat; explicit sharp/flat symbols are preserved elsewhere. Hindi does not
+map movable Sa to absolute C. These are fixed-pitch display conventions.
+
+The `note()` formatter reads seven catalog entries; `music()` handles canonical
+note/chord lists and tuning sets at explicitly musical boundaries. Quiz targets,
+root selectors, pitch arithmetic and saved state keep canonical English values.
+CAGED, interval degrees, chord suffixes and tablature fret numbers stay unchanged.
+SVG labels are localized before measuring and shrink to fit their existing badges.
+The DOM observer remembers its last output to avoid translating German B-flat
+(displayed B) a second time into H.
 
 The existing renderers use English source strings as stable catalog keys. Exact
 strings and bounded parameter templates are translated at text/accessible-label
