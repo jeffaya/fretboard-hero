@@ -4,6 +4,13 @@
     const $=s=>root.querySelector(s),access=window.FRETBOARD_ACCESS||{unlocked:true},premium=window.FRETBOARD_PREMIUM;
     const state={root:'A',quality:'minor',index:0};
     let exercises=[];
+    // A short CSS celebration, created once and replayed only on completion.
+    const confettiColors=['#ff9814','#70f7ff','#ff4ed8','#ffe38a','#b88cff'];
+    for(let i=0;i<40;i++){
+      const piece=document.createElement('i');
+      piece.setAttribute('style',`--x:${(i*37)%100}%;--drift:${(i%7-3)*18}px;--delay:${(i%9)*.08}s;--turn:${(i%2?1:-1)*(360+i*17)}deg;background:${confettiColors[i%confettiColors.length]}`);
+      $('#routineConfetti').append(piece);
+    }
     function render(){
       const done=state.index===5,exercise=exercises[Math.min(state.index,4)];
       $('#routineSteps').replaceChildren();
@@ -14,9 +21,10 @@
         $('#routineSteps').append(step);
       });
       $('#routineKicker').textContent=done?'5 OF 5 COMPLETED':`EXERCISE ${state.index+1} OF 5`;
-      $('#routineTitle').textContent=done?'Routine complete':exercise.title;
+      $('#routineTitle').textContent=done?'Routine complete!':exercise.title;
       $('#routineContext').textContent=done?`${state.root} ${state.quality} · Five exercises completed`:exercise.detail;
-      $('#routineInstruction').textContent=done?'You have connected the root, scale, triads, chord tones and pentatonic. Come back for a new key and new positions.':exercise.instruction;
+      $('#routineInstruction').textContent=done?'Five exercises. One key. You did it! Keep building your skills in Learn, or put your knowledge to the test in Quiz.':exercise.instruction;
+      $('#routineCelebration').hidden=!done;$('#routineExercise').classList.toggle('is-complete',done);
       $('#routineTabScroll').hidden=done;$('#routineLegend').hidden=done;
       $('#routineNext').hidden=done;$('#routineFinish').hidden=!done;
       $('#routineNext').textContent=state.index===4?'Done':'Next →';
