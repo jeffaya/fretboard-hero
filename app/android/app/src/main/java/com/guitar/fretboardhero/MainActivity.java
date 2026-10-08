@@ -8,6 +8,7 @@ import com.getcapacitor.BridgeActivity;
 public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        registerPlugin(PlayBillingPlugin.class);
         super.onCreate(savedInstanceState);
 
         // No dynamic safe-area handling here: a constant CSS margin

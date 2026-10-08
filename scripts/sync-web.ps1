@@ -14,7 +14,10 @@ param(
     [ValidateSet("guitar", "bass-4", "ukulele")]
     [string]$Instrument,
 
-    [string]$RepoPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+    [string]$RepoPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
+
+    [ValidateSet("Android", "iOS")]
+    [string]$Platform = "Android"
 )
 
 $ErrorActionPreference = "Stop"
@@ -38,13 +41,13 @@ Copy-Item -Path (Join-Path $webSource "*") -Destination $wwwPath -Recurse -Force
 $siteConfigPath = Join-Path $wwwPath "site.config.json"
 $siteConfig = Get-Content $siteConfigPath -Raw | ConvertFrom-Json
 $siteConfig.instrument = $Instrument
-$siteConfig | Add-Member -NotePropertyName unlocked -NotePropertyValue $true -Force
+# Android uses Play Billing. iOS retains its existing behavior until StoreKit is integrated.
+$siteConfig | Add-Member -NotePropertyName unlocked -NotePropertyValue ($Platform -eq "iOS") -Force
+$siteConfig | Add-Member -NotePropertyName nativeBilling -NotePropertyValue ($Platform -eq "Android") -Force
 $siteConfig.PSObject.Properties.Remove("testKeyHash")
 $utf8Config = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllText($siteConfigPath, ($siteConfig | ConvertTo-Json -Depth 8), $utf8Config)
-if ((Get-Content $siteConfigPath -Raw | ConvertFrom-Json).unlocked -ne $true) {
-    throw "Native bundle must have unlocked=true."
-}
+
 
 # Keep the universal iOS App Store icon and Capacitor source aligned with this build.
 $iconKey = if ($Instrument -eq "bass-4") { "bass" } else { $Instrument }

@@ -1,3 +1,4 @@
+import { handlePlayBilling } from './server/play-billing.mjs';
 // Social crawlers need instrument metadata in the initial HTML, before JavaScript.
 const products = {
   guitar: { name: 'Guitar', key: 'guitar' },
@@ -7,6 +8,7 @@ const products = {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === '/api/billing/google/verify') return handlePlayBilling(request, env);
     const response = await env.ASSETS.fetch(request);
     if (!['/', '/index.html'].includes(url.pathname) || !response.headers.get('content-type')?.includes('text/html')) return response;
     const requested = url.searchParams.get('instrument');
