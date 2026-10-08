@@ -17,10 +17,10 @@
   const rootPC=()=>PC[state.root];
   const thirdPC=()=>mod(rootPC()+intervals[state.quality].third);
   const fifthPC=()=>mod(rootPC()+7);
-  function go(screen){document.body.dataset.screen=screen;state.screen=screen;$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+screen).classList.add('active');if(screen==='play') playSession.enter();if(screen==='learn') renderLearn();if(screen==='fretmap') renderFretboardMap();if(screen==='circle') renderCircle();if(screen==='quiz') prepareQuiz();}
+  function go(screen){document.body.dataset.screen=screen;state.screen=screen;$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+screen).classList.add('active');if(screen==='routine') routineSession.enter();if(screen==='learn') renderLearn();if(screen==='fretmap') renderFretboardMap();if(screen==='circle') renderCircle();if(screen==='quiz') prepareQuiz();}
   $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
   // Shared controls live in core/controls.js.
-  ['learn','map','play'].forEach(name=>FretboardControls.bindDrawer({name}));
+  ['learn','map','routine'].forEach(name=>FretboardControls.bindDrawer({name}));
 
   // V6 custom select-buttons. They proxy the existing buttons, so gameplay has
   // one source of truth regardless of responsive presentation.
@@ -59,8 +59,8 @@
 
   function updateAdaptiveControls(){
     const mobile=matchMedia('(max-width:767px), (orientation:landscape) and (max-width:1000px) and (max-height:599px)').matches;
-    const toolbars=[$('#learnDrawer'),$('#mapDrawer'),$('#playDrawer')].filter(Boolean);
-    toolbars.forEach(toolbar=>toolbar.querySelectorAll('.control-group').forEach(g=>g.classList.toggle('is-select',toolbar.id==='playDrawer')));
+    const toolbars=[$('#learnDrawer'),$('#mapDrawer'),$('#routineDrawer')].filter(Boolean);
+    toolbars.forEach(toolbar=>toolbar.querySelectorAll('.control-group').forEach(g=>g.classList.toggle('is-select',toolbar.id==='routineDrawer')));
     if(mobile)return;
 
     toolbars.forEach(toolbar=>{
@@ -94,7 +94,7 @@
   $$('.control-panel').forEach(el=>adaptiveObserver.observe(el));
   window.addEventListener('resize',scheduleControlsRefresh);
 
-  const playSession=PlaySession.create({engine,refreshControls:refreshAllSelects});
+  const routineSession=RoutineSession.create({engine,refreshControls:refreshAllSelects});
 
   // Build instrument-dependent controls from the active profile.
   const modeHost=$('#modeControls');if(modeHost){modeHost.innerHTML='';ModeRegistry.list(instrument).forEach((m,i)=>{const b=document.createElement('button');b.type='button';b.dataset.mode=m.id;b.textContent=m.label;b.classList.toggle('active',m.id===state.mode||(i===0&&!instrument.modes[state.mode]));modeHost.appendChild(b)});if(!instrument.modes[state.mode])state.mode=ModeRegistry.list(instrument)[0]?.id||'';}
@@ -113,7 +113,7 @@
       resizeRenderFrame=0;
       if(!state.fretManual)state.maxFret=defaultFretCount();
       if(!state.mapFretManual)state.mapMaxFret=defaultFretCount();
-      if(state.screen==='play')playSession.resize();
+      if(state.screen==='routine')routineSession.resize();
       if(state.screen==='learn')renderLearn();
       if(state.screen==='fretmap')renderFretboardMap();
       if(state.screen==='circle')renderCircle();
