@@ -1,0 +1,36 @@
+name: Check iOS build
+on:
+  pull_request:
+    paths:
+      - 'app/ios/**'
+      - 'app/package*.json'
+      - 'scripts/*ios*'
+      - 'scripts/sync-web.ps1'
+      - 'web/core/native-billing.js'
+      - '.github/workflows/check-ios.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  simulator:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+        working-directory: app
+      - name: Prepare iOS demo and billing bundle
+        shell: pwsh
+        run: ./scripts/prepare-ios.ps1 -Instrument guitar
+      - name: Compile iPhone and iPad target without signing
+        run: >-
+          xcodebuild -project app/ios/App/App.xcodeproj -scheme App
+          -configuration Debug -sdk iphonesimulator
+          -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath /tmp/fretboard-ios-build
+          CODE_SIGNING_ALLOWED=NO build

@@ -242,17 +242,23 @@ unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-br
 `web/site.config.json` is the central configuration:
 
 - `unlocked: false`: web preview, A minor pentatonic position 1 in Learn, the A note only in Map,
-  one A minor Blues Beginner lick in Play, and the C major / A minor circle preview.
+  the A minor Daily Routine, and the C major / A minor circle preview.
   The Quiz and all three instruments remain available.
 - `unlocked: true`: complete access.
 - `publicUrl`: public website URL included in Quiz score sharing, including native builds. Change it when moving to a new domain. Query parameters and fragments are omitted.
 - `stores`: Android and iOS HTTPS store URLs for each instrument. Empty URLs
   show disabled “Coming soon” buttons in the shared unlock dialog.
 
-The native `scripts/sync-web.ps1` step always sets `unlocked: true` in
-`app/www/site.config.json` and removes `testKeyHash`. It leaves the web
-configuration untouched. Run the existing build scripts to regenerate the bundle;
-never edit `app/www` by hand. This sync step can also feed a future iOS build.
+The native `scripts/sync-web.ps1` step sets
+`unlocked: false`, `nativeBilling: true`, and removes `testKeyHash` in
+`app/www/site.config.json`. Google Play or StoreKit purchase verification controls access.
+One non-consumable purchase unlocks all three instruments within the installed
+app; purchases are separate between the three app packages. The web configuration
+is untouched. Run the existing build scripts to regenerate the bundle; never edit
+`app/www` by hand. Use `scripts/prepare-ios.ps1 -Instrument guitar` to prepare the iPhone/iPad variant.
+
+Before distributing, follow [Google Play billing setup](docs/GOOGLE_PLAY_BILLING.md)
+or [App Store billing setup](docs/APPLE_BILLING.md).
 
 A temporary web testing override accepts `?key=<test-key>` when its SHA-256
 hex digest matches `testKeyHash`. Without a matching key the site stays in demo
