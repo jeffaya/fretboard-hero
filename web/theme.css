@@ -71,7 +71,8 @@ body[data-screen]:not([data-screen='home']) .stage-light { opacity: .08; animati
 .fretmap-screen { --ui-accent: var(--ui-green); --ui-tint: #022f2a; }
 .circle-screen { --ui-accent: var(--ui-blue); --ui-tint: #052645; }
 .quiz-screen, #resultModal { --ui-accent: var(--ui-purple); --ui-tint: #290635; }
-.learn-card, .quiz-card { --ui-accent: var(--ui-purple); --ui-tint: #2b073e; }
+.learn-card { --ui-accent: var(--ui-purple); --ui-tint: #2b073e; }
+.quiz-card { --ui-accent: var(--ui-orange); --ui-tint: #32140a; }
 .routine-card { --ui-accent: var(--ui-orange); --ui-tint: #32140a; }
 .map-card { --ui-accent: var(--ui-green); --ui-tint: #022f2a; }
 .circle-card { --ui-accent: var(--ui-blue); --ui-tint: #052645; }

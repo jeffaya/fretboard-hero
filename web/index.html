@@ -42,10 +42,10 @@
   <link rel="apple-touch-icon" sizes="152x152" href="./assets/instruments/guitar/apple-touch-icon-152.png">
   <link rel="apple-touch-icon" sizes="167x167" href="./assets/instruments/guitar/apple-touch-icon-167.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/instruments/guitar/apple-touch-icon-180.png">
-  <link rel="stylesheet" href="./styles.css?v=10.24.0">
+  <link rel="stylesheet" href="./styles.css?v=10.24.1">
   <link rel="stylesheet" href="./home.css?v=10.21.1">
-  <link rel="stylesheet" href="./theme.css?v=10.24.0">
-  <link rel="stylesheet" href="./routine.css?v=10.24.0">
+  <link rel="stylesheet" href="./theme.css?v=10.24.1">
+  <link rel="stylesheet" href="./routine.css?v=10.24.1">
   <link rel="stylesheet" href="./premium.css?v=10.21.1">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
 </head>
@@ -70,8 +70,8 @@
             <button class="hero-btn learn-card" data-go="learn"><span class="hero-icon"><img src="./assets/home/learn.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>LEARN</strong><small>Notes · Triads · Scales · Chords</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn routine-card" data-go="routine"><span class="hero-icon"><img src="./assets/home/play.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>DAILY ROUTINE</strong><small>One key · Five guided exercises</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn map-card" data-go="fretmap"><span class="hero-icon"><img src="./assets/home/map.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>FRETBOARD MAP</strong><small>Explore the neck</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-            <button class="hero-btn quiz-card" data-go="quiz"><span class="hero-icon"><img src="./assets/home/quiz.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>QUIZ</strong><small>Test your knowledge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
             <button class="hero-btn circle-card" data-go="circle"><span class="hero-icon"><img src="./assets/home/circle.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>CIRCLE OF FIFTHS</strong><small>Visualize & practice</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+            <button class="hero-btn quiz-card" data-go="quiz"><span class="hero-icon"><img src="./assets/home/quiz.svg?v=10.24.1" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>QUIZ</strong><small>Test your knowledge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
           </nav>
           <nav class="home-instruments" aria-label="Choose instrument">
             <button type="button" data-home-instrument="guitar" aria-pressed="false"><svg class="instrument-art" viewBox="71.5 11.3333 190 253.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.14.0" width="768" height="256"/></svg><span>Guitar</span></button>
@@ -98,7 +98,11 @@
       </div>
       <div id="routineDrawerBackdrop" class="drawer-backdrop"></div>
       <div class="routine-content">
-        <article class="routine-exercise ui-panel">
+        <article id="routineExercise" class="routine-exercise ui-panel">
+          <div id="routineCelebration" class="routine-celebration" aria-hidden="true" hidden>
+            <div id="routineConfetti" class="routine-confetti"></div>
+            <div class="routine-medal"><svg viewBox="0 0 64 64"><path d="M20 9h24v15c0 12-6 18-12 18s-12-6-12-18Z M20 13H9v8c0 8 5 12 13 12 M44 13h11v8c0 8-5 12-13 12 M32 42v11 M22 56h20" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="m26 24 4 4 9-10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          </div>
           <span id="routineKicker" class="routine-kicker">EXERCISE 1 OF 5</span>
           <h2 id="routineTitle" tabindex="-1">Find the root note</h2>
           <p id="routineContext"></p>
@@ -106,7 +110,7 @@
           <div id="routineTabScroll" class="routine-tab-scroll"><svg id="routineTab" role="img"></svg></div>
           <p id="routineLegend" class="routine-legend">Read left to right · <span>Cyan = root note</span> · Play at your own pace</p>
         </article>
-        <div class="routine-actions"><button id="routineNext" class="ui-primary" type="button">Next →</button><button id="routineFinish" class="ui-primary" type="button" data-go="home" hidden>Back home</button></div>
+        <div class="routine-actions"><button id="routineNext" class="ui-primary" type="button">Next →</button><div id="routineFinish" class="routine-finish" hidden><button class="learn-card" type="button" data-go="learn"><img src="./assets/home/learn.svg" alt="" width="28" height="28">Learn</button><button class="quiz-card" type="button" data-go="quiz"><img src="./assets/home/quiz.svg?v=10.24.1" alt="" width="28" height="28">Quiz</button></div></div>
       </div>
     </section>
 
@@ -237,7 +241,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.24.0" defer></script>
+  <script src="./bootstrap.js?v=10.24.1" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>
