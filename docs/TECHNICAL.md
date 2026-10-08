@@ -185,7 +185,7 @@ checkout, so builds must be sequential, not concurrent.
 
 - Node.js, JDK 21.
 - Android SDK with `ANDROID_HOME` set, `platform-tools`,
-  `platforms;android-34`, `build-tools;34.0.0` installed.
+  `platforms;android-36`, `build-tools;35.0.0` installed.
 - `npm install` run once inside `app/`.
 - **Windows-specific**: a `User`-scope environment variable set via
   `[Environment]::SetEnvironmentVariable(..., "User")` in one PowerShell
@@ -376,3 +376,76 @@ V10.9.2: note, tuning and legend labels share optical centering based on the vis
 V10.9.3: eliminate duplicate tuning/open-note badges; label 0 aligns with the shared open-string column instead of the nut. Quiz open-string hit zones use the same coordinate. Position bands and labels stay on the wood; open-only pentatonic windows do not create stray leading bands. Note radii adapt to fret spacing to keep badges inside narrow 21-fret cells. Verified one badge per string in Map/Learn/Circle for all three profiles in desktop/tablet/phone, matching Quiz open hit-zone centers; existing six-viewport pitch/legend checks and syntax/diff checks pass. Screenshots of All Notes and E-minor pentatonic are in docs/previews/open-string-*.jpg.
 
 Pentatonic visual priority: position bands use 40 SVG units in portrait and 26 in landscape at 94% opacity. Pentatonic note discs and their legend pills share a white surface and a degree-specific darker ink palette for readable lettering. Other note surfaces retain the shared glass treatment. Optical text centering is shared across both surfaces. Preview: `docs/previews/pentatonic-phone.jpg`.
+
+
+## Android distribution: APK + AAB
+
+The existing Windows PowerShell scripts now accept `-Format Apk`, `Aab`, or
+`Both`. Omitting the option preserves the debug APK build. Use Release for
+store submissions; debug packages are for local testing only.
+
+```powershell
+# All three instruments: three signed APKs + three signed AABs.
+.\scripts\build-all.ps1 -BuildType Release -Format Both -VersionCode 2 -VersionName 1.1.0
+
+# One instrument, AAB only.
+.\scripts\build-instrument.ps1 -Instrument guitar -BuildType Release -Format Aab -VersionCode 2 -VersionName 1.1.0
+```
+
+Choose a `VersionCode` higher than the last uploaded code for each app; `2`
+is only an example. The script does not query Play Console. Both formats
+receive the same version via Gradle properties. `VersionName` is the displayed
+version. The three existing application IDs remain unchanged.
+
+Outputs in `dist/`:
+
+- `fretboard-hero-guitar-release.apk` and `fretboard-hero-guitar-release.aab`
+- `fretboard-hero-bass-4-release.apk` and `fretboard-hero-bass-4-release.aab`
+- `fretboard-hero-ukulele-release.apk` and `fretboard-hero-ukulele-release.aab`
+
+APKs install directly. Upload the corresponding signed AAB to that app's
+Google Play Console release track; an AAB does not install directly on a
+phone. This workflow creates packages, not a Play Store listing or a Play
+publication. Play Console still validates the bundle and app requirements.
+
+### Signing locally
+
+Reuse the existing release/upload key. Place it at
+`app/android/app/release.keystore` and create the ignored file
+`app/android/keystore.properties`:
+
+```properties
+storeFile=release.keystore
+storePassword=YOUR_STORE_PASSWORD
+keyAlias=YOUR_EXISTING_ALIAS
+keyPassword=YOUR_KEY_PASSWORD
+```
+
+Values use Java properties syntax (escape backslashes and leading spaces).
+The path is relative to `app/android/app`. Never commit signing keys or
+passwords. Release builds fail when signing configuration is missing; Debug
+builds continue using Android's debug key. For an existing Play app, the key
+must match its registered upload key; do not replace it with a new key merely
+to run this script.
+
+### GitHub Actions
+
+Open **Actions → Build Android APKs and AABs → Run workflow** on `main`.
+Enter `version_code`, `version_name` and choose **Both**. The existing four
+repository secrets are reused:
+
+- `ANDROID_KEYSTORE_BASE64`
+- `ANDROID_KEYSTORE_PASSWORD`
+- `ANDROID_KEY_ALIAS`
+- `ANDROID_KEY_PASSWORD`
+
+Each run builds instruments sequentially, uploads the requested packages as
+`fretboard-hero-android-<version_code>`, and removes temporary signing files.
+Runs on `main` also update the existing `android` GitHub release; branch runs
+only upload artifacts. When requesting only one format, other attachments
+on the rolling release may be older: use that run's artifact for an exact set.
+No upload to Google Play is performed automatically.
+
+References: [Android command-line builds](https://developer.android.com/build/building-cmdline),
+[app versioning](https://developer.android.com/studio/publish/versioning),
+[app signing](https://developer.android.com/studio/publish/app-signing).
