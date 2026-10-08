@@ -6,6 +6,19 @@
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>es</string>
+		<string>fr</string>
+		<string>de</string>
+		<string>ja</string>
+		<string>ko</string>
+		<string>zh-Hans</string>
+		<string>pt-BR</string>
+		<string>hi</string>
+		<string>id</string>
+	</array>
 	<key>CFBundleDisplayName</key>
         <string>Guitar Fretboard Hero</string>
 	<key>CFBundleExecutable</key>

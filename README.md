@@ -288,3 +288,11 @@ code above your last Play upload (the command uses an example). The existing
 APK-only debug command still works. Signing setup and the manual **Build
 Android APKs and AABs** GitHub workflow are documented in
 [Android distribution](docs/TECHNICAL.md#android-distribution-apk--aab).
+
+### Interface languages
+
+The site and both native apps support English, Spanish, French, German, Japanese,
+Korean, Simplified Chinese, Brazilian Portuguese, Hindi and Indonesian. Language
+is detected from browser/device preferences, with English fallback. The home
+flag/name selector saves a manual choice; Automatic restores detection.
+See [localization maintenance](docs/LOCALIZATION.md) for catalogs and validation.
