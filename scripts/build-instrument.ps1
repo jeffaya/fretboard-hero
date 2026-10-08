@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Builds a debug APK for one Fretboard Hero instrument variant (guitar, bass-4, ukulele).
+    Builds APK and/or AAB packages for one Fretboard Hero instrument variant (guitar, bass-4, ukulele).
 
 .PARAMETER Instrument
     One of: guitar, bass-4, ukulele
@@ -9,8 +9,16 @@
     Root of the fretoboard-hero repo. Default: the repo root (two levels up from this script).
 
 .PARAMETER BuildType
-    "Debug" (default, unsigned, for local testing) or "Release" (signed, requires
+    "Debug" (default, debug-signed, for local testing) or "Release" (signed, requires
     app/android/keystore.properties -- see docs/TECHNICAL.md).
+.PARAMETER Format
+    Apk (default, preserves existing builds), Aab, or Both.
+
+.PARAMETER VersionCode
+    Android integer version code. Increase for each Google Play upload.
+
+.PARAMETER VersionName
+    Public version name, such as 1.1.0.
 #>
 param(
     [Parameter(Mandatory = $true)]
@@ -20,13 +28,32 @@ param(
     [string]$RepoPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
 
     [ValidateSet("Debug", "Release")]
-    [string]$BuildType = "Debug"
+    [string]$BuildType = "Debug",
+
+    [ValidateSet("Apk", "Aab", "Both")]
+    [string]$Format = "Apk",
+
+    [ValidateRange(1, 2100000000)]
+    [int]$VersionCode = 1,
+
+    [ValidatePattern('^[0-9]+\.[0-9]+(\.[0-9]+)?([.-][A-Za-z0-9]+)*$')]
+    [string]$VersionName = "1.0"
 )
 
 $ErrorActionPreference = "Stop"
 
 $appRoot = Join-Path $RepoPath "app"
 $distDir = Join-Path $RepoPath "dist"
+if ($BuildType -eq "Release" -and -not (Test-Path (Join-Path $appRoot "android/keystore.properties"))) {
+    throw "Release signing requires app/android/keystore.properties. See docs/TECHNICAL.md."
+}
+$BuildType = if ($BuildType -eq "Release") { "Release" } else { "Debug" }
+$buildTypeLower = $BuildType.ToLower()
+$extensions = if ($Format -eq "Both") { @("apk", "aab") } else { @($Format.ToLower()) }
+# Do not leave a stale package that could be mistaken for this build's output.
+foreach ($extension in $extensions) {
+    Remove-Item (Join-Path $distDir "fretboard-hero-$Instrument-$buildTypeLower.$extension") -Force -ErrorAction SilentlyContinue
+}
 $instrumentsPath = Join-Path $appRoot "instruments.json"
 $instruments = Get-Content $instrumentsPath -Raw | ConvertFrom-Json
 $entry = $instruments.$Instrument
@@ -116,28 +143,32 @@ try {
         throw "npx cap sync android failed with exit code $LASTEXITCODE"
     }
 
-    # 5. Build the APK (debug or signed release)
-    $gradleTask = if ($BuildType -eq "Release") { "assembleRelease" } else { "assembleDebug" }
+    # 5. Build both requested formats in the same Gradle invocation.
+    $gradleTasks = @()
+    if ($extensions -contains "apk") { $gradleTasks += "assemble$BuildType" }
+    if ($extensions -contains "aab") { $gradleTasks += "bundle$BuildType" }
     Push-Location (Join-Path $appRoot "android")
     try {
-        & .\gradlew.bat $gradleTask
+        & .\gradlew.bat @gradleTasks "-PappVersionCode=$VersionCode" "-PappVersionName=$VersionName"
         if ($LASTEXITCODE -ne 0) {
-            throw "gradlew $gradleTask failed with exit code $LASTEXITCODE"
+            throw "Gradle build failed with exit code $LASTEXITCODE"
         }
     } finally {
         Pop-Location
         $ErrorActionPreference = $previousEap
     }
 
-    # 6. Copy the output APK into dist/ with an instrument-specific name
-    $buildTypeLower = $BuildType.ToLower()
-    $builtApk = Join-Path $appRoot "android\app\build\outputs\apk\$buildTypeLower\app-$buildTypeLower.apk"
-    if (-not (Test-Path $builtApk)) {
-        throw "Build did not produce app-$buildTypeLower.apk at $builtApk"
+    # 6. Copy packages with stable instrument-specific names.
+    foreach ($extension in $extensions) {
+        $outputKind = if ($extension -eq "apk") { "apk" } else { "bundle" }
+        $built = Join-Path $appRoot "android/app/build/outputs/$outputKind/$buildTypeLower/app-$buildTypeLower.$extension"
+        if (-not (Test-Path $built)) {
+            throw "Build did not produce the expected $extension at $built"
+        }
+        $output = Join-Path $distDir "fretboard-hero-$Instrument-$buildTypeLower.$extension"
+        Copy-Item -Path $built -Destination $output -Force
+        Write-Host "Built $output (version $VersionName, code $VersionCode)" -ForegroundColor Green
     }
-    $outputApk = Join-Path $distDir "fretboard-hero-$Instrument-$buildTypeLower.apk"
-    Copy-Item -Path $builtApk -Destination $outputApk -Force
-    Write-Host "Built $outputApk" -ForegroundColor Green
 } finally {
     Pop-Location
 }

@@ -11,3 +11,9 @@ app/ios/App/build/
 *.apk
 
 .wrangler/
+
+# Android distribution and signing credentials
+*.aab
+*.keystore
+*.jks
+keystore.properties
