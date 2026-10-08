@@ -67,11 +67,11 @@ body[data-screen='home'] { --ui-scene-shade: .22; }
 body[data-screen]:not([data-screen='home']) .stage-light { opacity: .08; animation: none; }
 #app { position: relative; z-index: 1; }
 #app .screen { background: transparent !important; }
-.practice-screen { --ui-accent: var(--ui-purple); --ui-tint: #2b073e; }
+.learn-screen { --ui-accent: var(--ui-purple); --ui-tint: #2b073e; }
 .fretmap-screen { --ui-accent: var(--ui-green); --ui-tint: #022f2a; }
 .circle-screen { --ui-accent: var(--ui-blue); --ui-tint: #052645; }
 .quiz-screen, #resultModal { --ui-accent: var(--ui-purple); --ui-tint: #290635; }
-.practice-card, .quiz-card { --ui-accent: var(--ui-purple); --ui-tint: #2b073e; }
+.learn-card, .quiz-card { --ui-accent: var(--ui-purple); --ui-tint: #2b073e; }
 .play-card { --ui-accent: var(--ui-orange); --ui-tint: #32140a; }
 .map-card { --ui-accent: var(--ui-green); --ui-tint: #022f2a; }
 .circle-card { --ui-accent: var(--ui-blue); --ui-tint: #052645; }
@@ -144,7 +144,7 @@ body[data-loading='true'] #app { visibility: hidden; }
 
 /* Shared with SVG note badges: the palette comes from FretboardAppearance. */
 .neck-note-pill,
-.practice-legend .legend.neck-note-pill,
+.learn-legend .legend.neck-note-pill,
 #mapNoteControls .neck-note-pill {
   color: var(--ui-text);
   background: radial-gradient(ellipse at 32% 22%,#334655 0%,#172331 30%,#080e19 70%,#03070e 100%);
@@ -153,8 +153,8 @@ body[data-loading='true'] #app { visibility: hidden; }
   font-family: var(--ui-font);
   font-weight: 800;
 }
-.practice-legend .legend-filter small { flex:none; white-space:nowrap; }
-.practice-legend .legend.neck-note-pill { flex:0 0 28px; box-sizing: border-box; min-width: 28px; width: 28px; height: 28px; }
+.learn-legend .legend-filter small { flex:none; white-space:nowrap; }
+.learn-legend .legend.neck-note-pill { flex:0 0 28px; box-sizing: border-box; min-width: 28px; width: 28px; height: 28px; }
 #mapNoteControls .neck-note-pill.active { border-color:var(--note-color); box-shadow:0 0 13px color-mix(in srgb,var(--note-color) 42%,transparent); }
 .neck-note text,.neck-tuning text { font-family:var(--ui-font); }
 

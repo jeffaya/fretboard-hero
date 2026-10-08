@@ -17,10 +17,10 @@
   const rootPC=()=>PC[state.root];
   const thirdPC=()=>mod(rootPC()+intervals[state.quality].third);
   const fifthPC=()=>mod(rootPC()+7);
-  function go(screen){document.body.dataset.screen=screen;state.screen=screen;$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+screen).classList.add('active');if(screen==='play') playSession.enter();if(screen==='practice') renderPractice();if(screen==='fretmap') renderFretboardMap();if(screen==='circle') renderCircle();if(screen==='quiz') prepareQuiz();}
+  function go(screen){document.body.dataset.screen=screen;state.screen=screen;$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+screen).classList.add('active');if(screen==='play') playSession.enter();if(screen==='learn') renderLearn();if(screen==='fretmap') renderFretboardMap();if(screen==='circle') renderCircle();if(screen==='quiz') prepareQuiz();}
   $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
   // Shared controls live in core/controls.js.
-  ['practice','map','play'].forEach(name=>FretboardControls.bindDrawer({name}));
+  ['learn','map','play'].forEach(name=>FretboardControls.bindDrawer({name}));
 
   // V6 custom select-buttons. They proxy the existing buttons, so gameplay has
   // one source of truth regardless of responsive presentation.
@@ -59,7 +59,7 @@
 
   function updateAdaptiveControls(){
     const mobile=matchMedia('(max-width:767px), (orientation:landscape) and (max-width:1000px) and (max-height:599px)').matches;
-    const toolbars=[$('#practiceDrawer'),$('#mapDrawer'),$('#playDrawer')].filter(Boolean);
+    const toolbars=[$('#learnDrawer'),$('#mapDrawer'),$('#playDrawer')].filter(Boolean);
     toolbars.forEach(toolbar=>toolbar.querySelectorAll('.control-group').forEach(g=>g.classList.toggle('is-select',toolbar.id==='playDrawer')));
     if(mobile)return;
 
@@ -75,7 +75,7 @@
         const required=groups.reduce((sum,g)=>sum+g.getBoundingClientRect().width,0)+gap*Math.max(0,groups.length-1);
         return required<=row.getBoundingClientRect().width+1;
       };
-      // Same degradation order on Practice and Map. Wide controls collapse first.
+      // Same degradation order on Learn and Map. Wide controls collapse first.
       const order=['fretboard','root','note','context','quality','mode'];
       for(const type of order){
         if(fits())break;
@@ -101,11 +101,11 @@
   const fretHost=$('#fretCountControls .control-options');if(fretHost){fretHost.innerHTML='';engine.fretOptions.forEach(f=>{const b=document.createElement('button');b.type='button';b.dataset.frets=String(f);b.textContent=`${f} FT`;fretHost.appendChild(b)});}
   state.triadStrings=instrument.defaultTriadSet||state.triadStrings;
   NOTES.forEach(n=>{const b=document.createElement('button');b.textContent=n;b.dataset.root=n;if(n==='A')b.classList.add('active');$('#rootControls').appendChild(b)});
-  $('#rootControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('root',b.dataset.root)){premium.open();return}state.root=b.dataset.root;$$('#rootControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
-  $('#modeControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('mode',ModeRegistry.kind(instrument,b.dataset.mode))){premium.open();return}state.mode=b.dataset.mode;const key=ModeRegistry.stateKey(instrument,state.mode),ctx=ModeRegistry.context(instrument,state.mode);state[key]=!access.unlocked&&key==='pattern'?'1':((key==='triadStrings'?instrument.defaultTriadSet:null)||ctx?.defaultValue||ctx?.values?.[0]||'all');$$('#modeControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
-  $('#qualityControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('quality',b.dataset.quality)){premium.open();return}state.quality=b.dataset.quality;$$('#qualityControls button').forEach(x=>x.classList.toggle('active',x===b));renderPractice()});
-  $('#fretCountControls').addEventListener('click',e=>{const b=e.target.closest('button[data-frets]');if(!b)return;state.maxFret=Number(b.dataset.frets);state.fretManual=true;renderPractice()});
-  $('#practicePositionButtons').addEventListener('click',e=>{const b=e.target.closest('button[data-value]');if(!b)return;if(modeKind()==='pentatonic'&&!access.allows('position',b.dataset.value)){premium.open();return}state[ModeRegistry.stateKey(instrument,state.mode)]=b.dataset.value;renderPractice()});
+  $('#rootControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('root',b.dataset.root)){premium.open();return}state.root=b.dataset.root;$$('#rootControls button').forEach(x=>x.classList.toggle('active',x===b));renderLearn()});
+  $('#modeControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('mode',ModeRegistry.kind(instrument,b.dataset.mode))){premium.open();return}state.mode=b.dataset.mode;const key=ModeRegistry.stateKey(instrument,state.mode),ctx=ModeRegistry.context(instrument,state.mode);state[key]=!access.unlocked&&key==='pattern'?'1':((key==='triadStrings'?instrument.defaultTriadSet:null)||ctx?.defaultValue||ctx?.values?.[0]||'all');$$('#modeControls button').forEach(x=>x.classList.toggle('active',x===b));renderLearn()});
+  $('#qualityControls').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(!access.allows('quality',b.dataset.quality)){premium.open();return}state.quality=b.dataset.quality;$$('#qualityControls button').forEach(x=>x.classList.toggle('active',x===b));renderLearn()});
+  $('#fretCountControls').addEventListener('click',e=>{const b=e.target.closest('button[data-frets]');if(!b)return;state.maxFret=Number(b.dataset.frets);state.fretManual=true;renderLearn()});
+  $('#learnPositionButtons').addEventListener('click',e=>{const b=e.target.closest('button[data-value]');if(!b)return;if(modeKind()==='pentatonic'&&!access.allows('position',b.dataset.value)){premium.open();return}state[ModeRegistry.stateKey(instrument,state.mode)]=b.dataset.value;renderLearn()});
   let resizeRenderFrame=0;
   window.addEventListener('resize',()=>{
     if(resizeRenderFrame)return;
@@ -114,7 +114,7 @@
       if(!state.fretManual)state.maxFret=defaultFretCount();
       if(!state.mapFretManual)state.mapMaxFret=defaultFretCount();
       if(state.screen==='play')playSession.resize();
-      if(state.screen==='practice')renderPractice();
+      if(state.screen==='learn')renderLearn();
       if(state.screen==='fretmap')renderFretboardMap();
       if(state.screen==='circle')renderCircle();
       if(state.screen==='quiz')renderQuizBoard();
@@ -122,10 +122,10 @@
   });
 
   $$('#mapFretControls button[data-map-frets]').forEach(b=>b.addEventListener('click',()=>{state.mapMaxFret=Number(b.dataset.mapFrets);state.mapFretManual=true;renderFretboardMap()}));
-  // Practice legend: tap a degree to isolate it; tap the active pill again to show everything.
-  $('.practice-legend')?.addEventListener('click',e=>{
+  // Learn legend: tap a degree to isolate it; tap the active pill again to show everything.
+  $('.learn-legend')?.addEventListener('click',e=>{
     const b=e.target.closest('[data-degree-filter]');if(!b||b.classList.contains('legend-muted'))return;
-    const next=b.dataset.degreeFilter;state.degreeFilter=state.degreeFilter===next?'all':next;renderPractice();
+    const next=b.dataset.degreeFilter;state.degreeFilter=state.degreeFilter===next?'all':next;renderLearn();
   });
 
   // Fretboard Map: all notes by default, or isolate one pitch class while learning it.
@@ -167,8 +167,8 @@
   function degreeFor(pc){const diff=mod(pc-rootPC());if(diff===0)return 'root';if(pc===thirdPC())return 'third';if(diff===2)return 'second';if(diff===5)return 'fourth';if(diff===7)return 'fifth';if(diff===9)return 'sixth';if(diff===10||diff===11)return 'seventh';return null}
   function pentaPCs(){return intervals[state.quality].penta.map(i=>mod(rootPC()+i))}
   function formula(){const ints=state.quality==='minor'?['1','♭3','4','5','♭7']:['1','2','3','5','6'];return pentaPCs().map(noteName).join(' • ')+'   '+ints.join(' • ')}
-  function updatePracticeLegend(){
-    $$('.practice-legend [data-degree-filter]').forEach(button=>{
+  function updateLearnLegend(){
+    $$('.learn-legend [data-degree-filter]').forEach(button=>{
       const degree=button.dataset.degreeFilter,pill=button.querySelector('.legend');
       const pc={root:rootPC(),third:thirdPC(),fourth:mod(rootPC()+5),fifth:fifthPC(),seventh:mod(rootPC()+(state.quality==='minor'?10:11))}[degree];
       pill.classList.add('neck-note-pill');pill.style.setProperty('--note-color',FretboardAppearance.DEGREE_COLORS[degree]);
@@ -183,7 +183,7 @@
     if((state.degreeFilter==='fourth'&&!showFourth)||(state.degreeFilter==='seventh'&&!showSeventh))state.degreeFilter='all';
   }
   function updateDegreeFilterUI(){
-    $$('.practice-legend [data-degree-filter]').forEach(b=>{const on=state.degreeFilter===b.dataset.degreeFilter;const filtered=state.degreeFilter!=='all';b.classList.toggle('active',on);b.classList.toggle('filter-dimmed',filtered&&!on);b.setAttribute('aria-pressed',String(on))});
+    $$('.learn-legend [data-degree-filter]').forEach(b=>{const on=state.degreeFilter===b.dataset.degreeFilter;const filtered=state.degreeFilter!=='all';b.classList.toggle('active',on);b.classList.toggle('filter-dimmed',filtered&&!on);b.setAttribute('aria-pressed',String(on))});
   }
   function degreeLabel(pc){return noteName(pc)}
   function portrait(){return matchMedia('(max-width:1199px) and (orientation:portrait)').matches}
@@ -192,7 +192,7 @@
   const {surface:premiumSurface,fret:premiumFret,string:premiumString}=appearance;
 
 
-  // V7 FRETBOARD CORE — one structural/visual neck renderer for Practice, Map and Quiz.
+  // V7 FRETBOARD CORE — one structural/visual neck renderer for Learn, Map and Quiz.
   // Modes only add their own overlays, notes and interactions on top of this shared core.
   function renderFretboardCore(svg,{prefix,maxFret,onSurface,fretOffset=0}={}){
     const layout=FretboardLayout.create({portrait:portrait(),stringCount:STRING_COUNT,maxFret});
@@ -267,30 +267,30 @@
     const notes=ArpeggioEngine.occurrences({engine,rootPC:rootPC(),type,maxFret:state.maxFret}).map(n=>({...n,degree:degreeByPc.get(n.pc)}));
     return [{shape:type,notes}];
   }
-  function selectedPracticeShapes(){const kind=modeKind();return kind==='triads'?triadShapes():kind==='chords'?chordShapes():kind==='arpeggios'?arpeggioShapes():[]}
+  function selectedLearnShapes(){const kind=modeKind();return kind==='triads'?triadShapes():kind==='chords'?chordShapes():kind==='arpeggios'?arpeggioShapes():[]}
   function selectedNoteKeys(shapes){const keys=new Set();shapes.forEach(sh=>sh.notes.forEach(n=>keys.add(n.string+':'+n.fret)));return keys}
   function renderContextControls(){
-    const label=$('#practicePositionLabel'),wrap=$('#practicePositionButtons');if(!label||!wrap)return;
+    const label=$('#learnPositionLabel'),wrap=$('#learnPositionButtons');if(!label||!wrap)return;
     const ctx=FretboardControls.context(instrument,state.mode);if(!ctx)return;
     label.textContent=ctx.label;let current=state[ModeRegistry.stateKey(instrument,state.mode)];
     wrap.innerHTML='';ctx.values.forEach(v=>{const b=document.createElement('button');b.type='button';b.dataset.value=v;b.textContent=v==='all'?'ALL':v;b.classList.toggle('active',v===current);if(modeKind()==='pentatonic')premium.mark(b,'position',v);wrap.appendChild(b)});
   }
 
-  function renderPractice(){
+  function renderLearn(){
     requestAnimationFrame(refreshAllSelects);
     const title=state.root+' '+state.quality.toUpperCase();
-    $('#practiceTitle').textContent=title;
+    $('#learnTitle').textContent=title;
     const kind=modeKind();
-    $('#practiceFormula').textContent=(instrument.modes[state.mode]?.label||state.mode).toUpperCase();
+    $('#learnFormula').textContent=(instrument.modes[state.mode]?.label||state.mode).toUpperCase();
     $$('#fretCountControls button').forEach(b=>b.classList.toggle('active',Number(b.dataset.frets)===state.maxFret));
-    renderContextControls();updatePracticeLegend();updateDegreeFilterUI();
-    const shapes=selectedPracticeShapes();
-    if(kind==='pentatonic')$('#practiceHint').textContent=state.pattern==='all'?'All connected positions are visible. Select one to isolate it.':`Position ${state.pattern} · ${access.unlocked?'Select another position to explore the neck.':'Unlock the app to explore all five positions.'}`;
-    else if(kind==='triads'){const groups=Object.keys(instrument.triadSets||{});$('#practiceHint').textContent=state.triadStrings==='all'?`All close-voicing triads across ${groups.join(', ')}.`:`All root, 1st and 2nd inversion triads on ${state.triadStrings}.`;}
-    else if(kind==='chords'){const label=(instrument.chords||instrument.caged)?.systemLabel||'chord';$('#practiceHint').textContent=state.chordShape==='all'?`All available ${label} shapes across the fretboard.`:`${state.chordShape} ${label} shape across the fretboard.`;}
-    else if(kind==='arpeggios')$('#practiceHint').textContent='Chord tones across the full visible fretboard.';
-    else $('#practiceHint').textContent='';
-    renderFretboard($('#practiceFretboard'),{interactive:false,mode:state.mode,visibleKeys:selectedNoteKeys(shapes),shapes});
+    renderContextControls();updateLearnLegend();updateDegreeFilterUI();
+    const shapes=selectedLearnShapes();
+    if(kind==='pentatonic')$('#learnHint').textContent=state.pattern==='all'?'All connected positions are visible. Select one to isolate it.':`Position ${state.pattern} · ${access.unlocked?'Select another position to explore the neck.':'Unlock the app to explore all five positions.'}`;
+    else if(kind==='triads'){const groups=Object.keys(instrument.triadSets||{});$('#learnHint').textContent=state.triadStrings==='all'?`All close-voicing triads across ${groups.join(', ')}.`:`All root, 1st and 2nd inversion triads on ${state.triadStrings}.`;}
+    else if(kind==='chords'){const label=(instrument.chords||instrument.caged)?.systemLabel||'chord';$('#learnHint').textContent=state.chordShape==='all'?`All available ${label} shapes across the fretboard.`:`${state.chordShape} ${label} shape across the fretboard.`;}
+    else if(kind==='arpeggios')$('#learnHint').textContent='Chord tones across the full visible fretboard.';
+    else $('#learnHint').textContent='';
+    renderFretboard($('#learnFretboard'),{interactive:false,mode:state.mode,visibleKeys:selectedNoteKeys(shapes),shapes});
   }
 
   const DEGREE_COLORS=FretboardAppearance.DEGREE_COLORS;
@@ -324,7 +324,7 @@
   }
   function renderFretboard(svg,opt){
     const maxFret=Math.min(engine.maxFret,state.maxFret);
-    const core=renderFretboardCore(svg,{prefix:'practice',maxFret,onSurface:ctx=>{if(ModeRegistry.kind(instrument,opt.mode)==='pentatonic')renderPentaSegments(svg,ctx)}});
+    const core=renderFretboardCore(svg,{prefix:'learn',maxFret,onSurface:ctx=>{if(ModeRegistry.kind(instrument,opt.mode)==='pentatonic')renderPentaSegments(svg,ctx)}});
     const {isP,fretPos,visualStringPos}=core;
     if(ModeRegistry.kind(instrument,opt.mode)==='pentatonic')renderPentaPositionLabels(svg,core);
     const renderKind=ModeRegistry.kind(instrument,opt.mode),activeSet=renderKind==='pentatonic'?new Set(pentaPCs()):renderKind==='arpeggios'?new Set(arpeggioShapes()[0]?.notes.map(n=>n.pc)||[]):new Set([rootPC(),thirdPC(),fifthPC()]);
@@ -425,7 +425,7 @@
       return[Math.min(a,b),Math.max(a,b)];
     };
     // Quiz-only interaction layer: each hit zone covers the full string lane between two frets.
-    // Practice and Fretboard Map continue to use the shared core without this overlay.
+    // Learn and Fretboard Map continue to use the shared core without this overlay.
     for(let s=0;s<STRING_COUNT;s++)for(let f=startFret;f<=endFret;f++){
       const [fa,fb]=fretBounds(f),[sa,sb]=stringBounds(s),centerF=(fa+fb)/2,centerS=visualStringPos(s),x=isP?centerS:centerF,y=isP?centerF:centerS;
       const hit=isP
@@ -496,5 +496,5 @@
     return url.href;
   }
   $('#shareScore').addEventListener('click',async()=>{const qz=state.quiz||{score:0,correct:0},{emoji,rank}=quizRank(qz.score);const text=`${emoji} I reached ${rank} with ${qz.score.toLocaleString('en-US')} points and ${qz.correct} correct answers in ${quizSeconds()} seconds on ${product.name} ${product.shareEmoji||''}\nCan you beat my score? Try the free fretboard quiz!`,url=quizShareUrl();try{if(navigator.share)await navigator.share({title:product.name,text,url});else{await navigator.clipboard.writeText(`${text}\n${url}`);const shareLabel=$('#shareScore span');if(shareLabel){shareLabel.textContent='COPIED!';setTimeout(()=>shareLabel.textContent='SHARE MY SCORE',1400)}}}catch{}});
-  renderPractice();
+  renderLearn();
 })();

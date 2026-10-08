@@ -13,7 +13,7 @@ export default {
     const instrument = Object.hasOwn(products, requested) ? products[requested] : products.guitar;
     const canonical = `https://fretboard-hero.com/${instrument.key === 'guitar' ? '' : `?instrument=${instrument.key === 'bass' ? 'bass-4' : instrument.key}`}`;
     const title = `${instrument.name} Fretboard Hero — Master the Neck`;
-    const description = `Learn the ${instrument.name.toLowerCase()} fretboard with Practice, Play, Fretboard Map, Quiz and Circle of Fifths.`;
+    const description = `Learn the ${instrument.name.toLowerCase()} fretboard with Learn, Play, Fretboard Map, Quiz and Circle of Fifths.`;
     const image = `https://fretboard-hero.com/assets/instruments/${instrument.key}/og.jpg`;
     const attr = (name, value) => ({ element(el) { el.setAttribute(name, value); } });
     return new HTMLRewriter()

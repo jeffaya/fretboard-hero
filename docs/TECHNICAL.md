@@ -43,7 +43,7 @@ web/
 ├── core/          # Shared engine. MUST stay instrument-agnostic.
 ├── instruments/    # Per-instrument profiles (tuning, fret range, ...).
 ├── products/       # Per-instrument product identity (branding, SEO, copy).
-├── modes/          # Reusable practice modes (pentatonic/triads/chords/...).
+├── modes/          # Reusable learn modes (pentatonic/triads/chords/...).
 ├── site.config.json  # { "instrument": "guitar" | "bass-4" | "ukulele" }
 ├── bootstrap.js     # Reads site.config.json, wires instrument -> product -> core.
 ├── index.html / app.js / styles.css / sw.js
@@ -268,14 +268,14 @@ debug builds expose a CDP endpoint instead:
    `Origin` header (403 "Rejected ... Origin"), and passing a custom header
    gets appended alongside the default rather than replacing it.
 5. Use the `Runtime.evaluate` CDP method to click nav elements
-   (`document.querySelector('[data-go="practice"]').click()`, etc.) and
+   (`document.querySelector('[data-go="learn"]').click()`, etc.) and
    `Runtime.consoleAPICalled` events to capture console errors/warnings
    during navigation.
 
 A ready-to-run implementation of this lives at
 `tools/verify-webview-navigation.py` — see `tools/README.md` and the
 script's own docstring for usage. It clicks through all 4 screens
-(`practice`, `fretmap`, `circle`, `quiz` — **note**: the data-go value is
+(`learn`, `fretmap`, `circle`, `quiz` — **note**: the data-go value is
 `fretmap`, not `map`), prints the active screen after each click, prints
 the page `<title>` (useful to confirm per-instrument branding is applied),
 prints the `viewport` meta content (to confirm `user-scalable=no` /
@@ -332,7 +332,7 @@ version number, it does not duplicate the changelog.
 
 ## Shared neon theme (V10.7.0)
 
-`web/theme.css` is the canonical shared appearance layer, loaded after legacy styles and `web/home.css`. It owns self-hosted typography, the single concert background, color tokens, gloss, button states and frame surfaces across Home, Practice, Fretboard Map, Circle and Quiz. Geometry remains in existing screen styles. `body[data-screen]` follows navigation; exercises dim the shared scene for readability. `web/home.js` loads before `app.js` and only handles the instrument dock. Settings, stats dialogs and their progress tracking were removed; the home does not read or write localStorage. Existing legacy progress data is inert. Motion runs automatically while home is active and honors prefers-reduced-motion.
+`web/theme.css` is the canonical shared appearance layer, loaded after legacy styles and `web/home.css`. It owns self-hosted typography, the single concert background, color tokens, gloss, button states and frame surfaces across Home, Learn, Fretboard Map, Circle and Quiz. Geometry remains in existing screen styles. `body[data-screen]` follows navigation; exercises dim the shared scene for readability. `web/home.js` loads before `app.js` and only handles the instrument dock. Settings, stats dialogs and their progress tracking were removed; the home does not read or write localStorage. Existing legacy progress data is inert. Motion runs automatically while home is active and honors prefers-reduced-motion.
 
 The instrument dock stores `fretboard-home-instrument` in sessionStorage and reloads bootstrap. Bootstrap validates the key against CATALOG, otherwise uses `site.config.json`. The original configuration is retained as `defaultInstrument`; it controls dock order independently of the active session selection. Unknown saved selections are cleared and fall back to the configured instrument. This does not alter build configuration or native app ID.
 
@@ -340,13 +340,13 @@ Play Mode and Quiz are two entry points to the existing quiz intro, not independ
 
 ### Home artwork and responsive layout (V10.6.1)
 
-`assets/theme/concert-crowd.webp` and the shared `assets/home/product-wordmarks.webp` logo sprite contain only illustration/lettering; controls and text remain native DOM. `icons.svg` is a shared symbol sprite referenced with SVG use. Barlow Condensed 500/800 are self-hosted subset WOFF2 fonts in `assets/theme`, licensed under the bundled OFL. No remote font request is needed. Asset payload (illustration, logo, sprite and fonts) is approximately 415 KB across all variants on disk; the shared logo sprite is requested once. `ProductShell` loads the active product’s wordmark viewport via `assets.heroLogoViewport` and derives the Practice description from the active profile's registered modes.
+`assets/theme/concert-crowd.webp` and the shared `assets/home/product-wordmarks.webp` logo sprite contain only illustration/lettering; controls and text remain native DOM. `icons.svg` is a shared symbol sprite referenced with SVG use. Barlow Condensed 500/800 are self-hosted subset WOFF2 fonts in `assets/theme`, licensed under the bundled OFL. No remote font request is needed. Asset payload (illustration, logo, sprite and fonts) is approximately 415 KB across all variants on disk; the shared logo sprite is requested once. `ProductShell` loads the active product’s wordmark viewport via `assets.heroLogoViewport` and derives the Learn description from the active profile's registered modes.
 
 Portrait layout is a centered column; landscape ≥700px is a two-column composition; short landscape ≥740px uses two columns inside the card menu. Media rules live in `home.css`, scoped to `#home`, without changing fretboard layouts. Native app/www must still be rebuilt from web. Small screens allow vertical scrolling.
 
 Artwork source prompts and provenance: `web/assets/home/ASSETS.md`. Browser validation uses the built-in product routes, not mocked fretboard engines. The in-conversation gallery consists of actual Chromium screenshots.
 
-V10.7.0 validation: Chromium checked shared font/background/gloss on all four modes, Practice root/degree controls, Quiz launch, six portrait/landscape viewport sizes (phone, tablet and desktop), and reduced-motion behavior. No runtime errors or horizontal overflow were observed.
+V10.7.0 validation: Chromium checked shared font/background/gloss on all four modes, Learn root/degree controls, Quiz launch, six portrait/landscape viewport sizes (phone, tablet and desktop), and reduced-motion behavior. No runtime errors or horizontal overflow were observed.
 
 ## Three-product home (V10.8.0)
 
@@ -361,18 +361,18 @@ The product wordmarks share one 2700×550 WebP sprite, displayed through indepen
 
 ## Shared premium neck (V10.9.0)
 
-`core/fretboard-appearance.js` owns the ebony surface, chrome frets, wound/plain strings, faceted violet diamond inlays, open-string tuning badges and dark glass note badges. Practice, Map, Quiz and Circle share the same structural neck; Practice, Map and Circle use the same note renderer. Geometry stays orthographic and follows the existing portrait/landscape layout. The 12th-fret pair is separated symmetrically for four- and six-string profiles. Open notes and tuning share one column at viewBox coordinate 35; an active open note replaces its neutral tuning badge.
+`core/fretboard-appearance.js` owns the ebony surface, chrome frets, wound/plain strings, faceted violet diamond inlays, open-string tuning badges and dark glass note badges. Learn, Map, Quiz and Circle share the same structural neck; Learn, Map and Circle use the same note renderer. Geometry stays orthographic and follows the existing portrait/landscape layout. The 12th-fret pair is separated symmetrically for four- and six-string profiles. Open notes and tuning share one column at viewBox coordinate 35; an active open note replaces its neutral tuning badge.
 
-Degree colors and Circle scale colors have one source in `FretboardAppearance`. Practice legends display actual note names and use the exact corresponding note outline color; Circle scale pills and Map pitch filters follow their neck palette. Position bands remain available but are thinner and translucent so the strings and notes stay visible. Legacy legend color rules have been removed.
+Degree colors and Circle scale colors have one source in `FretboardAppearance`. Learn legends display actual note names and use the exact corresponding note outline color; Circle scale pills and Map pitch filters follow their neck palette. Position bands remain available but are thinner and translucent so the strings and notes stay visible. Legacy legend color rules have been removed.
 
 The neck uses one 83 KB photorealistic ebony WebP texture, gradients and explicit contact shadows instead of turbulence and repeated blur filters. Metal parts, strings, faceted inlays and notes remain SVG geometry. No animation loop or additional dependencies are introduced. Existing Quiz hit zones and feedback remain intact.
 
-Validation: Chromium checked Guitar/Bass/Ukulele at 1440×900, 900×1440, 1024×768, 768×1024, 844×390 and 393×873; correct C pitch locations, 3/5/7/9/double-12/15 markers, exact Practice note/legend colors and labels across all registered modes in major/minor, degree filtering and Circle scale colors. Three-product navigation and Quiz rendering, JavaScript syntax checks, Capacitor bridge tests and diff checks passed. Browser viewport checks do not replace physical iPad/iPhone testing.
+Validation: Chromium checked Guitar/Bass/Ukulele at 1440×900, 900×1440, 1024×768, 768×1024, 844×390 and 393×873; correct C pitch locations, 3/5/7/9/double-12/15 markers, exact Learn note/legend colors and labels across all registered modes in major/minor, degree filtering and Circle scale colors. Three-product navigation and Quiz rendering, JavaScript syntax checks, Capacitor bridge tests and diff checks passed. Browser viewport checks do not replace physical iPad/iPhone testing.
 
 V10.9.1: all fret numbers are shown, with 3/5/7/9/12/15/17/19/21 emphasized. Faceted violet diamonds replace pearls; cyan/magenta rails are removed. Raised fret bodies use rectangles so their cross-section gradients have a nonzero bounding box. Cylindrical string gauges range from 8 to 2 viewBox units, with two offset shadow layers and wound-wire patterns. Note radii are 24 landscape / 26 portrait and tuning badges 24. The landscape neck is taller for more breathing room. Updated checks verify complete fret numbering, diamond geometry, string-gauge range and texture use across all three profiles and six viewports.
 
 V10.9.2: note, tuning and legend labels share optical centering based on the visible glyph bounds (Canvas TextMetrics), rather than the font em box. Bold font loading completes before initial board rendering; measured label metrics are cached. Browser checks verified 680 labels including accidentals in desktop, iPad and phone layouts; note/legend matching and all profile/viewport regressions still pass.
 
-V10.9.3: eliminate duplicate tuning/open-note badges; label 0 aligns with the shared open-string column instead of the nut. Quiz open-string hit zones use the same coordinate. Position bands and labels stay on the wood; open-only pentatonic windows do not create stray leading bands. Note radii adapt to fret spacing to keep badges inside narrow 21-fret cells. Verified one badge per string in Map/Practice/Circle for all three profiles in desktop/tablet/phone, matching Quiz open hit-zone centers; existing six-viewport pitch/legend checks and syntax/diff checks pass. Screenshots of All Notes and E-minor pentatonic are in docs/previews/open-string-*.jpg.
+V10.9.3: eliminate duplicate tuning/open-note badges; label 0 aligns with the shared open-string column instead of the nut. Quiz open-string hit zones use the same coordinate. Position bands and labels stay on the wood; open-only pentatonic windows do not create stray leading bands. Note radii adapt to fret spacing to keep badges inside narrow 21-fret cells. Verified one badge per string in Map/Learn/Circle for all three profiles in desktop/tablet/phone, matching Quiz open hit-zone centers; existing six-viewport pitch/legend checks and syntax/diff checks pass. Screenshots of All Notes and E-minor pentatonic are in docs/previews/open-string-*.jpg.
 
 Pentatonic visual priority: position bands use 40 SVG units in portrait and 26 in landscape at 94% opacity. Pentatonic note discs and their legend pills share a white surface and a degree-specific darker ink palette for readable lettering. Other note surfaces retain the shared glass treatment. Optical text centering is shared across both surfaces. Preview: `docs/previews/pentatonic-phone.jpg`.
