@@ -20,6 +20,19 @@
       expression+=escape(key.slice(end));return {regex:new RegExp('^'+expression+'$','iu'),names,value};
     }).sort((a,b)=>b.regex.source.length-a.regex.source.length);
   }
+  // Canonical pitches never change; call only at musical presentation boundaries.
+  function note(input){
+    const found=/^([A-Ga-g])([#♯♭b]?)(m|°|7|maj7|m7)?$/.exec(input);
+    if(!found)return input;
+    const [,letter,accidental,suffix='']=found,base=letter.toUpperCase();
+    if(locale==='de'&&base==='B'&&(accidental==='♭'||accidental==='b'))return 'B'+suffix;
+    return (dictionary['Note name '+base]||base)+accidental+suffix;
+  }
+  function music(input){
+    // Strings such as EAD are tuning sets, never the CAGED system name.
+    return input.replace(/\b[A-G]{2,3}\b/g,set=>[...set].map(note).join('–'))
+      .replace(/(?<![\p{L}\p{N}])([A-G][#♯♭b]?(?:maj7|m7|m|°|7)?)(?![\p{L}\p{N}])/gu,token=>note(token));
+  }
   function text(input,depth=0){
     if(typeof input!=='string'||locale==='en'||depth>5)return input;
     const core=input.trim();if(!core||!/[A-Za-z]/.test(core)||/^(?:(?:Guitar|Bass|Ukulele) )?Fretboard Hero(?: 🎸)?$/.test(core))return input;
@@ -28,11 +41,11 @@
     if(result===undefined){const key=lower.get(core.toLowerCase());if(key){result=dictionary[key];if(core===core.toUpperCase())result=result.toLocaleUpperCase(locale)}}
     if(result===undefined&&/[·•]/.test(core))result=core.split(/([·•])/).map(part=>text(part,depth+1)).join('');
     if(result===undefined){
-      for(const pattern of patterns){const found=pattern.regex.exec(core);if(found){result=pattern.value.replace(/\{(\w+)\}/g,(_,name)=>text(found[pattern.names.indexOf(name)+1],depth+1));break}}
+      for(const pattern of patterns){const found=pattern.regex.exec(core);if(found){result=pattern.value.replace(/\{(\w+)\}/g,(_,name)=>(['note','shape','set','sets'].includes(name)?music(found[pattern.names.indexOf(name)+1]):text(found[pattern.names.indexOf(name)+1],depth+1)));break}}
     }
     if(result===undefined){
       const key=/^([A-G][#♯♭]?)\s+(major|minor)$/i.exec(core);
-      if(key)result=key[1]+' '+text(key[2],depth+1);
+      if(key)result=note(key[1])+' '+text(key[2],depth+1);
       else if(/[·•]/.test(core))result=core.split(/([·•])/).map(part=>text(part,depth+1)).join('');
       else if(/^[A-Za-z ]+: /.test(core)){const split=core.indexOf(': ');result=text(core.slice(0,split),depth+1)+': '+text(core.slice(split+2),depth+1)}
       else if(core.includes('\n'))result=core.split('\n').map(part=>text(part,depth+1)).join('\n');
@@ -41,9 +54,11 @@
     }
     return result===undefined?input:input.slice(0,input.indexOf(core))+result+input.slice(input.indexOf(core)+core.length);
   }
+  const rendered=new WeakMap();
+  const musicalContext='#rootControls,#mapNoteControls,#routineRootControls,#learnPositionButtons,#quizChord,.degree-chord strong,#circleRelative,#circleSignature';
   const skip=element=>!element||element.closest('script,style,code,[data-no-i18n],.language-picker');
   function translateNode(node){
-    if(node.nodeType===3){if(skip(node.parentElement))return;const value=text(node.data);if(value!==node.data)node.data=value;return}
+    if(node.nodeType===3){if(skip(node.parentElement))return;if(rendered.get(node)===node.data)return;const value=node.parentElement.closest(musicalContext)&&!/^([A-G][#♯♭]?)\s+(major|minor)$/i.test(node.data.trim())?text(music(node.data)):text(node.data);rendered.set(node,value);if(value!==node.data)node.data=value;return}
     if(node.nodeType!==1||skip(node))return;
     for(const attr of ['aria-label','title','placeholder','alt'])if(node.hasAttribute(attr)){const original=node.getAttribute(attr),value=text(original);if(value!==original)node.setAttribute(attr,value)}
     for(const child of node.childNodes)translateNode(child);
@@ -74,7 +89,7 @@
     wrapper.append(icon,select);document.querySelector('.home-brand').prepend(wrapper);
     translateNode(document.body);metadata();
     // Legacy renderers write text directly. Observe only changed nodes/labels,
-    // never rewrite HTML, attributes used by gameplay, notes, or event handlers.
+    // never rewrite HTML, canonical gameplay attributes, or event handlers.
     const observer=new MutationObserver(records=>{
       for(const change of records){if(change.type==='childList')change.addedNodes.forEach(translateNode);else if(change.type==='characterData')translateNode(change.target);else{const el=change.target;if(!skip(el)){const value=el.getAttribute(change.attributeName),translated=text(value);if(value!==translated)el.setAttribute(change.attributeName,translated)}}}
     });
@@ -85,10 +100,10 @@
     const requested=new URL(location.href).searchParams.get('lang');
     locale=supported.has(requested)?requested:supported.has(saved)?saved:detect(navigator.languages?.length?navigator.languages:[navigator.language]);
     if(locale!=='en'){
-      try{const response=await fetch('./locales/'+locale+'.json?v=10.26.0');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
+      try{const response=await fetch('./locales/'+locale+'.json?v=10.26.1');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
     }
     document.documentElement.lang=locale;document.documentElement.dir='ltr';
     return locale;
   }
-  window.FretboardI18n={initialize,mount,text,detect,match,languages,get locale(){return locale}};
+  window.FretboardI18n={initialize,mount,text,note,music,detect,match,languages,get locale(){return locale}};
 })();

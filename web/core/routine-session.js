@@ -38,7 +38,7 @@
     function setup(id,values,key){
       const host=$('#'+id),feature='routine'+key[0].toUpperCase()+key.slice(1);
       values.forEach(value=>{
-        const b=document.createElement('button');b.type='button';b.textContent=key==='quality'?value.toUpperCase():value;b.dataset.value=value;
+        const b=document.createElement('button');b.type='button';b.textContent=key==='quality'?value.toUpperCase():(window.FretboardI18n?.note(value)||value);b.dataset.value=value;
         if(!access.unlocked)premium.mark(b,feature,value);
         b.addEventListener('click',()=>{
           if(!access.unlocked&&!access.allows(feature,value)){premium.open();return}
