@@ -16,7 +16,7 @@ Priority is a supported `?lang=` URL parameter, then the saved manual selection,
 then the first supported entry in `navigator.languages`, then English. A failed
 catalog load also falls back to English instead of blocking the app.
 
-The home language selector shows flags **and native language names**, and offers
+The language selector at the bottom of Home shows flags **and native language names**, and offers
 Automatic to remove the saved preference. Choices persist in localStorage across
 visits and instrument changes. The language URL parameter keeps selection usable
 when storage is blocked. A selection reloads the application from Home.

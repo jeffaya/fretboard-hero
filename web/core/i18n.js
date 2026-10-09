@@ -75,7 +75,6 @@
   }
   function mount(){
     const wrapper=document.createElement('label');wrapper.className='language-picker';
-    const icon=document.createElement('span');icon.textContent='🌐';icon.setAttribute('aria-hidden','true');
     const select=document.createElement('select');select.setAttribute('aria-label',text('Language'));
     const auto=document.createElement('option');auto.value='auto';const active=languages.find(x=>x[0]===locale);auto.textContent=active[1]+' '+active[2]+' · '+text('Automatic');select.append(auto);
     languages.forEach(([value,flag,name])=>{const option=document.createElement('option');option.value=value;option.textContent=flag+' '+name;select.append(option)});
@@ -86,7 +85,8 @@
       const url=new URL(location.href);if(select.value==='auto')url.searchParams.delete('lang');else url.searchParams.set('lang',select.value);location.assign(url.href);
     });
     window.addEventListener('languagechange',()=>{if(select.value==='auto'&&detect(navigator.languages)!==locale)location.reload()});
-    wrapper.append(icon,select);document.querySelector('.home-brand').prepend(wrapper);
+    wrapper.append(select);
+    const footer=document.createElement('footer');footer.className='home-footer';footer.append(wrapper);document.querySelector('.home-content').append(footer);
     translateNode(document.body);metadata();
     // Legacy renderers write text directly. Observe only changed nodes/labels,
     // never rewrite HTML, canonical gameplay attributes, or event handlers.
