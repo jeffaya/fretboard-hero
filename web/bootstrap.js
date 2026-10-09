@@ -18,7 +18,7 @@
   const fail=err=>{document.body.setAttribute('aria-busy','false');console.error(err);document.body.innerHTML=`<main style="min-height:100vh;display:grid;place-items:center;background:#05080b;color:#f8fbff;font-family:system-ui;padding:24px"><div><h1 style="color:#ff3ec9">CONFIGURATION ERROR</h1><p>${String(err.message||err)}</p><p>Check <code>site.config.json</code> and README.md.</p></div></main>`;};
   (async()=>{
     try{
-      await load('./core/i18n.js?v=10.26.4');
+      await load('./core/i18n.js?v=10.27.0');
       await FretboardI18n.initialize();
       const response=await fetch('./site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
@@ -50,6 +50,8 @@
       await load('./app.js?v=10.26.4');
       FretboardBilling.attach();
       FretboardI18n.mount();
+      await load('./core/pitch-detector.js?v=10.27.0');
+      await load('./tuner.js?v=10.27.0');
       if(!await artworkReady){
         logo.setAttribute('hidden','');
         const fallback=document.createElement('span');

@@ -313,5 +313,18 @@
   "Note name F": "F",
   "Note name G": "G",
   "Note name A": "A",
-  "Note name B": "H"
+  "Note name B": "H",
+  "Tuner": "Stimmgerät",
+  "Play one open string at a time.": "Spiele jeweils eine einzelne leere Saite.",
+  "Audio stays on your device. Nothing is recorded.": "Der Ton bleibt auf deinem Gerät. Es wird nichts aufgenommen.",
+  "Enable microphone": "Mikrofon aktivieren",
+  "Microphone off": "Mikrofon aus",
+  "In tune": "Richtig gestimmt",
+  "Too low — tighten gently": "Zu tief — vorsichtig spannen",
+  "Too high — loosen gently": "Zu hoch — vorsichtig lockern",
+  "Allow microphone access": "Mikrofonzugriff erlauben",
+  "Stop microphone": "Mikrofon stoppen",
+  "Microphone denied. Allow access in device or browser settings.": "Mikrofonzugriff verweigert. Erlaube ihn in den Geräte- oder Browsereinstellungen.",
+  "Microphone unavailable. Use a supported browser over HTTPS.": "Mikrofon nicht verfügbar. Nutze einen kompatiblen Browser über HTTPS.",
+  "Microphone unavailable. Check your microphone and try again.": "Mikrofon nicht verfügbar. Prüfe es und versuche es erneut."
 }
