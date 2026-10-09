@@ -1,5 +1,8 @@
 /* Routine reuses the shared shell, setup drawer, selects and button materials. */
-.routine-screen{flex-direction:column;min-height:100dvh;overflow:auto;padding-bottom:max(24px,var(--sa-bottom))}
+/* The landscape app shell locks document scrolling. Give Routine a bounded
+   scrollport so long tabs, instructions and the final actions stay reachable. */
+.routine-screen{flex-direction:column;height:100dvh;min-height:0;overflow-x:hidden;overflow-y:auto;padding-bottom:max(24px,var(--sa-bottom));scroll-padding-block:16px}
+.routine-screen>.topbar,.routine-steps,.routine-content,#routineDrawer .control-panel{flex-shrink:0}
 .routine-steps{display:flex;list-style:none;gap:5px;width:min(1052px,calc(100% - 48px));padding:0;margin:10px auto 12px}
 .routine-steps li{position:relative;flex:1;min-width:0;text-align:center;padding:8px 3px;border:1px solid #ffffff38;border-bottom:3px solid #ffffff50;border-radius:7px;background:#071021b8;color:#c2cddd;font-size:17px;font-weight:700}
 .routine-steps li.is-current{color:#ffe38a;border-color:#ffd84b;background:#453511c9;box-shadow:0 0 12px #ffcf3026}
