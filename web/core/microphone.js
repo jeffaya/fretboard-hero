@@ -3,6 +3,15 @@
   'use strict';
   let owner=null;
   function release(){owner?.stop()}
+  function preference(name){
+    const key=`fretboard-${name}-microphone`;
+    let enabled=true;
+    try{enabled=localStorage.getItem(key)!=='off'}catch{}
+    return {
+      get enabled(){return enabled},
+      setEnabled(value){enabled=Boolean(value);try{localStorage.setItem(key,enabled?'on':'off')}catch{}}
+    };
+  }
   function create({fftSize=8192,interval=90,onFrame,onState=()=>{}}){
     let stream,context,source,analyser,frame=0,generation=0,state='off';
     const report=(value,error)=>{state=value;onState(value,error)};
@@ -49,5 +58,5 @@
   document.addEventListener('visibilitychange',()=>{if(document.hidden)release()});
   window.addEventListener('pagehide',release);
   window.Capacitor?.Plugins?.App?.addListener('appStateChange',({isActive})=>{if(!isActive)release()});
-  window.FretboardMicrophone=Object.freeze({create,release,errorMessage});
+  window.FretboardMicrophone=Object.freeze({create,release,errorMessage,preference});
 })();

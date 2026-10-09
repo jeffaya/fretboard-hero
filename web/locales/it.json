@@ -317,13 +317,11 @@
   "Tuner": "Accordatore",
   "Play one open string at a time.": "Suona una sola corda a vuoto alla volta.",
   "Audio stays on your device. Nothing is recorded.": "L’audio resta sul dispositivo. Non viene registrato nulla.",
-  "Enable microphone": "Attiva microfono",
   "Microphone off": "Microfono spento",
   "In tune": "Accordata",
   "Too low — tighten gently": "Troppo bassa — tendi delicatamente",
   "Too high — loosen gently": "Troppo alta — allenta delicatamente",
   "Allow microphone access": "Consenti l’accesso al microfono",
-  "Stop microphone": "Ferma microfono",
   "Microphone denied. Allow access in device or browser settings.": "Microfono negato. Consenti l’accesso nelle impostazioni del dispositivo o del browser.",
   "Microphone unavailable. Use a supported browser over HTTPS.": "Microfono non disponibile. Usa un browser compatibile tramite HTTPS.",
   "Microphone unavailable. Check your microphone and try again.": "Microfono non disponibile. Controllalo e riprova.",
@@ -339,9 +337,9 @@
   "Explore": "Esplora",
   "Tune your instrument": "Accorda il tuo strumento",
   "Well played!": "Ben fatto!",
-  "Play the glowing note.": "Suona la nota illuminata.",
-  "Return to the first note": "Torna alla prima nota",
   "Play each triad together.": "Suona insieme le note di ogni triade.",
   "Listening…": "In ascolto…",
-  "Halo = target · Green = played": "Alone = nota da suonare · Verde = già suonata"
+  "Microphone": "Microfono",
+  "Play the highlighted note.": "Suona la nota evidenziata.",
+  "Highlight = target · Green = played": "Evidenziato = nota da suonare · Verde = già suonata"
 }

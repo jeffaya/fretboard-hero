@@ -49,11 +49,11 @@
   <link rel="stylesheet" href="./circle.css?v=10.31.0">
   <link rel="stylesheet" href="./home.css?v=10.33.0">
   <link rel="stylesheet" href="./theme.css?v=10.33.0">
-  <link rel="stylesheet" href="./routine.css?v=10.34.0">
+  <link rel="stylesheet" href="./routine.css?v=10.34.1">
   <link rel="stylesheet" href="./premium.css?v=10.31.0">
   <link rel="stylesheet" href="./locales.css?v=10.33.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
-  <link rel="stylesheet" href="./tuner.css?v=10.33.0">
+  <link rel="stylesheet" href="./tuner.css?v=10.34.1">
 </head>
 <body data-loading="true" aria-busy="true">
   <div id="startupLoader" class="startup-loader" role="status" aria-label="Loading your instrument">
@@ -115,7 +115,7 @@
           <div class="control-group is-select" data-control-group="quality"><label>KEY</label><div id="routineQualityControls" class="control-options"></div><div class="control-select" data-select-for="routineQualityControls"></div></div>
           <button id="routineTuner" class="tuner-launch ui-secondary" type="button" data-open-tuner><span class="tuner-launch-icon" data-control-group="tuner" aria-hidden="true"></span><span>Tuner</span></button>
           <div class="routine-mic-control">
-            <button id="routineMic" class="ui-secondary" type="button" aria-pressed="false" aria-describedby="routineMicPrivacy"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg><span id="routineMicLabel">Enable microphone</span></button>
+            <button id="routineMic" class="ui-secondary microphone-switch" type="button" role="switch" aria-checked="false" aria-describedby="routineMicPrivacy"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg><span>Microphone</span></button>
             <small id="routineMicPrivacy">Audio stays on your device. Nothing is recorded.</small>
           </div>
         </section>
@@ -267,7 +267,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.34.0" defer></script>
+  <script src="./bootstrap.js?v=10.34.1" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

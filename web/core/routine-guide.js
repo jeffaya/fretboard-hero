@@ -1,10 +1,5 @@
 (function(root){
   'use strict';
-  function sequence(exercise){
-    const forward=exercise.columns.map((_,i)=>i);
-    const returns=exercise.id==='scale'||exercise.id==='penta'||(exercise.id==='chords'&&exercise.columns.every(c=>c.notes.length===1));
-    return returns?forward.concat(forward.slice(0,-1).reverse()):forward;
-  }
   // Consecutive evidence, not accumulated successes: a wrong note resets the hold.
   // Identical pitches in adjacent positions need a release or a fresh attack.
   function createGate(){
@@ -28,6 +23,6 @@
       }
     };
   }
-  const api={sequence,createGate};
+  const api={createGate};
   if(typeof module==='object')module.exports=api;else root.RoutineGuide=Object.freeze(api);
 })(typeof window==='object'?window:globalThis);

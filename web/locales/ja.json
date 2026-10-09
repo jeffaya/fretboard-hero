@@ -317,13 +317,11 @@
   "Tuner": "チューナー",
   "Play one open string at a time.": "開放弦を1本ずつ弾いてください。",
   "Audio stays on your device. Nothing is recorded.": "音声は端末内で処理され、録音されません。",
-  "Enable microphone": "マイクを有効にする",
   "Microphone off": "マイクはオフです",
   "In tune": "合っています",
   "Too low — tighten gently": "低すぎます — 少しずつ張ってください",
   "Too high — loosen gently": "高すぎます — 少しずつ緩めてください",
   "Allow microphone access": "マイクへのアクセスを許可してください",
-  "Stop microphone": "マイクを停止",
   "Microphone denied. Allow access in device or browser settings.": "マイクが拒否されました。端末またはブラウザの設定で許可してください。",
   "Microphone unavailable. Use a supported browser over HTTPS.": "マイクを利用できません。HTTPS対応のブラウザを使用してください。",
   "Microphone unavailable. Check your microphone and try again.": "マイクを利用できません。マイクを確認して再試行してください。",
@@ -339,9 +337,9 @@
   "Explore": "探索する",
   "Tune your instrument": "楽器をチューニング",
   "Well played!": "よくできました！",
-  "Play the glowing note.": "光っている音を弾いてください。",
-  "Return to the first note": "最初の音まで戻りましょう",
   "Play each triad together.": "各トライアドの音を同時に弾いてください。",
   "Listening…": "聴き取り中…",
-  "Halo = target · Green = played": "光の輪 = 次に弾く音 · 緑 = 演奏済み"
+  "Microphone": "マイク",
+  "Play the highlighted note.": "強調表示された音を弾いてください。",
+  "Highlight = target · Green = played": "強調表示 = 次に弾く音 · 緑 = 演奏済み"
 }
