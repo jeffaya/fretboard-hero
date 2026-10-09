@@ -20,6 +20,9 @@
       const guide=current(),column=exercises[state.index]?.columns[guide?.index];
       return column?[...new Set(column.notes.map(n=>engine.midiAt(n.string,n.fret)))].sort((a,b)=>a-b):[];
     }
+    function soundKey(pitches){
+      return pitches.length>1?`${Math.min(...pitches)}:${[...new Set(pitches.map(midi=>midi%12))].sort((a,b)=>a-b).join(',')}`:pitches.join(',');
+    }
     function draw(animate=false){
       if(!exercises.length||state.index>=5)return;
       const guided=microphone.state==='on';
@@ -65,7 +68,7 @@
       let energy=0;for(const value of samples)energy+=value*value;
       const level=Math.sqrt(energy/samples.length),chord=pitches.length>1;
       let match=false;
-      if(level>=.004){
+      if(level>=FretboardPitch.minLevel){
         if(chord)match=detector.matches(detector.analyze(spectrum,sampleRate,fftSize),pitches);
         else{
           const hz=FretboardPitch.detect(samples.subarray(samples.length-8192),sampleRate,{maxFrequency:1500});
@@ -76,7 +79,7 @@
       lastPitches=pitches;current().index++;
       draw(true);
       if(current().index===exercises[state.index].columns.length){advance();return}
-      const next=targetPitches();gate.reset(next.join(',')===pitches.join(','));
+      const next=targetPitches();gate.reset(soundKey(next)===soundKey(pitches));
       settleUntil=now+200;showTarget();
     }
     function cancelTransition(){
@@ -131,7 +134,7 @@
         completed.add(state.index);state.index++;
         if(state.index===5&&completed.size<5)state.index=exercises.findIndex((_,i)=>!completed.has(i));
         if(state.index===5)microphone.stop();
-        else {gate.reset(targetPitches().join(',')===lastPitches.join(','));settleUntil=performance.now()+400}
+        else {gate.reset(soundKey(targetPitches())===soundKey(lastPitches));settleUntil=performance.now()+400}
         render();$('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
       },750);
     }
