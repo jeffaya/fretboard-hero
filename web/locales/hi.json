@@ -313,5 +313,18 @@
   "Note name F": "एफ",
   "Note name G": "जी",
   "Note name A": "ए",
-  "Note name B": "बी"
+  "Note name B": "बी",
+  "Tuner": "ट्यूनर",
+  "Play one open string at a time.": "एक बार में एक खुला तार बजाएँ।",
+  "Audio stays on your device. Nothing is recorded.": "ऑडियो आपके डिवाइस पर रहता है। कुछ भी रिकॉर्ड नहीं होता।",
+  "Enable microphone": "माइक्रोफ़ोन चालू करें",
+  "Microphone off": "माइक्रोफ़ोन बंद है",
+  "In tune": "सही सुर",
+  "Too low — tighten gently": "सुर नीचा है — धीरे से कसें",
+  "Too high — loosen gently": "सुर ऊँचा है — धीरे से ढीला करें",
+  "Allow microphone access": "माइक्रोफ़ोन की अनुमति दें",
+  "Stop microphone": "माइक्रोफ़ोन बंद करें",
+  "Microphone denied. Allow access in device or browser settings.": "माइक्रोफ़ोन की अनुमति नहीं मिली। डिवाइस या ब्राउज़र की सेटिंग में अनुमति दें।",
+  "Microphone unavailable. Use a supported browser over HTTPS.": "माइक्रोफ़ोन उपलब्ध नहीं है। HTTPS पर समर्थित ब्राउज़र इस्तेमाल करें।",
+  "Microphone unavailable. Check your microphone and try again.": "माइक्रोफ़ोन उपलब्ध नहीं है। माइक्रोफ़ोन जाँचें और फिर प्रयास करें।"
 }

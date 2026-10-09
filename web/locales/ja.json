@@ -313,5 +313,18 @@
   "Note name F": "ファ",
   "Note name G": "ソ",
   "Note name A": "ラ",
-  "Note name B": "シ"
+  "Note name B": "シ",
+  "Tuner": "チューナー",
+  "Play one open string at a time.": "開放弦を1本ずつ弾いてください。",
+  "Audio stays on your device. Nothing is recorded.": "音声は端末内で処理され、録音されません。",
+  "Enable microphone": "マイクを有効にする",
+  "Microphone off": "マイクはオフです",
+  "In tune": "合っています",
+  "Too low — tighten gently": "低すぎます — 少しずつ張ってください",
+  "Too high — loosen gently": "高すぎます — 少しずつ緩めてください",
+  "Allow microphone access": "マイクへのアクセスを許可してください",
+  "Stop microphone": "マイクを停止",
+  "Microphone denied. Allow access in device or browser settings.": "マイクが拒否されました。端末またはブラウザの設定で許可してください。",
+  "Microphone unavailable. Use a supported browser over HTTPS.": "マイクを利用できません。HTTPS対応のブラウザを使用してください。",
+  "Microphone unavailable. Check your microphone and try again.": "マイクを利用できません。マイクを確認して再試行してください。"
 }

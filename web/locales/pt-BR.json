@@ -313,5 +313,18 @@
   "Note name F": "Fá",
   "Note name G": "Sol",
   "Note name A": "Lá",
-  "Note name B": "Si"
+  "Note name B": "Si",
+  "Tuner": "Afinador",
+  "Play one open string at a time.": "Toque uma corda solta de cada vez.",
+  "Audio stays on your device. Nothing is recorded.": "O áudio fica no seu dispositivo. Nada é gravado.",
+  "Enable microphone": "Ativar microfone",
+  "Microphone off": "Microfone desligado",
+  "In tune": "Afinada",
+  "Too low — tighten gently": "Muito grave — aperte suavemente",
+  "Too high — loosen gently": "Muito aguda — solte suavemente",
+  "Allow microphone access": "Permita o acesso ao microfone",
+  "Stop microphone": "Parar microfone",
+  "Microphone denied. Allow access in device or browser settings.": "Microfone bloqueado. Permita o acesso nas configurações do dispositivo ou navegador.",
+  "Microphone unavailable. Use a supported browser over HTTPS.": "Microfone indisponível. Use um navegador compatível com HTTPS.",
+  "Microphone unavailable. Check your microphone and try again.": "Microfone indisponível. Verifique o microfone e tente novamente."
 }
