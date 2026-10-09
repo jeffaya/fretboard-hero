@@ -319,7 +319,8 @@ body #app #home .home-instruments button[aria-pressed='true']::after {
 body #app .control-select .select-trigger{border-radius:16px!important;border-width:1px!important;background:var(--ui-gloss),linear-gradient(180deg,#20263dd9,#070c1de8)!important;border-color:#d9dcec9c!important;box-shadow:inset 0 1px 1px #ffffff26,0 0 7px #ffffff18!important}
 .select-value{display:flex;align-items:center;gap:10px;min-width:0}.select-value>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .select-icon{display:block;flex:0 0 21px;width:21px;height:21px;background:#fff;-webkit-mask:var(--control-menu-icon) center/contain no-repeat;mask:var(--control-menu-icon) center/contain no-repeat}
-body #app .control-select .select-trigger b{color:#fff!important;font-size:18px;line-height:1}
+/* A centered vector chevron avoids the font-dependent baseline of ⌄. */
+.select-chevron{display:block;flex:0 0 20px;width:20px;height:20px;align-self:center;color:#fff;pointer-events:none}
 body #app .control-select .select-trigger:focus-visible{outline:2px solid #fff;outline-offset:3px}
 [data-control-group="style"]{--control-menu-icon:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%2018V5l10-2v13M9%208l10-2%22%2F%3E%3Ccircle%20cx%3D%226%22%20cy%3D%2218%22%20r%3D%223%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%223%22%2F%3E%3C%2Fsvg%3E")}
 [data-control-group="level"]{--control-menu-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M3 16h4v5H3zM10 10h4v11h-4zM17 3h4v18h-4z'/%3E%3C/svg%3E")}
