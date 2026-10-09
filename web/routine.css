@@ -69,6 +69,7 @@ body #app .routine-steps .is-current button{color:#fff!important}
 .routine-confetti i:nth-child(3n){border-radius:50%;width:9px;height:9px}
 .routine-finish{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:min(100%,600px)}
 .routine-finish button{display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
+#routineReplay{grid-column:1 / -1}
 .routine-finish img{flex:none;filter:drop-shadow(0 0 5px var(--ui-accent))}
 @keyframes routine-medal-pop{0%{opacity:0;transform:scale(.5) rotate(-12deg)}65%{opacity:1;transform:scale(1.12) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
 @keyframes routine-confetti-fall{0%{opacity:0;transform:translateY(0) rotate(0)}10%{opacity:1}80%{opacity:.9}100%{opacity:0;transform:translate(var(--drift),520px) rotate(var(--turn))}}

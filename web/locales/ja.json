@@ -333,5 +333,6 @@
   "Play each triad together, then one note at a time.": "各トライアドを同時に弾き、次に一音ずつ弾こう。",
   "Play each chord tone, then return through the same notes.": "コードの各音を弾き、同じ音を逆順に戻ろう。",
   "Play each chord shape. Stacked notes sound together; × means mute.": "各コードフォームを弾こう。縦に並ぶ音は同時に弾き、×の弦は鳴らさない。",
-  "Play two notes per string, then reverse.": "各弦で二音ずつ弾き、逆順に戻ろう。"
+  "Play two notes per string, then reverse.": "各弦で二音ずつ弾き、逆順に戻ろう。",
+  "Repeat my routine": "ルーティンをもう一度"
 }

@@ -93,3 +93,24 @@ test('Skipping ahead does not complete unplayed routine stages',()=>{
  assert.equal(r.nodes.get('#routineNext').textContent,'Next →');r.nodes.get('#routineNext').click();
  assert.equal(r.c.lastExercise.id,'root');assert.equal(r.nodes.get('#routineFinish').hidden,true);
 });
+
+test('Replay clears completed stages, changes the premium root and retains the selected quality',()=>{
+ const r=sessionRuntime();r.session.enter();r.nodes.get('#routineQualityControls').children[0].click();
+ for(let round=0;round<3;round++){
+  const previous=r.c.lastExercise.root;
+  for(let i=0;i<5;i++)r.nodes.get('#routineNext').click();
+  r.nodes.get('#routineReplay').click();
+  assert.equal(r.c.lastExercise.id,'root');assert.notEqual(r.c.lastExercise.root,previous);assert.equal(r.c.lastExercise.quality,'major');
+  assert.equal(r.nodes.get('#routineFinish').hidden,true);assert.equal(r.nodes.get('#routineNext').hidden,false);
+  assert.equal(r.nodes.get('#routineSteps').children.filter(n=>n.classes.has('is-complete')).length,0);
+ }
+ assert.equal(r.c.opens,0);
+});
+
+test('Replay remains available in the demo and keeps A minor without opening Premium',()=>{
+ const r=sessionRuntime(true);r.session.enter();
+ for(let i=0;i<5;i++)r.nodes.get('#routineNext').click();
+ r.nodes.get('#routineReplay').click();
+ assert.equal(r.c.lastExercise.id,'root');assert.equal(r.c.lastExercise.root,'A');assert.equal(r.c.lastExercise.quality,'minor');
+ assert.equal(r.nodes.get('#routineFinish').hidden,true);assert.equal(r.c.opens,0);
+});
