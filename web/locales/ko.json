@@ -313,5 +313,18 @@
   "Note name F": "파",
   "Note name G": "솔",
   "Note name A": "라",
-  "Note name B": "시"
+  "Note name B": "시",
+  "Tuner": "튜너",
+  "Play one open string at a time.": "개방현을 한 번에 하나씩 연주하세요.",
+  "Audio stays on your device. Nothing is recorded.": "오디오는 기기에서만 처리되며 녹음되지 않습니다.",
+  "Enable microphone": "마이크 켜기",
+  "Microphone off": "마이크 꺼짐",
+  "In tune": "정확한 음정",
+  "Too low — tighten gently": "너무 낮아요 — 천천히 조이세요",
+  "Too high — loosen gently": "너무 높아요 — 천천히 푸세요",
+  "Allow microphone access": "마이크 접근을 허용하세요",
+  "Stop microphone": "마이크 끄기",
+  "Microphone denied. Allow access in device or browser settings.": "마이크 접근이 거부되었습니다. 기기 또는 브라우저 설정에서 허용하세요.",
+  "Microphone unavailable. Use a supported browser over HTTPS.": "마이크를 사용할 수 없습니다. HTTPS를 지원하는 브라우저를 사용하세요.",
+  "Microphone unavailable. Check your microphone and try again.": "마이크를 사용할 수 없습니다. 마이크를 확인하고 다시 시도하세요."
 }

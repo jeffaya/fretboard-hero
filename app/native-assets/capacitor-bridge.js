@@ -13,6 +13,8 @@
 
   function attach(capacitorApp, doc) {
     capacitorApp.addListener('backButton', function () {
+      var tuner = doc.querySelector('.tuner-dialog[open]');
+      if (tuner) { tuner.close(); return; }
       var activeScreen = doc.querySelector('.screen.active');
       var screenId = activeScreen ? activeScreen.id : 'home';
       if (shouldGoHome(screenId)) {
