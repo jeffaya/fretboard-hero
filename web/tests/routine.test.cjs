@@ -14,13 +14,18 @@ test('All keys, qualities and instruments have five playable and musically corre
   assert.equal(JSON.stringify(flatten(exercises[0]).map(n=>`${n.string}:${n.fret}`)),JSON.stringify(expected));
   const scale=flatten(exercises[1]),intervals=quality==='major'?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10],first=engine.midiAt(scale[0].string,scale[0].fret);
   assert.equal(engine.noteAt(scale[0].string,scale[0].fret),rootPC);assert.equal((scale.length-1)%7,0);assert.ok(scale.length>=8);
-  scale.forEach((n,i)=>assert.equal(engine.midiAt(n.string,n.fret)-first,Math.floor(i/7)*12+intervals[i%7],label));
+  scale.slice(0,(scale.length+1)/2).forEach((n,i)=>assert.equal(engine.midiAt(n.string,n.fret)-first,Math.floor(i/7)*12+intervals[i%7],label));
   const tones=[rootPC,c.MusicTheory.mod(rootPC+(quality==='major'?4:3)),c.MusicTheory.mod(rootPC+7)];
   assert.equal(new Set(exercises[2].columns.map(c=>c.label)).size,3,label);
   for(const col of exercises[2].columns){assert.equal(col.notes.length,3);assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,3);for(const n of col.notes)assert.ok(tones.includes(engine.noteAt(n.string,n.fret)),label)}
   for(const n of flatten(exercises[3]))assert.ok(tones.includes(engine.noteAt(n.string,n.fret)),label);
-  if(profile.family==='bass'){assert.equal(exercises[3].step,'Arpeggios');const arp=flatten(exercises[3]);for(let i=1;i<arp.length;i++)assert.ok(arp[i].midi>arp[i-1].midi)}else{assert.ok(exercises[3].columns.length>=3,label);for(const col of exercises[3].columns)assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,3)}
-  const penta=c.MusicTheory.pentatonicPCs(rootPC,quality);assert.equal(flatten(exercises[4]).length,2*engine.stringCount);for(const n of flatten(exercises[4]))assert.ok(penta.includes(engine.noteAt(n.string,n.fret)),label);
+  if(profile.family==='bass'){assert.equal(exercises[3].step,'Arpeggios');const arp=flatten(exercises[3]);for(let i=1;i<(arp.length+1)/2;i++)assert.ok(arp[i].midi>arp[i-1].midi)}else{assert.ok(exercises[3].columns.length>=3,label);for(const col of exercises[3].columns)assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,3)}
+  const penta=c.MusicTheory.pentatonicPCs(rootPC,quality);assert.equal(flatten(exercises[4]).length,4*engine.stringCount-1);for(const n of flatten(exercises[4]))assert.ok(penta.includes(engine.noteAt(n.string,n.fret)),label);
+  for(const e of exercises.filter(e=>['scale','penta'].includes(e.id)||(e.id==='chords'&&profile.family==='bass'))){
+   const notes=flatten(e);assert.equal(notes.length%2,1,label);
+   for(let i=0;i<Math.floor(notes.length/2);i++)assert.equal(JSON.stringify(notes[i]),JSON.stringify(notes[notes.length-1-i]),label);
+   assert.notEqual(JSON.stringify(notes[Math.floor(notes.length/2)]),JSON.stringify(notes[Math.floor(notes.length/2)-1]),label+' turning note occurs once');
+  }
   count++;
  }
  assert.equal(count,576);
@@ -35,12 +40,13 @@ class Node{
  constructor(){this.children=[];this.events={};this.attrs={};this.dataset={};this.style={};this.classes=new Set();this.classList={contains:k=>this.classes.has(k),toggle:(k,on)=>on?this.classes.add(k):this.classes.delete(k)};this.textContent='';this.hidden=false}
  append(...nodes){this.children.push(...nodes)}replaceChildren(){this.children=[]}querySelectorAll(){return this.children}querySelector(){return null}setAttribute(k,v){this.attrs[k]=v}addEventListener(k,f){this.events[k]=f}click(){this.events.click?.()}focus(){}scrollIntoView(){}
 }
-function sessionRuntime(demo=false){
+function sessionRuntime(demo=false,enabled=true){
  const c=runtime(),nodes=new Map(),root={querySelector:s=>{if(!nodes.has(s))nodes.set(s,new Node());return nodes.get(s)}};
  c.document={createElement:()=>new Node()};c.opens=0;
  const timers=new Map();let timerId=0;
  c.setTimeout=f=>{timers.set(++timerId,f);return timerId};c.clearTimeout=id=>timers.delete(id);c.performance={now:()=>1000};
- c.FretboardMicrophone={create({onFrame,onState}){let state='off';c.audio={onFrame,start(){state='on';onState(state)},stop(){state='off';onState(state)},get state(){return state}};return c.audio}};
+ c.micPreference={get enabled(){return enabled},setEnabled(value){enabled=value}};
+ c.FretboardMicrophone={preference:()=>c.micPreference,create({onFrame,onState}){let state='off';c.audio={onFrame,start(){state='on';onState(state)},stop(){state='off';onState(state)},get state(){return state}};return c.audio}};
  c.window.matchMedia=()=>({matches:true});
  const flush=()=>{for(const [id,f] of timers){timers.delete(id);f()}};
  vm.runInContext(fs.readFileSync(path.join(base,'core/access.js'),'utf8'),c);
@@ -132,8 +138,40 @@ test('Leaving or choosing a step cancels a pending transition',()=>{
  const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineNext').click();r.session.leave();r.flush();assert.equal(r.c.lastExercise.id,'root');
  r.session.enter();r.nodes.get('#routineNext').click();r.nodes.get('#routineSteps').children[3].children[0].click();r.flush();assert.equal(r.c.lastExercise.id,'chords');
 });
-test('Offline never starts capture and leaving an enabled routine releases it',()=>{
- const r=sessionRuntime(true);r.session.enter();assert.equal(r.c.audio.state,'off');
- r.nodes.get('#routineMic').click();assert.equal(r.c.audio.state,'on');assert.equal(r.nodes.get('#routineMic').attrs['aria-pressed'],'true');
+test('A saved microphone-off choice leaves the routine offline until enabled',()=>{
+ const r=sessionRuntime(true,false);r.session.enter();assert.equal(r.c.audio.state,'off');
+ r.nodes.get('#routineMic').click();assert.equal(r.c.audio.state,'on');assert.equal(r.nodes.get('#routineMic').attrs['aria-checked'],'true');
  r.session.leave();assert.equal(r.c.audio.state,'off');assert.equal(r.nodes.get('#routineListening').hidden,true);
+});
+
+
+test('Routine entry defaults to listening, remembers off, and replay respects the choice',()=>{
+ const r=sessionRuntime(true);assert.equal(r.c.audio.state,'off');r.session.enter();assert.equal(r.c.audio.state,'on');
+ r.nodes.get('#routineMic').click();assert.equal(r.c.audio.state,'off');assert.equal(r.c.micPreference.enabled,false);
+ r.session.leave();r.session.enter();assert.equal(r.c.audio.state,'off');
+ for(let i=0;i<5;i++)r.next();r.nodes.get('#routineReplay').click();assert.equal(r.c.audio.state,'off');
+ r.nodes.get('#routineMic').click();assert.equal(r.c.micPreference.enabled,true);
+ for(let i=0;i<5;i++)r.next();assert.equal(r.c.audio.state,'off');r.nodes.get('#routineReplay').click();assert.equal(r.c.audio.state,'on');
+ r.session.leave();assert.equal(r.c.audio.state,'off');assert.equal(r.c.micPreference.enabled,true);
+});
+test('Guided tablature reads every written note exactly once, including the descending passage',()=>{
+ const c=runtime();c.document={createElementNS:()=>new Node()};vm.runInContext(fs.readFileSync(path.join(base,'core/routine-renderer.js'),'utf8'),c);
+ for(const width of [280,390,768,1100]){
+  const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
+  const exercises=c.RoutineExercises.create({engine,root:'A',quality:'minor',random:rng(9)});
+  for(const exercise of [exercises[1],exercises[4]]){
+   let previous=null;
+   for(let index=0;index<exercise.columns.length;index++){
+    const svg=new Node();svg.parentElement={clientWidth:width};c.window.RoutineRenderer.render(svg,exercise,engine,{index,animate:false});
+    const columns=svg.children.filter(n=>'data-column' in n.attrs),target=columns.find(n=>n.attrs.class.includes('is-target'));
+    assert.equal(columns.length,exercise.columns.length);assert.equal(target.attrs['data-column'],index);
+    assert.equal(columns.filter(n=>n.attrs.class.includes('is-played')).length,index);
+    const fret=target.children.find(n=>n.attrs.class==='routine-note-number');
+    assert.equal(Number(fret.textContent),exercise.columns[index].notes[0].fret);
+    // Read left to right on one staff, then start the next staff below it.
+    if(previous)assert.ok(fret.attrs.x>previous.x||fret.attrs.y>previous.y+40);
+    previous={x:fret.attrs.x,y:fret.attrs.y};
+   }
+  }
+ }
 });

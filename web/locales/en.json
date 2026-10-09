@@ -317,13 +317,11 @@
   "Tuner": "Tuner",
   "Play one open string at a time.": "Play one open string at a time.",
   "Audio stays on your device. Nothing is recorded.": "Audio stays on your device. Nothing is recorded.",
-  "Enable microphone": "Enable microphone",
   "Microphone off": "Microphone off",
   "In tune": "In tune",
   "Too low — tighten gently": "Too low — tighten gently",
   "Too high — loosen gently": "Too high — loosen gently",
   "Allow microphone access": "Allow microphone access",
-  "Stop microphone": "Stop microphone",
   "Microphone denied. Allow access in device or browser settings.": "Microphone denied. Allow access in device or browser settings.",
   "Microphone unavailable. Use a supported browser over HTTPS.": "Microphone unavailable. Use a supported browser over HTTPS.",
   "Microphone unavailable. Check your microphone and try again.": "Microphone unavailable. Check your microphone and try again.",
@@ -339,9 +337,9 @@
   "Explore": "Explore",
   "Tune your instrument": "Tune your instrument",
   "Well played!": "Well played!",
-  "Play the glowing note.": "Play the glowing note.",
-  "Return to the first note": "Return to the first note",
   "Play each triad together.": "Play each triad together.",
   "Listening…": "Listening…",
-  "Halo = target · Green = played": "Halo = target · Green = played"
+  "Microphone": "Microphone",
+  "Play the highlighted note.": "Play the highlighted note.",
+  "Highlight = target · Green = played": "Highlight = target · Green = played"
 }

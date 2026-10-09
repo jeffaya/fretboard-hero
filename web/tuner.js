@@ -8,7 +8,7 @@
     <div class="tuner-reading"><strong class="tuner-note">—</strong><span class="tuner-frequency">440 Hz</span></div>
     <div class="tuner-meter" aria-hidden="true"><span class="tuner-center"></span><span class="tuner-needle"></span></div>
     <div class="tuner-scale"><span>−50</span><span>0</span><span>+50</span></div>
-    <p class="tuner-status" role="status" aria-live="polite"></p><div class="tuner-instrument"><div class="tuner-strings"></div></div><button class="tuner-mic ui-primary" type="button"></button><p class="tuner-privacy"></p>`;
+    <p class="tuner-status" role="status" aria-live="polite"></p><div class="tuner-instrument"><div class="tuner-strings"></div></div><button class="tuner-mic ui-secondary microphone-switch" type="button" role="switch" aria-checked="false"></button><p class="tuner-privacy"></p>`;
   document.querySelector('#app').append(dialog);
   const $=s=>dialog.querySelector(s), status=$('.tuner-status'), mic=$('.tuner-mic');
   $('#tuner-title').textContent=t('Tuner')+' · '+t(profile.label);
@@ -77,8 +77,9 @@
     }
     b.onclick=()=>{selected=index===0?(selected<0?lastDetected:-1):index-1;reset();highlight(selected);controls.forEach((el,i)=>{if(i===0)el.setAttribute('aria-checked',String(selected<0));else el.setAttribute('aria-pressed',String(i===selected+1));});};controls.push(b);(index===0?$('.tuner-heading'):$('.tuner-strings')).append(b);
   });
+  const micPreference=FretboardMicrophone.preference('tuner');
   const microphone=FretboardMicrophone.create({onFrame:tick,onState(state,error){
-    mic.disabled=state==='pending';mic.textContent=t(state==='on'?'Stop microphone':'Enable microphone');
+    mic.textContent=t('Microphone');mic.setAttribute('aria-checked',String(state!=='off'));mic.setAttribute('aria-busy',String(state==='pending'));
     if(state!=='on')reset();
     setStatus(error?FretboardMicrophone.errorMessage(error):state==='pending'?'Allow microphone access':state==='on'?'':'Microphone off');
   }});
@@ -99,11 +100,11 @@
     controls.forEach((el,i)=>el.classList.toggle('detected',i===index+1));
     setStatus(good?'In tune':delta<0?'Too low — tighten gently':'Too high — loosen gently');
   }
-  function start(){if(microphone.state==='on')stop();else microphone.start()}
+  function toggle(){const enable=microphone.state==='off';micPreference.setEnabled(enable);if(enable)microphone.start();else stop()}
   let opener=button;
-  function open(trigger){opener=trigger;FretboardMicrophone.release();stop();dialog.showModal()}
+  function open(trigger){opener=trigger;FretboardMicrophone.release();stop();dialog.showModal();if(micPreference.enabled)microphone.start()}
   document.querySelectorAll('[data-open-tuner]').forEach(trigger=>trigger.addEventListener('click',()=>open(trigger)));
-  mic.onclick=start;
+  mic.onclick=toggle;
   FretboardModal.bindDismiss(dialog,()=>dialog.close());dialog.addEventListener('close',()=>{stop();opener.focus();});dialog.addEventListener('cancel',stop);
   stop();
 })();

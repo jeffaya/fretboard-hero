@@ -1,7 +1,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const {spectrum,N}=require('./audio-fixtures.cjs');
 const detector=require('../core/chord-detector.js').create({minMidi:28,maxMidi:84});
-const {sequence,createGate}=require('../core/routine-guide.js');
+const {createGate}=require('../core/routine-guide.js');
 const voicings=[[40,47,52,55,59,64],[45,52,57,60,64],[57,60,64],[28,31,35],[67,60,64,69]];
 for(const rate of [44100,48000])test(`Simultaneous voicings at ${rate} Hz tolerate timbre, detuning, unequal strings and noise`,()=>{
  for(const detune of [-25,0,25])for(const second of [1,2.2])for(const midis of voicings){
@@ -20,12 +20,6 @@ test('Silence, room noise and a sequential arpeggio never validate a simultaneou
 });
 test('A duplicate unison cannot be distinguished acoustically and is validated once',()=>{
  const notes=[60,64,67];assert.equal(detector.matches(detector.analyze(spectrum(notes),48000,N),[60,64,67,60]),true);
-});
-test('Scale, pentatonic and bass arpeggios return without playing the summit twice',()=>{
- const columns=Array.from({length:4},()=>({notes:[{}]}));
- for(const id of ['scale','penta','chords'])assert.deepEqual(sequence({id,columns}),[0,1,2,3,2,1,0]);
- for(const id of ['root','triads'])assert.deepEqual(sequence({id,columns}),[0,1,2,3]);
- assert.deepEqual(sequence({id:'chords',columns:columns.map(()=>({notes:[{},{}]}))}),[0,1,2,3]);
 });
 test('Transient matches and alternating wrong notes never accumulate into a success',()=>{
  const gate=createGate();for(let now=0;now<2000;now+=80)assert.equal(gate.update({match:now%160===0,level:.1,now}),false);

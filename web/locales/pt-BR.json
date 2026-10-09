@@ -317,13 +317,11 @@
   "Tuner": "Afinador",
   "Play one open string at a time.": "Toque uma corda solta de cada vez.",
   "Audio stays on your device. Nothing is recorded.": "O áudio fica no seu dispositivo. Nada é gravado.",
-  "Enable microphone": "Ativar microfone",
   "Microphone off": "Microfone desligado",
   "In tune": "Afinada",
   "Too low — tighten gently": "Muito grave — aperte suavemente",
   "Too high — loosen gently": "Muito aguda — solte suavemente",
   "Allow microphone access": "Permita o acesso ao microfone",
-  "Stop microphone": "Parar microfone",
   "Microphone denied. Allow access in device or browser settings.": "Microfone bloqueado. Permita o acesso nas configurações do dispositivo ou navegador.",
   "Microphone unavailable. Use a supported browser over HTTPS.": "Microfone indisponível. Use um navegador compatível com HTTPS.",
   "Microphone unavailable. Check your microphone and try again.": "Microfone indisponível. Verifique o microfone e tente novamente.",
@@ -339,9 +337,9 @@
   "Explore": "Explorar",
   "Tune your instrument": "Afine seu instrumento",
   "Well played!": "Mandou bem!",
-  "Play the glowing note.": "Toque a nota iluminada.",
-  "Return to the first note": "Volte à primeira nota",
   "Play each triad together.": "Toque todas as notas de cada tríade ao mesmo tempo.",
   "Listening…": "Ouvindo…",
-  "Halo = target · Green = played": "Halo = alvo · Verde = já tocado"
+  "Microphone": "Microfone",
+  "Play the highlighted note.": "Toque a nota destacada.",
+  "Highlight = target · Green = played": "Destaque = alvo · Verde = já tocado"
 }
