@@ -19,6 +19,8 @@ The compact drawer and inline toolbar breakpoints are shared with `core/controls
 
 For CSS changes, compare Home, Learn/Map controls, Daily Routine completion/replay, Circle, Quiz/results, Premium, language menu and Tuner on portrait and landscape viewports. Include all three instruments and a non-Latin locale. Refresh changed CSS URLs in `index.html`; refresh the bootstrap/app URL when JavaScript changes.
 
+Pentatonic position guides are owned by `core/pentatonic-renderer.js` and `fretboard.css`. Their spans come from each instrument's string-pair geometry; overlapping boxes use separate tracks below the horizontal neck or beside the vertical neck. The SVG reserves room for the guides while keeping badge text at a readable screen size. Short landscape phones scroll vertically to preserve neck size. The stage resize observer updates the guide layout when controls or orientation change.
+
 ## V10.6.3 — Instrument artwork
 
 - Replaced hand-drawn instrument symbols with a single transparent WebP sprite reconstructed from the reference screenshot using image generation. It follows the reference silhouettes but is not a pixel-identical extraction of original assets.

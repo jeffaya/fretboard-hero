@@ -304,27 +304,15 @@
     return mod(anchorQuality-tuning[anchorString].pc);
   }
   function visiblePentaPairs(maxFret){return PentatonicRenderer.visiblePairs({profile:instrument,anchor:pentaAnchorFret(),maxFret,selected:state.pattern})}
-  function pentaNotesOnString(window,string,maxFret){
-    // Kept for label placement/backward compatibility; derive visible notes from exact string pair.
-    const pair=window.pairs?window.pairs[string]:null;if(pair)return pair.filter(f=>f>=0&&f<=maxFret);
-    const pcs=new Set(pentaPCs()),notes=[];
-    for(let fret=Math.max(0,window.minFret);fret<=Math.min(window.maxFret,maxFret);fret++)if(pcs.has(noteAt(string,fret)))notes.push(fret);
-    return notes;
-  }
   function renderPentaSegments(svg,{isP,fretPos,visualStringPos,maxFret}){PentatonicRenderer.renderSegments({svg,windows:visiblePentaPairs(maxFret),colors:PENTA_POSITION_COLORS,stringCount:STRING_COUNT,isPortrait:isP,fretPos,stringPos:visualStringPos,maxFret,fretCenter,svgEl})}
-  function renderPentaPositionLabels(svg,{isP,fretPos,visualStringPos,maxFret}){
-    visiblePentaPairs(maxFret).forEach(window=>{
-      const notes=[];for(let string=0;string<STRING_COUNT;string++)notes.push(...pentaNotesOnString(window,string,maxFret).filter(f=>f>0));if(!notes.length)return;
-      const min=Math.min(...notes),max=Math.max(...notes),mid=(fretCenter(min,fretPos)+fretCenter(max,fretPos))/2,color=PENTA_POSITION_COLORS[window.id-1];
-      const edgeString=STRING_COUNT-1,x=isP?visualStringPos(edgeString)-34:mid,y=isP?mid:visualStringPos(edgeString)-25;
-      const label=svgEl('g',{'pointer-events':'none'});label.append(svgEl('rect',{x:x-18,y:y-14,width:36,height:24,rx:8,fill:'#05080c',stroke:color,'stroke-width':2.2,opacity:.94}));label.append(svgEl('text',{x,y:y+3,fill:color,'font-size':13,'font-weight':1000,'text-anchor':'middle'},`P${window.id}`));svg.append(label);
-    });
-  }
+  const positionGuideObserver=new ResizeObserver(()=>PentatonicRenderer.resizeGuides($('#learnFretboard')));
+  positionGuideObserver.observe($('#learnFretboard').parentElement);
   function renderFretboard(svg,opt){
     const maxFret=Math.min(engine.maxFret,state.maxFret);
+    svg.classList.toggle('has-position-guides',ModeRegistry.kind(instrument,opt.mode)==='pentatonic');
     const core=renderFretboardCore(svg,{prefix:'learn',maxFret,onSurface:ctx=>{if(ModeRegistry.kind(instrument,opt.mode)==='pentatonic')renderPentaSegments(svg,ctx)}});
     const {isP,fretPos,visualStringPos}=core;
-    if(ModeRegistry.kind(instrument,opt.mode)==='pentatonic')renderPentaPositionLabels(svg,core);
+    if(ModeRegistry.kind(instrument,opt.mode)==='pentatonic')PentatonicRenderer.renderGuides({svg,windows:visiblePentaPairs(maxFret),colors:PENTA_POSITION_COLORS,layout:core,svgEl});
     const renderKind=ModeRegistry.kind(instrument,opt.mode),activeSet=renderKind==='pentatonic'?new Set(pentaPCs()):renderKind==='arpeggios'?new Set(arpeggioShapes()[0]?.notes.map(n=>n.pc)||[]):new Set([rootPC(),thirdPC(),fifthPC()]);
     const visibleKeys=opt.visibleKeys||null,pentaPairs=ModeRegistry.kind(instrument,opt.mode)==='pentatonic'?visiblePentaPairs(maxFret):[];
     for(let s=0;s<STRING_COUNT;s++)for(let f=0;f<=maxFret;f++){
