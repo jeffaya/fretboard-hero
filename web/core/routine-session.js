@@ -70,6 +70,14 @@
       render();
       $('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
     });
+    $('#routineReplay').addEventListener('click',()=>{
+      if(state.index!==5)return;
+      const roots=MusicTheory.NOTES.filter(note=>note!==state.root);
+      state.root=access.unlocked?roots[Math.floor(random()*roots.length)]:'A';
+      if(!access.unlocked)state.quality='minor';
+      reset();
+      $('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
+    });
     if(window.ResizeObserver)new window.ResizeObserver(()=>{if(exercises.length&&state.index<5)RoutineRenderer.render($('#routineTab'),exercises[state.index],engine)}).observe($('#routineTabScroll'));
     return {
       resize(){if(exercises.length&&state.index<5)RoutineRenderer.render($('#routineTab'),exercises[state.index],engine)},

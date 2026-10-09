@@ -333,5 +333,6 @@
   "Play each triad together, then one note at a time.": "先同时弹奏每个三和弦，再逐音弹奏。",
   "Play each chord tone, then return through the same notes.": "弹奏各个和弦音，再按原路返回。",
   "Play each chord shape. Stacked notes sound together; × means mute.": "弹奏每个和弦指型。竖向排列的音同时弹奏；×表示不弹该弦。",
-  "Play two notes per string, then reverse.": "每根弦弹两个音，再反向弹回。"
+  "Play two notes per string, then reverse.": "每根弦弹两个音，再反向弹回。",
+  "Repeat my routine": "重新练习"
 }

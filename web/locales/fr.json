@@ -333,5 +333,6 @@
   "Play each triad together, then one note at a time.": "Joue chaque triade ensemble, puis note par note.",
   "Play each chord tone, then return through the same notes.": "Joue les notes de l’accord, puis reviens en sens inverse.",
   "Play each chord shape. Stacked notes sound together; × means mute.": "Joue chaque forme d’accord. Les notes superposées se jouent ensemble ; × signifie corde muette.",
-  "Play two notes per string, then reverse.": "Joue deux notes par corde, puis reviens en sens inverse."
+  "Play two notes per string, then reverse.": "Joue deux notes par corde, puis reviens en sens inverse.",
+  "Repeat my routine": "Refaire ma routine"
 }
