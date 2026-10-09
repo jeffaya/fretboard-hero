@@ -20,7 +20,7 @@
 .tuner-instrument{position:relative;width:min(320px,100%);aspect-ratio:320/260;margin:18px auto 12px}
 .tuner-headstock{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 6px 14px #0008)}
 .tuner-strings{position:absolute;inset:0}
-.tuner-string{position:absolute;translate:-50% -50%;width:48px;height:48px;padding:0;font-size:22px;font-weight:800;--ui-radius:50%}
+.tuner-string{position:absolute;translate:-50% -50%;width:40px;height:40px;padding:0;font-size:20px;font-weight:800;--ui-radius:50%}
 .tuner-auto{position:absolute;right:0;top:-4px;min-height:36px;padding:6px 10px;font-size:13px;translate:0 -50%}
 /* A filled glossy note button and a wide string halo make detection unmistakable. */
 .tuner-dialog{--tuner-signal:#26edff;--tuner-fill:#14cced;--tuner-deep:#047896}
@@ -30,7 +30,7 @@ body #app .tuner-string:is(.detected,[aria-pressed=true]){
   background:linear-gradient(165deg,#ffffffc9 0%,#ffffff50 32%,transparent 34%),linear-gradient(145deg,var(--tuner-signal),var(--tuner-fill) 60%,var(--tuner-deep))!important;
   color:#031923!important;text-shadow:0 1px 0 #ffffff70;
   box-shadow:inset 0 2px 2px #fff9,inset 0 -4px 6px #00283055,0 0 0 3px color-mix(in srgb,var(--tuner-signal) 32%,transparent),0 0 20px var(--tuner-signal),0 0 36px color-mix(in srgb,var(--tuner-signal) 38%,transparent)!important;
-  font-weight:800;scale:1.08;z-index:2;
+  font-weight:800;scale:1;z-index:2;
 }
 .tuner-headstock .highlighted .tuner-wire{stroke:#f1ffff;stroke-width:3.5;filter:drop-shadow(0 0 3px var(--tuner-signal))}
 .tuner-headstock .highlighted .tuner-wire-halo{stroke:var(--tuner-signal);stroke-width:9;opacity:.8;filter:blur(2px)}
@@ -39,10 +39,16 @@ body #app .tuner-string:is(.detected,[aria-pressed=true]){
 .in-tune .tuner-needle{background:var(--tuner-signal)}
 .tuner-mic{width:100%;min-height:48px;padding:12px;font:inherit;font-size:18px;font-weight:800;cursor:pointer}
 .tuner-privacy{font-size:12px;margin:10px 0 0}
-@media(max-width:380px){.tuner-dialog{padding:16px}.tuner-heading h2{font-size:24px}.tuner-instrument{width:min(283px,100%)}.tuner-string{width:44px;height:44px}}
+@media(max-width:380px){.tuner-dialog{padding:16px}.tuner-heading h2{font-size:24px}.tuner-instrument{width:min(283px,100%)}.tuner-string{width:40px;height:40px}}
 @media(max-height:720px){.tuner-dialog{padding:14px 20px}.tuner-instrument{width:min(258px,100%);margin-bottom:8px}.tuner-note{font-size:38px}.tuner-reading{margin:2px 0 8px}.tuner-intro{margin:4px 0 6px}.tuner-privacy{margin-top:6px}}
 @media(prefers-reduced-motion:reduce){.tuner-needle{transition:none}}
 
 .tuner-auto{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px;min-height:36px}
 .tuner-auto::after{content:'';display:block;width:38px;height:22px;border-radius:20px;background:radial-gradient(circle at 11px 11px,#fff 0 8px,transparent 9px),#536077;box-shadow:inset 0 0 0 1px #ffffff40}
 .tuner-auto[aria-checked=true]::after{background:radial-gradient(circle at 27px 11px,#fff 0 8px,transparent 9px),var(--ui-green)}
+
+/* Auto belongs in the header; string targets keep a clear vertical gap. */
+.tuner-heading .tuner-auto{position:static;translate:none;flex-shrink:0;min-height:44px;margin-left:auto}
+.tuner-heading h2{font-size:clamp(20px,5.5vw,28px)}
+.tuner-reading{margin-top:14px}
+.tuner-instrument{margin-top:8px}
