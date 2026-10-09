@@ -19,7 +19,6 @@
     svg.append(el('title',{},`${exercise.title}. ${exercise.detail}. ${description}`));
     const paths=el('g',{'class':'routine-paths','aria-hidden':'true'}),points=[];
     if(guide)svg.append(paths);
-    const visited=new Set(guide?.route.slice(0,guide.index)||[]),target=guide?.route[guide.index];
     for(let line=0;line<lines;line++){
       const columns=exercise.columns.slice(line*count,(line+1)*count),used=Math.min(width-left-right,columns.length*(labelled?Math.max(120,minimum):76)),step=used/columns.length,start=left+(width-left-right-used)/2,offset=line*lineHeight;
       engine.tuning.forEach((course,string)=>{const y=offset+top+(engine.stringCount-1-string)*row;
@@ -27,7 +26,7 @@
       });
       columns.forEach((column,i)=>{
         const x=start+(i+.5)*step,index=line*count+i;
-        const group=el('g',{'data-column':index,'class':'routine-tab-column'+(guide&&visited.has(index)?' is-played':'')+(guide&&target===index?' is-target':'')});
+        const group=el('g',{'data-column':index,'class':'routine-tab-column'+(guide&&index<guide.index?' is-played':'')+(guide&&guide.index===index?' is-target':'')});
         if(column.label)svg.append(el('text',{x,y:offset+13,'text-anchor':'middle',fill:'#d8e4f4','font-size':Math.min(22,font*.65)},column.label));
         const ys=column.notes.map(n=>offset+top+(engine.stringCount-1-n.string)*row),y=ys.reduce((a,b)=>a+b,0)/ys.length;
         points[index]={x,y,line,offset};
@@ -36,14 +35,13 @@
         if(column.muteMissing)engine.courses.forEach((_,string)=>{if(!notes.some(n=>n.string===string))notes.push({string,fret:'×'})});
         notes.forEach(n=>{
           const y=offset+top+(engine.stringCount-1-n.string)*row,isRoot=n.fret!=='×'&&engine.noteAt(n.string,n.fret)===exercise.rootPC;
-          if(guide&&n.fret!=='×')group.append(el('ellipse',{cx:x,cy:y,rx:font*.96,ry:font*.77,'class':'routine-note-halo'}));
           group.append(el('rect',{x:x-font*.7,y:y-font*.6,width:font*1.4,height:font*1.2,rx:5,fill:'#0a1425','class':n.fret!=='×'?'routine-note-face':''}),el('text',{x,y:y+1,'text-anchor':'middle','dominant-baseline':'central',fill:isRoot?'#70f7ff':'#fff','font-size':font,'font-weight':800,'class':n.fret!=='×'?'routine-note-number':''},String(n.fret)));
         });
         svg.append(group);
       });
     }
-    if(guide)for(let i=1;i<=Math.min(guide.index,guide.route.length-1);i++){
-      const a=points[guide.route[i-1]],b=points[guide.route[i]],reverse=guide.route[i]<guide.route[i-1],edge=reverse?left-8:width-right+4,entry=reverse?width-right+4:left-8;
+    if(guide)for(let i=1;i<=Math.min(guide.index,exercise.columns.length-1);i++){
+      const a=points[i-1],b=points[i],edge=width-right+4,entry=left-8;
       // Wrap through the gap between staves so the path stays continuous without
       // cutting diagonally across unrelated notes.
       const d=a.line===b.line?`M${a.x} ${a.y} C${(a.x+b.x)/2} ${a.y} ${(a.x+b.x)/2} ${b.y} ${b.x} ${b.y}`:

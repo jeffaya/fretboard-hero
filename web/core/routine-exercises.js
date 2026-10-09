@@ -2,6 +2,9 @@
   'use strict';
   const pick=(items,random)=>items[Math.floor(random()*items.length)];
   const single=notes=>notes.map(note=>({notes:[note]}));
+  // Write the descending passage after the ascent, as a normal tablature.
+  // The turning note is played once; the final note returns to the beginning.
+  const roundTrip=notes=>single(notes.concat(notes.slice(0,-1).reverse()));
   const range=notes=>`Frets ${Math.min(...notes.map(n=>n.fret))}–${Math.max(...notes.map(n=>n.fret))}`;
 
   // Work in MIDI for melodic order: a high-G ukulele is not tuned low to high.
@@ -44,7 +47,7 @@
     const intervals=quality==='major'?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10];
     const scale=pick(sequences(engine,rootPC,intervals,maxFret),random);
     const scaleExercise=make('scale','Scale',`Play the ${key} scale`,`${quality==='minor'?'Natural minor':'Major'} · ${range(scale)}`,
-      'Play up to the octave, then back to the root.',single(scale));
+      'Play up to the octave, then back to the root.',roundTrip(scale));
 
     const sets=Object.keys(engine.profile.triadSets),set=pick(sets,random);
     const shapes=TriadEngine.findShapes({engine,rootPC,quality,maxFret,set});
@@ -65,7 +68,7 @@
     if(engine.profile.family==='bass'){
       const arp=pick(sequences(engine,rootPC,[0,quality==='major'?4:3,7],maxFret),random);
       chordExercise=make('chords','Arpeggios',`Outline the ${key} arpeggio`,`${key} · Root, third & fifth · ${range(arp)}`,
-        'Play each chord tone, then return through the same notes.',single(arp));
+        'Play each chord tone, then return through the same notes.',roundTrip(arp));
     }else{
       const system=engine.profile.caged||engine.profile.chords;
       const all=ChordEngine.templateShapes({engine,...system,rootPC,quality,maxFret});
@@ -84,7 +87,7 @@
     if(!box)throw new Error('No complete routine pentatonic position for this tuning');
     const penta=box.pairs.flatMap((pair,string)=>pair.map(fret=>({string,fret})));
     const pentaExercise=make('penta','Penta',`Play the ${key} pentatonic`,`${key} · Position ${box.id} · ${range(penta)}`,
-      `Play two notes per string, then reverse. ${engine.profile.reentrant?'The high G string makes this a fingering pattern, not an ascending pitch sequence.':''}`,single(penta));
+      `Play two notes per string, then reverse. ${engine.profile.reentrant?'The high G string makes this a fingering pattern, not an ascending pitch sequence.':''}`,roundTrip(penta));
     return [rootExercise,scaleExercise,triadExercise,chordExercise,pentaExercise];
   }
   window.RoutineExercises=Object.freeze({create});

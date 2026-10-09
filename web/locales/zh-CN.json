@@ -317,13 +317,11 @@
   "Tuner": "调音器",
   "Play one open string at a time.": "请一次弹奏一根空弦。",
   "Audio stays on your device. Nothing is recorded.": "音频仅在设备上处理，不会录音。",
-  "Enable microphone": "开启麦克风",
   "Microphone off": "麦克风已关闭",
   "In tune": "音准正确",
   "Too low — tighten gently": "音偏低 — 轻轻拧紧",
   "Too high — loosen gently": "音偏高 — 轻轻放松",
   "Allow microphone access": "请允许访问麦克风",
-  "Stop microphone": "关闭麦克风",
   "Microphone denied. Allow access in device or browser settings.": "麦克风权限被拒绝。请在设备或浏览器设置中允许访问。",
   "Microphone unavailable. Use a supported browser over HTTPS.": "麦克风不可用。请使用支持 HTTPS 的浏览器。",
   "Microphone unavailable. Check your microphone and try again.": "麦克风不可用。请检查麦克风后重试。",
@@ -339,9 +337,9 @@
   "Explore": "探索",
   "Tune your instrument": "为乐器调音",
   "Well played!": "弹得好！",
-  "Play the glowing note.": "请弹奏发光的音符。",
-  "Return to the first note": "返回第一个音符",
   "Play each triad together.": "请同时弹奏每个三和弦的所有音。",
   "Listening…": "正在聆听…",
-  "Halo = target · Green = played": "光环 = 目标音 · 绿色 = 已弹奏"
+  "Microphone": "麦克风",
+  "Play the highlighted note.": "请弹奏高亮的音符。",
+  "Highlight = target · Green = played": "高亮 = 目标音 · 绿色 = 已弹奏"
 }
