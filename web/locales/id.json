@@ -334,5 +334,8 @@
   "Play each chord tone, then return through the same notes.": "Mainkan nada akor, lalu kembali melalui nada yang sama.",
   "Play each chord shape. Stacked notes sound together; × means mute.": "Mainkan setiap bentuk akor. Nada bertumpuk dimainkan bersama; × berarti senar tidak dibunyikan.",
   "Play two notes per string, then reverse.": "Mainkan dua nada per senar, lalu balik urutannya.",
-  "Repeat my routine": "Ulangi rutinitas saya"
+  "Repeat my routine": "Ulangi rutinitas saya",
+  "Practice": "Berlatih",
+  "Explore": "Jelajahi",
+  "Tune your instrument": "Setem instrumen Anda"
 }
