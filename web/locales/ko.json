@@ -333,5 +333,6 @@
   "Play each triad together, then one note at a time.": "각 트라이어드를 함께 연주한 뒤 한 음씩 연주하세요.",
   "Play each chord tone, then return through the same notes.": "코드의 각 음을 연주한 뒤 같은 음을 거꾸로 연주하세요.",
   "Play each chord shape. Stacked notes sound together; × means mute.": "각 코드 모양을 연주하세요. 세로로 쌓인 음은 함께 연주하고 ×는 소리 내지 마세요.",
-  "Play two notes per string, then reverse.": "줄마다 두 음씩 연주한 뒤 역순으로 돌아오세요."
+  "Play two notes per string, then reverse.": "줄마다 두 음씩 연주한 뒤 역순으로 돌아오세요.",
+  "Repeat my routine": "연습 다시 하기"
 }
