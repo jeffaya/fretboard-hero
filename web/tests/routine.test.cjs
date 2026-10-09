@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const base=path.join(__dirname,'..');
-function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-exercises','core/routine-guide','core/chord-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
+function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-exercises','core/routine-guide','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
 function rng(seed){return()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296)}
 const flatten=e=>e.columns.flatMap(c=>c.notes);
 test('All keys, qualities and instruments have five playable and musically correct exercises',()=>{
@@ -174,4 +174,34 @@ test('Guided tablature reads every written note exactly once, including the desc
    }
   }
  }
+});
+
+for(const step of [0,2])test(`Routine step ${step+1} accepts quiet audio only after a sustained correct match`,()=>{
+ const {samples,spectrum,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(true);r.session.enter();
+ r.nodes.get('#routineSteps').children[step].children[0].click();
+ const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);
+ const midis=r.c.lastExercise.columns[0].notes.map(n=>engine.midiAt(n.string,n.fret)),options={gain:.015,noise:.0001};
+ const play=(notes,now)=>r.c.audio.onFrame({samples:samples(notes,options),spectrum:spectrum(notes,options),sampleRate:48000,fftSize:N,now});
+ const progress=()=>r.nodes.get('#routineNoteProgress').textContent;
+ const first=progress();
+ for(let now=1500;now<2300;now+=80)play(midis.map(m=>m+1),now);
+ assert.equal(progress(),first);
+ play(midis,2300);assert.equal(progress(),first);
+ for(let now=2380;now<2940;now+=80)play(midis,now);
+ assert.ok(progress().startsWith('2 /'),progress());
+});
+
+test('Holding one chord cannot clear the next shape with the same bass and chord tones',()=>{
+ const {samples,spectrum,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(true);r.session.enter();
+ r.nodes.get('#routineSteps').children[3].children[0].click();
+ const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);
+ const midi=col=>col.notes.map(n=>engine.midiAt(n.string,n.fret)),first=midi(r.c.lastExercise.columns[0]),second=midi(r.c.lastExercise.columns[1]);
+ assert.notEqual(first.join(','),second.join(','));assert.equal(Math.min(...first),Math.min(...second));
+ const data=samples(first),frequencies=spectrum(first),silence=new Float32Array(N),empty=new Float32Array(N/2).fill(-Infinity);
+ const frame=(now,quiet=false)=>r.c.audio.onFrame({samples:quiet?silence:data,spectrum:quiet?empty:frequencies,sampleRate:48000,fftSize:N,now});
+ for(let now=1500;now<3100;now+=80)frame(now);
+ assert.ok(r.nodes.get('#routineNoteProgress').textContent.startsWith('2 /'));
+ for(let now=3100;now<3420;now+=80)frame(now,true);
+ for(let now=3420;now<3980;now+=80)frame(now);
+ assert.ok(r.nodes.get('#routineNoteProgress').textContent.startsWith('3 /'));
 });
