@@ -401,37 +401,6 @@ body #app .quiz-hud .hud-gain-pop { color: #9affca; text-shadow: 0 0 10px #5cffb
   .responsive-drawer { will-change: transform; }
 }
 
-body #app #home .home-instruments button[aria-pressed="false"] {
-  background: var(--ui-gloss),linear-gradient(180deg,#101b2ed9,#060c18ed);
-  border-color: #788ca66b;
-  box-shadow: inset 0 1px 1px #ffffff12;
-  color: #bdcadb;
-}
-
-body #app #home .home-instruments button[aria-pressed="true"] {
-  position: relative;
-  background: var(--ui-gloss),linear-gradient(125deg,#780b77eb,#290d48f2 72%,#110b25);
-  border-color: #ff75ee;
-  box-shadow: inset 0 0 0 1px #ffb5f480,inset 0 0 24px #e927ff26,0 0 15px #e927ff75;
-  color: #fff;
-}
-
-body #app #home .home-instruments button[aria-pressed="true"]::after {
-  content: "✓";
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 18px;
-  height: 18px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #fff;
-  color: #790970;
-  font: 800 13px/1 system-ui;
-  pointer-events: none;
-}
-
 body #app .control-select .select-trigger {
   border-radius: 16px;
   border-width: 1px;

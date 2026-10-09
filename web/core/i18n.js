@@ -120,11 +120,7 @@
     window.addEventListener('resize',()=>{if(menu.matches(':popover-open'))positionMenu()});
     window.addEventListener('languagechange',()=>{if(selected==='auto'&&detect(navigator.languages)!==locale)location.reload()});
     wrapper.append(trigger,menu);
-    const footer=document.createElement('footer');footer.className='home-footer';footer.append(wrapper);
-    // Move the same controls so reading/tab order matches their visual placement.
-    const desktop=matchMedia('(min-width:1001px) and (orientation:landscape)');
-    const placeUtilities=()=>document.querySelector(desktop.matches?'.home-brand':'.home-content').append(footer);
-    placeUtilities();desktop.addEventListener('change',placeUtilities);
+    document.querySelector('.home-language').append(wrapper);
     translateNode(document.body);metadata();
     // Legacy renderers write text directly. Observe only changed nodes/labels,
     // never rewrite HTML, canonical gameplay attributes, or event handlers.
@@ -138,7 +134,7 @@
     const requested=new URL(location.href).searchParams.get('lang');
     locale=supported.has(requested)?requested:supported.has(saved)?saved:detect(navigator.languages?.length?navigator.languages:[navigator.language]);
     if(locale!=='en'){
-      try{const response=await fetch('./locales/'+locale+'.json?v=10.30.0');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
+      try{const response=await fetch('./locales/'+locale+'.json?v=10.33.0');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
     }
     document.documentElement.lang=locale;document.documentElement.dir='ltr';
     return locale;
