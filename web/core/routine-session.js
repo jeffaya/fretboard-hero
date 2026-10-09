@@ -65,7 +65,7 @@
       let energy=0;for(const value of samples)energy+=value*value;
       const level=Math.sqrt(energy/samples.length),chord=pitches.length>1;
       let match=false;
-      if(level>=.004){
+      if(level>=FretboardPitch.minLevel){
         if(chord)match=detector.matches(detector.analyze(spectrum,sampleRate,fftSize),pitches);
         else{
           const hz=FretboardPitch.detect(samples.subarray(samples.length-8192),sampleRate,{maxFrequency:1500});
