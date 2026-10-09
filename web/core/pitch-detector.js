@@ -1,7 +1,7 @@
 /* YIN difference / cumulative mean normalization, with sub-sample interpolation. */
 (function(root){
   'use strict';
-  function detect(samples, sampleRate){
+  function detect(samples, sampleRate, {maxFrequency=1000}={}){
     // Decimate to ~12 kHz: enough resolution for open strings, low CPU on phones.
     const step=Math.max(1,Math.floor(sampleRate/12000)), rate=sampleRate/step;
     const size=Math.floor(samples.length/step), x=new Float32Array(size);
@@ -10,7 +10,7 @@
     mean/=size;
     for(let i=0;i<size;i++){x[i]-=mean;energy+=x[i]*x[i];}
     if(Math.sqrt(energy/size)<0.004)return null;
-    const max=Math.min(Math.floor(rate/32),Math.floor(size/2)-1), min=Math.floor(rate/1000), span=size-max;
+    const max=Math.min(Math.floor(rate/32),Math.floor(size/2)-1), min=Math.floor(rate/maxFrequency), span=size-max;
     const d=new Float32Array(max+1);let total=0;
     for(let lag=1;lag<=max;lag++){
       let sum=0;for(let i=0;i<span;i++){const delta=x[i]-x[i+lag];sum+=delta*delta;}
