@@ -73,7 +73,7 @@
 
   #learn:has(.has-position-guides) .learn-board {
     flex: none;
-    height: calc(100vw / 3 + 108px);
+    height: calc(100vw / 3 + 44px);
     max-height: none;
   }
 }
