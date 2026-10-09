@@ -51,7 +51,7 @@
     menu.innerHTML='';
     const active=buttons.find(b=>b.classList.contains('active'))||buttons[0];
     trigger.setAttribute('aria-label',`${host.closest('.control-group')?.querySelector('label')?.textContent||'Choose'}: ${active.textContent.trim()}`);
-    trigger.innerHTML=`<span class="select-value"><i class="select-icon" aria-hidden="true"></i><span>${active.textContent.trim()}</span></span><b aria-hidden="true">⌄</b>`;
+    trigger.innerHTML=`<span class="select-value"><i class="select-icon" aria-hidden="true"></i><span>${active.textContent.trim()}</span></span><svg class="select-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
     buttons.forEach(b=>{const o=document.createElement('button');o.type='button';o.className='select-option'+(b.classList.contains('active')?' active':'');o.textContent=b.textContent.trim();if(b.dataset.premiumLocked==='true'){o.dataset.premiumLocked='true';o.classList.add('premium-locked');o.insertAdjacentHTML('beforeend',b.querySelector('.premium-lock').outerHTML)}o.setAttribute('role','option');o.setAttribute('aria-selected',String(b.classList.contains('active')));o.addEventListener('click',()=>{b.click();host.classList.remove('select-open');trigger.setAttribute('aria-expanded','false');requestAnimationFrame(refreshAllSelects)});menu.append(o)});
   }
   function refreshAllSelects(){ $$('.control-select').forEach(refreshSelect); requestAnimationFrame(updateAdaptiveControls); }
