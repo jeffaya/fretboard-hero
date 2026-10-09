@@ -317,13 +317,11 @@
   "Tuner": "Stimmgerät",
   "Play one open string at a time.": "Spiele jeweils eine einzelne leere Saite.",
   "Audio stays on your device. Nothing is recorded.": "Der Ton bleibt auf deinem Gerät. Es wird nichts aufgenommen.",
-  "Enable microphone": "Mikrofon aktivieren",
   "Microphone off": "Mikrofon aus",
   "In tune": "Richtig gestimmt",
   "Too low — tighten gently": "Zu tief — vorsichtig spannen",
   "Too high — loosen gently": "Zu hoch — vorsichtig lockern",
   "Allow microphone access": "Mikrofonzugriff erlauben",
-  "Stop microphone": "Mikrofon stoppen",
   "Microphone denied. Allow access in device or browser settings.": "Mikrofonzugriff verweigert. Erlaube ihn in den Geräte- oder Browsereinstellungen.",
   "Microphone unavailable. Use a supported browser over HTTPS.": "Mikrofon nicht verfügbar. Nutze einen kompatiblen Browser über HTTPS.",
   "Microphone unavailable. Check your microphone and try again.": "Mikrofon nicht verfügbar. Prüfe es und versuche es erneut.",
@@ -339,9 +337,9 @@
   "Explore": "Entdecken",
   "Tune your instrument": "Stimme dein Instrument",
   "Well played!": "Gut gespielt!",
-  "Play the glowing note.": "Spiele die leuchtende Note.",
-  "Return to the first note": "Zurück zur ersten Note",
   "Play each triad together.": "Spiele die Töne jedes Dreiklangs gleichzeitig.",
   "Listening…": "Hört zu…",
-  "Halo = target · Green = played": "Leuchten = Ziel · Grün = gespielt"
+  "Microphone": "Mikrofon",
+  "Play the highlighted note.": "Spiele die hervorgehobene Note.",
+  "Highlight = target · Green = played": "Hervorgehoben = Ziel · Grün = gespielt"
 }

@@ -1,5 +1,5 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-function environment(){
+function environment(saved=new Map()){
  const events={},contexts=[],frames=new Map(),tracks=[],requests=[],native={};let id=0;
  class Context{
   constructor(){this.state='running';this.sampleRate=48000;this.events={};contexts.push(this)}
@@ -8,7 +8,7 @@ function environment(){
   createAnalyser(){return {fftSize:8192,getFloatTimeDomainData(){},getFloatFrequencyData(){}}}
   createMediaStreamSource(){return {connect(){},disconnect(){}}}
  }
- const c={window:{AudioContext:Context,addEventListener:(n,f)=>events[n]=f,Capacitor:{Plugins:{App:{addListener:(n,f)=>native[n]=f}}}},document:{hidden:false,addEventListener:(n,f)=>events[n]=f},navigator:{mediaDevices:{getUserMedia:()=>new Promise((resolve,reject)=>requests.push({resolve,reject}))}},requestAnimationFrame:f=>{frames.set(++id,f);return id},cancelAnimationFrame:id=>frames.delete(id),Float32Array};
+ const c={localStorage:{getItem:key=>saved.get(key)??null,setItem:(key,value)=>saved.set(key,value)},window:{AudioContext:Context,addEventListener:(n,f)=>events[n]=f,Capacitor:{Plugins:{App:{addListener:(n,f)=>native[n]=f}}}},document:{hidden:false,addEventListener:(n,f)=>events[n]=f},navigator:{mediaDevices:{getUserMedia:()=>new Promise((resolve,reject)=>requests.push({resolve,reject}))}},requestAnimationFrame:f=>{frames.set(++id,f);return id},cancelAnimationFrame:id=>frames.delete(id),Float32Array};
  vm.runInNewContext(fs.readFileSync(require.resolve('../core/microphone.js'),'utf8'),c);
  function stream(){const track={readyState:'live',events:{},stop(){this.readyState='ended'},addEventListener(n,f){this.events[n]=f}};tracks.push(track);return {getTracks:()=>[track],getAudioTracks:()=>[track]}}
  return {c,api:c.window.FretboardMicrophone,events,native,contexts,tracks,requests,stream};
@@ -37,4 +37,15 @@ for(const event of ['visibilitychange','pagehide','native','interrupted','ended'
  else if(event==='ended')r.tracks[0].events.ended();
  else{r.c.document.hidden=true;r.events[event]()}
  assert.equal(mic.state,'off');assert.equal(r.tracks[0].readyState,'ended');assert.equal(r.contexts[0].state,'closed');assert.equal(r.requests.length,1);
+});
+
+test('Each microphone defaults on; explicit off survives reload and stays independent of the other feature',()=>{
+ const saved=new Map(),r=environment(saved),routine=r.api.preference('routine'),tuner=r.api.preference('tuner');
+ assert.equal(routine.enabled,true);assert.equal(tuner.enabled,true);routine.setEnabled(false);
+ assert.equal(environment(saved).api.preference('routine').enabled,false);assert.equal(tuner.enabled,true);
+ routine.setEnabled(true);assert.equal(environment(saved).api.preference('routine').enabled,true);
+});
+test('Unavailable storage still allows on/off within the current visit',()=>{
+ const r=environment();r.c.localStorage={getItem(){throw Error('blocked')},setItem(){throw Error('blocked')}};
+ const preference=r.api.preference('routine');assert.equal(preference.enabled,true);preference.setEnabled(false);assert.equal(preference.enabled,false);
 });

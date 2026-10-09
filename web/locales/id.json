@@ -317,13 +317,11 @@
   "Tuner": "Tuner",
   "Play one open string at a time.": "Petik satu senar terbuka setiap kali.",
   "Audio stays on your device. Nothing is recorded.": "Audio tetap di perangkat Anda. Tidak ada yang direkam.",
-  "Enable microphone": "Aktifkan mikrofon",
   "Microphone off": "Mikrofon mati",
   "In tune": "Sudah selaras",
   "Too low — tighten gently": "Terlalu rendah — kencangkan perlahan",
   "Too high — loosen gently": "Terlalu tinggi — kendurkan perlahan",
   "Allow microphone access": "Izinkan akses mikrofon",
-  "Stop microphone": "Hentikan mikrofon",
   "Microphone denied. Allow access in device or browser settings.": "Akses mikrofon ditolak. Izinkan di pengaturan perangkat atau browser.",
   "Microphone unavailable. Use a supported browser over HTTPS.": "Mikrofon tidak tersedia. Gunakan browser yang mendukung HTTPS.",
   "Microphone unavailable. Check your microphone and try again.": "Mikrofon tidak tersedia. Periksa mikrofon dan coba lagi.",
@@ -339,9 +337,9 @@
   "Explore": "Jelajahi",
   "Tune your instrument": "Setem instrumen Anda",
   "Well played!": "Bagus sekali!",
-  "Play the glowing note.": "Mainkan nada yang menyala.",
-  "Return to the first note": "Kembali ke nada pertama",
   "Play each triad together.": "Mainkan semua nada dalam setiap triad bersamaan.",
   "Listening…": "Mendengarkan…",
-  "Halo = target · Green = played": "Lingkaran cahaya = target · Hijau = sudah dimainkan"
+  "Microphone": "Mikrofon",
+  "Play the highlighted note.": "Mainkan nada yang disorot.",
+  "Highlight = target · Green = played": "Sorotan = target · Hijau = sudah dimainkan"
 }

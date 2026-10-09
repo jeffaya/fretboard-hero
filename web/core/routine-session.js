@@ -6,6 +6,7 @@
     const state={root:'A',quality:'minor',index:0},completed=new Set(),gate=RoutineGuide.createGate();
     const detector=FretboardChordDetector.create({minMidi:Math.min(...engine.courses.map(c=>c.midi)),maxMidi:Math.max(...engine.courses.map(c=>c.midi))+15});
     let exercises=[],guides=[],active=false,transition=0,settleUntil=0,lastPitches=[];
+    const micPreference=FretboardMicrophone.preference('routine');
     const microphone=FretboardMicrophone.create({fftSize:16384,interval:80,onFrame:listen,onState:audioState});
     // A short CSS celebration, created once and replayed only on completion.
     const confettiColors=['#ff9814','#70f7ff','#ff4ed8','#ffe38a','#b88cff'];
@@ -16,18 +17,18 @@
     }
     function current(){return guides[state.index]}
     function targetPitches(){
-      const guide=current(),column=exercises[state.index]?.columns[guide?.route[guide.index]];
+      const guide=current(),column=exercises[state.index]?.columns[guide?.index];
       return column?[...new Set(column.notes.map(n=>engine.midiAt(n.string,n.fret)))].sort((a,b)=>a-b):[];
     }
     function draw(animate=false){
       if(!exercises.length||state.index>=5)return;
       const guided=microphone.state==='on';
-      $('#routineLegend').textContent=t(guided?'Halo = target · Green = played':'Cyan = root note');
+      $('#routineLegend').textContent=t(guided?'Highlight = target · Green = played':'Cyan = root note');
       RoutineRenderer.render($('#routineTab'),exercises[state.index],engine,guided?{...current(),animate}:null);
       if(guided){
         const guide=current();
-        $('#routineNoteProgress').textContent=`${Math.min(guide.index+1,guide.route.length)} / ${guide.route.length}`;
-        $('#routineMicStatus').textContent=t(guide.route.length>exercises[state.index].columns.length&&guide.index>=exercises[state.index].columns.length?'Return to the first note':'Listening…');
+        $('#routineNoteProgress').textContent=`${Math.min(guide.index+1,exercises[state.index].columns.length)} / ${exercises[state.index].columns.length}`;
+        $('#routineMicStatus').textContent=t('Listening…');
       }
     }
     function showTarget(){
@@ -36,9 +37,9 @@
     }
     function audioState(value,error){
       const on=value==='on';
-      $('#routineMic').disabled=value==='pending'||state.index===5;
-      $('#routineMic').setAttribute('aria-pressed',String(on));
-      $('#routineMicLabel').textContent=t(on?'Stop microphone':'Enable microphone');
+      $('#routineMic').disabled=state.index===5;
+      $('#routineMic').setAttribute('aria-checked',String(on||value==='pending'));
+      $('#routineMic').setAttribute('aria-busy',String(value==='pending'));
       $('#routineMenuBtn').classList.toggle('is-listening',on);
       $('#routineListening').hidden=!on&&value!=='pending'&&!error;
       $('#routineNoteProgress').hidden=!on;
@@ -49,13 +50,13 @@
       if((on||value==='pending'||error)&&$('#routineDrawer').classList.contains('open'))$('#routineMenuClose').click();
       if(on){
         showTarget();
-        if(current()?.index===current()?.route.length)advance();
+        if(current()?.index===exercises[state.index]?.columns.length)advance();
       }
     }
     function renderInstruction(){
       if(state.index>=5)return;
       const e=exercises[state.index];
-      const instruction=microphone.state==='on'&&e.id==='root'?'Play the glowing note.':microphone.state==='on'&&e.id==='triads'?'Play each triad together.':e.instruction;
+      const instruction=microphone.state==='on'&&e.id==='root'?'Play the highlighted note.':microphone.state==='on'&&e.id==='triads'?'Play each triad together.':e.instruction;
       $('#routineInstruction').textContent=t(instruction);
     }
     function listen({samples,spectrum,sampleRate,fftSize,now}){
@@ -74,7 +75,7 @@
       if(!gate.update({match,level,now,chord}))return;
       lastPitches=pitches;current().index++;
       draw(true);
-      if(current().index===current().route.length){advance();return}
+      if(current().index===exercises[state.index].columns.length){advance();return}
       const next=targetPitches();gate.reset(next.join(',')===pitches.join(','));
       settleUntil=now+200;showTarget();
     }
@@ -89,7 +90,7 @@
       exercises.forEach((item,i)=>{
         const step=document.createElement('li'),button=document.createElement('button');
         button.type='button';button.textContent=item.step;button.dataset.step=String(i+1);
-        button.addEventListener('click',()=>{cancelTransition();state.index=i;if(current().index===current().route.length)current().index=0;gate.reset();settleUntil=performance.now()+400;render();$('#routineTitle').focus({preventScroll:true})});
+        button.addEventListener('click',()=>{cancelTransition();state.index=i;if(current().index===exercises[state.index].columns.length)current().index=0;gate.reset();settleUntil=performance.now()+400;render();$('#routineTitle').focus({preventScroll:true})});
         step.append(button);
         step.classList.toggle('is-current',i===state.index);step.classList.toggle('is-complete',completed.has(i));
         if(i===state.index)button.setAttribute('aria-current','step');
@@ -114,7 +115,7 @@
       $('#routineTabScroll').hidden=done;$('#routineLegend').hidden=done;
       $('#routineNext').hidden=done;$('#routineFinish').hidden=!done;
       $('#routineNext').textContent=t(state.index===4&&[0,1,2,3].every(i=>completed.has(i))?'Done':'Next →');
-      $('#routineMic').disabled=done||microphone.state==='pending';
+      $('#routineMic').disabled=done;
       draw();
       for(const key of ['root','quality'])$('#routine'+(key==='root'?'Root':'Quality')+'Controls').querySelectorAll('button').forEach(b=>{
         const active=b.dataset.value===state[key];b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));
@@ -137,7 +138,7 @@
     function reset(){
       cancelTransition();completed.clear();state.index=0;lastPitches=[];
       exercises=RoutineExercises.create({engine,root:state.root,quality:state.quality,random});
-      guides=exercises.map(exercise=>({route:RoutineGuide.sequence(exercise),index:0}));
+      guides=exercises.map(()=>({index:0}));
       gate.reset();settleUntil=performance.now()+400;render();
     }
     function setup(id,values,key){
@@ -154,19 +155,23 @@
     }
     setup('routineRootControls',MusicTheory.NOTES,'root');setup('routineQualityControls',['major','minor'],'quality');
     $('#routineNext').addEventListener('click',advance);
-    $('#routineMic').addEventListener('click',()=>{if(microphone.state==='on')microphone.stop();else if(active&&state.index<5)microphone.start()});
+    $('#routineMic').addEventListener('click',()=>{
+      if(!active||state.index>=5)return;
+      const enable=microphone.state==='off';micPreference.setEnabled(enable);
+      if(enable)microphone.start();else microphone.stop();
+    });
     $('#routineReplay').addEventListener('click',()=>{
       if(state.index!==5)return;
       const roots=MusicTheory.NOTES.filter(note=>note!==state.root);
       state.root=access.unlocked?roots[Math.floor(random()*roots.length)]:'A';
       if(!access.unlocked)state.quality='minor';
-      reset();$('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
+      reset();if(micPreference.enabled)microphone.start();$('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
     });
     if(window.ResizeObserver)new window.ResizeObserver(()=>draw()).observe($('#routineTabScroll'));
     return {
       resize(){draw()},
       leave(){active=false;cancelTransition();microphone.stop()},
-      enter(){active=true;microphone.stop();state.root=access.unlocked?MusicTheory.NOTES[Math.floor(random()*MusicTheory.NOTES.length)]:'A';state.quality='minor';reset()}
+      enter(){active=true;microphone.stop();state.root=access.unlocked?MusicTheory.NOTES[Math.floor(random()*MusicTheory.NOTES.length)]:'A';state.quality='minor';reset();if(micPreference.enabled)microphone.start()}
     };
   }
   window.RoutineSession=Object.freeze({create});
