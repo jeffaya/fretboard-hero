@@ -326,5 +326,12 @@
   "Stop microphone": "关闭麦克风",
   "Microphone denied. Allow access in device or browser settings.": "麦克风权限被拒绝。请在设备或浏览器设置中允许访问。",
   "Microphone unavailable. Use a supported browser over HTTPS.": "麦克风不可用。请使用支持 HTTPS 的浏览器。",
-  "Microphone unavailable. Check your microphone and try again.": "麦克风不可用。请检查麦克风后重试。"
+  "Microphone unavailable. Check your microphone and try again.": "麦克风不可用。请检查麦克风后重试。",
+  "Find every {note} on the fretboard": "找出指板上所有的{note}",
+  "Play each note and say “{note}” aloud.": "弹奏每个音，并大声说出“{note}”。",
+  "Play up to the octave, then back to the root.": "弹到高八度，再回到根音。",
+  "Play each triad together, then one note at a time.": "先同时弹奏每个三和弦，再逐音弹奏。",
+  "Play each chord tone, then return through the same notes.": "弹奏各个和弦音，再按原路返回。",
+  "Play each chord shape. Stacked notes sound together; × means mute.": "弹奏每个和弦指型。竖向排列的音同时弹奏；×表示不弹该弦。",
+  "Play two notes per string, then reverse.": "每根弦弹两个音，再反向弹回。"
 }
