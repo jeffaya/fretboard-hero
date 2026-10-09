@@ -79,3 +79,13 @@ body #app .routine-steps .is-current button{color:#fff!important}
  .routine-steps{margin-bottom:4px}
  #routineInstruction{margin-bottom:4px}
 }
+
+/* Use taller desktop viewports for breathing room around the compact tab,
+   without stretching its strings or changing the phone/laptop layout. */
+@media(min-width:1001px) and (min-height:741px) and (orientation:landscape){
+ .routine-content{margin-top:clamp(20px,calc((100dvh - 740px)*.25),140px)}
+ .routine-steps{margin-bottom:clamp(24px,4dvh,56px)}
+ .routine-exercise h2{margin-bottom:12px}
+ #routineInstruction{margin-bottom:clamp(20px,3dvh,36px)}
+ .routine-actions{margin-top:clamp(24px,3dvh,40px)}
+}
