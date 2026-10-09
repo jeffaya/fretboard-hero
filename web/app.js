@@ -166,7 +166,6 @@
   const noteAt=(stringIndex,fret)=>engine.noteAt(stringIndex,fret);
   function degreeFor(pc){const diff=mod(pc-rootPC());if(diff===0)return 'root';if(pc===thirdPC())return 'third';if(diff===2)return 'second';if(diff===5)return 'fourth';if(diff===7)return 'fifth';if(diff===9)return 'sixth';if(diff===10||diff===11)return 'seventh';return null}
   function pentaPCs(){return intervals[state.quality].penta.map(i=>mod(rootPC()+i))}
-  function formula(){const ints=state.quality==='minor'?['1','♭3','4','5','♭7']:['1','2','3','5','6'];return pentaPCs().map(noteName).join(' • ')+'   '+ints.join(' • ')}
   function updateLearnLegend(){
     $$('.learn-legend [data-degree-filter]').forEach(button=>{
       const degree=button.dataset.degreeFilter,pill=button.querySelector('.legend');
@@ -298,7 +297,6 @@
   // P1 Root cyan, P2 3rd pink, P3 4th orange, P4 5th yellow, P5 7th green.
   const PENTA_POSITION_COLORS=[DEGREE_COLORS.root,DEGREE_COLORS.third,DEGREE_COLORS.fourth,DEGREE_COLORS.fifth,DEGREE_COLORS.seventh];
   function fretCenter(fret,fretPos){return FretboardLayout.fretCenter(fret,fretPos)}
-  function visiblePentaWindows(maxFret){return patternWindows().filter(w=>w.minFret<=maxFret&&(state.pattern==='all'||String(w.id)===String(state.pattern)))}
   // Instrument-specific position geometry is supplied by the active profile.
   const PENTA_STRING_PAIRS=instrument.pentatonic?.stringPairs;
   function pentaAnchorFret(){
