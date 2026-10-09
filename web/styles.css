@@ -3071,3 +3071,11 @@ body{
   .learn-learning-area .learn-legend .legend-filter{width:48px!important;min-width:48px!important;flex-direction:column!important;gap:3px!important;padding:4px!important;box-sizing:border-box!important}
   .learn-learning-area .learn-legend .legend-filter small{font-size:10px!important;line-height:1!important}
 }
+
+/* Desktop / landscape tablets: let Learn's stage fill the remaining height,
+   just like Map, while reserving the legend's natural height below it. */
+@media (min-width:1001px) and (orientation:landscape), (min-width:768px) and (min-height:600px) and (orientation:landscape){
+  .learn-screen .learn-learning-area{display:flex!important;flex-direction:column!important;flex:1 1 0!important;min-height:0!important}
+  .learn-screen .learn-learning-area>.learn-board{flex:1 1 0!important;height:auto!important;min-height:0!important;max-height:none!important;align-items:center!important}
+  .learn-screen .learn-learning-area>.learn-legend-row{flex:0 0 auto!important}
+}
