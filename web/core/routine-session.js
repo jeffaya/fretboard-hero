@@ -17,7 +17,7 @@
       $('#routineSteps').replaceChildren();
       exercises.forEach((item,i)=>{
         const step=document.createElement('li'),button=document.createElement('button');
-        button.type='button';button.textContent=item.step;
+        button.type='button';button.textContent=item.step;button.dataset.step=String(i+1);
         button.addEventListener('click',()=>{state.index=i;render();$('#routineTitle').focus({preventScroll:true})});
         step.append(button);
         step.classList.toggle('is-current',i===state.index);step.classList.toggle('is-complete',completed.has(i));
