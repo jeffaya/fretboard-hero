@@ -326,5 +326,12 @@
   "Stop microphone": "माइक्रोफ़ोन बंद करें",
   "Microphone denied. Allow access in device or browser settings.": "माइक्रोफ़ोन की अनुमति नहीं मिली। डिवाइस या ब्राउज़र की सेटिंग में अनुमति दें।",
   "Microphone unavailable. Use a supported browser over HTTPS.": "माइक्रोफ़ोन उपलब्ध नहीं है। HTTPS पर समर्थित ब्राउज़र इस्तेमाल करें।",
-  "Microphone unavailable. Check your microphone and try again.": "माइक्रोफ़ोन उपलब्ध नहीं है। माइक्रोफ़ोन जाँचें और फिर प्रयास करें।"
+  "Microphone unavailable. Check your microphone and try again.": "माइक्रोफ़ोन उपलब्ध नहीं है। माइक्रोफ़ोन जाँचें और फिर प्रयास करें।",
+  "Find every {note} on the fretboard": "फ़्रेटबोर्ड पर सभी {note} खोजें",
+  "Play each note and say “{note}” aloud.": "हर सुर बजाते समय “{note}” ज़ोर से कहें।",
+  "Play up to the octave, then back to the root.": "ऊपरी सप्तक तक बजाएँ, फिर मूल सुर पर लौटें।",
+  "Play each triad together, then one note at a time.": "हर त्रिस्वर एक साथ बजाएँ, फिर एक-एक सुर बजाएँ।",
+  "Play each chord tone, then return through the same notes.": "कॉर्ड के सुर बजाएँ, फिर उन्हीं सुरों से वापस लौटें।",
+  "Play each chord shape. Stacked notes sound together; × means mute.": "हर कॉर्ड आकार बजाएँ। एक के ऊपर एक लिखे सुर साथ बजते हैं; × का अर्थ है तार न बजाएँ।",
+  "Play two notes per string, then reverse.": "हर तार पर दो सुर बजाएँ, फिर उल्टे क्रम में लौटें।"
 }

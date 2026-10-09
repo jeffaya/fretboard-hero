@@ -326,5 +326,12 @@
   "Stop microphone": "Stop microphone",
   "Microphone denied. Allow access in device or browser settings.": "Microphone denied. Allow access in device or browser settings.",
   "Microphone unavailable. Use a supported browser over HTTPS.": "Microphone unavailable. Use a supported browser over HTTPS.",
-  "Microphone unavailable. Check your microphone and try again.": "Microphone unavailable. Check your microphone and try again."
+  "Microphone unavailable. Check your microphone and try again.": "Microphone unavailable. Check your microphone and try again.",
+  "Find every {note} on the fretboard": "Find every {note} on the fretboard",
+  "Play each note and say “{note}” aloud.": "Play each note and say “{note}” aloud.",
+  "Play up to the octave, then back to the root.": "Play up to the octave, then back to the root.",
+  "Play each triad together, then one note at a time.": "Play each triad together, then one note at a time.",
+  "Play each chord tone, then return through the same notes.": "Play each chord tone, then return through the same notes.",
+  "Play each chord shape. Stacked notes sound together; × means mute.": "Play each chord shape. Stacked notes sound together; × means mute.",
+  "Play two notes per string, then reverse.": "Play two notes per string, then reverse."
 }

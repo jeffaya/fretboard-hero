@@ -326,5 +326,12 @@
   "Stop microphone": "Detener micrófono",
   "Microphone denied. Allow access in device or browser settings.": "Micrófono denegado. Permite el acceso en los ajustes del dispositivo o navegador.",
   "Microphone unavailable. Use a supported browser over HTTPS.": "Micrófono no disponible. Usa un navegador compatible con HTTPS.",
-  "Microphone unavailable. Check your microphone and try again.": "Micrófono no disponible. Revisa el micrófono e inténtalo de nuevo."
+  "Microphone unavailable. Check your microphone and try again.": "Micrófono no disponible. Revisa el micrófono e inténtalo de nuevo.",
+  "Find every {note} on the fretboard": "Encuentra todos los {note} en el diapasón",
+  "Play each note and say “{note}” aloud.": "Toca cada nota y di «{note}» en voz alta.",
+  "Play up to the octave, then back to the root.": "Sube hasta la octava y vuelve a la tónica.",
+  "Play each triad together, then one note at a time.": "Toca cada tríada a la vez y luego nota por nota.",
+  "Play each chord tone, then return through the same notes.": "Toca las notas del acorde y vuelve por las mismas notas.",
+  "Play each chord shape. Stacked notes sound together; × means mute.": "Toca cada forma del acorde. Las notas apiladas suenan juntas; × indica silencio.",
+  "Play two notes per string, then reverse.": "Toca dos notas por cuerda y vuelve en sentido inverso."
 }

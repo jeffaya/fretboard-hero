@@ -3,8 +3,8 @@
   const t=s=>FretboardI18n.text(s), profile=FRETBOARD_ACTIVE_INSTRUMENT, courses=profile.courses;
   const note=c=>FretboardI18n.note(c.name);
   const button=document.createElement('button');button.className='tuner-launch ui-secondary';
-  // Reuse the existing tonality control icon, including future theme changes.
-  const icon=document.createElement('span');icon.className='tuner-launch-icon';icon.setAttribute('aria-hidden','true');icon.dataset.controlGroup='quality';
+  // Keep the tuning fork dedicated to instrument tuning.
+  const icon=document.createElement('span');icon.className='tuner-launch-icon';icon.setAttribute('aria-hidden','true');icon.dataset.controlGroup='tuner';
   const label=document.createElement('span');label.textContent=t('Tuner');button.append(icon,label);
   document.querySelector('.home-footer').append(button);
   const dialog=document.createElement('dialog');dialog.className='tuner-dialog ui-panel ui-modal';dialog.dataset.noI18n='';dialog.setAttribute('aria-labelledby','tuner-title');
@@ -113,8 +113,12 @@
       mic.disabled=false;mic.textContent=t('Stop microphone');setStatus('');frame=requestAnimationFrame(tick);
     }catch(error){if(token!==generation)return;stop();setStatus(error.name==='NotAllowedError'?'Microphone denied. Allow access in device or browser settings.':error.name==='Unsupported'?'Microphone unavailable. Use a supported browser over HTTPS.':'Microphone unavailable. Check your microphone and try again.');}
   }
-  button.onclick=()=>{stop();dialog.showModal();};mic.onclick=start;
-  FretboardModal.bindDismiss(dialog,()=>dialog.close());dialog.addEventListener('close',()=>{stop();button.focus();});dialog.addEventListener('cancel',stop);
+  let opener=button;
+  function open(trigger){opener=trigger;stop();dialog.showModal()}
+  button.onclick=()=>open(button);
+  document.querySelectorAll('[data-open-tuner]').forEach(trigger=>trigger.addEventListener('click',()=>open(trigger)));
+  mic.onclick=start;
+  FretboardModal.bindDismiss(dialog,()=>dialog.close());dialog.addEventListener('close',()=>{stop();opener.focus();});dialog.addEventListener('cancel',stop);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});window.addEventListener('pagehide',stop);
   // Capacitor lifecycle also covers native backgrounding where visibility events vary.
   window.Capacitor?.Plugins?.App?.addListener('appStateChange',({isActive})=>{if(!isActive)stop();});
