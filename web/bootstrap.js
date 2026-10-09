@@ -51,7 +51,7 @@
       FretboardBilling.attach();
       FretboardI18n.mount();
       await load('./core/pitch-detector.js?v=10.27.0');
-      await load('./tuner.js?v=10.27.0');
+      await load('./tuner.js?v=10.27.1');
       if(!await artworkReady){
         logo.setAttribute('hidden','');
         const fallback=document.createElement('span');
