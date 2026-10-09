@@ -76,7 +76,7 @@
   function mount(){
     const wrapper=document.createElement('label');wrapper.className='language-picker';
     const select=document.createElement('select');select.setAttribute('aria-label',text('Language'));
-    const auto=document.createElement('option');auto.value='auto';const active=languages.find(x=>x[0]===locale);auto.textContent=active[1]+' '+active[2]+' · '+text('Automatic');select.append(auto);
+    const auto=document.createElement('option');auto.value='auto';const detected=detect(navigator.languages?.length?navigator.languages:[navigator.language]);const active=languages.find(x=>x[0]===detected);auto.textContent=active[1]+' '+text('Automatic');select.append(auto);
     languages.forEach(([value,flag,name])=>{const option=document.createElement('option');option.value=value;option.textContent=flag+' '+name;select.append(option)});
     let saved;try{saved=localStorage.getItem(storageKey)}catch{}const requested=new URL(location.href).searchParams.get('lang');select.value=supported.has(requested)?requested:supported.has(saved)?saved:'auto';
     select.addEventListener('change',()=>{
