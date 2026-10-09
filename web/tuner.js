@@ -2,11 +2,7 @@
   'use strict';
   const t=s=>FretboardI18n.text(s), profile=FRETBOARD_ACTIVE_INSTRUMENT, courses=profile.courses;
   const note=c=>FretboardI18n.note(c.name);
-  const button=document.createElement('button');button.className='tuner-launch ui-secondary';
-  // Keep the tuning fork dedicated to instrument tuning.
-  const icon=document.createElement('span');icon.className='tuner-launch-icon';icon.setAttribute('aria-hidden','true');icon.dataset.controlGroup='tuner';
-  const label=document.createElement('span');label.textContent=t('Tuner');button.append(icon,label);
-  document.querySelector('.home-footer').append(button);
+  const button=document.querySelector('#homeTuner');
   const dialog=document.createElement('dialog');dialog.className='tuner-dialog ui-panel ui-modal';dialog.dataset.noI18n='';dialog.setAttribute('aria-labelledby','tuner-title');
   dialog.innerHTML=`<div class="tuner-heading"><h2 id="tuner-title"></h2></div>
     <div class="tuner-reading"><strong class="tuner-note">—</strong><span class="tuner-frequency">440 Hz</span></div>
@@ -118,7 +114,6 @@
   }
   let opener=button;
   function open(trigger){opener=trigger;stop();dialog.showModal()}
-  button.onclick=()=>open(button);
   document.querySelectorAll('[data-open-tuner]').forEach(trigger=>trigger.addEventListener('click',()=>open(trigger)));
   mic.onclick=start;
   FretboardModal.bindDismiss(dialog,()=>dialog.close());dialog.addEventListener('close',()=>{stop();opener.focus();});dialog.addEventListener('cancel',stop);

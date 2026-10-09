@@ -334,5 +334,8 @@
   "Play each chord tone, then return through the same notes.": "Spiele die Akkordtöne und kehre über dieselben Töne zurück.",
   "Play each chord shape. Stacked notes sound together; × means mute.": "Spiele jede Akkordform. Übereinander stehende Töne erklingen zusammen; × bedeutet stumm.",
   "Play two notes per string, then reverse.": "Spiele zwei Töne pro Saite, dann rückwärts.",
-  "Repeat my routine": "Routine wiederholen"
+  "Repeat my routine": "Routine wiederholen",
+  "Practice": "Üben",
+  "Explore": "Entdecken",
+  "Tune your instrument": "Stimme dein Instrument"
 }
