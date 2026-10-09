@@ -179,3 +179,11 @@
   #home .hero-btn small { font-size: 13px !important; }
   #home .tagline { font-size: 13px !important; }
 }
+
+/* Secondary tools belong to the brand on desktop; phones keep them last. */
+@media (min-width:1001px) and (orientation:landscape) {
+  #home .home-brand .home-footer { padding:0; margin:24px 0 0; gap:10px; }
+  #home .home-footer .language-picker { font-size:15px; }
+  #home .home-footer .language-picker select { min-height:44px; padding-block:8px; }
+  #home .home-footer .tuner-launch { min-height:44px; padding:8px 14px; font-size:15px; }
+}

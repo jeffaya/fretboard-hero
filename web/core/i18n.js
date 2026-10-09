@@ -86,7 +86,11 @@
     });
     window.addEventListener('languagechange',()=>{if(select.value==='auto'&&detect(navigator.languages)!==locale)location.reload()});
     wrapper.append(select);
-    const footer=document.createElement('footer');footer.className='home-footer';footer.append(wrapper);document.querySelector('.home-content').append(footer);
+    const footer=document.createElement('footer');footer.className='home-footer';footer.append(wrapper);
+    // Move the same controls so reading/tab order matches their visual placement.
+    const desktop=matchMedia('(min-width:1001px) and (orientation:landscape)');
+    const placeUtilities=()=>document.querySelector(desktop.matches?'.home-brand':'.home-content').append(footer);
+    placeUtilities();desktop.addEventListener('change',placeUtilities);
     translateNode(document.body);metadata();
     // Legacy renderers write text directly. Observe only changed nodes/labels,
     // never rewrite HTML, canonical gameplay attributes, or event handlers.
