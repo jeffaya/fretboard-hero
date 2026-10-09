@@ -313,5 +313,18 @@
   "Note name F": "Fa",
   "Note name G": "Sol",
   "Note name A": "La",
-  "Note name B": "Si"
+  "Note name B": "Si",
+  "Tuner": "Tuner",
+  "Play one open string at a time.": "Petik satu senar terbuka setiap kali.",
+  "Audio stays on your device. Nothing is recorded.": "Audio tetap di perangkat Anda. Tidak ada yang direkam.",
+  "Enable microphone": "Aktifkan mikrofon",
+  "Microphone off": "Mikrofon mati",
+  "In tune": "Sudah selaras",
+  "Too low — tighten gently": "Terlalu rendah — kencangkan perlahan",
+  "Too high — loosen gently": "Terlalu tinggi — kendurkan perlahan",
+  "Allow microphone access": "Izinkan akses mikrofon",
+  "Stop microphone": "Hentikan mikrofon",
+  "Microphone denied. Allow access in device or browser settings.": "Akses mikrofon ditolak. Izinkan di pengaturan perangkat atau browser.",
+  "Microphone unavailable. Use a supported browser over HTTPS.": "Mikrofon tidak tersedia. Gunakan browser yang mendukung HTTPS.",
+  "Microphone unavailable. Check your microphone and try again.": "Mikrofon tidak tersedia. Periksa mikrofon dan coba lagi."
 }

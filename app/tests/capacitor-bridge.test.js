@@ -57,3 +57,11 @@ assert.equal(exited, true, 'expected the app to exit from the home screen');
 assert.equal(clicked, false, 'expected no click when already on home');
 
 console.log('All capacitor-bridge tests passed.');
+
+// Back closes the tuner before considering app exit.
+exited = false;
+let tunerClosed = false;
+attach(fakeApp, {querySelector: selector => selector === '.tuner-dialog[open]' ? {close(){tunerClosed = true;}} : null});
+fakeApp._handler();
+assert.equal(tunerClosed, true);
+assert.equal(exited, false);
