@@ -190,3 +190,18 @@ for(const step of [0,2])test(`Routine step ${step+1} accepts quiet audio only af
  for(let now=2380;now<2940;now+=80)play(midis,now);
  assert.ok(progress().startsWith('2 /'),progress());
 });
+
+test('Holding one chord cannot clear the next shape with the same bass and chord tones',()=>{
+ const {samples,spectrum,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(true);r.session.enter();
+ r.nodes.get('#routineSteps').children[3].children[0].click();
+ const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);
+ const midi=col=>col.notes.map(n=>engine.midiAt(n.string,n.fret)),first=midi(r.c.lastExercise.columns[0]),second=midi(r.c.lastExercise.columns[1]);
+ assert.notEqual(first.join(','),second.join(','));assert.equal(Math.min(...first),Math.min(...second));
+ const data=samples(first),frequencies=spectrum(first),silence=new Float32Array(N),empty=new Float32Array(N/2).fill(-Infinity);
+ const frame=(now,quiet=false)=>r.c.audio.onFrame({samples:quiet?silence:data,spectrum:quiet?empty:frequencies,sampleRate:48000,fftSize:N,now});
+ for(let now=1500;now<3100;now+=80)frame(now);
+ assert.ok(r.nodes.get('#routineNoteProgress').textContent.startsWith('2 /'));
+ for(let now=3100;now<3420;now+=80)frame(now,true);
+ for(let now=3420;now<3980;now+=80)frame(now);
+ assert.ok(r.nodes.get('#routineNoteProgress').textContent.startsWith('3 /'));
+});
