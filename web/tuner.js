@@ -4,7 +4,7 @@
   const note=c=>FretboardI18n.note(c.name);
   const button=document.createElement('button');button.className='tuner-launch ui-secondary';
   // Reuse the existing tonality control icon, including future theme changes.
-  const icon=document.createElement('span');icon.className='tuner-launch-icon';icon.setAttribute('aria-hidden','true');icon.dataset.controlGroup='root';
+  const icon=document.createElement('span');icon.className='tuner-launch-icon';icon.setAttribute('aria-hidden','true');icon.dataset.controlGroup='quality';
   const label=document.createElement('span');label.textContent=t('Tuner');button.append(icon,label);
   document.querySelector('.home-footer').append(button);
   const dialog=document.createElement('dialog');dialog.className='tuner-dialog ui-panel ui-modal';dialog.dataset.noI18n='';dialog.setAttribute('aria-labelledby','tuner-title');
@@ -29,22 +29,43 @@
   const position=index=>({left:index<half, y:62+(index<half?half-1-index:index-half)*(half===3?53:80)});
   const ns='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 320 260');svg.setAttribute('aria-hidden','true');svg.classList.add('tuner-headstock');
+  const outline='M126 254L125 208Q124 192 111 170L103 41Q125 37 138 22Q160 8 182 22Q195 37 217 41L209 170Q196 192 195 208L194 254Z';
   svg.innerHTML=`<defs>
-    <linearGradient id="tuner-wood" x1="0" x2="1"><stop stop-color="#352022"/><stop offset=".45" stop-color="#8b5939"/><stop offset=".65" stop-color="#65412d"/><stop offset="1" stop-color="#281b21"/></linearGradient>
-    <linearGradient id="tuner-metal"><stop stop-color="#57657a"/><stop offset=".45" stop-color="#edf4f6"/><stop offset=".7" stop-color="#91a4b0"/><stop offset="1" stop-color="#3c4a5c"/></linearGradient>
-  </defs><path class="tuner-wood" d="M126 254L125 208Q124 192 111 170L103 41Q125 37 138 22Q160 8 182 22Q195 37 217 41L209 170Q196 192 195 208L194 254Z" fill="url(#tuner-wood)" stroke="#c4a683" stroke-width="2"/>
-  <path d="M133 51Q146 35 156 34M141 55L143 181M151 44L152 191M172 43L170 189M187 54L178 181" fill="none" stroke="#eab983" opacity=".14"/>
-  <path d="M126 213H194V260H126Z" fill="#211d22" stroke="#8e827b"/>
-  <path d="M127 239H193M127 257H193" stroke="#9b9fa7" stroke-width="2"/>
-  <circle cx="160" cy="246" r="3" fill="#cdc1a4"/>`;
+    <linearGradient id="tuner-wood" x1="0" y1="0" x2="1" y2=".25"><stop stop-color="#1e1014"/><stop offset=".15" stop-color="#5a261e"/><stop offset=".4" stop-color="#ba7844"/><stop offset=".57" stop-color="#85472c"/><stop offset=".83" stop-color="#50241e"/><stop offset="1" stop-color="#200f16"/></linearGradient>
+    <linearGradient id="tuner-metal" x1="0" y1="0" x2="1" y2=".2"><stop stop-color="#17202d"/><stop offset=".16" stop-color="#667c90"/><stop offset=".3" stop-color="#f4fbff"/><stop offset=".43" stop-color="#a0b9ca"/><stop offset=".5" stop-color="#34495e"/><stop offset=".64" stop-color="#7b91a1"/><stop offset=".81" stop-color="#ffffff"/><stop offset="1" stop-color="#304154"/></linearGradient>
+    <linearGradient id="tuner-lacquer" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#ffffff" stop-opacity=".6"/><stop offset=".26" stop-color="#fff2d5" stop-opacity=".2"/><stop offset=".29" stop-color="#ffffff" stop-opacity=".04"/><stop offset=".68" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#92dfff" stop-opacity=".17"/></linearGradient>
+    <linearGradient id="tuner-edge" x1="0" x2="1" y2=".6"><stop stop-color="#fff0cc"/><stop offset=".32" stop-color="#c8a16b"/><stop offset=".6" stop-color="#5e413c"/><stop offset="1" stop-color="#d9c7a2"/></linearGradient>
+    <radialGradient id="tuner-post" cx=".3" cy=".2"><stop stop-color="#ffffff"/><stop offset=".25" stop-color="#e3ecf0"/><stop offset=".6" stop-color="#8798a7"/><stop offset=".85" stop-color="#334454"/><stop offset="1" stop-color="#b7c3cb"/></radialGradient>
+    <clipPath id="tuner-body-clip"><path d="${outline}"/></clipPath>
+  </defs>
+  <path d="${outline}" transform="translate(3 4)" fill="#100b10" stroke="#060509" stroke-width="5"/>
+  <path d="${outline}" fill="url(#tuner-wood)" stroke="url(#tuner-edge)" stroke-width="4"/>
+  <g clip-path="url(#tuner-body-clip)">
+    ${Array.from({length:32},(_,i)=>{const x=105+i*3.7;return `<path d="M${x} 12C${x-12} 55 ${x+10} 83 ${x+2} 124S${x-7} 189 ${x+4} 258" fill="none" stroke="${i%3?'#f2bc72':'#1d0a13'}" stroke-width="${i%3?.45:1.1}" opacity="${i%3?.18:.24}"/>`}).join('')}
+    <path d="M97 37Q146 52 215 12L209 88Q154 126 104 121Z" fill="url(#tuner-lacquer)"/>
+    <path d="M106 42Q127 37 140 25Q158 13 178 24" fill="none" stroke="#fff8da" stroke-width="1.6" opacity=".8"/>
+    <path d="M109 48L116 165Q130 190 132 206" fill="none" stroke="#ffdeae" stroke-width="2" opacity=".32"/>
+    <path d="M214 46L206 167Q192 193 192 210" fill="none" stroke="#030512" stroke-width="4" opacity=".55"/>
+    <path d="M179 25Q188 88 172 203" fill="none" stroke="#ffedd3" stroke-width="13" opacity=".04"/>
+  </g>
+  <path d="M126 213H194V260H126Z" fill="#16151d" stroke="url(#tuner-edge)" stroke-width="2"/>
+  <path d="M136 216L135 260M146 216L148 260M173 216L174 260M187 216L185 260" stroke="#7e6051" opacity=".3"/>
+  <path d="M127 239H193M127 257H193" stroke="#333340" stroke-width="5"/>
+  <path d="M127 238H193M127 256H193" stroke="url(#tuner-metal)" stroke-width="3"/>
+  <path d="M128 237H192M128 255H192" stroke="#fff" stroke-width=".6" opacity=".65"/>
+  <circle cx="160" cy="246" r="3.3" fill="#d7ccb8"/><circle cx="159" cy="245" r="1.1" fill="#fff9e9"/>`;
   courses.forEach((course,index)=>{
     const {left,y}=position(index),x=left?121:199,edge=left?94:210;
     const group=document.createElementNS(ns,'g');group.dataset.course=String(index);
     group.innerHTML=`<rect x="${edge}" y="${y-4}" width="16" height="8" rx="3" fill="url(#tuner-metal)"/>
       <rect x="${left?80:226}" y="${y-10}" width="14" height="20" rx="6" fill="url(#tuner-metal)" stroke="#a5afb9"/>
-      <circle cx="${x}" cy="${y}" r="7" fill="url(#tuner-metal)" stroke="#c4c6ca"/>
+      <ellipse cx="${x+1}" cy="${y+2}" rx="9" ry="8" fill="#090d18" opacity=".7"/>
+      <circle cx="${x}" cy="${y}" r="8" fill="url(#tuner-post)" stroke="#3f4e5f"/>
+      <circle cx="${x}" cy="${y}" r="4" fill="url(#tuner-metal)" stroke="#e2e9ed" stroke-width=".5"/>
+      <path d="M${x-2} ${y}H${x+2}" stroke="#334052" stroke-width="1"/>
+      <path class="tuner-wire-halo" d="M${133+index*(54/(courses.length-1))} 260V211L${x} ${y}" fill="none" stroke="transparent"/>
       <path class="tuner-wire" d="M${133+index*(54/(courses.length-1))} 260V211L${x} ${y}" fill="none" stroke="#ccd3dd" stroke-width="${2.4-index*.25}"/>
-      <circle class="tuner-peg-glow" cx="${x}" cy="${y}" r="9" fill="none" stroke="transparent" stroke-width="2"/>`;
+      <circle class="tuner-peg-glow" cx="${x}" cy="${y}" r="11" fill="none" stroke="transparent" stroke-width="3"/>`;
     svg.append(group);
   });
   const nut=document.createElementNS(ns,'path');nut.setAttribute('d','M125 207H195');nut.setAttribute('stroke','#e1d8c5');nut.setAttribute('stroke-width','5');svg.append(nut);
