@@ -291,7 +291,7 @@ Android APKs and AABs** GitHub workflow are documented in
 
 ### Interface languages
 
-The site and both native apps support English, Spanish, French, German, Japanese,
+The site and both native apps support English, Spanish, French, German, Italian, Japanese,
 Korean, Simplified Chinese, Brazilian Portuguese, Hindi and Indonesian. Language
 is detected from browser/device preferences, with English fallback. The home
 flag/name selector saves a manual choice; Automatic restores detection.
