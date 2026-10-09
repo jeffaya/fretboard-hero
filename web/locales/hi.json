@@ -337,5 +337,11 @@
   "Repeat my routine": "रूटीन फिर से करें",
   "Practice": "अभ्यास करें",
   "Explore": "खोजें",
-  "Tune your instrument": "अपना वाद्य ट्यून करें"
+  "Tune your instrument": "अपना वाद्य ट्यून करें",
+  "Well played!": "बहुत बढ़िया!",
+  "Play the glowing note.": "चमकता हुआ स्वर बजाएँ।",
+  "Return to the first note": "पहले स्वर पर वापस जाएँ",
+  "Play each triad together.": "हर त्रिस्वर के सभी स्वर एक साथ बजाएँ।",
+  "Listening…": "सुन रहा है…",
+  "Halo = target · Green = played": "प्रभामंडल = अगला स्वर · हरा = बजाया गया"
 }

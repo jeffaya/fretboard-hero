@@ -337,5 +337,11 @@
   "Repeat my routine": "Ripeti la routine",
   "Practice": "Esercitati",
   "Explore": "Esplora",
-  "Tune your instrument": "Accorda il tuo strumento"
+  "Tune your instrument": "Accorda il tuo strumento",
+  "Well played!": "Ben fatto!",
+  "Play the glowing note.": "Suona la nota illuminata.",
+  "Return to the first note": "Torna alla prima nota",
+  "Play each triad together.": "Suona insieme le note di ogni triade.",
+  "Listening…": "In ascolto…",
+  "Halo = target · Green = played": "Alone = nota da suonare · Verde = già suonata"
 }
