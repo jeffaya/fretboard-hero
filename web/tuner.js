@@ -87,7 +87,10 @@
     frame=requestAnimationFrame(tick);if(now-lastFrame<90)return;lastFrame=now;
     const data=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(data);
     const hz=FretboardPitch.detect(data,context.sampleRate);
-    if(!hz){if(now-lastPitch>650){reset();setStatus('');}return;}
+    // Hold the last reading through silence, including its string and needle.
+    // Discard old samples so the next pluck starts a fresh smoothing window.
+    if(now-lastPitch>650)history=[];
+    if(!hz)return;
     lastPitch=now;history.push(hz);if(history.length>5)history.shift();if(history.length<3)return;
     const sorted=[...history].sort((a,b)=>a-b), pitch=sorted[Math.floor(sorted.length/2)];
     const index=selected<0?FretboardPitch.closest(pitch,courses):selected, target=courses[index];
