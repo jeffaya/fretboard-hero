@@ -337,5 +337,11 @@
   "Repeat my routine": "ルーティンをもう一度",
   "Practice": "練習する",
   "Explore": "探索する",
-  "Tune your instrument": "楽器をチューニング"
+  "Tune your instrument": "楽器をチューニング",
+  "Well played!": "よくできました！",
+  "Play the glowing note.": "光っている音を弾いてください。",
+  "Return to the first note": "最初の音まで戻りましょう",
+  "Play each triad together.": "各トライアドの音を同時に弾いてください。",
+  "Listening…": "聴き取り中…",
+  "Halo = target · Green = played": "光の輪 = 次に弾く音 · 緑 = 演奏済み"
 }

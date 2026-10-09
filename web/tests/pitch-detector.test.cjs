@@ -11,3 +11,9 @@ for(const rate of [44100,48000])for(const midi of [28,33,38,40,43,45,50,55,59,60
 }
 test('silence and low level input do not report a note',()=>{assert.equal(pitch.detect(new Float32Array(8192),48000),null);assert.equal(pitch.detect(Float32Array.from({length:8192},(_,i)=>.001*Math.sin(i)),48000),null)});
 test('octaves stay distinct; reentrant ukulele picks G4',()=>{assert.equal(pitch.closest(pitch.frequency(64),[{midi:40},{midi:64}]),1);assert.equal(pitch.closest(pitch.frequency(67),[{midi:67},{midi:60},{midi:64},{midi:69}]),0)});
+test('Guided practice reaches the high ukulele frets without folding the octave',()=>{
+ for(const rate of [44100,48000])for(let midi=70;midi<=84;midi++){
+  const hz=pitch.frequency(midi),samples=Float32Array.from({length:8192},(_,i)=>.12*Math.sin(2*Math.PI*hz*i/rate)+.08*Math.sin(4*Math.PI*hz*i/rate));
+  const result=pitch.detect(samples,rate,{maxFrequency:1500});assert.ok(result);assert.ok(Math.abs(pitch.cents(result,midi))<8,`${midi}: ${result}`);
+ }
+});

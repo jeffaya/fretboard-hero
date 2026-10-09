@@ -337,5 +337,11 @@
   "Repeat my routine": "重新练习",
   "Practice": "练习",
   "Explore": "探索",
-  "Tune your instrument": "为乐器调音"
+  "Tune your instrument": "为乐器调音",
+  "Well played!": "弹得好！",
+  "Play the glowing note.": "请弹奏发光的音符。",
+  "Return to the first note": "返回第一个音符",
+  "Play each triad together.": "请同时弹奏每个三和弦的所有音。",
+  "Listening…": "正在聆听…",
+  "Halo = target · Green = played": "光环 = 目标音 · 绿色 = 已弹奏"
 }

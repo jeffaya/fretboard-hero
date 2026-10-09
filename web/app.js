@@ -17,7 +17,7 @@
   const rootPC=()=>PC[state.root];
   const thirdPC=()=>mod(rootPC()+intervals[state.quality].third);
   const fifthPC=()=>mod(rootPC()+7);
-  function go(screen){document.body.dataset.screen=screen;state.screen=screen;$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+screen).classList.add('active');if(screen==='routine') routineSession.enter();if(screen==='learn') renderLearn();if(screen==='fretmap') renderFretboardMap();if(screen==='circle') renderCircle();if(screen==='quiz') prepareQuiz();}
+  function go(screen){if(state.screen==='routine'&&screen!=='routine')routineSession.leave();document.body.dataset.screen=screen;state.screen=screen;$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+screen).classList.add('active');if(screen==='routine') routineSession.enter();if(screen==='learn') renderLearn();if(screen==='fretmap') renderFretboardMap();if(screen==='circle') renderCircle();if(screen==='quiz') prepareQuiz();}
   $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
   // Shared controls live in core/controls.js.
   ['learn','map','routine'].forEach(name=>FretboardControls.bindDrawer({name}));
