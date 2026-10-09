@@ -24,7 +24,19 @@
         if(i===state.index)button.setAttribute('aria-current','step');
         $('#routineSteps').append(step);
       });
-      $('#routineTitle').textContent=done?'Routine complete!':exercise.title;
+      const title=$('#routineTitle'),t=value=>window.FretboardI18n?.text(value)||value;
+      title.textContent=done?t('Routine complete!'):exercise.title;
+      if(!done){
+        const target=exercise.id==='root'?(window.FretboardI18n?.note(state.root)||state.root):t(`${state.root} ${state.quality}`);
+        const label=t(exercise.id==='root'?'Find the root note':exercise.title);
+        const at=exercise.id==='root'?-1:label.indexOf(target);
+        const before=document.createElement('span'),badge=document.createElement('span'),after=document.createElement('span');
+        before.textContent=at<0?label+' ':label.slice(0,at);
+        badge.className='routine-target';badge.textContent=target;
+        after.textContent=at<0?'':label.slice(at+target.length);
+        title.replaceChildren();title.append(before,badge,after);
+        title.setAttribute('data-no-i18n','');
+      }
       $('#routineContext').hidden=!done;
       $('#routineContext').textContent=done?`${state.root} ${state.quality} · Five exercises completed`:exercise.detail;
       $('#routineInstruction').textContent=done?'Five exercises. One key. You did it! Keep building your skills in Learn, or put your knowledge to the test in Quiz.':exercise.instruction;
@@ -58,6 +70,7 @@
       render();
       $('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
     });
+    if(window.ResizeObserver)new window.ResizeObserver(()=>{if(exercises.length&&state.index<5)RoutineRenderer.render($('#routineTab'),exercises[state.index],engine)}).observe($('#routineTabScroll'));
     return {
       resize(){if(exercises.length&&state.index<5)RoutineRenderer.render($('#routineTab'),exercises[state.index],engine)},
       enter(){state.root=access.unlocked?MusicTheory.NOTES[Math.floor(random()*MusicTheory.NOTES.length)]:'A';state.quality='minor';reset()}
