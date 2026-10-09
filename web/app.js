@@ -486,6 +486,7 @@
   $('#replayQuiz').addEventListener('click',startQuiz);
   $('#viewRankLadder')?.addEventListener('click',()=>showRankLadder('score'));
   $('#backToScore')?.addEventListener('click',backFromRankLadder);
+  FretboardModal.bindDismiss($('#resultModal'),exitQuizToHome);
   $('#introBackHome')?.addEventListener('click',exitQuizToHome);
   $('#resultBackHome')?.addEventListener('click',exitQuizToHome);
   function quizShareUrl(){
