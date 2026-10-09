@@ -44,10 +44,10 @@
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/instruments/guitar/apple-touch-icon-180.png">
   <link rel="stylesheet" href="./styles.css?v=10.24.2">
   <link rel="stylesheet" href="./home.css?v=10.21.1">
-  <link rel="stylesheet" href="./theme.css?v=10.27.5">
-  <link rel="stylesheet" href="./routine.css?v=10.27.3">
+  <link rel="stylesheet" href="./theme.css?v=10.28.0">
+  <link rel="stylesheet" href="./routine.css?v=10.28.0">
   <link rel="stylesheet" href="./premium.css?v=10.25.0">
-  <link rel="stylesheet" href="./locales.css?v=10.27.0">
+  <link rel="stylesheet" href="./locales.css?v=10.28.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
   <link rel="stylesheet" href="./tuner.css?v=10.27.4">
 </head>
@@ -90,29 +90,29 @@
         <div class="section-heading"><strong>DAILY ROUTINE</strong></div>
         <button id="routineMenuBtn" class="icon-btn mobile-menu-btn" aria-label="Open Routine setup" aria-expanded="false"><span></span><span></span><span></span></button>
       </header>
-      <ol id="routineSteps" class="routine-steps" aria-label="Routine progress"></ol>
       <div id="routineDrawer" class="responsive-drawer" aria-hidden="true">
         <div class="drawer-head"><strong>ROUTINE SETUP</strong><button id="routineMenuClose" class="icon-btn" aria-label="Close menu">×</button></div>
         <section class="control-panel">
           <div class="control-group is-select" data-control-group="root"><label>NOTE</label><div id="routineRootControls" class="control-options"></div><div class="control-select" data-select-for="routineRootControls"></div></div>
           <div class="control-group is-select" data-control-group="quality"><label>KEY</label><div id="routineQualityControls" class="control-options"></div><div class="control-select" data-select-for="routineQualityControls"></div></div>
+          <button id="routineTuner" class="tuner-launch ui-secondary" type="button" data-open-tuner><span class="tuner-launch-icon" data-control-group="tuner" aria-hidden="true"></span><span>Tuner</span></button>
         </section>
       </div>
       <div id="routineDrawerBackdrop" class="drawer-backdrop"></div>
       <div class="routine-content">
         <article id="routineExercise" class="routine-exercise ui-panel">
+          <ol id="routineSteps" class="routine-steps" aria-label="Routine progress"></ol>
           <div id="routineCelebration" class="routine-celebration" aria-hidden="true" hidden>
             <div id="routineConfetti" class="routine-confetti"></div>
             <div class="routine-medal"><svg viewBox="0 0 64 64"><path d="M20 9h24v15c0 12-6 18-12 18s-12-6-12-18Z M20 13H9v8c0 8 5 12 13 12 M44 13h11v8c0 8-5 12-13 12 M32 42v11 M22 56h20" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="m26 24 4 4 9-10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           </div>
-          <span id="routineKicker" class="routine-kicker">EXERCISE 1 OF 5</span>
           <h2 id="routineTitle" tabindex="-1">Find the root note</h2>
-          <p id="routineContext"></p>
+          <p id="routineContext" hidden></p>
           <p id="routineInstruction"></p>
           <div id="routineTabScroll" class="routine-tab-scroll"><svg id="routineTab" role="img"></svg></div>
-          <p id="routineLegend" class="routine-legend">Read left to right · <span>Cyan = root note</span> · Play at your own pace</p>
-        </article>
+          <p id="routineLegend" class="routine-legend"><span>Cyan = root note</span></p>
         <div class="routine-actions"><button id="routineNext" class="ui-primary" type="button">Next →</button><div id="routineFinish" class="routine-finish" hidden><button class="learn-card" type="button" data-go="learn"><img src="./assets/home/learn.svg" alt="" width="28" height="28">Learn</button><button class="quiz-card" type="button" data-go="quiz"><img src="./assets/home/quiz.svg?v=10.24.2" alt="" width="28" height="28">Quiz</button></div></div>
+        </article>
       </div>
     </section>
 
@@ -243,7 +243,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.27.5" defer></script>
+  <script src="./bootstrap.js?v=10.28.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

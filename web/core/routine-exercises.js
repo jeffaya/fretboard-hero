@@ -38,13 +38,13 @@
     const make=(id,step,title,detail,instruction,columns)=>({...shared,id,step,title,detail,instruction,columns});
     const roots=[];
     engine.courses.forEach((_,string)=>{for(let fret=0;fret<=maxFret;fret++)if(engine.noteAt(string,fret)===rootPC)roots.push({string,fret})});
-    const rootExercise=make('root','Root','Find the root note',`${key} · Frets 0–${maxFret}`,
-      `Play every ${root} shown, one string at a time. Say “${root}” aloud as you play to connect the sound, name and position.`,single(roots));
+    const rootExercise=make('root','Root',`Find every ${root} on the fretboard`,`${key} · Frets 0–${maxFret}`,
+      `Play each note and say “${root}” aloud.`,single(roots));
 
     const intervals=quality==='major'?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10];
     const scale=pick(sequences(engine,rootPC,intervals,maxFret),random);
     const scaleExercise=make('scale','Scale',`Play the ${key} scale`,`${quality==='minor'?'Natural minor':'Major'} · ${range(scale)}`,
-      'Follow the tab from the root to the octave. Play slowly and evenly, then retrace the notes back to the root.',single(scale));
+      'Play up to the octave, then back to the root.',single(scale));
 
     const sets=Object.keys(engine.profile.triadSets),set=pick(sets,random);
     const shapes=TriadEngine.findShapes({engine,rootPC,quality,maxFret,set});
@@ -58,21 +58,21 @@
     const triads=pick(spread.length?spread:combinations,random);
     if(!triads)throw new Error('No routine triad inversions for this tuning');
     const triadExercise=make('triads','Triads',`Connect the ${key} triads`,`${key} · Strings ${set} · Lower, middle & upper neck`,
-      'Play each three-note voicing together, then pick its notes separately. Notice which chord tone is lowest as you move up the neck.',
+      'Play each triad together, then one note at a time.',
       triads.map(s=>({notes:s.notes,label:s.inversion})));
 
     let chordExercise;
     if(engine.profile.family==='bass'){
       const arp=pick(sequences(engine,rootPC,[0,quality==='major'?4:3,7],maxFret),random);
       chordExercise=make('chords','Arpeggios',`Outline the ${key} arpeggio`,`${key} · Root, third & fifth · ${range(arp)}`,
-        'Play the chord tones one at a time with a steady pulse. Listen to the third, then return through the same notes.',single(arp));
+        'Play each chord tone, then return through the same notes.',single(arp));
     }else{
       const system=engine.profile.caged||engine.profile.chords;
       const all=ChordEngine.templateShapes({engine,...system,rootPC,quality,maxFret});
       const unique=system.order.map(shape=>pick(all.filter(s=>s.shape===shape),random)).filter(Boolean).sort((a,b)=>a.min-b.min);
       chordExercise=make('chords','Chords',engine.profile.family==='guitar'?`Move through ${key} CAGED shapes`:`Move through ${key} chord shapes`,
         `${key} · ${engine.profile.family==='guitar'?'CAGED':'Ukulele'} voicings`,
-        'Play each voicing, then move to the next shape of the same chord. Stacked numbers sound together; × marks a string to leave silent.',
+        'Play each chord shape. Stacked notes sound together; × means mute.',
         unique.map(s=>({notes:s.notes,label:`${s.shape} shape`,muteMissing:true})));
     }
 
@@ -84,7 +84,7 @@
     if(!box)throw new Error('No complete routine pentatonic position for this tuning');
     const penta=box.pairs.flatMap((pair,string)=>pair.map(fret=>({string,fret})));
     const pentaExercise=make('penta','Penta',`Play the ${key} pentatonic`,`${key} · Position ${box.id} · ${range(penta)}`,
-      `Play the two notes on each string in tab order, then reverse. ${engine.profile.reentrant?'The high G string makes this a fingering pattern, not an ascending pitch sequence.':'Keep your hand relaxed and use one finger per fret where comfortable.'}`,single(penta));
+      `Play two notes per string, then reverse. ${engine.profile.reentrant?'The high G string makes this a fingering pattern, not an ascending pitch sequence.':''}`,single(penta));
     return [rootExercise,scaleExercise,triadExercise,chordExercise,pentaExercise];
   }
   window.RoutineExercises=Object.freeze({create});

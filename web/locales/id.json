@@ -326,5 +326,12 @@
   "Stop microphone": "Hentikan mikrofon",
   "Microphone denied. Allow access in device or browser settings.": "Akses mikrofon ditolak. Izinkan di pengaturan perangkat atau browser.",
   "Microphone unavailable. Use a supported browser over HTTPS.": "Mikrofon tidak tersedia. Gunakan browser yang mendukung HTTPS.",
-  "Microphone unavailable. Check your microphone and try again.": "Mikrofon tidak tersedia. Periksa mikrofon dan coba lagi."
+  "Microphone unavailable. Check your microphone and try again.": "Mikrofon tidak tersedia. Periksa mikrofon dan coba lagi.",
+  "Find every {note} on the fretboard": "Temukan semua {note} di papan nada",
+  "Play each note and say “{note}” aloud.": "Mainkan setiap nada sambil mengucapkan “{note}”.",
+  "Play up to the octave, then back to the root.": "Mainkan hingga oktaf, lalu kembali ke nada dasar.",
+  "Play each triad together, then one note at a time.": "Mainkan setiap triad bersamaan, lalu satu nada demi satu.",
+  "Play each chord tone, then return through the same notes.": "Mainkan nada akor, lalu kembali melalui nada yang sama.",
+  "Play each chord shape. Stacked notes sound together; × means mute.": "Mainkan setiap bentuk akor. Nada bertumpuk dimainkan bersama; × berarti senar tidak dibunyikan.",
+  "Play two notes per string, then reverse.": "Mainkan dua nada per senar, lalu balik urutannya."
 }
