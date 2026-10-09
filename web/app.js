@@ -303,7 +303,7 @@
     const anchorQuality=state.quality==='minor'?rootPC():mod(rootPC()-3),anchorString=instrument.pentatonic?.anchorCourse||0;
     return mod(anchorQuality-tuning[anchorString].pc);
   }
-  function visiblePentaPairs(maxFret){return PentatonicRenderer.visiblePairs({profile:instrument,anchor:pentaAnchorFret(),maxFret,selected:state.pattern})}
+  function visiblePentaPairs(maxFret,selected=state.pattern){return PentatonicRenderer.visiblePairs({profile:instrument,anchor:pentaAnchorFret(),maxFret,selected})}
   function renderPentaSegments(svg,{isP,fretPos,visualStringPos,maxFret}){PentatonicRenderer.renderSegments({svg,windows:visiblePentaPairs(maxFret),colors:PENTA_POSITION_COLORS,stringCount:STRING_COUNT,isPortrait:isP,fretPos,stringPos:visualStringPos,maxFret,fretCenter,svgEl})}
   const positionGuideObserver=new ResizeObserver(()=>PentatonicRenderer.resizeGuides($('#learnFretboard')));
   positionGuideObserver.observe($('#learnFretboard').parentElement);
@@ -312,7 +312,7 @@
     svg.classList.toggle('has-position-guides',ModeRegistry.kind(instrument,opt.mode)==='pentatonic');
     const core=renderFretboardCore(svg,{prefix:'learn',maxFret,onSurface:ctx=>{if(ModeRegistry.kind(instrument,opt.mode)==='pentatonic')renderPentaSegments(svg,ctx)}});
     const {isP,fretPos,visualStringPos}=core;
-    if(ModeRegistry.kind(instrument,opt.mode)==='pentatonic')PentatonicRenderer.renderGuides({svg,windows:visiblePentaPairs(maxFret),colors:PENTA_POSITION_COLORS,layout:core,svgEl});
+    if(ModeRegistry.kind(instrument,opt.mode)==='pentatonic')PentatonicRenderer.renderGuides({svg,windows:visiblePentaPairs(maxFret,'all'),selected:state.pattern,colors:PENTA_POSITION_COLORS,layout:core,svgEl});
     const renderKind=ModeRegistry.kind(instrument,opt.mode),activeSet=renderKind==='pentatonic'?new Set(pentaPCs()):renderKind==='arpeggios'?new Set(arpeggioShapes()[0]?.notes.map(n=>n.pc)||[]):new Set([rootPC(),thirdPC(),fifthPC()]);
     const visibleKeys=opt.visibleKeys||null,pentaPairs=ModeRegistry.kind(instrument,opt.mode)==='pentatonic'?visiblePentaPairs(maxFret):[];
     for(let s=0;s<STRING_COUNT;s++)for(let f=0;f<=maxFret;f++){
