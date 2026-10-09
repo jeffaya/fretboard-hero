@@ -1,0 +1,125 @@
+/* Circle of fifths layout. */
+
+.circle-screen {
+  flex-direction: column;
+  min-height: 100dvh;
+  overflow: auto;
+  padding-bottom: max(22px,var(--sa-bottom));
+}
+
+.circle-content {
+  box-sizing: border-box;
+  width: min(1200px,100%);
+  margin: auto;
+  padding: 16px 20px 30px;
+  display: grid;
+  grid-template-columns: minmax(0,1.4fr) minmax(280px,1fr);
+  gap: 24px;
+  align-items: center;
+}
+
+.circle-wheel-panel { min-width: 0; padding: 12px; }
+
+.circle-wheel-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+  font-family: var(--ui-font);
+}
+
+.circle-wheel-svg:active { cursor: grabbing; }
+
+.circle-wheel-svg:focus-visible { outline: 2px solid #fff; outline-offset: 4px; border-radius: 50%; }
+
+.circle-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.circle-navigation button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 24px;
+}
+
+.circle-navigation p {
+  margin: 0;
+  text-align: center;
+  color: #bcc9df;
+  font-size: 14px;
+}
+
+.circle-info-panel {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #ba65ff70;
+  border-radius: 24px;
+  background: #071021b8;
+}
+
+.circle-key-title>span { color: #b9c6dd; font-size: 12px; letter-spacing: .12em; }
+
+.circle-info-label {
+  color: #b9c6dd;
+  font-size: 12px;
+  letter-spacing: .12em;
+  margin-bottom: 12px;
+}
+
+.circle-key-title>strong {
+  display: block;
+  color: #fff;
+  font-size: 42px;
+  line-height: 1.2;
+  margin-top: 8px;
+}
+
+.circle-key-title>small { display: block; color: #70f7ff; font-size: 18px; }
+
+.circle-key-title p,
+.circle-explanation,
+.circle-info-card p { color: #c0ccde; font-size: 16px; line-height: 1.5; }
+
+.circle-info-card { margin-top: 24px; }
+
+.circle-progressions { display: grid; gap: 12px; }
+
+.circle-progressions>div { display: flex; align-items: center; gap: 6px; }
+
+.degree-chord {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  border: 1px solid #ffffff50;
+  border-radius: 12px;
+  background: #ffffff08;
+  padding: 10px 4px;
+}
+
+.degree-chord small { display: block; color: #aebed6; font-size: 14px; }
+
+.degree-chord strong { display: block; color: #fff; font-size: 22px; }
+
+.circle-progressions b { color: #70f7ff; }
+
+@media (max-width:760px) {
+  .circle-content { grid-template-columns: 1fr; padding: 12px; gap: 16px; }
+
+  .circle-wheel-panel { padding: 8px; }
+
+  .circle-info-panel { padding: 18px; }
+}
+
+@media (orientation:landscape) and (max-height:600px) {
+  .circle-content { grid-template-columns: minmax(0,1fr) minmax(260px,1fr); align-items: start; }
+
+  .circle-wheel-panel { max-width: 480px; justify-self: center; }
+
+  .circle-info-panel { padding: 16px; }
+}

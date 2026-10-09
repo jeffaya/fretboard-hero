@@ -1,3 +1,24 @@
+## CSS ownership
+
+The stylesheet order is explicit in `index.html`. Layout rules are split by responsibility:
+
+| File | Owns |
+| --- | --- |
+| `styles.css` | Shared tokens, reset and application shell |
+| `controls.css` | Navigation, adaptive toolbars, selects and drawers |
+| `fretboard.css` | Shared neck layout and Learn legend |
+| `quiz.css` | Quiz HUD, feedback, result dialogs and rank ladder |
+| `circle.css` | Circle of fifths layout |
+| `home.css` | Home composition and instrument selection |
+| `theme.css` | Shared typography, surfaces and button variants |
+| `routine.css`, `premium.css`, `locales.css`, `tuner.css` | Feature-specific presentation |
+
+Edit the owning component and its responsive rule instead of appending a new versioned override to the global stylesheet. Keep intentional state selectors (active, locked, hidden, focus, reduced motion) explicit. The remaining `!important` declarations protect typography, hidden content, language-menu states and reduced-motion preferences; avoid adding them to layout rules.
+
+The compact drawer and inline toolbar breakpoints are shared with `core/controls.js` and `app.js`. Preserve their behavior when changing CSS. Fixed safe-area padding is intentional for native WebViews. `scripts/sync-web.ps1` copies every stylesheet into native builds; generated `app/www` must not be edited.
+
+For CSS changes, compare Home, Learn/Map controls, Daily Routine completion/replay, Circle, Quiz/results, Premium, language menu and Tuner on portrait and landscape viewports. Include all three instruments and a non-Latin locale. Refresh changed CSS URLs in `index.html`; refresh the bootstrap/app URL when JavaScript changes.
+
 ## V10.6.3 — Instrument artwork
 
 - Replaced hand-drawn instrument symbols with a single transparent WebP sprite reconstructed from the reference screenshot using image generation. It follows the reference silhouettes but is not a pixel-identical extraction of original assets.
