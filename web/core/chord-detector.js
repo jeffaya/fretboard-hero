@@ -18,7 +18,9 @@
       const observed=new Float64Array(SIZE),resolution=sampleRate/fftSize;
       let peak=-Infinity;
       for(let i=2;i<Math.min(spectrum.length-1,Math.ceil(8000/resolution));i++)peak=Math.max(peak,spectrum[i]);
-      if(peak<-70)return {notes:[],fit:0};
+      // Quiet chords spread their energy across strings and FFT bins. Keep
+      // their peaks for the normalized harmonic fit instead of discarding them.
+      if(peak<-85)return {notes:[],fit:0};
       for(let i=2;i<Math.min(spectrum.length-1,Math.ceil(8000/resolution));i++){
         const b=spectrum[i];if(b<peak-38||b<spectrum[i-1]||b<=spectrum[i+1])continue;
         const a=spectrum[i-1],c=spectrum[i+1],den=a-2*b+c;

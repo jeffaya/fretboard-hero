@@ -8,7 +8,8 @@
       reset(repeat=false){since=null;last=-Infinity;blocked=repeat;quietSince=null;previousLevel=0;attack=0},
       update({match,level,now,chord=false}){
         if(now-last>250)since=null;last=now;
-        const onset=previousLevel>0&&level>Math.max(.008,previousLevel*1.9);
+        // A fresh pluck is a relative rise, even when both notes are quiet.
+        const onset=match&&previousLevel>0&&level>previousLevel*1.9;
         previousLevel=level;
         if(blocked){
           if(!match){if(quietSince===null)quietSince=now;if(now-quietSince>=150)blocked=false}else quietSince=null;
