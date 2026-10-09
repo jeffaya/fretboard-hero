@@ -5,7 +5,7 @@ catalogs in `web/locales/`. There is no translation API, runtime font-provider
 request or recurring localization service dependency.
 
 Supported locales: English `en`, Spanish `es`, French `fr`, German `de`, Japanese
-`ja`, Korean `ko`, Simplified Chinese `zh-CN`, Brazilian Portuguese `pt-BR`, Hindi
+`ja`, Italian `it`, Korean `ko`, Simplified Chinese `zh-CN`, Brazilian Portuguese `pt-BR`, Hindi
 `hi`, and Indonesian `id`. Regional variants match the base language (`fr-CA`,
 `es-MX`, etc.). Portuguese maps to Brazilian Portuguese. All Chinese preferences
 currently map to Simplified Chinese; Traditional Chinese is not included.
@@ -16,7 +16,7 @@ Priority is a supported `?lang=` URL parameter, then the saved manual selection,
 then the first supported entry in `navigator.languages`, then English. A failed
 catalog load also falls back to English instead of blocking the app.
 
-The home language selector shows flags **and native language names**, and offers
+The language selector at the bottom of Home shows flags **and native language names**, and offers
 Automatic to remove the saved preference. Choices persist in localStorage across
 visits and instrument changes. The language URL parameter keeps selection usable
 when storage is blocked. A selection reloads the application from Home.
@@ -33,7 +33,7 @@ store prices remain controlled by Apple/Google and the customer's store account.
 Catalogs cover home menus, Learn controls and hints, Map, Circle of Fifths,
 all five Routine steps/instructions, completion, quiz instructions/results/ranks,
 share text, unlock dialogs, native billing feedback and accessibility labels.
-Numbers and displayed note names use the selected locale. French, Spanish,
+Numbers and displayed note names use the selected locale. French, Italian, Spanish,
 Portuguese and Indonesian use Do–Si (with local accents); Japanese uses ド–シ,
 Korean 도–시, Hindi transliterated letter names सी–बी. English and Simplified
 Chinese retain international letter names. German uses H for B natural and B
@@ -63,7 +63,7 @@ store listings or language-specific SEO routes. Logos retain their brand names.
 
 ## Maintenance
 
-All ten JSON files must have identical English keys and preserve the same named
+All eleven JSON files must have identical English keys and preserve the same named
 `{placeholders}`. Add complete messages, rather than concatenating translated word
 fragments where word order differs. Musical and purchase state values stay in
 English identifiers internally. Unknown text falls back to its English source.
@@ -87,3 +87,6 @@ Browser checks exercised all ten languages through every screen and Routine
 completion, plus persisted selection, automatic reset, quiz completion and a
 mocked Japanese StoreKit purchase. Phone portrait/landscape, tablet and desktop
 were checked; native device language settings still need release-device QA.
+
+The same Home language selector is available on the website and in Android/iOS.
+Italian includes the complete catalog and fixed note names Do, Re, Mi, Fa, Sol, La, Si.

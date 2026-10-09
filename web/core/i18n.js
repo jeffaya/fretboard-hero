@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const languages=[['en','🇺🇸','English'],['es','🇪🇸','Español'],['fr','🇫🇷','Français'],['de','🇩🇪','Deutsch'],['ja','🇯🇵','日本語'],['ko','🇰🇷','한국어'],['zh-CN','🇨🇳','简体中文'],['pt-BR','🇧🇷','Português (Brasil)'],['hi','🇮🇳','हिन्दी'],['id','🇮🇩','Bahasa Indonesia']];
+  const languages=[['en','🇺🇸','English'],['es','🇪🇸','Español'],['fr','🇫🇷','Français'],['de','🇩🇪','Deutsch'],['it','🇮🇹','Italiano'],['ja','🇯🇵','日本語'],['ko','🇰🇷','한국어'],['zh-CN','🇨🇳','简体中文'],['pt-BR','🇧🇷','Português (Brasil)'],['hi','🇮🇳','हिन्दी'],['id','🇮🇩','Bahasa Indonesia']];
   const supported=new Set(languages.map(x=>x[0])),storageKey='fretboard-language';
   function match(value){
     if(typeof value!=='string')return null;
@@ -70,12 +70,11 @@
     for(const selector of ['meta[name="description"]','meta[property="og:description"]','meta[name="twitter:description"]'])document.querySelector(selector)?.setAttribute('content',description);
     for(const selector of ['meta[property="og:title"]','meta[name="twitter:title"]'])document.querySelector(selector)?.setAttribute('content',document.title);
     document.querySelector('meta[property="og:image:alt"]')?.setAttribute('content',document.title);
-    document.querySelector('meta[property="og:locale"]')?.setAttribute('content',({'en':'en_US','zh-CN':'zh_CN','pt-BR':'pt_BR'})[locale]||locale+'_'+({'es':'ES','fr':'FR','de':'DE','ja':'JP','ko':'KR','hi':'IN','id':'ID'})[locale]);
+    document.querySelector('meta[property="og:locale"]')?.setAttribute('content',({'en':'en_US','zh-CN':'zh_CN','pt-BR':'pt_BR'})[locale]||locale+'_'+({'es':'ES','fr':'FR','de':'DE','it':'IT','ja':'JP','ko':'KR','hi':'IN','id':'ID'})[locale]);
     const structured=document.querySelector('#productStructuredData');if(structured){try{const data=JSON.parse(structured.textContent);data.inLanguage=locale;data.description=description;data.featureList=['Learn','Daily Routine','Fretboard Map','Circle of Fifths','Quiz'].map(value=>text(value));structured.textContent=JSON.stringify(data)}catch{}}
   }
   function mount(){
     const wrapper=document.createElement('label');wrapper.className='language-picker';
-    const icon=document.createElement('span');icon.textContent='🌐';icon.setAttribute('aria-hidden','true');
     const select=document.createElement('select');select.setAttribute('aria-label',text('Language'));
     const auto=document.createElement('option');auto.value='auto';const active=languages.find(x=>x[0]===locale);auto.textContent=active[1]+' '+active[2]+' · '+text('Automatic');select.append(auto);
     languages.forEach(([value,flag,name])=>{const option=document.createElement('option');option.value=value;option.textContent=flag+' '+name;select.append(option)});
@@ -86,7 +85,8 @@
       const url=new URL(location.href);if(select.value==='auto')url.searchParams.delete('lang');else url.searchParams.set('lang',select.value);location.assign(url.href);
     });
     window.addEventListener('languagechange',()=>{if(select.value==='auto'&&detect(navigator.languages)!==locale)location.reload()});
-    wrapper.append(icon,select);document.querySelector('.home-brand').prepend(wrapper);
+    wrapper.append(select);
+    const footer=document.createElement('footer');footer.className='home-footer';footer.append(wrapper);document.querySelector('.home-content').append(footer);
     translateNode(document.body);metadata();
     // Legacy renderers write text directly. Observe only changed nodes/labels,
     // never rewrite HTML, canonical gameplay attributes, or event handlers.
@@ -100,7 +100,7 @@
     const requested=new URL(location.href).searchParams.get('lang');
     locale=supported.has(requested)?requested:supported.has(saved)?saved:detect(navigator.languages?.length?navigator.languages:[navigator.language]);
     if(locale!=='en'){
-      try{const response=await fetch('./locales/'+locale+'.json?v=10.26.1');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
+      try{const response=await fetch('./locales/'+locale+'.json?v=10.26.2');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
     }
     document.documentElement.lang=locale;document.documentElement.dir='ltr';
     return locale;
