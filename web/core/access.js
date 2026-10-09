@@ -71,7 +71,7 @@
     let previous,background=[];
     const close=()=>{overlay.hidden=true;background.forEach(([node,inert])=>node.inert=inert);previous?.focus()};
     const open=()=>{if(!overlay.hidden)return;previous=document.activeElement;background=[...overlay.parentElement.children].filter(n=>n!==overlay).map(n=>[n,n.inert]);background.forEach(([n])=>n.inert=true);overlay.hidden=false;dialog.focus();prepareQR();if(billing)billing.refreshPrice()};
-    overlay.querySelector('.premium-close').addEventListener('click',close);overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
+    overlay.querySelector('.premium-close').addEventListener('click',close);window.FretboardModal.bindDismiss(overlay,close);
     overlay.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();close()}if(e.key==='Tab'){const nodes=[...dialog.querySelectorAll('a[href],button:not(:disabled)')];const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&(document.activeElement===first||document.activeElement===dialog)){e.preventDefault();last.focus()}else if(!e.shiftKey&&(document.activeElement===last||document.activeElement===dialog)){e.preventDefault();first.focus()}}});
     const mark=(button,feature,value)=>{if(!button)return;const locked=!access.allows(feature,value);button.classList.toggle('premium-locked',locked);button.dataset.premiumLocked=String(locked);button.querySelector('.premium-lock')?.remove();if(locked){if(button.hasAttribute('data-premium-icon-only'))button.textContent='';button.insertAdjacentHTML('beforeend',lock)}};
     document.addEventListener('click',e=>{const button=e.target.closest('[data-premium-locked="true"]');if(button){e.preventDefault();e.stopImmediatePropagation();open()}},true);

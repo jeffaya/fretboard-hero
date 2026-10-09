@@ -24,7 +24,8 @@
       const config=await response.json();
       await load('./core/native-billing.js?v=10.25.0');
       const nativeUnlocked=await FretboardBilling.initialize(config);
-      await load('./core/access.js?v=10.25.0');
+      await load('./core/modal.js?v=10.27.4');
+      await load('./core/access.js?v=10.27.4');
       window.FRETBOARD_ACCESS=FretboardAccess.create(config.nativeBilling===true?nativeUnlocked:await FretboardAccess.resolve(config,location.search));
       const defaultInstrument=config.instrument;
       if(!CATALOG[defaultInstrument])throw new Error(`Unknown instrument "${defaultInstrument}". Supported: ${Object.keys(CATALOG).join(', ')}`);
@@ -47,11 +48,11 @@
       window.ProductShell.apply(product,instrument);
       await load('./home.js?v=10.26.4');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
-      await load('./app.js?v=10.26.4');
+      await load('./app.js?v=10.27.4');
       FretboardBilling.attach();
       FretboardI18n.mount();
       await load('./core/pitch-detector.js?v=10.27.0');
-      await load('./tuner.js?v=10.27.2');
+      await load('./tuner.js?v=10.27.4');
       if(!await artworkReady){
         logo.setAttribute('hidden','');
         const fallback=document.createElement('span');

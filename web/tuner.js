@@ -8,8 +8,7 @@
   const label=document.createElement('span');label.textContent=t('Tuner');button.append(icon,label);
   document.querySelector('.home-footer').append(button);
   const dialog=document.createElement('dialog');dialog.className='tuner-dialog ui-panel ui-modal';dialog.dataset.noI18n='';dialog.setAttribute('aria-labelledby','tuner-title');
-  dialog.innerHTML=`<div class="tuner-heading"><h2 id="tuner-title"></h2><button class="tuner-close ui-back" type="button">×</button></div>
-    <p class="tuner-intro"></p>
+  dialog.innerHTML=`<div class="tuner-heading"><h2 id="tuner-title"></h2></div>
     <div class="tuner-reading"><strong class="tuner-note">—</strong><span class="tuner-frequency">440 Hz</span></div>
     <div class="tuner-meter" aria-hidden="true"><span class="tuner-center"></span><span class="tuner-needle"></span></div>
     <div class="tuner-scale"><span>−50</span><span>0</span><span>+50</span></div>
@@ -17,16 +16,15 @@
   document.querySelector('#app').append(dialog);
   const $=s=>dialog.querySelector(s), status=$('.tuner-status'), mic=$('.tuner-mic');
   $('#tuner-title').textContent=t('Tuner')+' · '+t(profile.label);
-  $('.tuner-close').setAttribute('aria-label',t('Close'));
-  $('.tuner-intro').textContent=t('Play one open string at a time.');
   $('.tuner-privacy').textContent=t('Audio stays on your device. Nothing is recorded.');
+  const controls=[];
   let selected=-1,lastDetected=0,stream,context,source,analyser,frame,generation=0,history=[],lastPitch=0,lastFrame=0;
   const setStatus=s=>{const value=t(s);if(status.textContent!==value)status.textContent=value;};
-  function reset(){highlight(selected);[...$('.tuner-strings').children].forEach(el=>el.classList.remove('detected'));history=[];lastPitch=0;$('.tuner-note').textContent='—';$('.tuner-frequency').textContent='440 Hz';$('.tuner-needle').style.left='50%';dialog.classList.remove('in-tune');}
+  function reset(){highlight(selected);controls.forEach(el=>el.classList.remove('detected'));history=[];lastPitch=0;$('.tuner-note').textContent='—';$('.tuner-frequency').textContent='440 Hz';$('.tuner-needle').style.left='50%';dialog.classList.remove('in-tune');}
   const half=courses.length/2;
   // From the nut upwards: low strings on the left, high strings on the right.
   // Guitar top-to-bottom labels are D/A/E and G/B/E, matching a 3+3 headstock.
-  const position=index=>({left:index<half, y:62+(index<half?half-1-index:index-half)*(half===3?53:80)});
+  const position=index=>({left:index<half, y:52+(index<half?half-1-index:index-half)*(half===3?60:80)});
   const ns='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 320 260');svg.setAttribute('aria-hidden','true');svg.classList.add('tuner-headstock');
   const outline='M126 254L125 208Q124 192 111 170L103 41Q125 37 138 22Q160 8 182 22Q195 37 217 41L209 170Q196 192 195 208L194 254Z';
@@ -81,7 +79,7 @@
       const {left,y}=position(index-1);b.className='tuner-string';b.style.left=(left?12:88)+'%';b.style.top=(y/260*100)+'%';
       b.setAttribute('aria-label',t('String {n}').replace('{n}',String(courses.length-index+1))+' · '+label);
     }
-    b.onclick=()=>{selected=index===0?(selected<0?lastDetected:-1):index-1;reset();highlight(selected);[...$('.tuner-strings').children].forEach((el,i)=>{if(i===0)el.setAttribute('aria-checked',String(selected<0));else el.setAttribute('aria-pressed',String(i===selected+1));});};$('.tuner-strings').append(b);
+    b.onclick=()=>{selected=index===0?(selected<0?lastDetected:-1):index-1;reset();highlight(selected);controls.forEach((el,i)=>{if(i===0)el.setAttribute('aria-checked',String(selected<0));else el.setAttribute('aria-pressed',String(i===selected+1));});};controls.push(b);(index===0?$('.tuner-heading'):$('.tuner-strings')).append(b);
   });
   function stop(){generation++;cancelAnimationFrame(frame);stream?.getTracks().forEach(track=>track.stop());stream=null;source?.disconnect();source=null;const old=context;context=null;if(old)old.close().catch(()=>{});analyser=null;mic.disabled=false;mic.textContent=t('Enable microphone');reset();setStatus('Microphone off');}
   function tick(now){
@@ -89,7 +87,7 @@
     frame=requestAnimationFrame(tick);if(now-lastFrame<90)return;lastFrame=now;
     const data=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(data);
     const hz=FretboardPitch.detect(data,context.sampleRate);
-    if(!hz){if(now-lastPitch>650){reset();setStatus('Play one open string at a time.');}return;}
+    if(!hz){if(now-lastPitch>650){reset();setStatus('');}return;}
     lastPitch=now;history.push(hz);if(history.length>5)history.shift();if(history.length<3)return;
     const sorted=[...history].sort((a,b)=>a-b), pitch=sorted[Math.floor(sorted.length/2)];
     const index=selected<0?FretboardPitch.closest(pitch,courses):selected, target=courses[index];
@@ -97,7 +95,7 @@
     const delta=FretboardPitch.cents(pitch,target.midi), good=Math.abs(delta)<=5;
     $('.tuner-note').textContent=note(target);$('.tuner-frequency').textContent=pitch.toFixed(1)+' Hz · '+(delta>0?'+':'')+Math.round(delta)+' cents';
     $('.tuner-needle').style.left=(50+Math.max(-50,Math.min(50,delta))*0.9)+'%';dialog.classList.toggle('in-tune',good);
-    [...$('.tuner-strings').children].forEach((el,i)=>el.classList.toggle('detected',i===index+1));
+    controls.forEach((el,i)=>el.classList.toggle('detected',i===index+1));
     setStatus(good?'In tune':delta<0?'Too low — tighten gently':'Too high — loosen gently');
   }
   async function start(){
@@ -112,11 +110,11 @@
       if(token!==generation||!dialog.open){captured.getTracks().forEach(track=>track.stop());if(pendingContext.state!=='closed')await pendingContext.close();return;}
       stream=captured;analyser=context.createAnalyser();analyser.fftSize=8192;source=context.createMediaStreamSource(stream);source.connect(analyser);
       stream.getAudioTracks()[0].addEventListener('ended',()=>{if(token===generation)stop();});
-      mic.disabled=false;mic.textContent=t('Stop microphone');setStatus('Play one open string at a time.');frame=requestAnimationFrame(tick);
+      mic.disabled=false;mic.textContent=t('Stop microphone');setStatus('');frame=requestAnimationFrame(tick);
     }catch(error){if(token!==generation)return;stop();setStatus(error.name==='NotAllowedError'?'Microphone denied. Allow access in device or browser settings.':error.name==='Unsupported'?'Microphone unavailable. Use a supported browser over HTTPS.':'Microphone unavailable. Check your microphone and try again.');}
   }
   button.onclick=()=>{stop();dialog.showModal();};mic.onclick=start;
-  $('.tuner-close').onclick=()=>dialog.close();dialog.addEventListener('close',()=>{stop();button.focus();});dialog.addEventListener('cancel',stop);
+  FretboardModal.bindDismiss(dialog,()=>dialog.close());dialog.addEventListener('close',()=>{stop();button.focus();});dialog.addEventListener('cancel',stop);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});window.addEventListener('pagehide',stop);
   // Capacitor lifecycle also covers native backgrounding where visibility events vary.
   window.Capacitor?.Plugins?.App?.addListener('appStateChange',({isActive})=>{if(!isActive)stop();});
