@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const base=path.join(__dirname,'..');
-function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-exercises']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
+function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-exercises','core/routine-guide','core/chord-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
 function rng(seed){return()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296)}
 const flatten=e=>e.columns.flatMap(c=>c.notes);
 test('All keys, qualities and instruments have five playable and musically correct exercises',()=>{
@@ -32,34 +32,39 @@ test('Repeated routines vary scale locations, string sets and pentatonic positio
 });
 test('Shared drawer is exposed inline and inert only when closed in compact mode',()=>{const nodes=new Map(),media={matches:false,addEventListener(_,f){this.change=f}},c={window:{},matchMedia:()=>media};function node(id){if(!nodes.has(id)){const classes=new Set();nodes.set(id,{attrs:{},events:{},classList:{contains:k=>classes.has(k),toggle:(k,on)=>on?classes.add(k):classes.delete(k)},setAttribute(k,v){this.attrs[k]=v},addEventListener(k,f){this.events[k]=f},focus(){c.focused=id}})}return nodes.get(id)}const root={querySelector:node};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(base,'core/controls.js'),'utf8'),c);c.window.FretboardControls.bindDrawer({root,name:'routine'});const drawer=node('#routineDrawer'),btn=node('#routineMenuBtn');assert.equal(drawer.inert,false);assert.equal(drawer.attrs['aria-hidden'],'false');media.matches=true;media.change();assert.equal(drawer.inert,true);btn.events.click();assert.equal(drawer.inert,false);assert.equal(btn.attrs['aria-expanded'],'true');drawer.events.keydown({key:'Escape',preventDefault(){}});assert.equal(drawer.inert,true);assert.equal(c.focused,'#routineMenuBtn');media.matches=false;media.change();assert.equal(drawer.inert,false)});
 class Node{
- constructor(){this.children=[];this.events={};this.attrs={};this.dataset={};this.style={};this.classes=new Set();this.classList={toggle:(k,on)=>on?this.classes.add(k):this.classes.delete(k)};this.textContent='';this.hidden=false}
- append(...nodes){this.children.push(...nodes)}replaceChildren(){this.children=[]}querySelectorAll(){return this.children}setAttribute(k,v){this.attrs[k]=v}addEventListener(k,f){this.events[k]=f}click(){this.events.click?.()}focus(){}scrollIntoView(){}
+ constructor(){this.children=[];this.events={};this.attrs={};this.dataset={};this.style={};this.classes=new Set();this.classList={contains:k=>this.classes.has(k),toggle:(k,on)=>on?this.classes.add(k):this.classes.delete(k)};this.textContent='';this.hidden=false}
+ append(...nodes){this.children.push(...nodes)}replaceChildren(){this.children=[]}querySelectorAll(){return this.children}querySelector(){return null}setAttribute(k,v){this.attrs[k]=v}addEventListener(k,f){this.events[k]=f}click(){this.events.click?.()}focus(){}scrollIntoView(){}
 }
 function sessionRuntime(demo=false){
  const c=runtime(),nodes=new Map(),root={querySelector:s=>{if(!nodes.has(s))nodes.set(s,new Node());return nodes.get(s)}};
  c.document={createElement:()=>new Node()};c.opens=0;
+ const timers=new Map();let timerId=0;
+ c.setTimeout=f=>{timers.set(++timerId,f);return timerId};c.clearTimeout=id=>timers.delete(id);c.performance={now:()=>1000};
+ c.FretboardMicrophone={create({onFrame,onState}){let state='off';c.audio={onFrame,start(){state='on';onState(state)},stop(){state='off';onState(state)},get state(){return state}};return c.audio}};
+ c.window.matchMedia=()=>({matches:true});
+ const flush=()=>{for(const [id,f] of timers){timers.delete(id);f()}};
  vm.runInContext(fs.readFileSync(path.join(base,'core/access.js'),'utf8'),c);
  c.window.FRETBOARD_ACCESS=c.window.FretboardAccess.create(!demo);c.window.FRETBOARD_PREMIUM={mark(){},open(){c.opens++}};
  c.RoutineRenderer={render:(_,exercise)=>{c.lastExercise=exercise}};
  vm.runInContext(fs.readFileSync(path.join(base,'core/routine-session.js'),'utf8'),c);
  const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),session=c.window.RoutineSession.create({root,engine,refreshControls(){},random:rng(321)});
- return {session,nodes,c};
+ return {session,nodes,c,flush,next(){nodes.get('#routineNext').click();flush()}};
 }
 test('Demo permits all five stages and Done, but blocks other roots and major without resetting progress',()=>{
  const r=sessionRuntime(true);r.session.enter();
- r.nodes.get('#routineNext').click();assert.equal(r.c.lastExercise.id,'scale');
+ r.next();assert.equal(r.c.lastExercise.id,'scale');
  r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='C').click();r.nodes.get('#routineQualityControls').children[0].click();
  assert.equal(r.c.opens,2);assert.equal(r.c.lastExercise.id,'scale');assert.equal(r.c.lastExercise.root,'A');assert.equal(r.c.lastExercise.quality,'minor');
- for(let i=1;i<5;i++){assert.equal(r.nodes.get('#routineNext').textContent,i===4?'Done':'Next →');r.nodes.get('#routineNext').click()}
+ for(let i=1;i<5;i++){assert.equal(r.nodes.get('#routineNext').textContent,i===4?'Done':'Next →');r.next()}
  assert.equal(r.nodes.get('#routineTitle').textContent,'Routine complete!');assert.equal(r.nodes.get('#routineNext').hidden,true);assert.equal(r.nodes.get('#routineFinish').hidden,false);
  assert.equal(r.nodes.get('#routineSteps').children.filter(n=>n.classes.has('is-complete')).length,5);
  r.session.enter();assert.equal(r.c.lastExercise.id,'root');assert.equal(r.nodes.get('#routineFinish').hidden,true);
 });
 test('Unlocked root and quality selection reset all stages and entry chooses a fresh root',()=>{
  const r=sessionRuntime();r.session.enter();const first=r.c.lastExercise.root;
- r.nodes.get('#routineNext').click();r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='C').click();r.nodes.get('#routineQualityControls').children[0].click();
+ r.next();r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='C').click();r.nodes.get('#routineQualityControls').children[0].click();
  assert.equal(r.c.lastExercise.id,'root');assert.equal(r.c.lastExercise.root,'C');assert.equal(r.c.lastExercise.quality,'major');
- for(let i=0;i<5;i++){assert.equal(r.c.lastExercise.root,'C');assert.equal(r.c.lastExercise.quality,'major');r.nodes.get('#routineNext').click()}
+ for(let i=0;i<5;i++){assert.equal(r.c.lastExercise.root,'C');assert.equal(r.c.lastExercise.quality,'major');r.next()}
  r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='D').click();assert.equal(r.nodes.get('#routineFinish').hidden,true);assert.equal(r.c.lastExercise.root,'D');assert.equal(r.nodes.get('#routineSteps').children[0].children[0].attrs['aria-current'],'step');
  const roots=new Set([first]);for(let i=0;i<10;i++){r.session.enter();roots.add(r.c.lastExercise.root)}assert.ok(roots.size>1);assert.equal(r.c.opens,0);
 });
@@ -70,7 +75,8 @@ test('Tab wraps without overlapping frets, preserves chord columns and fits a st
   for(const exercise of exercises){
    const svg=new Node();svg.parentElement={clientWidth:width};c.window.RoutineRenderer.render(svg,exercise,engine);
    assert.equal(Number(svg.attrs.viewBox.split(' ')[2]),width);
-   const frets=svg.children.filter(n=>n.attrs['font-weight']===800&&n.textContent!=='×');assert.equal(frets.length,flatten(exercise).length);
+   const descendants=n=>n.children.flatMap(child=>[child,...descendants(child)]);
+   const frets=descendants(svg).filter(n=>n.attrs['font-weight']===800&&n.textContent!=='×');assert.equal(frets.length,flatten(exercise).length);
    for(const n of frets){assert.ok(n.attrs.x-14>=0&&n.attrs.x+14<=width);assert.ok(n.attrs['font-size']>=18)}
    for(const a of frets)for(const b of frets)if(a!==b&&a.attrs.y===b.attrs.y)assert.ok(Math.abs(a.attrs.x-b.attrs.x)>=30);
    if(exercise.id==='root'&&width>=360)assert.ok(Number(svg.attrs.viewBox.split(' ')[3])<240,'root exercise fits one staff');
@@ -90,7 +96,7 @@ test('Progress navigation reuses exercises and marks the active step',()=>{
 
 test('Skipping ahead does not complete unplayed routine stages',()=>{
  const r=sessionRuntime();r.session.enter();r.nodes.get('#routineSteps').children[4].children[0].click();
- assert.equal(r.nodes.get('#routineNext').textContent,'Next →');r.nodes.get('#routineNext').click();
+ assert.equal(r.nodes.get('#routineNext').textContent,'Next →');r.next();
  assert.equal(r.c.lastExercise.id,'root');assert.equal(r.nodes.get('#routineFinish').hidden,true);
 });
 
@@ -98,7 +104,7 @@ test('Replay clears completed stages, changes the premium root and retains the s
  const r=sessionRuntime();r.session.enter();r.nodes.get('#routineQualityControls').children[0].click();
  for(let round=0;round<3;round++){
   const previous=r.c.lastExercise.root;
-  for(let i=0;i<5;i++)r.nodes.get('#routineNext').click();
+  for(let i=0;i<5;i++)r.next();
   r.nodes.get('#routineReplay').click();
   assert.equal(r.c.lastExercise.id,'root');assert.notEqual(r.c.lastExercise.root,previous);assert.equal(r.c.lastExercise.quality,'major');
   assert.equal(r.nodes.get('#routineFinish').hidden,true);assert.equal(r.nodes.get('#routineNext').hidden,false);
@@ -109,8 +115,25 @@ test('Replay clears completed stages, changes the premium root and retains the s
 
 test('Replay remains available in the demo and keeps A minor without opening Premium',()=>{
  const r=sessionRuntime(true);r.session.enter();
- for(let i=0;i<5;i++)r.nodes.get('#routineNext').click();
+ for(let i=0;i<5;i++)r.next();
  r.nodes.get('#routineReplay').click();
  assert.equal(r.c.lastExercise.id,'root');assert.equal(r.c.lastExercise.root,'A');assert.equal(r.c.lastExercise.quality,'minor');
  assert.equal(r.nodes.get('#routineFinish').hidden,true);assert.equal(r.c.opens,0);
+});
+
+
+test('Manual continuation shows one brief celebration and cannot skip twice',()=>{
+ const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineNext').click();
+ assert.equal(r.c.lastExercise.id,'root');assert.equal(r.nodes.get('#routineTransition').hidden,false);
+ r.nodes.get('#routineNext').click();r.flush();
+ assert.equal(r.c.lastExercise.id,'scale');assert.equal(r.nodes.get('#routineTransition').hidden,true);
+});
+test('Leaving or choosing a step cancels a pending transition',()=>{
+ const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineNext').click();r.session.leave();r.flush();assert.equal(r.c.lastExercise.id,'root');
+ r.session.enter();r.nodes.get('#routineNext').click();r.nodes.get('#routineSteps').children[3].children[0].click();r.flush();assert.equal(r.c.lastExercise.id,'chords');
+});
+test('Offline never starts capture and leaving an enabled routine releases it',()=>{
+ const r=sessionRuntime(true);r.session.enter();assert.equal(r.c.audio.state,'off');
+ r.nodes.get('#routineMic').click();assert.equal(r.c.audio.state,'on');assert.equal(r.nodes.get('#routineMic').attrs['aria-pressed'],'true');
+ r.session.leave();assert.equal(r.c.audio.state,'off');assert.equal(r.nodes.get('#routineListening').hidden,true);
 });

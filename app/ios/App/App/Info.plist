@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Fretboard Hero uses the microphone to tune your instrument. Audio is analyzed on your device and is not recorded or sent.</string>
+	<string>Fretboard Hero uses the microphone to tune your instrument and guide your daily practice. Audio is analyzed on your device and is not recorded or sent.</string>
   <key>CAPACITOR_DEBUG</key>
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>CFBundleDevelopmentRegion</key>
