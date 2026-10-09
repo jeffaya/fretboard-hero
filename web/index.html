@@ -45,7 +45,7 @@
   <link rel="stylesheet" href="./styles.css?v=10.28.6">
   <link rel="stylesheet" href="./home.css?v=10.28.3">
   <link rel="stylesheet" href="./theme.css?v=10.28.0">
-  <link rel="stylesheet" href="./routine.css?v=10.28.2">
+  <link rel="stylesheet" href="./routine.css?v=10.29.0">
   <link rel="stylesheet" href="./premium.css?v=10.25.0">
   <link rel="stylesheet" href="./locales.css?v=10.28.3">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
@@ -100,7 +100,7 @@
       </div>
       <div id="routineDrawerBackdrop" class="drawer-backdrop"></div>
       <div class="routine-content">
-        <article id="routineExercise" class="routine-exercise ui-panel">
+        <article id="routineExercise" class="routine-exercise">
           <ol id="routineSteps" class="routine-steps" aria-label="Routine progress"></ol>
           <div id="routineCelebration" class="routine-celebration" aria-hidden="true" hidden>
             <div id="routineConfetti" class="routine-confetti"></div>
@@ -109,7 +109,7 @@
           <h2 id="routineTitle" tabindex="-1">Find the root note</h2>
           <p id="routineContext" hidden></p>
           <p id="routineInstruction"></p>
-          <div id="routineTabScroll" class="routine-tab-scroll"><svg id="routineTab" role="img"></svg></div>
+          <div id="routineTabScroll" class="routine-tab-scroll ui-panel"><svg id="routineTab" role="img"></svg></div>
           <p id="routineLegend" class="routine-legend"><span>Cyan = root note</span></p>
         <div class="routine-actions"><button id="routineNext" class="ui-primary" type="button">Next →</button><div id="routineFinish" class="routine-finish" hidden><button class="learn-card" type="button" data-go="learn"><img src="./assets/home/learn.svg" alt="" width="28" height="28">Learn</button><button class="quiz-card" type="button" data-go="quiz"><img src="./assets/home/quiz.svg?v=10.24.2" alt="" width="28" height="28">Quiz</button></div></div>
         </article>
@@ -243,7 +243,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.28.5" defer></script>
+  <script src="./bootstrap.js?v=10.29.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

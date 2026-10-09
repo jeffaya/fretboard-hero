@@ -11,20 +11,19 @@
     const minimum=labelled?Math.max(102,...exercise.columns.map(c=>(c.label||'').length*8+20)):30,capacity=Math.max(1,Math.floor((width-left-right)/minimum));
     const lines=Math.ceil(exercise.columns.length/capacity),count=Math.ceil(exercise.columns.length/lines);
     const top=labelled?34:20;
-    const available=window.innerWidth>=1001?svg.parentElement.clientHeight:0;
-    const row=Math.max(compact?25:32,(available/lines-top-26)/(engine.stringCount-1));
-    const font=Math.min(36,(width-left-right)/count/1.6,Math.max(compact?18:21,row*.52));
+    const row=compact?25:window.innerWidth>=1001&&window.innerHeight<=580?26:32;
+    const font=compact?18:21;
     const lineHeight=top+(engine.stringCount-1)*row+26,height=lines*lineHeight;
     svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.style.minWidth='0';
     const description=exercise.columns.map(c=>`${c.label?c.label+': ':''}${c.notes.map(n=>t(`${engine.tuning[n.string].name} string ${engine.stringCount-n.string}, fret ${n.fret}`)).join(', ')}`).join('; ');
     svg.append(el('title',{},`${exercise.title}. ${exercise.detail}. ${description}`));
     for(let line=0;line<lines;line++){
-      const columns=exercise.columns.slice(line*count,(line+1)*count),step=(width-left-right)/columns.length,offset=line*lineHeight;
+      const columns=exercise.columns.slice(line*count,(line+1)*count),used=Math.min(width-left-right,columns.length*(labelled?Math.max(120,minimum):76)),step=used/columns.length,start=left+(width-left-right-used)/2,offset=line*lineHeight;
       engine.tuning.forEach((course,string)=>{const y=offset+top+(engine.stringCount-1-string)*row;
         svg.append(el('text',{x:4,y:y+5,fill:'#c6d3e6','font-size':Math.min(22,font*.65),'data-no-i18n':''},window.FretboardI18n?.note(course.name)||course.name),el('line',{x1:left,y1:y,x2:width-right,y2:y,stroke:'#899bb3','stroke-width':1}));
       });
       columns.forEach((column,i)=>{
-        const x=left+(i+.5)*step;
+        const x=start+(i+.5)*step;
         if(column.label)svg.append(el('text',{x,y:offset+13,'text-anchor':'middle',fill:'#d8e4f4','font-size':Math.min(22,font*.65)},column.label));
         const notes=[...column.notes];
         if(column.muteMissing)engine.courses.forEach((_,string)=>{if(!notes.some(n=>n.string===string))notes.push({string,fret:'×'})});
