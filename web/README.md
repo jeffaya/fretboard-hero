@@ -13,6 +13,8 @@ The stylesheet order is explicit in `index.html`. Layout rules are split by resp
 | `theme.css` | Shared typography, surfaces and button variants |
 | `routine.css`, `premium.css`, `locales.css`, `tuner.css` | Feature-specific presentation |
 
+Home keeps branding on the left and activities on the right in landscape, with the same blocks stacked in portrait. Instrument selection and language live together below the brand. The tuner has a dedicated first card; Practice groups Daily Routine, Learn and Quiz, while Explore groups the map and circle. Home layout and instrument selection styling belong in `home.css`. The tuner binds the static `data-open-tuner` card and the existing routine shortcut; there is no generated home footer or breakpoint-based relocation of language controls.
+
 Edit the owning component and its responsive rule instead of appending a new versioned override to the global stylesheet. Keep intentional state selectors (active, locked, hidden, focus, reduced motion) explicit. The remaining `!important` declarations protect typography, hidden content, language-menu states and reduced-motion preferences; avoid adding them to layout rules.
 
 The compact drawer and inline toolbar breakpoints are shared with `core/controls.js` and `app.js`. Preserve their behavior when changing CSS. Fixed safe-area padding is intentional for native WebViews. `scripts/sync-web.ps1` copies every stylesheet into native builds; generated `app/www` must not be edited.

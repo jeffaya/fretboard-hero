@@ -1,15 +1,5 @@
 /* Tuner styles. */
 
-.home-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.home-footer .language-picker { margin: 0; max-width: 65%; }
-
 .tuner-launch {
   display: inline-flex;
   align-items: center;

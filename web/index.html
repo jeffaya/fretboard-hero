@@ -47,13 +47,13 @@
   <link rel="stylesheet" href="./fretboard.css?v=10.32.1">
   <link rel="stylesheet" href="./quiz.css?v=10.31.0">
   <link rel="stylesheet" href="./circle.css?v=10.31.0">
-  <link rel="stylesheet" href="./home.css?v=10.31.0">
-  <link rel="stylesheet" href="./theme.css?v=10.31.0">
+  <link rel="stylesheet" href="./home.css?v=10.33.0">
+  <link rel="stylesheet" href="./theme.css?v=10.33.0">
   <link rel="stylesheet" href="./routine.css?v=10.31.0">
   <link rel="stylesheet" href="./premium.css?v=10.31.0">
-  <link rel="stylesheet" href="./locales.css?v=10.31.0">
+  <link rel="stylesheet" href="./locales.css?v=10.33.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
-  <link rel="stylesheet" href="./tuner.css?v=10.31.0">
+  <link rel="stylesheet" href="./tuner.css?v=10.33.0">
 </head>
 <body data-loading="true" aria-busy="true">
   <div id="startupLoader" class="startup-loader" role="status" aria-label="Loading your instrument">
@@ -70,19 +70,33 @@
         <div class="home-brand">
           <h1 class="hero-logo"><svg viewBox="0 0 900 550" role="img" aria-label="Guitar Fretboard Hero"><image width="2700" height="550"/></svg></h1>
           <p class="tagline">MASTER THE GUITAR NECK</p>
+          <div class="home-setup">
+            <div class="home-setup-heading"><span class="home-section-label">Choose instrument</span><div class="home-language"></div></div>
+            <nav class="home-instruments" aria-label="Choose instrument">
+              <button type="button" data-home-instrument="guitar" aria-pressed="false"><svg class="instrument-art" viewBox="71.5 11.3333 190 253.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.14.0" width="768" height="256"/></svg><span>Guitar</span></button>
+              <button type="button" data-home-instrument="bass-4" aria-pressed="false"><svg class="instrument-art" viewBox="301.5 10.3333 190 253.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.14.0" width="768" height="256"/></svg><span>Bass</span></button>
+              <button type="button" data-home-instrument="ukulele" aria-pressed="false"><svg class="instrument-art" viewBox="510 16.8333 190 253.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.14.0" width="768" height="256"/></svg><span>Ukulele</span></button>
+            </nav>
+          </div>
         </div>
         <div class="home-menu">
+          <button id="homeTuner" class="hero-btn tuner-card" type="button" data-open-tuner><span class="hero-icon"><span class="tuner-launch-icon" data-control-group="tuner" aria-hidden="true"></span></span><span class="home-card-copy"><strong>Tuner</strong><small>Tune your instrument</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
           <nav class="home-actions" aria-label="Choose your session">
-            <button class="hero-btn learn-card" data-go="learn"><span class="hero-icon"><img src="./assets/home/learn.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>LEARN</strong><small>Notes · Triads · Scales · Chords</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-            <button class="hero-btn routine-card" data-go="routine"><span class="hero-icon"><img src="./assets/home/play.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>DAILY ROUTINE</strong><small>One key · Five guided exercises</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-            <button class="hero-btn map-card" data-go="fretmap"><span class="hero-icon"><img src="./assets/home/map.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>FRETBOARD MAP</strong><small>Explore the neck</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-            <button class="hero-btn circle-card" data-go="circle"><span class="hero-icon"><img src="./assets/home/circle.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>CIRCLE OF FIFTHS</strong><small>Visualize & practice</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-            <button class="hero-btn quiz-card" data-go="quiz"><span class="hero-icon"><img src="./assets/home/quiz.svg?v=10.24.2" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>QUIZ</strong><small>Test your knowledge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-          </nav>
-          <nav class="home-instruments" aria-label="Choose instrument">
-            <button type="button" data-home-instrument="guitar" aria-pressed="false"><svg class="instrument-art" viewBox="71.5 11.3333 190 253.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.14.0" width="768" height="256"/></svg><span>Guitar</span></button>
-            <button type="button" data-home-instrument="bass-4" aria-pressed="false"><svg class="instrument-art" viewBox="301.5 10.3333 190 253.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.14.0" width="768" height="256"/></svg><span>Bass</span></button>
-            <button type="button" data-home-instrument="ukulele" aria-pressed="false"><svg class="instrument-art" viewBox="510 16.8333 190 253.3333" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><image href="./assets/home/instruments.webp?v=10.14.0" width="768" height="256"/></svg><span>Ukulele</span></button>
+            <section class="home-action-group" aria-labelledby="homePracticeLabel">
+              <h2 id="homePracticeLabel" class="home-section-label">Practice</h2>
+              <div class="home-action-grid">
+                <button class="hero-btn routine-card" data-go="routine"><span class="hero-icon"><img src="./assets/home/play.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>DAILY ROUTINE</strong><small>One key · Five guided exercises</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+                <button class="hero-btn learn-card" data-go="learn"><span class="hero-icon"><img src="./assets/home/learn.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>LEARN</strong><small>Notes · Triads · Scales · Chords</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+                <button class="hero-btn quiz-card" data-go="quiz"><span class="hero-icon"><img src="./assets/home/quiz.svg?v=10.24.2" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>QUIZ</strong><small>Test your knowledge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+              </div>
+            </section>
+            <section class="home-action-group" aria-labelledby="homeExploreLabel">
+              <h2 id="homeExploreLabel" class="home-section-label">Explore</h2>
+              <div class="home-action-grid">
+                <button class="hero-btn map-card" data-go="fretmap"><span class="hero-icon"><img src="./assets/home/map.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>FRETBOARD MAP</strong><small>Explore the neck</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+                <button class="hero-btn circle-card" data-go="circle"><span class="hero-icon"><img src="./assets/home/circle.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>CIRCLE OF FIFTHS</strong><small>Visualize & practice</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+              </div>
+            </section>
           </nav>
         </div>
       </div>
@@ -247,7 +261,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.32.1" defer></script>
+  <script src="./bootstrap.js?v=10.33.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

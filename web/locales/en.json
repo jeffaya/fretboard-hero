@@ -334,5 +334,8 @@
   "Play each chord tone, then return through the same notes.": "Play each chord tone, then return through the same notes.",
   "Play each chord shape. Stacked notes sound together; × means mute.": "Play each chord shape. Stacked notes sound together; × means mute.",
   "Play two notes per string, then reverse.": "Play two notes per string, then reverse.",
-  "Repeat my routine": "Repeat my routine"
+  "Repeat my routine": "Repeat my routine",
+  "Practice": "Practice",
+  "Explore": "Explore",
+  "Tune your instrument": "Tune your instrument"
 }
