@@ -60,7 +60,7 @@ test('Unlocked root and quality selection reset all stages and entry chooses a f
  r.nodes.get('#routineNext').click();r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='C').click();r.nodes.get('#routineQualityControls').children[0].click();
  assert.equal(r.c.lastExercise.id,'root');assert.equal(r.c.lastExercise.root,'C');assert.equal(r.c.lastExercise.quality,'major');
  for(let i=0;i<5;i++){assert.equal(r.c.lastExercise.root,'C');assert.equal(r.c.lastExercise.quality,'major');r.nodes.get('#routineNext').click()}
- r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='D').click();assert.equal(r.nodes.get('#routineFinish').hidden,true);assert.equal(r.c.lastExercise.root,'D');assert.equal(r.nodes.get('#routineKicker').textContent,'EXERCISE 1 OF 5');
+ r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='D').click();assert.equal(r.nodes.get('#routineFinish').hidden,true);assert.equal(r.c.lastExercise.root,'D');assert.equal(r.nodes.get('#routineSteps').children[0].children[0].attrs['aria-current'],'step');
  const roots=new Set([first]);for(let i=0;i<10;i++){r.session.enter();roots.add(r.c.lastExercise.root)}assert.ok(roots.size>1);assert.equal(r.c.opens,0);
 });
 test('Tab wraps without overlapping frets, preserves chord columns and fits a standard phone root exercise',()=>{
@@ -77,4 +77,19 @@ test('Tab wraps without overlapping frets, preserves chord columns and fits a st
    assert.match(svg.children[0].textContent,/fret/);
   }
  }
+});
+
+test('Progress navigation reuses exercises and marks the active step',()=>{
+ const r=sessionRuntime();r.session.enter();const first=r.c.lastExercise;
+ r.nodes.get('#routineSteps').children[3].children[0].click();assert.equal(r.c.lastExercise.id,'chords');
+ assert.equal(r.nodes.get('#routineSteps').children.filter(n=>n.classes.has('is-complete')).length,0);
+ r.nodes.get('#routineSteps').children[0].children[0].click();assert.equal(r.c.lastExercise,first);
+ assert.equal(r.nodes.get('#routineContext').hidden,true);
+ assert.equal(r.nodes.get('#routineSteps').children[0].children[0].attrs['aria-current'],'step');
+});
+
+test('Skipping ahead does not complete unplayed routine stages',()=>{
+ const r=sessionRuntime();r.session.enter();r.nodes.get('#routineSteps').children[4].children[0].click();
+ assert.equal(r.nodes.get('#routineNext').textContent,'Next →');r.nodes.get('#routineNext').click();
+ assert.equal(r.c.lastExercise.id,'root');assert.equal(r.nodes.get('#routineFinish').hidden,true);
 });

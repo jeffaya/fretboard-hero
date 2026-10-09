@@ -326,5 +326,12 @@
   "Stop microphone": "マイクを停止",
   "Microphone denied. Allow access in device or browser settings.": "マイクが拒否されました。端末またはブラウザの設定で許可してください。",
   "Microphone unavailable. Use a supported browser over HTTPS.": "マイクを利用できません。HTTPS対応のブラウザを使用してください。",
-  "Microphone unavailable. Check your microphone and try again.": "マイクを利用できません。マイクを確認して再試行してください。"
+  "Microphone unavailable. Check your microphone and try again.": "マイクを利用できません。マイクを確認して再試行してください。",
+  "Find every {note} on the fretboard": "指板上のすべての{note}を見つけよう",
+  "Play each note and say “{note}” aloud.": "「{note}」と声に出しながら各音を弾こう。",
+  "Play up to the octave, then back to the root.": "オクターブまで上がり、ルートに戻ろう。",
+  "Play each triad together, then one note at a time.": "各トライアドを同時に弾き、次に一音ずつ弾こう。",
+  "Play each chord tone, then return through the same notes.": "コードの各音を弾き、同じ音を逆順に戻ろう。",
+  "Play each chord shape. Stacked notes sound together; × means mute.": "各コードフォームを弾こう。縦に並ぶ音は同時に弾き、×の弦は鳴らさない。",
+  "Play two notes per string, then reverse.": "各弦で二音ずつ弾き、逆順に戻ろう。"
 }
