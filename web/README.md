@@ -267,9 +267,14 @@ An optional instrument argument also refreshes checked-in native icons.
 Android builds use each instrument's 1024 px source; `sync-web.ps1` copies the
 selected source to the universal iOS AppIcon and Capacitor resource.
 
-The approved guitar OG is reused; bass/ukulele variants were produced with the
-built-in image generator, preserving the five menus, concert setting and neon
-composition while changing the instrument name, tagline and neck to four strings.
+The 10.35.0 OG refresh uses the built-in image generator to preserve the approved
+concert setting, neon palette and instrument branding across all three images.
+Six cards now lead with Tuner and Daily Routine with live mic feedback, followed
+by Learn, Fretboard Map, Circle of Fifths and Quiz. Bass retains its four-string
+neck and uses Arpeggios in Learn; ukulele retains its wooden four-string neck.
+Prompts and export details live in `assets/instruments/og-prompts.md` and the
+adjacent README. OG/Twitter descriptions, image alt text and versioned image URLs
+are updated in the static HTML, worker and client product profiles.
 
 The loader crossfades the three picks with a small rotation and neon halo. It is
 hidden by the existing bootstrap completion signal, without a minimum delay.
@@ -286,6 +291,5 @@ The former Practice section is now Learn throughout its screen IDs, navigation,
 JavaScript helpers and CSS selectors. `assets/home/learn.svg` is the shared pink
 neon graduation cap. The locked-mode dialog copies this icon and the Learn label
 from the home menu through `FretboardAccess.mount`; no duplicate menu list exists.
-OG bitmap artwork is intentionally deferred to a separate update. The generic
-practice wording inside Play and Circle of Fifths is independent of the renamed
-section.
+The current OG bitmap artwork also uses Learn. The generic practice wording
+inside Play and Circle of Fifths is independent of the renamed section.
