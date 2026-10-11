@@ -6,6 +6,8 @@ With the microphone on, the current fret number has a fixed cyan highlight with 
 
 Finishing the targets advances to the next exercise after a 750 ms “Well played!” interstitial. Manual Next uses the same transition and remains available when detection does not pick up the instrument. Double presses cannot skip exercises. Choosing a step, changing the key, replaying or leaving cancels a pending transition. Existing routine completion/replay and premium key restrictions remain in place. Reduced motion removes path and success-message animation while retaining the fixed highlight and brief success message.
 
+The exercise heading retains programmatic focus for assistive navigation but has no visible outline. The target notes remain the visual guide, and interactive controls retain their keyboard focus indicators.
+
 ## Local capture and lifecycle
 
 `core/microphone.js` owns the sole microphone stream used by both tuner and routine. It connects an input source to an analyser, never to speakers. It contains no recorder, audio persistence, upload or third-party model call. Stop, navigation away, tuner opening, page hide/background, native background, track end and audio-context interruption release the stream and context. A late permission grant after leaving is immediately released. Backgrounding/interruption does not automatically resume capture. Opening a function or replaying the routine again follows its saved microphone preference and requires any applicable system permission. The permission itself is never bypassed or stored as a granted flag.
