@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const base=path.join(__dirname,'..');
-function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-exercises','core/routine-guide','core/routine-strumming','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
+function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-exercises','core/routine-guide','core/routine-rhythm','core/routine-strumming','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
 function rng(seed){return()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296)}
 const flatten=e=>e.columns.flatMap(c=>c.notes);
 const playedStrings=e=>[...new Set(flatten(e).map(n=>n.string))].sort().join(',');
@@ -19,7 +19,7 @@ test('All keys, qualities and instruments have five playable and musically corre
   const tones=[rootPC,c.MusicTheory.mod(rootPC+(quality==='major'?4:3)),c.MusicTheory.mod(rootPC+7)];
   assert.equal(new Set(exercises[2].columns.filter(col=>col.notes.length===3).map(c=>c.label)).size,3,label);
   for(const col of exercises[2].columns){assert.equal(col.notes.length,col.kind==='third'?1:3);assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,col.notes.length);for(const n of col.notes)assert.ok(tones.includes(engine.noteAt(n.string,n.fret)),label)}
-  for(const n of flatten(exercises[3]))assert.ok(tones.includes(engine.noteAt(n.string,n.fret)),label);
+  for(const col of exercises[3].columns){const pcs=col.kind==='strum'?Object.values(c.MusicTheory.chordTones(col.rootPC,col.quality)):tones;for(const n of col.notes)assert.ok(pcs.includes(engine.noteAt(n.string,n.fret)),label)}
   if(profile.family==='bass'){assert.equal(exercises[3].step,'Arpeggios');const arp=flatten(exercises[3]);for(let i=1;i<(arp.length+1)/2;i++)assert.ok(arp[i].midi>arp[i-1].midi)}else{assert.ok(exercises[3].columns.length>=3,label);for(const col of exercises[3].columns)assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,3)}
   const penta=c.MusicTheory.pentatonicPCs(rootPC,quality);assert.equal(flatten(exercises[4]).length,4*engine.stringCount-1);for(const n of flatten(exercises[4]))assert.ok(penta.includes(engine.noteAt(n.string,n.fret)),label);
   for(const e of exercises.filter(e=>['scale','penta'].includes(e.id)||(e.id==='chords'&&profile.family==='bass'))){
@@ -38,14 +38,14 @@ test('Repeated routines vary scales and pentatonics while the full guitar triad 
 });
 test('Shared drawer is exposed inline and inert only when closed in compact mode',()=>{const nodes=new Map(),media={matches:false,addEventListener(_,f){this.change=f}},c={window:{},matchMedia:()=>media};function node(id){if(!nodes.has(id)){const classes=new Set();nodes.set(id,{attrs:{},events:{},classList:{contains:k=>classes.has(k),toggle:(k,on)=>on?classes.add(k):classes.delete(k)},setAttribute(k,v){this.attrs[k]=v},addEventListener(k,f){this.events[k]=f},focus(){c.focused=id}})}return nodes.get(id)}const root={querySelector:node};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(base,'core/controls.js'),'utf8'),c);c.window.FretboardControls.bindDrawer({root,name:'routine'});const drawer=node('#routineDrawer'),btn=node('#routineMenuBtn');assert.equal(drawer.inert,false);assert.equal(drawer.attrs['aria-hidden'],'false');media.matches=true;media.change();assert.equal(drawer.inert,true);btn.events.click();assert.equal(drawer.inert,false);assert.equal(btn.attrs['aria-expanded'],'true');drawer.events.keydown({key:'Escape',preventDefault(){}});assert.equal(drawer.inert,true);assert.equal(c.focused,'#routineMenuBtn');media.matches=false;media.change();assert.equal(drawer.inert,false)});
 class Node{
- constructor(){this.children=[];this.events={};this.attrs={};this.dataset={};this.style={};this.classes=new Set();this.classList={contains:k=>this.classes.has(k),toggle:(k,on)=>on?this.classes.add(k):this.classes.delete(k)};this.textContent='';this.hidden=false}
+ constructor(){this.children=[];this.events={};this.attrs={};this.dataset={};this.style={};this.classes=new Set();this.classList={contains:k=>this.classes.has(k),toggle:(k,on)=>on?this.classes.add(k):this.classes.delete(k)};this.textContent='';this.hidden=false;this.parentElement={clientWidth:390}}
  append(...nodes){this.children.push(...nodes)}replaceChildren(){this.children=[]}querySelectorAll(){return this.children}querySelector(){return null}setAttribute(k,v){this.attrs[k]=v}addEventListener(k,f){this.events[k]=f}click(){this.events.click?.()}focus(){}scrollIntoView(){}
 }
 function sessionRuntime(demo=false,enabled=true){
  const c=runtime(),nodes=new Map(),root={querySelector:s=>{if(!nodes.has(s))nodes.set(s,new Node());return nodes.get(s)}};
- c.document={createElement:()=>new Node()};c.opens=0;
+ c.document={createElement:()=>new Node(),createElementNS:()=>new Node(),addEventListener(){}};c.opens=0;
  const timers=new Map();let timerId=0;
- c.setTimeout=f=>{timers.set(++timerId,f);return timerId};c.clearTimeout=id=>timers.delete(id);c.performance={now:()=>1000};c.requestAnimationFrame=()=>1;c.cancelAnimationFrame=()=>{};
+ c.setTimeout=f=>{timers.set(++timerId,f);return timerId};c.clearTimeout=id=>timers.delete(id);c.now=1000;c.performance={now:()=>c.now};const frames=new Map();let frameId=0;c.requestAnimationFrame=f=>{frames.set(++frameId,f);return frameId};c.cancelAnimationFrame=id=>frames.delete(id);c.frame=now=>{c.now=now;for(const [id,f] of [...frames]){frames.delete(id);f(now)}};
  c.micPreference={get enabled(){return enabled},setEnabled(value){enabled=value}};
  c.FretboardMicrophone={preference:()=>c.micPreference,create({onFrame,onState}){let state='off';c.audio={onFrame,start(){state='on';onState(state)},stop(){state='off';onState(state)},get state(){return state}};return c.audio}};
  c.window.matchMedia=()=>({matches:true});
@@ -53,6 +53,7 @@ function sessionRuntime(demo=false,enabled=true){
  vm.runInContext(fs.readFileSync(path.join(base,'core/access.js'),'utf8'),c);
  c.window.FRETBOARD_ACCESS=c.window.FretboardAccess.create(!demo);c.window.FRETBOARD_PREMIUM={mark(){},open(){c.opens++}};
  c.RoutineRenderer={render:(_,exercise)=>{c.lastExercise=exercise}};
+ const createStrumming=c.RoutineStrumming.create;c.RoutineStrumming={create(options){const strumming=createStrumming(options),update=strumming.update;strumming.update=function(e,...rest){if(e?.strumming)c.lastExercise=e;return update.call(this,e,...rest)};return strumming}};
  vm.runInContext(fs.readFileSync(path.join(base,'core/routine-session.js'),'utf8'),c);
  const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),session=c.window.RoutineSession.create({root,engine,refreshControls(){},random:rng(321)});
  const nextGroup=()=>{nodes.get('#routineNext').click();flush()};
@@ -193,18 +194,21 @@ for(const step of [0,2])test(`Routine step ${step+1} accepts quiet audio only af
  assert.ok(progress().startsWith('2 /'),progress());
 });
 
-test('Holding one chord counts once; releasing and strumming again counts a new stroke',()=>{
+test('A held chord validates one timed stroke, while an early fresh attack does not count',()=>{
  const {samples,spectrum,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(true);r.session.enter();
  r.nodes.get('#routineSteps').children[3].children[0].click();
  const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);
- const midi=col=>col.notes.map(n=>engine.midiAt(n.string,n.fret)),first=midi(r.c.lastExercise.columns[0]);
- const data=samples(first),frequencies=spectrum(first),silence=new Float32Array(N),empty=new Float32Array(N/2).fill(-Infinity);
- const frame=(now,quiet=false)=>r.c.audio.onFrame({samples:quiet?silence:data,spectrum:quiet?empty:frequencies,sampleRate:48000,fftSize:N,now});
- for(let now=1500;now<3100;now+=80)frame(now);
- assert.equal(r.nodes.get('#routineNoteProgress').textContent,'1 / 40');
- for(let now=3100;now<3420;now+=80)frame(now,true);
- for(let now=3420;now<3980;now+=80)frame(now);
- assert.equal(r.nodes.get('#routineNoteProgress').textContent,'2 / 40');
+ const notes=r.c.lastExercise.columns[0].notes.map(n=>engine.midiAt(n.string,n.fret));
+ const data=samples(notes),frequencies=spectrum(notes),silence=new Float32Array(N),empty=new Float32Array(N/2).fill(-Infinity);
+ const frame=(now,quiet=false)=>{r.c.frame(now);r.c.audio.onFrame({samples:quiet?silence:data,spectrum:quiet?empty:frequencies,sampleRate:48000,fftSize:N,now})};
+ // First target at 4333 ms after the four-beat count-in.
+ for(let now=1040;now<4320;now+=40)frame(now,true);
+ for(let now=4320;now<5720;now+=40)frame(now);
+ assert.equal(r.nodes.get('#routineNoteProgress').textContent,'1 / 32');
+ for(let now=5720;now<5800;now+=40)frame(now,true);
+ // More than 180 ms before the third beat at 6000 ms.
+ for(let now=5800;now<6360;now+=40)frame(now);
+ assert.equal(r.nodes.get('#routineNoteProgress').textContent,'1 / 32');
 });
 
 test('All guitar keys traverse GBE, DGB and ADG from the nut to fret 15, with same-string third liaisons',()=>{
@@ -288,27 +292,33 @@ for(const quality of ['minor','major'])test(`Audio completes all three ${quality
  assert.equal(r.c.lastExercise.id,'chords');
 });
 
-test('Guitar strumming uses one low, compact chord and eight complete bars in every key',()=>{
+test('Guitar strumming uses three diatonic, low chords and four beats in each of eight bars',()=>{
  const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
  for(const root of c.MusicTheory.NOTES)for(const quality of ['major','minor']){
-  const e=c.RoutineExercises.create({engine,root,quality})[3],notes=e.columns[0].notes;
-  assert.equal(e.strumming,true);assert.equal(e.columns.length,40);
-  assert.ok(Math.max(...notes.map(n=>n.fret))<=5,root+' '+quality);
-  assert.ok(notes.length>=3&&notes.length<=6);
-  if(notes.length===3)assert.equal(notes.map(n=>n.string).join(','),'3,4,5');
-  assert.ok(e.columns.every(col=>JSON.stringify(col.notes)===JSON.stringify(notes)));
-  for(let bar=0;bar<8;bar++)assert.equal(e.columns.filter(c=>c.bar===bar).map(c=>c.beat).join(','),bar<4?'0,2,4,6':'0,2,3,4,6,7');
+  const e=c.RoutineExercises.create({engine,root,quality})[3];
+  assert.equal(e.strumming,true);assert.equal(e.columns.length,32);
+  assert.deepEqual([...new Set(e.columns.map(col=>c.MusicTheory.mod(col.rootPC-e.rootPC)))],[0,5,7]);
+  for(const col of e.columns){
+   assert.ok(Math.max(...col.notes.map(n=>n.fret))<=5,root+' '+quality);
+   assert.ok(col.notes.length>=3&&col.notes.length<=6);
+   if(col.notes.length===3)assert.equal(col.notes.map(n=>n.string).join(','),'3,4,5');
+  }
+  for(let bar=0;bar<8;bar++)assert.equal(e.columns.filter(c=>c.bar===bar).map(c=>c.beat).join(','),'0,1,2,3');
+  for(let bar=0;bar<4;bar++)assert.equal(new Set(e.columns.slice(bar*4,bar*4+4).map(c=>c.rootPC)).size,1);
+  for(let bar=4;bar<7;bar++)assert.notEqual(e.columns[bar*4].rootPC,e.columns[bar*4+2].rootPC);
  }
  const am=c.RoutineExercises.create({engine,root:'A',quality:'minor'})[3];
  assert.equal(am.columns[0].notes.map(n=>`${n.string}:${n.fret}`).join(','),'1:0,2:2,3:2,4:1,5:0');
+ assert.equal([...new Set(am.columns.map(c=>c.root))].join(','),'A,D,E');
+ const fs=c.RoutineExercises.create({engine,root:'F',quality:'major'})[3];
+ assert.equal([...new Set(fs.columns.map(c=>c.root))].join(','),'F,B♭,C');
 });
 
-test('Manual strumming traverses eight bars; toggling mic and changing tempo preserve progress',()=>{
+test('Manual strumming traverses eight bars; mic, tempo and navigation keep the current bar',()=>{
  const r=sessionRuntime(true,false);r.session.enter();r.nodes.get('#routineSteps').children[3].children[0].click();
- assert.equal(r.nodes.get('#routineStrumming').hidden,false);
+ assert.equal(r.nodes.get('#routineStrumming').hidden,false);assert.equal(r.nodes.get('#routineTabScroll').hidden,true);
  for(let bar=1;bar<=8;bar++){
   assert.equal(r.nodes.get('#routineStrumBar').textContent,`Bar ${bar} / 8`);
-  assert.equal(r.nodes.get('#routineStrumPattern').children.filter(n=>n.attrs['aria-label']==='Upstroke').length,bar<=4?0:2);
   if(bar===3){
    r.nodes.get('#routineTempo').events.change({target:{value:'48'}});
    r.nodes.get('#routineMic').click();r.nodes.get('#routineMic').click();
@@ -319,24 +329,18 @@ test('Manual strumming traverses eight bars; toggling mic and changing tempo pre
  }
  assert.equal(r.nodes.get('#routineTransition').hidden,false);r.flush();
  assert.equal(r.c.lastExercise.id,'penta');assert.equal(r.nodes.get('#routineStrumming').hidden,true);
- r.nodes.get('#routineSteps').children[3].children[0].click();assert.equal(r.nodes.get('#routineStrumCount').textContent,'Strums: 0 / 40');
+ r.nodes.get('#routineSteps').children[3].children[0].click();assert.equal(r.nodes.get('#routineNoteProgress').textContent,'0 / 32');
 });
 
-test('Strumming rejects wrong harmony and noise, completes exactly forty rearticulated chords',()=>{
- const {samples,spectrum,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineSteps').children[3].children[0].click();
- const notes=[45,52,57,60,64],correct={samples:samples(notes,{gain:.02}),spectrum:spectrum(notes,{gain:.02})},wrong={samples:samples([45,52,57,61,64],{gain:.02}),spectrum:spectrum([45,52,57,61,64],{gain:.02})};
- const quiet={samples:new Float32Array(N),spectrum:new Float32Array(N/2).fill(-Infinity)};
- const noise={samples:samples([],{noise:.02}),spectrum:spectrum([],{noise:.02})};let now=1500;
- const play=(audio,frames)=>{for(let i=0;i<frames;i++,now+=80)r.c.audio.onFrame({...audio,sampleRate:48000,fftSize:N,now})};
- play(wrong,12);play(quiet,4);play(noise,12);play(quiet,4);
- assert.equal(r.nodes.get('#routineStrumCount').textContent,'Strums: 0 / 40');
- for(let stroke=1;stroke<=40;stroke++){
-  play(correct,6);assert.equal(r.nodes.get('#routineStrumCount').textContent,`Strums: ${stroke} / 40`);
-  play(correct,3);assert.equal(r.nodes.get('#routineStrumCount').textContent,`Strums: ${stroke} / 40`);
-  if(stroke<40)assert.equal(r.nodes.get('#routineTransition').hidden,true);
-  play(quiet,3);
- }
- r.flush();assert.equal(r.c.lastExercise.id,'penta');
+test('Pause freezes the tab, resume counts in and missed bars repeat without skipping the exercise',()=>{
+ const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineSteps').children[3].children[0].click();
+ const tick=end=>{for(let time=r.c.now+40;time<=end;time+=40)r.c.frame(time)};
+ tick(6000);r.nodes.get('#routineRhythmToggle').click();
+ const svg=r.nodes.get('#routineRhythmTab'),track=svg.children.at(-1).children[1],transform=track.attrs.transform;
+ tick(10000);assert.equal(track.attrs.transform,transform);assert.equal(r.nodes.get('#routineRhythmStatus').textContent,'Paused');
+ r.nodes.get('#routineRhythmToggle').click();assert.equal(r.nodes.get('#routineRhythmStatus').textContent,'Ready: 4');
+ tick(16800);assert.match(r.nodes.get('#routineRhythmStatus').textContent,/Again:/);assert.equal(r.nodes.get('#routineStrumBar').textContent,'Bar 1 / 8');
+ r.next();assert.equal(r.c.lastExercise.id,'penta');tick(25000);assert.equal(r.c.lastExercise.id,'penta');
 });
 
 test('Every guitar triad section keeps six named strings and the notes on their actual string lines',()=>{
@@ -355,4 +359,28 @@ test('Every guitar triad section keeps six named strings and the notes on their 
    frets.forEach((fret,n)=>assert.equal(lines.findIndex(line=>line.attrs.y1===fret.attrs.y-1)%6,visible.columns[index].notes[n].string));
   });
  }
+});
+
+for(const rate of [44100,48000])test(`Live routine follows 32 ringing chord attacks and changes at 80 BPM (${rate} Hz)`,()=>{
+ const {samples,spectrumOf,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(true);r.session.enter();
+ r.nodes.get('#routineSteps').children[3].children[0].click();
+ r.nodes.get('#routineTempo').events.change({target:{value:'80'}});
+ const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar),exercise=r.c.lastExercise;
+ const beat=750,start=4000,end=start+32*beat,data=new Float32Array(Math.ceil((end+500)*rate/1000));
+ for(const [i,column] of exercise.columns.entries()){
+  const at=start+i*beat,offset=Math.round(at*rate/1000),length=Math.round(beat*rate/1000);
+  const stroke=samples(column.notes.map(n=>engine.midiAt(n.string,n.fret)),{rate,length,gain:.08,decay:3.5});
+  // Rearticulation of an already ringing chord, with a short pick attack.
+  for(let j=0;j<length;j++)data[offset+j]=stroke[j]*Math.min(j/(rate*.008),1);
+ }
+ for(let now=1040;now<=end+40;now+=40){
+  r.c.frame(now);
+  if(now%80===0){
+   const stop=Math.round(now*rate/1000),begin=Math.max(0,stop-N),window=new Float32Array(N);
+   window.set(data.subarray(begin,stop),N-(stop-begin));
+   r.c.audio.onFrame({samples:window,spectrum:spectrumOf(window),sampleRate:rate,fftSize:N,now});
+  }
+ }
+ assert.equal(r.nodes.get('#routineNoteProgress').textContent,'32 / 32');
+ assert.equal(r.nodes.get('#routineTransition').hidden,false);r.flush();assert.equal(r.c.lastExercise.id,'penta');
 });

@@ -145,21 +145,24 @@ body #app .routine-steps .is-current button { color: #fff; }
   margin: 8px 8px 0;
 }
 
-.routine-strumming { margin-top: 12px; padding: 16px; border-radius: 16px; font-family: var(--ui-font); }
 .routine-practice { min-width: 0; }
-@media (min-width:768px) {
-  .routine-practice.has-strumming { display: grid; grid-template-columns: 240px minmax(0,1fr); align-items: center; gap: 16px; }
-  .has-strumming .routine-strumming { margin-top: 0; }
-}
-.routine-strum-heading { display: flex; justify-content: space-between; gap: 12px; color: #fff; font-size: 16px; }
-#routineStrumCount { color: #b7c9df; }
-.routine-strum-pattern { display: grid; grid-template-columns: repeat(8,minmax(0,1fr)); gap: 5px; list-style: none; margin: 14px 0; padding: 0; }
-.routine-strum-pattern li { min-width: 0; color: #b7c9df; }
-.routine-strum-pattern span { display: block; border-top: 3px solid transparent; padding-top: 5px; font-size: 14px; }
-.routine-strum-pattern .on-beat span { border-color: #fff; color: #fff; }
-.routine-strum-pattern strong { display: block; padding: 3px 0; border: 2px solid transparent; border-radius: 8px; font: 700 32px/1.2 var(--ui-font); }
-.routine-strum-pattern .is-played strong { color: #88ffda; background: #073c33; }
-.routine-strum-pattern .is-target strong { color: #24042b; background: var(--ui-purple); border-color: #ffe8ff; box-shadow: 0 0 12px color-mix(in srgb,var(--ui-purple) 60%,transparent); }
+.routine-strumming { font-family: var(--ui-font); }
+.routine-strum-heading { display: flex; justify-content: space-between; gap: 12px; margin: 0 4px 8px; color: #fff; font-size: 16px; }
+#routineRhythmStatus { color: #ffe8ff; }
+.routine-rhythm-tab { overflow: hidden; border-radius: 16px; margin-bottom: 12px; }
+.routine-rhythm-tab svg { display: block; width: 100%; height: auto; }
+.rhythm-string { fill: #c6d3e6; font-size: 14px; }
+.rhythm-string-line { stroke: #899bb3; stroke-width: 1; }
+.rhythm-bar-line { stroke: #899bb3; stroke-width: 1; opacity: .35; }
+.rhythm-chord { fill: #fff; font-size: 19px; font-weight: 700; }
+.rhythm-beat { fill: #c6d3e6; font-size: 16px; }
+.rhythm-playhead { stroke: var(--ui-purple); stroke-width: 4; filter: drop-shadow(0 0 5px var(--ui-purple)); }
+.routine-rhythm-tab .routine-note-face,.rhythm-mute-face { fill: #0a1425; }
+.routine-rhythm-tab .routine-note-number { fill: #fff; font-size: 20px; font-weight: 800; }
+.rhythm-mute { fill: #899bb3; font-size: 16px; }
+.routine-rhythm-tab .is-missed .routine-note-face { stroke: #ff8585; }
+.routine-rhythm-tab .is-missed .rhythm-beat { fill: #ff8585; }
+.routine-rhythm-tab .is-played .rhythm-beat { fill: #88ffda; }
 .routine-strum-controls { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; }
 body #app .routine-strum-controls button { min-height: 44px; padding: 8px 12px; font-size: 14px; }
 .routine-strum-controls label { display: flex; align-items: center; gap: 6px; color: #fff; font-size: 14px; }
