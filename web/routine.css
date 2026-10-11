@@ -138,24 +138,6 @@ body #app .routine-steps .is-current button { color: #fff; }
 
 .routine-tab-scroll svg { display: block; width: 100%; height: auto; }
 
-.routine-triad-groups {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 0;
-  margin: 0 0 14px;
-  list-style: none;
-  font: 600 15px/1.25 var(--ui-font);
-}
-.routine-triad-groups li { padding: 7px 12px; border: 1px solid #526781; border-radius: 12px; color: #b7c9df; background: #0a1527b0; }
-.routine-triad-groups .is-current { color: #a4faff; border-color: #70f7ff; background: #103940; }
-.routine-triad-groups .is-complete { color: #88ffda; border-color: #4de7b680; }
-@media (max-width:767px) {
-  .routine-triad-groups { gap: 5px; font-size: 13px; }
-  .routine-triad-groups li { padding: 6px 8px; }
-}
-
 .routine-legend {
   text-align: left;
   font-size: 14px;
