@@ -114,7 +114,9 @@ body #app .routine-steps .is-current button { color: #fff; }
   line-height: 1.2;
 }
 
-.routine-exercise h2:focus-visible { outline: 2px solid #ffd84b; outline-offset: 4px; }
+/* Keep the heading focus for assistive navigation without framing the title.
+   The tablature notes provide the visual target; button focus stays visible. */
+.routine-exercise h2:focus { outline: none; }
 
 #routineContext { margin: 0 0 8px; color: #ffe38a; font-size: 18px; }
 
