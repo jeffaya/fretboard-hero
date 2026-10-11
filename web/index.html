@@ -50,7 +50,7 @@
   <link rel="stylesheet" href="./circle.css?v=10.31.0">
   <link rel="stylesheet" href="./home.css?v=10.33.0">
   <link rel="stylesheet" href="./theme.css?v=10.33.0">
-  <link rel="stylesheet" href="./routine.css?v=10.37.0">
+  <link rel="stylesheet" href="./routine.css?v=10.37.1">
   <link rel="stylesheet" href="./premium.css?v=10.31.0">
   <link rel="stylesheet" href="./locales.css?v=10.33.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
@@ -115,10 +115,6 @@
           <div class="control-group is-select" data-control-group="root"><label>NOTE</label><div id="routineRootControls" class="control-options"></div><div class="control-select" data-select-for="routineRootControls"></div></div>
           <div class="control-group is-select" data-control-group="quality"><label>KEY</label><div id="routineQualityControls" class="control-options"></div><div class="control-select" data-select-for="routineQualityControls"></div></div>
           <button id="routineTuner" class="tuner-launch ui-secondary" type="button" data-open-tuner><span class="tuner-launch-icon" data-control-group="tuner" aria-hidden="true"></span><span>Tuner</span></button>
-          <div class="routine-mic-control">
-            <button id="routineMic" class="ui-secondary microphone-switch" type="button" role="switch" aria-checked="false" aria-describedby="routineMicPrivacy"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg><span>Microphone</span></button>
-            <small id="routineMicPrivacy">Audio stays on your device. Nothing is recorded.</small>
-          </div>
         </section>
       </div>
       <div id="routineDrawerBackdrop" class="drawer-backdrop"></div>
@@ -133,7 +129,12 @@
           <p id="routineContext" hidden></p>
           <p id="routineInstruction"></p>
           <ol id="routineTriadGroups" class="routine-triad-groups" aria-label="String groups" hidden data-no-i18n></ol>
-          <div id="routineListening" class="routine-listening" hidden data-no-i18n><p id="routineMicStatus" role="status" aria-live="polite"></p><span id="routineNoteProgress"></span></div>
+          <div id="routineListening" class="routine-listening" hidden>
+            <button id="routineMic" class="microphone-switch" type="button" role="switch" aria-label="Microphone" aria-checked="false" aria-describedby="routineMicStatus routineMicPrivacy"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button>
+            <p id="routineMicStatus" role="status" aria-live="polite" data-no-i18n></p>
+            <span id="routineNoteProgress" data-no-i18n></span>
+            <small id="routineMicPrivacy">Audio stays on your device. Nothing is recorded.</small>
+          </div>
           <div id="routineTransition" class="routine-transition" role="status" aria-live="polite" hidden><span aria-hidden="true">✓</span><strong>Well played!</strong></div>
           <div id="routinePractice" class="routine-practice">
           <div id="routineTabScroll" class="routine-tab-scroll ui-panel"><svg id="routineTab" role="img"></svg></div>
@@ -281,7 +282,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.37.0" defer></script>
+  <script src="./bootstrap.js?v=10.37.1" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

@@ -67,14 +67,13 @@
       $('#routineMic').disabled=state.index===5;
       $('#routineMic').setAttribute('aria-checked',String(on||value==='pending'));
       $('#routineMic').setAttribute('aria-busy',String(value==='pending'));
-      $('#routineMenuBtn').classList.toggle('is-listening',on);
-      $('#routineListening').hidden=!on&&value!=='pending'&&!error;
+      $('#routineListening').hidden=!active||state.index===5;
       $('#routineNoteProgress').hidden=!on;
+      $('#routineMicStatus').classList.toggle('is-error',Boolean(error));
       $('#routineMicStatus').textContent=t(error?FretboardMicrophone.errorMessage(error):value==='pending'?'Allow microphone access':'Microphone off');
       resetGates();settleUntil=performance.now()+400;
       if(exercises.length)renderInstruction();
       draw();
-      if((on||value==='pending'||error)&&$('#routineDrawer').classList.contains('open'))$('#routineMenuClose').click();
       if(on){
         showTarget();
         if(current()?.index===(currentSection()?.end||exercises[state.index]?.columns.length))advance();
@@ -157,6 +156,7 @@
       $('#routineNext').hidden=done;$('#routineFinish').hidden=!done;
       $('#routineNext').textContent=t(exercise.sections&&current()?.section<exercise.sections.length-1?'Next strings →':state.index===4&&[0,1,2,3].every(i=>completed.has(i))?'Done':'Next →');
       $('#routineMic').disabled=done;
+      $('#routineListening').hidden=!active||done;
       draw();
       for(const key of ['root','quality'])$('#routine'+(key==='root'?'Root':'Quality')+'Controls').querySelectorAll('button').forEach(b=>{
         const active=b.dataset.value===state[key];b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));
