@@ -50,7 +50,7 @@
   <link rel="stylesheet" href="./circle.css?v=10.31.0">
   <link rel="stylesheet" href="./home.css?v=10.33.0">
   <link rel="stylesheet" href="./theme.css?v=10.33.0">
-  <link rel="stylesheet" href="./routine.css?v=10.37.4">
+  <link rel="stylesheet" href="./routine.css?v=10.38.0">
   <link rel="stylesheet" href="./premium.css?v=10.31.0">
   <link rel="stylesheet" href="./locales.css?v=10.33.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
@@ -134,13 +134,13 @@
             <span id="routineNoteProgress" data-no-i18n></span>
           </div>
           <div id="routineTransition" class="routine-transition" role="status" aria-live="polite" hidden><span aria-hidden="true">✓</span><strong>Well played!</strong></div>
-          <div id="routinePractice" class="routine-practice">
+          <div class="routine-practice">
           <div id="routineTabScroll" class="routine-tab-scroll ui-panel"><svg id="routineTab" role="img"></svg></div>
-          <div id="routineStrumming" class="routine-strumming ui-panel" hidden data-no-i18n>
-            <div class="routine-strum-heading"><strong id="routineStrumBar"></strong><span id="routineStrumCount"></span></div>
-            <ol id="routineStrumPattern" class="routine-strum-pattern"></ol>
+          <div id="routineStrumming" class="routine-strumming" hidden data-no-i18n>
+            <div class="routine-strum-heading"><strong id="routineStrumBar"></strong><span id="routineRhythmStatus" role="status" aria-live="polite"></span></div>
+            <div class="routine-rhythm-tab ui-panel"><svg id="routineRhythmTab" role="img" aria-describedby="routineStrumHelp"></svg></div>
             <div class="routine-strum-controls">
-              <button id="routinePulse" class="ui-secondary" type="button" aria-pressed="true"></button>
+              <button id="routineRhythmToggle" class="ui-secondary" type="button" aria-pressed="true"></button>
               <label><span id="routineTempoLabel"></span> <select id="routineTempo"><option>48</option><option>56</option><option>64</option><option selected>72</option><option>80</option></select> BPM</label>
               <button id="routineStrumNext" class="ui-secondary" type="button"></button>
             </div>
@@ -280,7 +280,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.37.4" defer></script>
+  <script src="./bootstrap.js?v=10.38.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

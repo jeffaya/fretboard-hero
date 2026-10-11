@@ -20,7 +20,7 @@
     const minimum=labelled?Math.max(102,...widths.map(w=>w+20)):30,capacity=Math.max(1,Math.floor((width-left-right)/minimum));
     const lines=Math.ceil(exercise.columns.length/capacity),count=Math.ceil(exercise.columns.length/lines);
     const top=journey?52:labelled?34:20;
-    const row=exercise.strumming?23:compact?25:window.innerWidth>=1001&&window.innerHeight<=580?26:32;
+    const row=compact?25:window.innerWidth>=1001&&window.innerHeight<=580?26:32;
     const lineHeight=top+(strings.length-1)*row+26,height=lines*lineHeight;
     svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.style.minWidth='0';
     const description=exercise.columns.map(c=>`${c.label?c.label+': ':''}${c.subLabel?c.subLabel+'. ':''}${c.notes.map(n=>t(`${engine.tuning[n.string].name} string ${engine.stringCount-n.string}, fret ${n.fret}`)).join(', ')}`).join('; ');

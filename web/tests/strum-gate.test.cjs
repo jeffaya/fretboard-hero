@@ -40,3 +40,11 @@ test('A delayed analysis frame does not turn a held chord into a fresh attack',(
  for(const now of [80,160,240,320,400,800,880,960,1040,1120])if(gate.update({samples,sampleRate:48000,now,match:true}))count++;
  assert.equal(count,1);
 });
+
+test('Harmony is resolved against the original onset and returns that time, not the later FFT confirmation',()=>{
+ const gate=createStrumGate(),samples=new Float32Array(16384).fill(.02),observed=[];
+ let hit;
+ for(let now=1000;now<1500;now+=80){const result=gate.update({samples,sampleRate:48000,now,match(at){observed.push(at);return true}});if(result)hit={...result,confirmed:now}}
+ assert.ok(hit);assert.ok(hit.at>=920&&hit.at<=1000);assert.ok(hit.confirmed-hit.at>=160);
+ assert.ok(observed.every(at=>at===hit.at));
+});

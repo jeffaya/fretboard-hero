@@ -8,14 +8,9 @@
     let exercises=[],guides=[],active=false,transition=0,settleUntil=0,lastPitches=[];
     const micPreference=FretboardMicrophone.preference('routine');
     const microphone=FretboardMicrophone.create({fftSize:16384,interval:80,onFrame:listen,onState:audioState});
-    const strumming=RoutineStrumming.create({root,onNextBar(){
-      const exercise=exercises[state.index];
-      if(!active||transition||!exercise?.strumming)return;
-      const bar=exercise.columns[current().index]?.bar;
-      while(current().index<exercise.columns.length&&exercise.columns[current().index].bar===bar)current().index++;
-      resetGates();draw();
-      if(current().index===exercise.columns.length)advance();
-    }});
+    const strumming=RoutineStrumming.create({root,engine,
+      onProgress(index,played){current().index=index;current().strums=played},onComplete:advance,onRestart:()=>strumGate.reset()
+    });
     function resetGates(repeat=false){gate.reset(repeat);strumGate.reset()}
     // A short CSS celebration, created once and replayed only on completion.
     const confettiColors=['#ff9814','#70f7ff','#ff4ed8','#ffe38a','#b88cff'];
@@ -34,22 +29,23 @@
       return pitches.length>1?`${Math.min(...pitches)}:${[...new Set(pitches.map(midi=>midi%12))].sort((a,b)=>a-b).join(',')}`:pitches.join(',');
     }
     function draw(animate=false){
-      if(!exercises.length||state.index>=5)return;
+      if(!exercises.length||state.index>=5||transition)return;
       const guided=microphone.state==='on',exercise=exercises[state.index],section=currentSection();
-      $('#routinePractice').classList.toggle('has-strumming',Boolean(exercise.strumming));
+      $('#routineTabScroll').hidden=Boolean(exercise.strumming);
       $('#routineLegend').textContent=t(exercise.strumming?'Strum only numbered strings; × means mute.':guided?'Highlight = target · Green = played':'Cyan = root note');
-      const visible=exercise.strumming?{...exercise,columns:[exercise.columns[0]]}:section?{...exercise,columns:exercise.columns.slice(section.start,section.end)}:exercise;
-      RoutineRenderer.render($('#routineTab'),visible,engine,guided?{index:exercise.strumming?0:current().index-(section?.start||0),animate}:null);
-      strumming.update(active?exercise:null,current().index,guided);
+      const visible=section?{...exercise,columns:exercise.columns.slice(section.start,section.end)}:exercise;
+      if(!exercise.strumming)RoutineRenderer.render($('#routineTab'),visible,engine,guided?{index:current().index-(section?.start||0),animate}:null);
+      strumming.update(active?exercise:null,current().index,guided,current().strums);
       if(guided){
         const guide=current();
         const count=section?section.end-section.start:exercise.columns.length;
-        $('#routineNoteProgress').textContent=`${Math.min(guide.index-(section?.start||0)+(exercise.strumming?0:1),count)} / ${count}`;
+        if(!exercise.strumming)$('#routineNoteProgress').textContent=`${Math.min(guide.index-(section?.start||0)+1,count)} / ${count}`;
         $('#routineMicStatus').textContent=t('Listening…');
       }
     }
     function showTarget(){
-      const target=$(exercises[state.index]?.strumming?'#routineStrumPattern':'#routineTab').querySelector('.is-target');
+      if(exercises[state.index]?.strumming)return;
+      const target=$('#routineTab').querySelector('.is-target');
       if(target)target.scrollIntoView({block:'nearest',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
     }
     function audioState(value,error){
@@ -77,12 +73,23 @@
     }
     function listen({samples,spectrum,sampleRate,fftSize,now}){
       if(!active||state.index>=5||transition||now<settleUntil)return;
+      if(exercises[state.index].strumming){
+        let result;
+        const hit=strumGate.update({samples,sampleRate,now,match(at){
+          const column=strumming.targetAt(at);if(!column)return false;
+          result??=detector.analyze(spectrum,sampleRate,fftSize);
+          const pitches=column.notes.map(n=>engine.midiAt(n.string,n.fret));
+          return detector.matches(result,pitches,{requireBass:false});
+        }});
+        if(hit)strumming.hit(hit.at,now);
+        return;
+      }
       const pitches=targetPitches();if(!pitches.length)return;
       let energy=0;for(const value of samples)energy+=value*value;
       const level=Math.sqrt(energy/samples.length),chord=pitches.length>1;
       let match=false;
       if(level>=FretboardPitch.minLevel){
-        if(chord)match=detector.matches(detector.analyze(spectrum,sampleRate,fftSize),pitches,{requireBass:!exercises[state.index].strumming});
+        if(chord)match=detector.matches(detector.analyze(spectrum,sampleRate,fftSize),pitches);
         else{
           const hz=FretboardPitch.detect(samples.subarray(samples.length-8192),sampleRate,{maxFrequency:1500});
           match=Boolean(hz&&Math.abs(FretboardPitch.cents(hz,pitches[0]))<=38);
@@ -94,12 +101,10 @@
           }
         }
       }
-      const isStrumming=exercises[state.index].strumming;
-      if(!(isStrumming?strumGate.update({samples,sampleRate,now,match}):gate.update({match,level,now,chord})))return;
+      if(!gate.update({match,level,now,chord}))return;
       lastPitches=pitches;current().index++;
       draw(true);
       if(current().index===(currentSection()?.end||exercises[state.index].columns.length)){advance();return}
-      if(isStrumming){showTarget();return}
       const next=targetPitches();gate.reset(soundKey(next)===soundKey(pitches));
       settleUntil=now+200;showTarget();
     }
@@ -155,6 +160,7 @@
     }
     function advance(){
       if(state.index>=5||transition||!active)return;
+      strumming.stop();
       $('#routineTransition').hidden=false;$('#routineNext').disabled=true;
       $('#routineExercise').classList.toggle('is-transitioning',true);
       transition=setTimeout(()=>{
