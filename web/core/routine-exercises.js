@@ -35,6 +35,41 @@
     return candidates.filter(notes=>{const key=notes.map(n=>`${n.string}:${n.fret}`).join('|');if(seen.has(key))return false;seen.add(key);return true});
   }
 
+  function guitarTriads(engine,root,rootPC,quality,maxFret){
+    const columns=[],sections=[],system=engine.profile.caged;
+    // Spell a third as a third, including E# in C# major and C## in A# major.
+    const letters=['C','D','E','F','G','A','B'],letter=letters[(letters.indexOf(root[0])+2)%7];
+    const alteration=MusicTheory.mod(rootPC+(quality==='major'?4:3)-MusicTheory.PC[letter]);
+    const third=letter+(alteration<=6?'#'.repeat(alteration):'♭'.repeat(12-alteration));
+    function cagedForms(shape){
+      return system.order.filter(id=>{
+        const offsets=shape.notes.map(note=>{
+          const part=system.templates[id].find(([string])=>string===note.string);
+          return part&&part[2]===note.degree?note.fret-part[1]+(quality==='minor'&&part[2]==='third'?1:0):null;
+        });
+        // A label describes an exact three-string fragment of the template,
+        // not a claim that its entire parent chord is playable at this fret.
+        return offsets.every(offset=>offset!==null&&offset===offsets[0]);
+      });
+    }
+    for(const set of ['GBE','DGB','ADG']){
+      const strings=engine.profile.triadSets[set],start=columns.length;
+      const shapes=TriadEngine.findShapes({engine,rootPC,quality,maxFret,set});
+      if(!shapes.length)throw new Error('No routine triads for '+set);
+      shapes.forEach((shape,index)=>{
+        if(index){
+          const note=shape.notes.find(n=>n.degree==='third');
+          const from=shapes[index-1].notes.find(n=>n.string===note.string);
+          columns.push({kind:'third',notes:[note],from,label:`${quality==='major'?'Major':'Minor'} third — ${third}`,subLabel:`${from.fret} → ${note.fret}`});
+        }
+        const forms=cagedForms(shape);
+        columns.push({kind:'triad',notes:shape.notes,label:shape.inversion,forms,subLabel:forms.length?`CAGED forms: ${forms.join(' / ')}`:''});
+      });
+      sections.push({set,strings,start,end:columns.length});
+    }
+    return {columns,sections};
+  }
+
   function create({engine,root,quality,random=Math.random}){
     const rootPC=MusicTheory.PC[root],maxFret=Math.min(15,engine.maxFret),key=`${root} ${quality}`;
     const shared={root,rootPC,quality};
@@ -49,20 +84,27 @@
     const scaleExercise=make('scale','Scale',`Play the ${key} scale`,`${quality==='minor'?'Natural minor':'Major'} · ${range(scale)}`,
       'Play up to the octave, then back to the root.',roundTrip(scale));
 
-    const sets=Object.keys(engine.profile.triadSets),set=pick(sets,random);
-    const shapes=TriadEngine.findShapes({engine,rootPC,quality,maxFret,set});
-    // Choose one of each inversion, spread across the neck, on one string set.
-    const combinations=[];
-    for(const a of shapes)for(const b of shapes)for(const c of shapes){
-      if(a.min>=b.min||b.min>=c.min||new Set([a.inversion,b.inversion,c.inversion]).size!==3)continue;
-      combinations.push([a,b,c]);
+    let triadExercise;
+    if(engine.profile.family==='guitar'){
+      const journey=guitarTriads(engine,root,rootPC,quality,maxFret);
+      triadExercise={...make('triads','Triads',`Connect the ${key} triads`,`${key} · Frets 0–${maxFret}`,
+        'Triad → third alone → next triad. Sliding is optional.',journey.columns),sections:journey.sections};
+    }else{
+      const sets=Object.keys(engine.profile.triadSets),set=pick(sets,random);
+      const shapes=TriadEngine.findShapes({engine,rootPC,quality,maxFret,set});
+      // Choose one of each inversion, spread across the neck, on one string set.
+      const combinations=[];
+      for(const a of shapes)for(const b of shapes)for(const c of shapes){
+        if(a.min>=b.min||b.min>=c.min||new Set([a.inversion,b.inversion,c.inversion]).size!==3)continue;
+        combinations.push([a,b,c]);
+      }
+      const spread=combinations.filter(s=>s[2].min-s[0].min>=6);
+      const triads=pick(spread.length?spread:combinations,random);
+      if(!triads)throw new Error('No routine triad inversions for this tuning');
+      triadExercise=make('triads','Triads',`Connect the ${key} triads`,`${key} · Strings ${set} · Lower, middle & upper neck`,
+        'Play each triad together, then one note at a time.',
+        triads.map(s=>({notes:s.notes,label:s.inversion})));
     }
-    const spread=combinations.filter(s=>s[2].min-s[0].min>=6);
-    const triads=pick(spread.length?spread:combinations,random);
-    if(!triads)throw new Error('No routine triad inversions for this tuning');
-    const triadExercise=make('triads','Triads',`Connect the ${key} triads`,`${key} · Strings ${set} · Lower, middle & upper neck`,
-      'Play each triad together, then one note at a time.',
-      triads.map(s=>({notes:s.notes,label:s.inversion})));
 
     let chordExercise;
     if(engine.profile.family==='bass'){

@@ -341,5 +341,11 @@
   "Listening…": "Mendengarkan…",
   "Microphone": "Mikrofon",
   "Play the highlighted note.": "Mainkan nada yang disorot.",
-  "Highlight = target · Green = played": "Sorotan = target · Hijau = sudah dimainkan"
+  "Highlight = target · Green = played": "Sorotan = target · Hijau = sudah dimainkan",
+  "Triad → third alone → next triad. Sliding is optional.": "Triad → nada terts saja → triad berikutnya. Slide opsional.",
+  "String groups": "Kelompok senar",
+  "Next strings →": "Senar berikutnya →",
+  "Major third — {note}": "Terts mayor — {note}",
+  "Minor third — {note}": "Terts minor — {note}",
+  "CAGED forms: {forms}": "Bentuk CAGED: {forms}"
 }

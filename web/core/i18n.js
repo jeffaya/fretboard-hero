@@ -22,7 +22,7 @@
   }
   // Canonical pitches never change; call only at musical presentation boundaries.
   function note(input){
-    const found=/^([A-Ga-g])([#♯♭b]?)(m|°|7|maj7|m7)?$/.exec(input);
+    const found=/^([A-Ga-g])([#♯♭b]{0,2})(m|°|7|maj7|m7)?$/.exec(input);
     if(!found)return input;
     const [,letter,accidental,suffix='']=found,base=letter.toUpperCase();
     if(locale==='de'&&base==='B'&&(accidental==='♭'||accidental==='b'))return 'B'+suffix;
@@ -31,7 +31,7 @@
   function music(input){
     // Strings such as EAD are tuning sets, never the CAGED system name.
     return input.replace(/\b[A-G]{2,3}\b/g,set=>[...set].map(note).join('–'))
-      .replace(/(?<![\p{L}\p{N}])([A-G][#♯♭b]?(?:maj7|m7|m|°|7)?)(?![\p{L}\p{N}])/gu,token=>note(token));
+      .replace(/(?<![\p{L}\p{N}])([A-G][#♯♭b]{0,2}(?:maj7|m7|m|°|7)?)(?![\p{L}\p{N}])/gu,token=>note(token));
   }
   function text(input,depth=0){
     if(typeof input!=='string'||locale==='en'||depth>5)return input;
@@ -134,7 +134,7 @@
     const requested=new URL(location.href).searchParams.get('lang');
     locale=supported.has(requested)?requested:supported.has(saved)?saved:detect(navigator.languages?.length?navigator.languages:[navigator.language]);
     if(locale!=='en'){
-      try{const response=await fetch('./locales/'+locale+'.json?v=10.34.1');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
+      try{const response=await fetch('./locales/'+locale+'.json?v=10.36.0');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
     }
     document.documentElement.lang=locale;document.documentElement.dir='ltr';
     return locale;

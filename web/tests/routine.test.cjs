@@ -16,8 +16,8 @@ test('All keys, qualities and instruments have five playable and musically corre
   assert.equal(engine.noteAt(scale[0].string,scale[0].fret),rootPC);assert.equal((scale.length-1)%7,0);assert.ok(scale.length>=8);
   scale.slice(0,(scale.length+1)/2).forEach((n,i)=>assert.equal(engine.midiAt(n.string,n.fret)-first,Math.floor(i/7)*12+intervals[i%7],label));
   const tones=[rootPC,c.MusicTheory.mod(rootPC+(quality==='major'?4:3)),c.MusicTheory.mod(rootPC+7)];
-  assert.equal(new Set(exercises[2].columns.map(c=>c.label)).size,3,label);
-  for(const col of exercises[2].columns){assert.equal(col.notes.length,3);assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,3);for(const n of col.notes)assert.ok(tones.includes(engine.noteAt(n.string,n.fret)),label)}
+  assert.equal(new Set(exercises[2].columns.filter(col=>col.notes.length===3).map(c=>c.label)).size,3,label);
+  for(const col of exercises[2].columns){assert.equal(col.notes.length,col.kind==='third'?1:3);assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,col.notes.length);for(const n of col.notes)assert.ok(tones.includes(engine.noteAt(n.string,n.fret)),label)}
   for(const n of flatten(exercises[3]))assert.ok(tones.includes(engine.noteAt(n.string,n.fret)),label);
   if(profile.family==='bass'){assert.equal(exercises[3].step,'Arpeggios');const arp=flatten(exercises[3]);for(let i=1;i<(arp.length+1)/2;i++)assert.ok(arp[i].midi>arp[i-1].midi)}else{assert.ok(exercises[3].columns.length>=3,label);for(const col of exercises[3].columns)assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,3)}
   const penta=c.MusicTheory.pentatonicPCs(rootPC,quality);assert.equal(flatten(exercises[4]).length,4*engine.stringCount-1);for(const n of flatten(exercises[4]))assert.ok(penta.includes(engine.noteAt(n.string,n.fret)),label);
@@ -30,10 +30,10 @@ test('All keys, qualities and instruments have five playable and musically corre
  }
  assert.equal(count,576);
 });
-test('Repeated routines vary scale locations, string sets and pentatonic positions',()=>{
+test('Repeated routines vary scales and pentatonics while the full guitar triad journey stays predictable',()=>{
  const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),random=rng(1234),variants=[new Set(),new Set(),new Set()];
  for(let i=0;i<30;i++){const e=c.RoutineExercises.create({engine,root:'A',quality:'minor',random});[e[1],e[2],e[4]].forEach((x,j)=>variants[j].add(JSON.stringify(x.columns)))}
- variants.forEach(v=>assert.ok(v.size>2));
+ assert.ok(variants[0].size>2);assert.equal(variants[1].size,1);assert.ok(variants[2].size>2);
 });
 test('Shared drawer is exposed inline and inert only when closed in compact mode',()=>{const nodes=new Map(),media={matches:false,addEventListener(_,f){this.change=f}},c={window:{},matchMedia:()=>media};function node(id){if(!nodes.has(id)){const classes=new Set();nodes.set(id,{attrs:{},events:{},classList:{contains:k=>classes.has(k),toggle:(k,on)=>on?classes.add(k):classes.delete(k)},setAttribute(k,v){this.attrs[k]=v},addEventListener(k,f){this.events[k]=f},focus(){c.focused=id}})}return nodes.get(id)}const root={querySelector:node};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(base,'core/controls.js'),'utf8'),c);c.window.FretboardControls.bindDrawer({root,name:'routine'});const drawer=node('#routineDrawer'),btn=node('#routineMenuBtn');assert.equal(drawer.inert,false);assert.equal(drawer.attrs['aria-hidden'],'false');media.matches=true;media.change();assert.equal(drawer.inert,true);btn.events.click();assert.equal(drawer.inert,false);assert.equal(btn.attrs['aria-expanded'],'true');drawer.events.keydown({key:'Escape',preventDefault(){}});assert.equal(drawer.inert,true);assert.equal(c.focused,'#routineMenuBtn');media.matches=false;media.change();assert.equal(drawer.inert,false)});
 class Node{
@@ -54,14 +54,15 @@ function sessionRuntime(demo=false,enabled=true){
  c.RoutineRenderer={render:(_,exercise)=>{c.lastExercise=exercise}};
  vm.runInContext(fs.readFileSync(path.join(base,'core/routine-session.js'),'utf8'),c);
  const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),session=c.window.RoutineSession.create({root,engine,refreshControls(){},random:rng(321)});
- return {session,nodes,c,flush,next(){nodes.get('#routineNext').click();flush()}};
+ const nextGroup=()=>{nodes.get('#routineNext').click();flush()};
+ return {session,nodes,c,flush,nextGroup,next(){const id=c.lastExercise.id;nextGroup();while(id==='triads'&&c.lastExercise.id==='triads')nextGroup()}};
 }
 test('Demo permits all five stages and Done, but blocks other roots and major without resetting progress',()=>{
  const r=sessionRuntime(true);r.session.enter();
  r.next();assert.equal(r.c.lastExercise.id,'scale');
  r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='C').click();r.nodes.get('#routineQualityControls').children[0].click();
  assert.equal(r.c.opens,2);assert.equal(r.c.lastExercise.id,'scale');assert.equal(r.c.lastExercise.root,'A');assert.equal(r.c.lastExercise.quality,'minor');
- for(let i=1;i<5;i++){assert.equal(r.nodes.get('#routineNext').textContent,i===4?'Done':'Next →');r.next()}
+ for(let i=1;i<5;i++){assert.equal(r.nodes.get('#routineNext').textContent,i===2?'Next strings →':i===4?'Done':'Next →');r.next()}
  assert.equal(r.nodes.get('#routineTitle').textContent,'Routine complete!');assert.equal(r.nodes.get('#routineNext').hidden,true);assert.equal(r.nodes.get('#routineFinish').hidden,false);
  assert.equal(r.nodes.get('#routineSteps').children.filter(n=>n.classes.has('is-complete')).length,5);
  r.session.enter();assert.equal(r.c.lastExercise.id,'root');assert.equal(r.nodes.get('#routineFinish').hidden,true);
@@ -204,4 +205,88 @@ test('Holding one chord cannot clear the next shape with the same bass and chord
  for(let now=3100;now<3420;now+=80)frame(now,true);
  for(let now=3420;now<3980;now+=80)frame(now);
  assert.ok(r.nodes.get('#routineNoteProgress').textContent.startsWith('3 /'));
+});
+
+test('All guitar keys traverse GBE, DGB and ADG from the nut to fret 15, with same-string third liaisons',()=>{
+ const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
+ for(const root of c.MusicTheory.NOTES)for(const quality of ['major','minor']){
+  const e=c.RoutineExercises.create({engine,root,quality,random:rng(4)})[2];
+  assert.equal(e.sections.map(s=>s.set).join(','),'GBE,DGB,ADG');
+  assert.equal(e.sections[0].start,0);assert.equal(e.sections.at(-1).end,e.columns.length);
+  for(const section of e.sections){
+   const cols=e.columns.slice(section.start,section.end),triads=cols.filter(c=>c.kind==='triad');
+   assert.equal(cols.length,triads.length*2-1);assert.ok(triads.length>=3);
+   assert.ok(Math.min(...triads[0].notes.map(n=>n.fret))<=4);
+   assert.ok(Math.max(...triads.at(-1).notes.map(n=>n.fret))>=11);
+   assert.equal(new Set(triads.map(c=>c.label)).size,3);
+   cols.forEach((col,i)=>{
+    assert.equal(col.kind,i%2?'third':'triad');
+    assert.ok(col.notes.every(n=>section.strings.includes(n.string)&&n.string!==0&&n.fret<=15));
+    if(i%2){
+     const target=col.notes[0];assert.equal(target.degree,'third');
+     assert.ok(cols[i+1].notes.some(n=>n.string===target.string&&n.fret===target.fret));
+     assert.ok(cols[i-1].notes.some(n=>n.string===col.from.string&&n.fret===col.from.fret));
+     assert.equal(target.string,col.from.string);assert.equal(target.fret-col.from.fret,quality==='major'?4:3);
+    }else if(i)assert.ok(Math.min(...col.notes.map(n=>n.fret))>Math.min(...cols[i-2].notes.map(n=>n.fret)));
+   });
+  }
+ }
+});
+test('A minor triads identify actual CAGED fragments, including shared C/D and A/G shapes',()=>{
+ const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
+ const e=c.RoutineExercises.create({engine,root:'A',quality:'minor'})[2];
+ assert.equal(e.sections.map(s=>e.columns.slice(s.start,s.end).filter(c=>c.kind==='triad').map(c=>c.forms.join('/')).join(',')).join('|'),'A,E,C/D,A|A/G,E,C,A/G|G,E,C,G');
+ assert.ok(e.columns.filter(c=>c.kind==='third').every(c=>c.label==='Minor third — C'));
+ for(const [root,third] of [['C#','E#'],['G#','B#'],['A#','C##'],['D#','F##']]){
+  const e=c.RoutineExercises.create({engine,root,quality:'major'})[2];
+  assert.ok(e.columns.filter(c=>c.kind==='third').every(c=>c.label==='Major third — '+third));
+ }
+});
+test('Manual Next completes each string group in order and marks Triads complete only after the third group',()=>{
+ const r=sessionRuntime(true,false);r.session.enter();r.nodes.get('#routineSteps').children[2].children[0].click();
+ const groups=()=>r.nodes.get('#routineTriadGroups').children;
+ for(let section=0;section<3;section++){
+  assert.equal(r.c.lastExercise.strings.join(','),[[3,4,5],[2,3,4],[1,2,3]][section].join(','));
+  assert.equal(groups()[section].attrs['aria-current'],'step');assert.equal(groups().filter(g=>g.classes.has('is-complete')).length,section);
+  assert.equal(r.nodes.get('#routineSteps').children[2].classes.has('is-complete'),false);
+  r.nodes.get('#routineNext').click();r.nodes.get('#routineNext').click();r.flush();
+ }
+ assert.equal(r.c.lastExercise.id,'chords');assert.equal(r.nodes.get('#routineSteps').children[2].classes.has('is-complete'),true);
+ assert.equal(r.nodes.get('#routineTriadGroups').hidden,true);
+ r.nodes.get('#routineSteps').children[2].children[0].click();assert.equal(r.c.lastExercise.strings.join(','),'3,4,5');
+});
+test('Cancelling a group transition preserves its group, and microphone toggling does not restart it',()=>{
+ const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineSteps').children[2].children[0].click();r.nextGroup();
+ assert.equal(r.c.lastExercise.strings.join(','),'2,3,4');
+ r.nodes.get('#routineMic').click();r.nodes.get('#routineMic').click();assert.equal(r.c.lastExercise.strings.join(','),'2,3,4');
+ r.nodes.get('#routineNext').click();r.nodes.get('#routineSteps').children[0].children[0].click();r.flush();
+ assert.equal(r.c.lastExercise.id,'root');r.nodes.get('#routineSteps').children[2].children[0].click();
+ assert.equal(r.c.lastExercise.strings.join(','),'2,3,4');
+ r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='A').click();
+ r.session.leave();r.session.enter();r.nodes.get('#routineSteps').children[2].children[0].click();assert.equal(r.c.lastExercise.strings.join(','),'3,4,5');
+});
+for(const quality of ['minor','major'])test(`Audio completes all three ${quality} triad groups and requires isolated thirds between chords`,()=>{
+ const {samples,spectrum,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(false);r.session.enter();
+ r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='A').click();
+ if(quality==='major')r.nodes.get('#routineQualityControls').children[0].click();
+ r.nodes.get('#routineSteps').children[2].children[0].click();
+ const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);let now=1500;
+ const play=(notes,frames=10)=>{const data=samples(notes,{gain:.02}),bins=spectrum(notes,{gain:.02});for(let i=0;i<frames;i++,now+=80)r.c.audio.onFrame({samples:data,spectrum:bins,sampleRate:48000,fftSize:N,now})};
+ const progress=()=>r.nodes.get('#routineNoteProgress').textContent;
+ for(let section=0;section<3;section++){
+  assert.equal(r.c.lastExercise.strings.join(','),[[3,4,5],[2,3,4],[1,2,3]][section].join(','));
+  const cols=r.c.lastExercise.columns;
+  for(let i=0;i<cols.length;i++){
+   assert.equal(progress(),`${i+1} / ${cols.length}`);
+   const midi=c=>c.notes.map(n=>engine.midiAt(n.string,n.fret));
+   if(cols[i].kind==='third'){
+    play(midi(cols[i+1]));assert.equal(progress(),`${i+1} / ${cols.length}`,'full next chord cannot replace its isolated third');
+    play(midi(cols[i]).map(m=>m+1));assert.equal(progress(),`${i+1} / ${cols.length}`,'wrong note is rejected');
+   }
+   play(midi(cols[i]));
+   if(i<cols.length-1)assert.equal(progress(),`${i+2} / ${cols.length}`);
+   else {assert.equal(r.nodes.get('#routineTransition').hidden,false);r.flush()}
+  }
+ }
+ assert.equal(r.c.lastExercise.id,'chords');
 });

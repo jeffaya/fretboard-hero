@@ -341,5 +341,11 @@
   "Listening…": "正在聆听…",
   "Microphone": "麦克风",
   "Play the highlighted note.": "请弹奏高亮的音符。",
-  "Highlight = target · Green = played": "高亮 = 目标音 · 绿色 = 已弹奏"
+  "Highlight = target · Green = played": "高亮 = 目标音 · 绿色 = 已弹奏",
+  "Triad → third alone → next triad. Sliding is optional.": "三和弦 → 单独弹三音 → 下一个三和弦。滑音可选。",
+  "String groups": "弦组",
+  "Next strings →": "下一个弦组 →",
+  "Major third — {note}": "大三度 — {note}",
+  "Minor third — {note}": "小三度 — {note}",
+  "CAGED forms: {forms}": "CAGED 指型：{forms}"
 }
