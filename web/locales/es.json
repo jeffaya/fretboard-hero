@@ -347,5 +347,20 @@
   "Next strings →": "Siguientes cuerdas →",
   "Major third — {note}": "Tercera mayor — {note}",
   "Minor third — {note}": "Tercera menor — {note}",
-  "CAGED forms: {forms}": "Formas CAGED: {forms}"
+  "CAGED forms: {forms}": "Formas CAGED: {forms}",
+  "Strum {key}": "Rasguea en {key}",
+  "Keep one comfortable chord. Four bars down, then four with upstrokes.": "Mantén un acorde cómodo. Cuatro compases hacia abajo, luego cuatro con golpes hacia arriba.",
+  "Strum only numbered strings; × means mute.": "Rasguea solo las cuerdas numeradas; × significa silenciar.",
+  "Bar {n} / 8": "Compás {n} / 8",
+  "Strums: {n} / 40": "Golpes: {n} / 40",
+  "Tempo": "Tempo",
+  "Start pulse": "Iniciar pulso",
+  "Pause pulse": "Pausar pulso",
+  "Next bar →": "Siguiente compás →",
+  "Strumming pattern": "Patrón de rasgueo",
+  "Upstroke": "Hacia arriba",
+  "Downstroke": "Hacia abajo",
+  "Each new strum counts. Timing is free; arrows suggest the direction.": "Cada nuevo golpe cuenta. El ritmo es libre; las flechas sugieren la dirección.",
+  "Microphone off: follow the arrows, then move to the next bar.": "Micrófono apagado: sigue las flechas y pasa al siguiente compás.",
+  "No stroke": "Sin golpe"
 }

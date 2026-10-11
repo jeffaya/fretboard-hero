@@ -347,5 +347,20 @@
   "Next strings →": "下一个弦组 →",
   "Major third — {note}": "大三度 — {note}",
   "Minor third — {note}": "小三度 — {note}",
-  "CAGED forms: {forms}": "CAGED 指型：{forms}"
+  "CAGED forms: {forms}": "CAGED 指型：{forms}",
+  "Strum {key}": "用{key}扫弦",
+  "Keep one comfortable chord. Four bars down, then four with upstrokes.": "保持一个舒适的和弦。先向下扫四小节，再加入向上扫弦弹四小节。",
+  "Strum only numbered strings; × means mute.": "只扫标有数字的琴弦；×表示闷音。",
+  "Bar {n} / 8": "小节 {n} / 8",
+  "Strums: {n} / 40": "扫弦：{n} / 40",
+  "Tempo": "速度",
+  "Start pulse": "开始节拍",
+  "Pause pulse": "暂停节拍",
+  "Next bar →": "下一小节 →",
+  "Strumming pattern": "扫弦节奏",
+  "Upstroke": "向上扫",
+  "Downstroke": "向下扫",
+  "Each new strum counts. Timing is free; arrows suggest the direction.": "每次新的扫弦都会计数。节奏自由，箭头仅提示方向。",
+  "Microphone off: follow the arrows, then move to the next bar.": "麦克风已关闭：跟随箭头弹奏，然后进入下一小节。",
+  "No stroke": "不扫弦"
 }
