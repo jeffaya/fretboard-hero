@@ -7,8 +7,8 @@
     exercise={...exercise,title:t(exercise.title),detail:t(exercise.detail),columns:exercise.columns.map(column=>({...column,label:column.label?t(column.label):'',subLabel:column.subLabel?t(column.subLabel):''}))};
     svg.replaceChildren();
     const width=Math.max(240,Math.round(svg.parentElement.clientWidth)),compact=width<600;
-    const strings=exercise.strings||engine.courses.map((_,i)=>i),journey=Boolean(exercise.strings);
-    const labelled=exercise.columns.some(c=>c.label),left=journey?52:42,right=10,font=compact?18:21,labelFont=journey?12:Math.min(22,font*.65);
+    const strings=engine.courses.map((_,i)=>i),journey=Boolean(exercise.sections);
+    const labelled=exercise.columns.some(c=>c.label),left=42,right=10,font=compact?18:21,labelFont=journey?12:Math.min(22,font*.65);
     const widths=labelled?exercise.columns.map(c=>{
       if(!journey)return c.label.length*8;
       return Math.max(...[c.label,c.subLabel].map(label=>{
@@ -31,7 +31,7 @@
       const columns=exercise.columns.slice(line*count,(line+1)*count),used=Math.min(width-left-right,columns.length*(labelled?Math.max(120,minimum):76)),step=used/columns.length,start=left+(width-left-right-used)/2,offset=line*lineHeight;
       strings.forEach((string,i)=>{const course=engine.tuning[string],y=offset+top+(strings.length-1-i)*row;
         const name=window.FretboardI18n?.note(course.name)||course.name;
-        svg.append(el('text',{x:4,y:y+5,fill:'#c6d3e6','font-size':Math.min(22,font*.65),'data-no-i18n':''},journey?`${name} ${engine.stringCount-string}`:name),el('line',{x1:left,y1:y,x2:width-right,y2:y,stroke:'#899bb3','stroke-width':1}));
+        svg.append(el('text',{x:4,y:y+5,fill:'#c6d3e6','font-size':Math.min(22,font*.65),'data-no-i18n':''},name),el('line',{x1:left,y1:y,x2:width-right,y2:y,stroke:'#899bb3','stroke-width':1}));
       });
       columns.forEach((column,i)=>{
         const x=start+(i+.5)*step,index=line*count+i;
