@@ -8,6 +8,18 @@ Finishing the targets advances to the next exercise after a 750 ms “Well playe
 
 The exercise heading retains programmatic focus for assistive navigation but has no visible outline. The target notes remain the visual guide, and interactive controls retain their keyboard focus indicators.
 
+## Guitar triad journey
+
+The guitar triad exercise traverses GBE (strings 3–2–1), then DGB (4–3–2), then ADG (5–4–3). The EAD bass group is intentionally excluded. Each group starts with the nearest playable close-position triad, including open strings where applicable, and visits every successive inversion whose notes fit within frets 0–15. The root and major/minor quality stay the same throughout. Bass and ukulele keep their existing three-inversion exercises.
+
+Between each pair of triads, a separate target asks for the **third of the upcoming voicing**. The source note belongs to the previous triad on the same string; the displayed fret arrow gives the optional slide movement. A minor uses C, A major uses C#, and spelling preserves the diatonic third even for E# or double sharps. Sliding is optional: only the arrival note is evaluated, not the physical gesture or string used.
+
+One string group is displayed at a time on three labeled tab lines, with group progress, inversion names, and CAGED references. CAGED labels are calculated from exact matching three-string fragments of the existing templates, including degree identity and the minor-third adjustment. Shared fragments show both forms (for example C / D); no label is forced when there is no exact match. These are relationships to a parent shape, not a requirement to play its full chord.
+
+With the microphone on, all triad tones must sound together, then each intervening third must sound alone. The liaison reuses the pitch detector and additionally checks the harmonic fit for a single pitch, so playing the next full triad cannot replace the isolated-note target. Other single-note exercises and full-chord matching rules are unchanged. As with the rest of the detector, harmonic ambiguity and residual ringing can affect recognition; muting the other strings helps isolate the liaison.
+
+Completing a group advances automatically after the existing short success transition. Manual **Next strings** completes the current group and moves to the next; the third group's Next moves to the chord exercise. The overall Triads step is complete only after all three groups have been traversed. Group/note progress survives microphone toggling and navigation to an unfinished exercise. Reopening a completed exercise or replaying the routine starts again at GBE. All new copy is localized in the 11 supported languages.
+
 ## Local capture and lifecycle
 
 `core/microphone.js` owns the sole microphone stream used by both tuner and routine. It connects an input source to an analyser, never to speakers. It contains no recorder, audio persistence, upload or third-party model call. Stop, navigation away, tuner opening, page hide/background, native background, track end and audio-context interruption release the stream and context. A late permission grant after leaving is immediately released. Backgrounding/interruption does not automatically resume capture. Opening a function or replaying the routine again follows its saved microphone preference and requires any applicable system permission. The permission itself is never bypassed or stored as a granted flag.

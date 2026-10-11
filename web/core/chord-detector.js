@@ -70,7 +70,17 @@
       // foreign tones (including a wrong major/minor third) still reject it.
       return outside<inside*.08;
     }
-    return {analyze,matches};
+    function matchesSingle(result,midi){
+      const target=result.notes.find(note=>note.midi===midi);
+      if(result.fit<=.72||!target)return false;
+      const overtone=note=>{
+        const harmonic=Math.round(2**((note.midi-midi)/12));
+        return harmonic>=2&&harmonic<=8&&Math.abs(note.midi-midi-12*Math.log2(harmonic))<.43;
+      };
+      const outside=result.notes.reduce((sum,n)=>sum+(n.midi===midi||overtone(n)?0:n.strength),0);
+      return outside<target.strength*.08;
+    }
+    return {analyze,matches,matchesSingle};
   }
   const api={create};
   if(typeof module==='object')module.exports=api;else root.FretboardChordDetector=Object.freeze(api);

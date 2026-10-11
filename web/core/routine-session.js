@@ -16,6 +16,7 @@
       $('#routineConfetti').append(piece);
     }
     function current(){return guides[state.index]}
+    function currentSection(){return exercises[state.index]?.sections?.[current()?.section||0]}
     function targetPitches(){
       const guide=current(),column=exercises[state.index]?.columns[guide?.index];
       return column?[...new Set(column.notes.map(n=>engine.midiAt(n.string,n.fret)))].sort((a,b)=>a-b):[];
@@ -25,12 +26,24 @@
     }
     function draw(animate=false){
       if(!exercises.length||state.index>=5)return;
-      const guided=microphone.state==='on';
+      const guided=microphone.state==='on',exercise=exercises[state.index],section=currentSection();
       $('#routineLegend').textContent=t(guided?'Highlight = target · Green = played':'Cyan = root note');
-      RoutineRenderer.render($('#routineTab'),exercises[state.index],engine,guided?{...current(),animate}:null);
+      $('#routineTriadGroups').hidden=!section;
+      $('#routineTriadGroups').setAttribute('aria-label',t('String groups'));
+      $('#routineTriadGroups').replaceChildren();
+      if(section)exercise.sections.forEach((item,index)=>{
+        const group=document.createElement('li');group.textContent=`${index+1}. ${t(`Strings ${item.set}`)}`;
+        group.classList.toggle('is-current',index===current().section);
+        group.classList.toggle('is-complete',index<current().section);
+        if(index===current().section)group.setAttribute('aria-current','step');
+        $('#routineTriadGroups').append(group);
+      });
+      const visible=section?{...exercise,strings:section.strings,columns:exercise.columns.slice(section.start,section.end)}:exercise;
+      RoutineRenderer.render($('#routineTab'),visible,engine,guided?{index:current().index-(section?.start||0),animate}:null);
       if(guided){
         const guide=current();
-        $('#routineNoteProgress').textContent=`${Math.min(guide.index+1,exercises[state.index].columns.length)} / ${exercises[state.index].columns.length}`;
+        const count=section?section.end-section.start:exercise.columns.length;
+        $('#routineNoteProgress').textContent=`${Math.min(guide.index-(section?.start||0)+1,count)} / ${count}`;
         $('#routineMicStatus').textContent=t('Listening…');
       }
     }
@@ -53,13 +66,13 @@
       if((on||value==='pending'||error)&&$('#routineDrawer').classList.contains('open'))$('#routineMenuClose').click();
       if(on){
         showTarget();
-        if(current()?.index===exercises[state.index]?.columns.length)advance();
+        if(current()?.index===(currentSection()?.end||exercises[state.index]?.columns.length))advance();
       }
     }
     function renderInstruction(){
       if(state.index>=5)return;
       const e=exercises[state.index];
-      const instruction=microphone.state==='on'&&e.id==='root'?'Play the highlighted note.':microphone.state==='on'&&e.id==='triads'?'Play each triad together.':e.instruction;
+      const instruction=microphone.state==='on'&&e.id==='root'?'Play the highlighted note.':microphone.state==='on'&&e.id==='triads'&&!e.sections?'Play each triad together.':e.instruction;
       $('#routineInstruction').textContent=t(instruction);
     }
     function listen({samples,spectrum,sampleRate,fftSize,now}){
@@ -73,12 +86,18 @@
         else{
           const hz=FretboardPitch.detect(samples.subarray(samples.length-8192),sampleRate,{maxFrequency:1500});
           match=Boolean(hz&&Math.abs(FretboardPitch.cents(hz,pitches[0]))<=38);
+          // A liaison is one isolated note. A full triad whose fundamental
+          // happens to be that third must not skip the single-note target.
+          if(match&&exercises[state.index].columns[current().index].kind==='third'){
+            const result=detector.analyze(spectrum,sampleRate,fftSize);
+            match=detector.matchesSingle(result,pitches[0]);
+          }
         }
       }
       if(!gate.update({match,level,now,chord}))return;
       lastPitches=pitches;current().index++;
       draw(true);
-      if(current().index===exercises[state.index].columns.length){advance();return}
+      if(current().index===(currentSection()?.end||exercises[state.index].columns.length)){advance();return}
       const next=targetPitches();gate.reset(soundKey(next)===soundKey(pitches));
       settleUntil=now+200;showTarget();
     }
@@ -93,7 +112,12 @@
       exercises.forEach((item,i)=>{
         const step=document.createElement('li'),button=document.createElement('button');
         button.type='button';button.textContent=item.step;button.dataset.step=String(i+1);
-        button.addEventListener('click',()=>{cancelTransition();state.index=i;if(current().index===exercises[state.index].columns.length)current().index=0;gate.reset();settleUntil=performance.now()+400;render();$('#routineTitle').focus({preventScroll:true})});
+        button.addEventListener('click',()=>{
+          cancelTransition();state.index=i;
+          if(completed.has(i)||current().index===exercises[state.index].columns.length){current().index=0;current().section=0}
+          gate.reset();settleUntil=performance.now()+400;render();$('#routineTitle').focus({preventScroll:true});
+          if(currentSection()&&current().index===currentSection().end)advance();
+        });
         step.append(button);
         step.classList.toggle('is-current',i===state.index);step.classList.toggle('is-complete',completed.has(i));
         if(i===state.index)button.setAttribute('aria-current','step');
@@ -116,8 +140,9 @@
       if(done)$('#routineInstruction').textContent=t('Five exercises. One key. You did it! Keep building your skills in Learn, or put your knowledge to the test in Quiz.');else renderInstruction();
       $('#routineCelebration').hidden=!done;$('#routineExercise').classList.toggle('is-complete',done);
       $('#routineTabScroll').hidden=done;$('#routineLegend').hidden=done;
+      if(done)$('#routineTriadGroups').hidden=true;
       $('#routineNext').hidden=done;$('#routineFinish').hidden=!done;
-      $('#routineNext').textContent=t(state.index===4&&[0,1,2,3].every(i=>completed.has(i))?'Done':'Next →');
+      $('#routineNext').textContent=t(exercise.sections&&current()?.section<exercise.sections.length-1?'Next strings →':state.index===4&&[0,1,2,3].every(i=>completed.has(i))?'Done':'Next →');
       $('#routineMic').disabled=done;
       draw();
       for(const key of ['root','quality'])$('#routine'+(key==='root'?'Root':'Quality')+'Controls').querySelectorAll('button').forEach(b=>{
@@ -131,17 +156,22 @@
       $('#routineExercise').classList.toggle('is-transitioning',true);
       transition=setTimeout(()=>{
         cancelTransition();if(!active)return;
-        completed.add(state.index);state.index++;
-        if(state.index===5&&completed.size<5)state.index=exercises.findIndex((_,i)=>!completed.has(i));
+        const section=currentSection(),hasNextSection=section&&current().section<exercises[state.index].sections.length-1;
+        if(hasNextSection){current().index=section.end;current().section++}
+        else{
+          completed.add(state.index);state.index++;
+          if(state.index===5&&completed.size<5)state.index=exercises.findIndex((_,i)=>!completed.has(i));
+        }
         if(state.index===5)microphone.stop();
         else {gate.reset(soundKey(targetPitches())===soundKey(lastPitches));settleUntil=performance.now()+400}
         render();$('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
+        if(hasNextSection)showTarget();
       },750);
     }
     function reset(){
       cancelTransition();completed.clear();state.index=0;lastPitches=[];
       exercises=RoutineExercises.create({engine,root:state.root,quality:state.quality,random});
-      guides=exercises.map(()=>({index:0}));
+      guides=exercises.map(()=>({index:0,section:0}));
       gate.reset();settleUntil=performance.now()+400;render();
     }
     function setup(id,values,key){

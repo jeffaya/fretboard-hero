@@ -341,5 +341,11 @@
   "Listening…": "Listening…",
   "Microphone": "Microphone",
   "Play the highlighted note.": "Play the highlighted note.",
-  "Highlight = target · Green = played": "Highlight = target · Green = played"
+  "Highlight = target · Green = played": "Highlight = target · Green = played",
+  "Triad → third alone → next triad. Sliding is optional.": "Triad → third alone → next triad. Sliding is optional.",
+  "String groups": "String groups",
+  "Next strings →": "Next strings →",
+  "Major third — {note}": "Major third — {note}",
+  "Minor third — {note}": "Minor third — {note}",
+  "CAGED forms: {forms}": "CAGED forms: {forms}"
 }

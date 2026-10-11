@@ -341,5 +341,11 @@
   "Listening…": "सुन रहा है…",
   "Microphone": "माइक्रोफ़ोन",
   "Play the highlighted note.": "हाइलाइट किया गया स्वर बजाएँ।",
-  "Highlight = target · Green = played": "हाइलाइट = अगला स्वर · हरा = बजाया गया"
+  "Highlight = target · Green = played": "हाइलाइट = अगला स्वर · हरा = बजाया गया",
+  "Triad → third alone → next triad. Sliding is optional.": "त्रिस्वर → अकेला तीसरा स्वर → अगला त्रिस्वर। स्लाइड वैकल्पिक है।",
+  "String groups": "तारों के समूह",
+  "Next strings →": "अगले तार →",
+  "Major third — {note}": "मेजर तृतीय — {note}",
+  "Minor third — {note}": "माइनर तृतीय — {note}",
+  "CAGED forms: {forms}": "CAGED आकृतियाँ: {forms}"
 }

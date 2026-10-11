@@ -341,5 +341,11 @@
   "Listening…": "듣는 중…",
   "Microphone": "마이크",
   "Play the highlighted note.": "강조된 음을 연주하세요.",
-  "Highlight = target · Green = played": "강조 표시 = 목표 · 초록 = 연주 완료"
+  "Highlight = target · Green = played": "강조 표시 = 목표 · 초록 = 연주 완료",
+  "Triad → third alone → next triad. Sliding is optional.": "트라이어드 → 3도 한 음 → 다음 트라이어드. 슬라이드는 선택입니다.",
+  "String groups": "현 그룹",
+  "Next strings →": "다음 현 그룹 →",
+  "Major third — {note}": "장3도 — {note}",
+  "Minor third — {note}": "단3도 — {note}",
+  "CAGED forms: {forms}": "CAGED 폼: {forms}"
 }

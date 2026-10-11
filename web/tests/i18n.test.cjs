@@ -24,3 +24,12 @@ test('Note display follows locale, retains accidentals and never translates pros
  const de=await create({languages:['de']});assert.equal(de.note('B'),'H');assert.equal(de.note('B♭'),'B');assert.equal(de.note('A#'),'A#');assert.equal(de.music('B♭ • B'),'B • H');
  const fr=await create({languages:['fr']});assert.equal(fr.music('EAD, DGB, CAGED'),'Mi–La–Ré, Ré–Sol–Si, CAGED');assert.equal(fr.text('Correct — A#'),'Correct — La#');
 });
+
+test('Triad liaison notes and CAGED form letters localize without losing interval spelling',async()=>{
+ const fr=await create({languages:['fr']});
+ assert.equal(fr.text('Minor third — C'),'Tierce mineure — Do');
+ assert.equal(fr.text('Major third — E#'),'Tierce majeure — Mi#');
+ assert.equal(fr.text('Major third — C##'),'Tierce majeure — Do##');
+ assert.equal(fr.text('CAGED forms: C / D'),'Formes CAGED : C / D');
+ for(const locale of locales){const i=await create({languages:[locale]});for(const key of ['Minor third — C','Major third — C##','CAGED forms: C / D'])assert.equal(i.text(i.text(key)),i.text(key),locale+' '+key)}
+});
