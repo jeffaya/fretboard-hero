@@ -341,5 +341,11 @@
   "Listening…": "À l’écoute…",
   "Microphone": "Microphone",
   "Play the highlighted note.": "Jouez la note surlignée.",
-  "Highlight = target · Green = played": "Surligné = note à jouer · Vert = déjà joué"
+  "Highlight = target · Green = played": "Surligné = note à jouer · Vert = déjà joué",
+  "Triad → third alone → next triad. Sliding is optional.": "Triade → tierce seule → triade suivante. Slide facultatif.",
+  "String groups": "Groupes de cordes",
+  "Next strings →": "Cordes suivantes →",
+  "Major third — {note}": "Tierce majeure — {note}",
+  "Minor third — {note}": "Tierce mineure — {note}",
+  "CAGED forms: {forms}": "Formes CAGED : {forms}"
 }

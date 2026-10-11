@@ -341,5 +341,11 @@
   "Listening…": "聴き取り中…",
   "Microphone": "マイク",
   "Play the highlighted note.": "強調表示された音を弾いてください。",
-  "Highlight = target · Green = played": "強調表示 = 次に弾く音 · 緑 = 演奏済み"
+  "Highlight = target · Green = played": "強調表示 = 次に弾く音 · 緑 = 演奏済み",
+  "Triad → third alone → next triad. Sliding is optional.": "トライアド → 3度の単音 → 次のトライアド。スライドは任意です。",
+  "String groups": "弦のグループ",
+  "Next strings →": "次の弦へ →",
+  "Major third — {note}": "長3度 — {note}",
+  "Minor third — {note}": "短3度 — {note}",
+  "CAGED forms: {forms}": "CAGEDフォーム: {forms}"
 }
