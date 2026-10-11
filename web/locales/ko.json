@@ -347,5 +347,20 @@
   "Next strings →": "다음 현 그룹 →",
   "Major third — {note}": "장3도 — {note}",
   "Minor third — {note}": "단3도 — {note}",
-  "CAGED forms: {forms}": "CAGED 폼: {forms}"
+  "CAGED forms: {forms}": "CAGED 폼: {forms}",
+  "Strum {key}": "{key} 스트로크",
+  "Keep one comfortable chord. Four bars down, then four with upstrokes.": "편한 코드 하나를 유지하세요. 네 마디는 아래로, 다음 네 마디는 위로 치기도 더하세요.",
+  "Strum only numbered strings; × means mute.": "숫자가 있는 줄만 치세요. ×는 뮤트입니다.",
+  "Bar {n} / 8": "마디 {n} / 8",
+  "Strums: {n} / 40": "스트로크: {n} / 40",
+  "Tempo": "템포",
+  "Start pulse": "박자 시작",
+  "Pause pulse": "박자 일시 정지",
+  "Next bar →": "다음 마디 →",
+  "Strumming pattern": "스트로크 패턴",
+  "Upstroke": "위로",
+  "Downstroke": "아래로",
+  "Each new strum counts. Timing is free; arrows suggest the direction.": "새로 칠 때마다 진행됩니다. 타이밍은 자유이며 화살표는 방향 안내입니다.",
+  "Microphone off: follow the arrows, then move to the next bar.": "마이크가 꺼져 있습니다. 화살표를 따라 친 뒤 다음 마디로 이동하세요.",
+  "No stroke": "치지 않기"
 }

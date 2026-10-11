@@ -347,5 +347,20 @@
   "Next strings →": "次の弦へ →",
   "Major third — {note}": "長3度 — {note}",
   "Minor third — {note}": "短3度 — {note}",
-  "CAGED forms: {forms}": "CAGEDフォーム: {forms}"
+  "CAGED forms: {forms}": "CAGEDフォーム: {forms}",
+  "Strum {key}": "{key}でストローク",
+  "Keep one comfortable chord. Four bars down, then four with upstrokes.": "押さえやすいコードを保ちます。4小節はダウン、次の4小節はアップも加えます。",
+  "Strum only numbered strings; × means mute.": "数字のある弦だけを弾きます。×はミュートです。",
+  "Bar {n} / 8": "小節 {n} / 8",
+  "Strums: {n} / 40": "ストローク：{n} / 40",
+  "Tempo": "テンポ",
+  "Start pulse": "拍を開始",
+  "Pause pulse": "拍を一時停止",
+  "Next bar →": "次の小節 →",
+  "Strumming pattern": "ストロークパターン",
+  "Upstroke": "アップ",
+  "Downstroke": "ダウン",
+  "Each new strum counts. Timing is free; arrows suggest the direction.": "新しいストロークごとに進みます。タイミングは自由で、矢印は方向の目安です。",
+  "Microphone off: follow the arrows, then move to the next bar.": "マイクはオフです。矢印に沿って弾き、次の小節へ進んでください。",
+  "No stroke": "弾かない"
 }
