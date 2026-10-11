@@ -47,12 +47,12 @@
         }
         last=now;
         if(pending===null)return false;
-        if(now-pending>600){pending=null;matches=0;return false}
+        if(now-pending>560){pending=null;matches=0;return false}
         // Let the FFT catch up with the attack before judging its harmony.
         if(now-pending<160)return false;
-        matches=match?matches+1:0;
+        matches=(typeof match==='function'?match(pending):match)?matches+1:0;
         if(matches<2)return false;
-        pending=null;matches=0;return true;
+        const at=pending;pending=null;matches=0;return {at};
       }
     };
   }
