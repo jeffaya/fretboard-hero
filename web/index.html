@@ -50,7 +50,7 @@
   <link rel="stylesheet" href="./circle.css?v=10.31.0">
   <link rel="stylesheet" href="./home.css?v=10.33.0">
   <link rel="stylesheet" href="./theme.css?v=10.33.0">
-  <link rel="stylesheet" href="./routine.css?v=10.35.1">
+  <link rel="stylesheet" href="./routine.css?v=10.36.0">
   <link rel="stylesheet" href="./premium.css?v=10.31.0">
   <link rel="stylesheet" href="./locales.css?v=10.33.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
@@ -132,6 +132,7 @@
           <h2 id="routineTitle" tabindex="-1">Find the root note</h2>
           <p id="routineContext" hidden></p>
           <p id="routineInstruction"></p>
+          <ol id="routineTriadGroups" class="routine-triad-groups" aria-label="String groups" hidden data-no-i18n></ol>
           <div id="routineListening" class="routine-listening" hidden data-no-i18n><p id="routineMicStatus" role="status" aria-live="polite"></p><span id="routineNoteProgress"></span></div>
           <div id="routineTransition" class="routine-transition" role="status" aria-live="polite" hidden><span aria-hidden="true">✓</span><strong>Well played!</strong></div>
           <div id="routineTabScroll" class="routine-tab-scroll ui-panel"><svg id="routineTab" role="img"></svg></div>
@@ -268,7 +269,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.35.0" defer></script>
+  <script src="./bootstrap.js?v=10.36.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

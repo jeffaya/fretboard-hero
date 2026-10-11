@@ -85,3 +85,11 @@ test('Single plucked strings with strong harmonics cannot impersonate a major or
   for(const third of [3,4])assert.equal(detector.matches(result,[root,root+7,root+12,root+12+third,root+19,root+24]),false,JSON.stringify({root,pluck,third,result}));
  }
 });
+
+for(const rate of [44100,48000])test(`An isolated liaison at ${rate} Hz tolerates guitar harmonics but rejects the surrounding triad`,()=>{
+ for(const midi of [48,52,60,64,72,76])for(const pluck of [.12,.35]){
+  const options={rate,gain:.015,pluck,second:1.6,noise:.00003};
+  assert.ok(detector.matchesSingle(detector.analyze(spectrum([midi],options),rate,N),midi),`${midi} ${pluck}`);
+  for(const notes of [[midi,midi+4,midi+9],[midi-4,midi,midi+3],[midi+1]])assert.equal(detector.matchesSingle(detector.analyze(spectrum(notes,options),rate,N),midi),false);
+ }
+});
