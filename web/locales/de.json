@@ -347,5 +347,20 @@
   "Next strings →": "Nächste Saiten →",
   "Major third — {note}": "Große Terz — {note}",
   "Minor third — {note}": "Kleine Terz — {note}",
-  "CAGED forms: {forms}": "CAGED-Formen: {forms}"
+  "CAGED forms: {forms}": "CAGED-Formen: {forms}",
+  "Strum {key}": "Schlage {key} an",
+  "Keep one comfortable chord. Four bars down, then four with upstrokes.": "Halte einen bequemen Akkord. Vier Takte mit Abschlägen, dann vier mit Aufschlägen.",
+  "Strum only numbered strings; × means mute.": "Schlage nur nummerierte Saiten an; × bedeutet abdämpfen.",
+  "Bar {n} / 8": "Takt {n} / 8",
+  "Strums: {n} / 40": "Anschläge: {n} / 40",
+  "Tempo": "Tempo",
+  "Start pulse": "Puls starten",
+  "Pause pulse": "Puls pausieren",
+  "Next bar →": "Nächster Takt →",
+  "Strumming pattern": "Schlagmuster",
+  "Upstroke": "Aufschlag",
+  "Downstroke": "Abschlag",
+  "Each new strum counts. Timing is free; arrows suggest the direction.": "Jeder neue Anschlag zählt. Das Timing ist frei; die Pfeile zeigen die empfohlene Richtung.",
+  "Microphone off: follow the arrows, then move to the next bar.": "Mikrofon aus: Folge den Pfeilen und gehe dann zum nächsten Takt.",
+  "No stroke": "Kein Anschlag"
 }

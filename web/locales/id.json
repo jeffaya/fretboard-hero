@@ -347,5 +347,20 @@
   "Next strings →": "Senar berikutnya →",
   "Major third — {note}": "Terts mayor — {note}",
   "Minor third — {note}": "Terts minor — {note}",
-  "CAGED forms: {forms}": "Bentuk CAGED: {forms}"
+  "CAGED forms: {forms}": "Bentuk CAGED: {forms}",
+  "Strum {key}": "Strum dalam {key}",
+  "Keep one comfortable chord. Four bars down, then four with upstrokes.": "Tahan satu akor yang nyaman. Empat birama ke bawah, lalu empat dengan tambahan petikan ke atas.",
+  "Strum only numbered strings; × means mute.": "Mainkan hanya senar bernomor; × berarti redam.",
+  "Bar {n} / 8": "Birama {n} / 8",
+  "Strums: {n} / 40": "Petikan: {n} / 40",
+  "Tempo": "Tempo",
+  "Start pulse": "Mulai ketukan",
+  "Pause pulse": "Jeda ketukan",
+  "Next bar →": "Birama berikutnya →",
+  "Strumming pattern": "Pola strumming",
+  "Upstroke": "Ke atas",
+  "Downstroke": "Ke bawah",
+  "Each new strum counts. Timing is free; arrows suggest the direction.": "Setiap petikan baru dihitung. Tempo bebas; panah menyarankan arah.",
+  "Microphone off: follow the arrows, then move to the next bar.": "Mikrofon mati: ikuti panah, lalu lanjut ke birama berikutnya.",
+  "No stroke": "Tanpa petikan"
 }

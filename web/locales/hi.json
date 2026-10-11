@@ -347,5 +347,20 @@
   "Next strings →": "अगले तार →",
   "Major third — {note}": "मेजर तृतीय — {note}",
   "Minor third — {note}": "माइनर तृतीय — {note}",
-  "CAGED forms: {forms}": "CAGED आकृतियाँ: {forms}"
+  "CAGED forms: {forms}": "CAGED आकृतियाँ: {forms}",
+  "Strum {key}": "{key} में स्ट्रम करें",
+  "Keep one comfortable chord. Four bars down, then four with upstrokes.": "एक आरामदायक कॉर्ड पकड़ें। चार बार नीचे की ओर, फिर चार बार ऊपर के स्ट्रोक भी जोड़ें।",
+  "Strum only numbered strings; × means mute.": "केवल अंक वाली तारें बजाएँ; × का अर्थ म्यूट करना है।",
+  "Bar {n} / 8": "बार {n} / 8",
+  "Strums: {n} / 40": "स्ट्रोक: {n} / 40",
+  "Tempo": "टेम्पो",
+  "Start pulse": "ताल शुरू करें",
+  "Pause pulse": "ताल रोकें",
+  "Next bar →": "अगला बार →",
+  "Strumming pattern": "स्ट्रमिंग पैटर्न",
+  "Upstroke": "ऊपर की ओर",
+  "Downstroke": "नीचे की ओर",
+  "Each new strum counts. Timing is free; arrows suggest the direction.": "हर नया स्ट्रोक गिना जाता है। अपनी गति से बजाएँ; तीर दिशा सुझाते हैं।",
+  "Microphone off: follow the arrows, then move to the next bar.": "माइक्रोफ़ोन बंद है: तीरों के अनुसार बजाएँ, फिर अगले बार पर जाएँ।",
+  "No stroke": "कोई स्ट्रोक नहीं"
 }
