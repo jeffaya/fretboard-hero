@@ -53,7 +53,7 @@
     return api;
   }
   function errorMessage(error){
-    return error.name==='NotAllowedError'?'Microphone denied. Allow access in device or browser settings.':error.name==='Unsupported'?'Microphone unavailable. Use a supported browser over HTTPS.':'Microphone unavailable. Check your microphone and try again.';
+    return error.name==='NotAllowedError'?'Microphone access denied.':error.name==='Unsupported'?'Microphone not supported.':'Microphone unavailable.';
   }
   document.addEventListener('visibilitychange',()=>{if(document.hidden)release()});
   window.addEventListener('pagehide',release);
