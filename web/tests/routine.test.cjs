@@ -3,6 +3,7 @@ const base=path.join(__dirname,'..');
 function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-exercises','core/routine-guide','core/routine-strumming','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
 function rng(seed){return()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296)}
 const flatten=e=>e.columns.flatMap(c=>c.notes);
+const playedStrings=e=>[...new Set(flatten(e).map(n=>n.string))].sort().join(',');
 test('All keys, qualities and instruments have five playable and musically correct exercises',()=>{
  const c=runtime();let count=0;
  for(const profile of Object.values(c.FRETBOARD_INSTRUMENTS))for(const root of c.MusicTheory.NOTES)for(const quality of ['major','minor'])for(let seed=1;seed<=8;seed++){
@@ -243,26 +244,23 @@ test('A minor triads identify actual CAGED fragments, including shared C/D and A
 });
 test('Manual Next completes each string group in order and marks Triads complete only after the third group',()=>{
  const r=sessionRuntime(true,false);r.session.enter();r.nodes.get('#routineSteps').children[2].children[0].click();
- const groups=()=>r.nodes.get('#routineTriadGroups').children;
  for(let section=0;section<3;section++){
-  assert.equal(r.c.lastExercise.strings.join(','),[[3,4,5],[2,3,4],[1,2,3]][section].join(','));
-  assert.equal(groups()[section].attrs['aria-current'],'step');assert.equal(groups().filter(g=>g.classes.has('is-complete')).length,section);
+  assert.equal(playedStrings(r.c.lastExercise),[[3,4,5],[2,3,4],[1,2,3]][section].join(','));
   assert.equal(r.nodes.get('#routineSteps').children[2].classes.has('is-complete'),false);
   r.nodes.get('#routineNext').click();r.nodes.get('#routineNext').click();r.flush();
  }
  assert.equal(r.c.lastExercise.id,'chords');assert.equal(r.nodes.get('#routineSteps').children[2].classes.has('is-complete'),true);
- assert.equal(r.nodes.get('#routineTriadGroups').hidden,true);
- r.nodes.get('#routineSteps').children[2].children[0].click();assert.equal(r.c.lastExercise.strings.join(','),'3,4,5');
+ r.nodes.get('#routineSteps').children[2].children[0].click();assert.equal(playedStrings(r.c.lastExercise),'3,4,5');
 });
 test('Cancelling a group transition preserves its group, and microphone toggling does not restart it',()=>{
  const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineSteps').children[2].children[0].click();r.nextGroup();
- assert.equal(r.c.lastExercise.strings.join(','),'2,3,4');
- r.nodes.get('#routineMic').click();r.nodes.get('#routineMic').click();assert.equal(r.c.lastExercise.strings.join(','),'2,3,4');
+ assert.equal(playedStrings(r.c.lastExercise),'2,3,4');
+ r.nodes.get('#routineMic').click();r.nodes.get('#routineMic').click();assert.equal(playedStrings(r.c.lastExercise),'2,3,4');
  r.nodes.get('#routineNext').click();r.nodes.get('#routineSteps').children[0].children[0].click();r.flush();
  assert.equal(r.c.lastExercise.id,'root');r.nodes.get('#routineSteps').children[2].children[0].click();
- assert.equal(r.c.lastExercise.strings.join(','),'2,3,4');
+ assert.equal(playedStrings(r.c.lastExercise),'2,3,4');
  r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='A').click();
- r.session.leave();r.session.enter();r.nodes.get('#routineSteps').children[2].children[0].click();assert.equal(r.c.lastExercise.strings.join(','),'3,4,5');
+ r.session.leave();r.session.enter();r.nodes.get('#routineSteps').children[2].children[0].click();assert.equal(playedStrings(r.c.lastExercise),'3,4,5');
 });
 for(const quality of ['minor','major'])test(`Audio completes all three ${quality} triad groups and requires isolated thirds between chords`,()=>{
  const {samples,spectrum,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(false);r.session.enter();
@@ -273,7 +271,7 @@ for(const quality of ['minor','major'])test(`Audio completes all three ${quality
  const play=(notes,frames=10)=>{const data=samples(notes,{gain:.02}),bins=spectrum(notes,{gain:.02});for(let i=0;i<frames;i++,now+=80)r.c.audio.onFrame({samples:data,spectrum:bins,sampleRate:48000,fftSize:N,now})};
  const progress=()=>r.nodes.get('#routineNoteProgress').textContent;
  for(let section=0;section<3;section++){
-  assert.equal(r.c.lastExercise.strings.join(','),[[3,4,5],[2,3,4],[1,2,3]][section].join(','));
+  assert.equal(playedStrings(r.c.lastExercise),[[3,4,5],[2,3,4],[1,2,3]][section].join(','));
   const cols=r.c.lastExercise.columns;
   for(let i=0;i<cols.length;i++){
    assert.equal(progress(),`${i+1} / ${cols.length}`);
@@ -339,4 +337,22 @@ test('Strumming rejects wrong harmony and noise, completes exactly forty reartic
   play(quiet,3);
  }
  r.flush();assert.equal(r.c.lastExercise.id,'penta');
+});
+
+test('Every guitar triad section keeps six named strings and the notes on their actual string lines',()=>{
+ const c=runtime();c.document={createElementNS:()=>new Node()};vm.runInContext(fs.readFileSync(path.join(base,'core/routine-renderer.js'),'utf8'),c);
+ const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),exercise=c.RoutineExercises.create({engine,root:'D',quality:'minor'})[2];
+ for(const width of [280,390,1194])for(const section of exercise.sections){
+  const visible={...exercise,columns:exercise.columns.slice(section.start,section.end)},svg=new Node();svg.parentElement={clientWidth:width};
+  c.window.RoutineRenderer.render(svg,visible,engine,{index:1,animate:false});
+  const strings=svg.children.filter(n=>n.attrs.x===4),lines=svg.children.filter(n=>n.attrs.stroke==='#899bb3');
+  assert.ok(strings.length>=6);assert.equal(strings.length%6,0);assert.equal(lines.length,strings.length);
+  for(let i=0;i<strings.length;i+=6)assert.equal(strings.slice(i,i+6).map(n=>n.textContent).join(','),'E,A,D,G,B,E');
+  const columns=svg.children.filter(n=>'data-column' in n.attrs);
+  columns.forEach((column,index)=>{
+   const frets=column.children.filter(n=>n.attrs.class==='routine-note-number');
+   assert.equal(frets.length,visible.columns[index].notes.length);
+   frets.forEach((fret,n)=>assert.equal(lines.findIndex(line=>line.attrs.y1===fret.attrs.y-1)%6,visible.columns[index].notes[n].string));
+  });
+ }
 });

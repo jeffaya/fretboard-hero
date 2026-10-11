@@ -38,17 +38,7 @@
       const guided=microphone.state==='on',exercise=exercises[state.index],section=currentSection();
       $('#routinePractice').classList.toggle('has-strumming',Boolean(exercise.strumming));
       $('#routineLegend').textContent=t(exercise.strumming?'Strum only numbered strings; × means mute.':guided?'Highlight = target · Green = played':'Cyan = root note');
-      $('#routineTriadGroups').hidden=!section;
-      $('#routineTriadGroups').setAttribute('aria-label',t('String groups'));
-      $('#routineTriadGroups').replaceChildren();
-      if(section)exercise.sections.forEach((item,index)=>{
-        const group=document.createElement('li');group.textContent=`${index+1}. ${t(`Strings ${item.set}`)}`;
-        group.classList.toggle('is-current',index===current().section);
-        group.classList.toggle('is-complete',index<current().section);
-        if(index===current().section)group.setAttribute('aria-current','step');
-        $('#routineTriadGroups').append(group);
-      });
-      const visible=exercise.strumming?{...exercise,columns:[exercise.columns[0]]}:section?{...exercise,strings:section.strings,columns:exercise.columns.slice(section.start,section.end)}:exercise;
+      const visible=exercise.strumming?{...exercise,columns:[exercise.columns[0]]}:section?{...exercise,columns:exercise.columns.slice(section.start,section.end)}:exercise;
       RoutineRenderer.render($('#routineTab'),visible,engine,guided?{index:exercise.strumming?0:current().index-(section?.start||0),animate}:null);
       strumming.update(active?exercise:null,current().index,guided);
       if(guided){
@@ -152,7 +142,7 @@
       if(done)$('#routineInstruction').textContent=t('Five exercises. One key. You did it! Keep building your skills in Learn, or put your knowledge to the test in Quiz.');else renderInstruction();
       $('#routineCelebration').hidden=!done;$('#routineExercise').classList.toggle('is-complete',done);
       $('#routineTabScroll').hidden=done;$('#routineLegend').hidden=done;
-      if(done){$('#routineTriadGroups').hidden=true;strumming.update(null)}
+      if(done)strumming.update(null);
       $('#routineNext').hidden=done;$('#routineFinish').hidden=!done;
       $('#routineNext').textContent=t(exercise.sections&&current()?.section<exercise.sections.length-1?'Next strings →':state.index===4&&[0,1,2,3].every(i=>completed.has(i))?'Done':'Next →');
       $('#routineMic').disabled=done;
