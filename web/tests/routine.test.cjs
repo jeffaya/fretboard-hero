@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const base=path.join(__dirname,'..');
-function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-exercises','core/routine-guide','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
+function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-exercises','core/routine-guide','core/routine-strumming','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
 function rng(seed){return()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296)}
 const flatten=e=>e.columns.flatMap(c=>c.notes);
 test('All keys, qualities and instruments have five playable and musically correct exercises',()=>{
@@ -44,7 +44,7 @@ function sessionRuntime(demo=false,enabled=true){
  const c=runtime(),nodes=new Map(),root={querySelector:s=>{if(!nodes.has(s))nodes.set(s,new Node());return nodes.get(s)}};
  c.document={createElement:()=>new Node()};c.opens=0;
  const timers=new Map();let timerId=0;
- c.setTimeout=f=>{timers.set(++timerId,f);return timerId};c.clearTimeout=id=>timers.delete(id);c.performance={now:()=>1000};
+ c.setTimeout=f=>{timers.set(++timerId,f);return timerId};c.clearTimeout=id=>timers.delete(id);c.performance={now:()=>1000};c.requestAnimationFrame=()=>1;c.cancelAnimationFrame=()=>{};
  c.micPreference={get enabled(){return enabled},setEnabled(value){enabled=value}};
  c.FretboardMicrophone={preference:()=>c.micPreference,create({onFrame,onState}){let state='off';c.audio={onFrame,start(){state='on';onState(state)},stop(){state='off';onState(state)},get state(){return state}};return c.audio}};
  c.window.matchMedia=()=>({matches:true});
@@ -192,19 +192,18 @@ for(const step of [0,2])test(`Routine step ${step+1} accepts quiet audio only af
  assert.ok(progress().startsWith('2 /'),progress());
 });
 
-test('Holding one chord cannot clear the next shape with the same bass and chord tones',()=>{
+test('Holding one chord counts once; releasing and strumming again counts a new stroke',()=>{
  const {samples,spectrum,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(true);r.session.enter();
  r.nodes.get('#routineSteps').children[3].children[0].click();
  const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);
- const midi=col=>col.notes.map(n=>engine.midiAt(n.string,n.fret)),first=midi(r.c.lastExercise.columns[0]),second=midi(r.c.lastExercise.columns[1]);
- assert.notEqual(first.join(','),second.join(','));assert.equal(Math.min(...first),Math.min(...second));
+ const midi=col=>col.notes.map(n=>engine.midiAt(n.string,n.fret)),first=midi(r.c.lastExercise.columns[0]);
  const data=samples(first),frequencies=spectrum(first),silence=new Float32Array(N),empty=new Float32Array(N/2).fill(-Infinity);
  const frame=(now,quiet=false)=>r.c.audio.onFrame({samples:quiet?silence:data,spectrum:quiet?empty:frequencies,sampleRate:48000,fftSize:N,now});
  for(let now=1500;now<3100;now+=80)frame(now);
- assert.ok(r.nodes.get('#routineNoteProgress').textContent.startsWith('2 /'));
+ assert.equal(r.nodes.get('#routineNoteProgress').textContent,'1 / 40');
  for(let now=3100;now<3420;now+=80)frame(now,true);
  for(let now=3420;now<3980;now+=80)frame(now);
- assert.ok(r.nodes.get('#routineNoteProgress').textContent.startsWith('3 /'));
+ assert.equal(r.nodes.get('#routineNoteProgress').textContent,'2 / 40');
 });
 
 test('All guitar keys traverse GBE, DGB and ADG from the nut to fret 15, with same-string third liaisons',()=>{
@@ -289,4 +288,55 @@ for(const quality of ['minor','major'])test(`Audio completes all three ${quality
   }
  }
  assert.equal(r.c.lastExercise.id,'chords');
+});
+
+test('Guitar strumming uses one low, compact chord and eight complete bars in every key',()=>{
+ const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
+ for(const root of c.MusicTheory.NOTES)for(const quality of ['major','minor']){
+  const e=c.RoutineExercises.create({engine,root,quality})[3],notes=e.columns[0].notes;
+  assert.equal(e.strumming,true);assert.equal(e.columns.length,40);
+  assert.ok(Math.max(...notes.map(n=>n.fret))<=5,root+' '+quality);
+  assert.ok(notes.length>=3&&notes.length<=6);
+  if(notes.length===3)assert.equal(notes.map(n=>n.string).join(','),'3,4,5');
+  assert.ok(e.columns.every(col=>JSON.stringify(col.notes)===JSON.stringify(notes)));
+  for(let bar=0;bar<8;bar++)assert.equal(e.columns.filter(c=>c.bar===bar).map(c=>c.beat).join(','),bar<4?'0,2,4,6':'0,2,3,4,6,7');
+ }
+ const am=c.RoutineExercises.create({engine,root:'A',quality:'minor'})[3];
+ assert.equal(am.columns[0].notes.map(n=>`${n.string}:${n.fret}`).join(','),'1:0,2:2,3:2,4:1,5:0');
+});
+
+test('Manual strumming traverses eight bars; toggling mic and changing tempo preserve progress',()=>{
+ const r=sessionRuntime(true,false);r.session.enter();r.nodes.get('#routineSteps').children[3].children[0].click();
+ assert.equal(r.nodes.get('#routineStrumming').hidden,false);
+ for(let bar=1;bar<=8;bar++){
+  assert.equal(r.nodes.get('#routineStrumBar').textContent,`Bar ${bar} / 8`);
+  assert.equal(r.nodes.get('#routineStrumPattern').children.filter(n=>n.attrs['aria-label']==='Upstroke').length,bar<=4?0:2);
+  if(bar===3){
+   r.nodes.get('#routineTempo').events.change({target:{value:'48'}});
+   r.nodes.get('#routineMic').click();r.nodes.get('#routineMic').click();
+   r.nodes.get('#routineSteps').children[0].children[0].click();r.nodes.get('#routineSteps').children[3].children[0].click();
+   assert.equal(r.nodes.get('#routineStrumBar').textContent,'Bar 3 / 8');
+  }
+  r.nodes.get('#routineStrumNext').click();
+ }
+ assert.equal(r.nodes.get('#routineTransition').hidden,false);r.flush();
+ assert.equal(r.c.lastExercise.id,'penta');assert.equal(r.nodes.get('#routineStrumming').hidden,true);
+ r.nodes.get('#routineSteps').children[3].children[0].click();assert.equal(r.nodes.get('#routineStrumCount').textContent,'Strums: 0 / 40');
+});
+
+test('Strumming rejects wrong harmony and noise, completes exactly forty rearticulated chords',()=>{
+ const {samples,spectrum,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineSteps').children[3].children[0].click();
+ const notes=[45,52,57,60,64],correct={samples:samples(notes,{gain:.02}),spectrum:spectrum(notes,{gain:.02})},wrong={samples:samples([45,52,57,61,64],{gain:.02}),spectrum:spectrum([45,52,57,61,64],{gain:.02})};
+ const quiet={samples:new Float32Array(N),spectrum:new Float32Array(N/2).fill(-Infinity)};
+ const noise={samples:samples([],{noise:.02}),spectrum:spectrum([],{noise:.02})};let now=1500;
+ const play=(audio,frames)=>{for(let i=0;i<frames;i++,now+=80)r.c.audio.onFrame({...audio,sampleRate:48000,fftSize:N,now})};
+ play(wrong,12);play(quiet,4);play(noise,12);play(quiet,4);
+ assert.equal(r.nodes.get('#routineStrumCount').textContent,'Strums: 0 / 40');
+ for(let stroke=1;stroke<=40;stroke++){
+  play(correct,6);assert.equal(r.nodes.get('#routineStrumCount').textContent,`Strums: ${stroke} / 40`);
+  play(correct,3);assert.equal(r.nodes.get('#routineStrumCount').textContent,`Strums: ${stroke} / 40`);
+  if(stroke<40)assert.equal(r.nodes.get('#routineTransition').hidden,true);
+  play(quiet,3);
+ }
+ r.flush();assert.equal(r.c.lastExercise.id,'penta');
 });

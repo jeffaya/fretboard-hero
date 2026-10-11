@@ -3,11 +3,20 @@
   function create({root=document,engine,refreshControls,random=Math.random}){
     const $=s=>root.querySelector(s),access=window.FRETBOARD_ACCESS||{unlocked:true},premium=window.FRETBOARD_PREMIUM;
     const t=value=>window.FretboardI18n?.text(value)||value;
-    const state={root:'A',quality:'minor',index:0},completed=new Set(),gate=RoutineGuide.createGate();
+    const state={root:'A',quality:'minor',index:0},completed=new Set(),gate=RoutineGuide.createGate(),strumGate=RoutineGuide.createStrumGate();
     const detector=FretboardChordDetector.create({minMidi:Math.min(...engine.courses.map(c=>c.midi)),maxMidi:Math.max(...engine.courses.map(c=>c.midi))+15});
     let exercises=[],guides=[],active=false,transition=0,settleUntil=0,lastPitches=[];
     const micPreference=FretboardMicrophone.preference('routine');
     const microphone=FretboardMicrophone.create({fftSize:16384,interval:80,onFrame:listen,onState:audioState});
+    const strumming=RoutineStrumming.create({root,onNextBar(){
+      const exercise=exercises[state.index];
+      if(!active||transition||!exercise?.strumming)return;
+      const bar=exercise.columns[current().index]?.bar;
+      while(current().index<exercise.columns.length&&exercise.columns[current().index].bar===bar)current().index++;
+      resetGates();draw();
+      if(current().index===exercise.columns.length)advance();
+    }});
+    function resetGates(repeat=false){gate.reset(repeat);strumGate.reset()}
     // A short CSS celebration, created once and replayed only on completion.
     const confettiColors=['#ff9814','#70f7ff','#ff4ed8','#ffe38a','#b88cff'];
     for(let i=0;i<40;i++){
@@ -27,7 +36,8 @@
     function draw(animate=false){
       if(!exercises.length||state.index>=5)return;
       const guided=microphone.state==='on',exercise=exercises[state.index],section=currentSection();
-      $('#routineLegend').textContent=t(guided?'Highlight = target · Green = played':'Cyan = root note');
+      $('#routinePractice').classList.toggle('has-strumming',Boolean(exercise.strumming));
+      $('#routineLegend').textContent=t(exercise.strumming?'Strum only numbered strings; × means mute.':guided?'Highlight = target · Green = played':'Cyan = root note');
       $('#routineTriadGroups').hidden=!section;
       $('#routineTriadGroups').setAttribute('aria-label',t('String groups'));
       $('#routineTriadGroups').replaceChildren();
@@ -38,17 +48,18 @@
         if(index===current().section)group.setAttribute('aria-current','step');
         $('#routineTriadGroups').append(group);
       });
-      const visible=section?{...exercise,strings:section.strings,columns:exercise.columns.slice(section.start,section.end)}:exercise;
-      RoutineRenderer.render($('#routineTab'),visible,engine,guided?{index:current().index-(section?.start||0),animate}:null);
+      const visible=exercise.strumming?{...exercise,columns:[exercise.columns[0]]}:section?{...exercise,strings:section.strings,columns:exercise.columns.slice(section.start,section.end)}:exercise;
+      RoutineRenderer.render($('#routineTab'),visible,engine,guided?{index:exercise.strumming?0:current().index-(section?.start||0),animate}:null);
+      strumming.update(active?exercise:null,current().index,guided);
       if(guided){
         const guide=current();
         const count=section?section.end-section.start:exercise.columns.length;
-        $('#routineNoteProgress').textContent=`${Math.min(guide.index-(section?.start||0)+1,count)} / ${count}`;
+        $('#routineNoteProgress').textContent=`${Math.min(guide.index-(section?.start||0)+(exercise.strumming?0:1),count)} / ${count}`;
         $('#routineMicStatus').textContent=t('Listening…');
       }
     }
     function showTarget(){
-      const target=$('#routineTab').querySelector('.is-target');
+      const target=$(exercises[state.index]?.strumming?'#routineStrumPattern':'#routineTab').querySelector('.is-target');
       if(target)target.scrollIntoView({block:'nearest',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
     }
     function audioState(value,error){
@@ -60,7 +71,7 @@
       $('#routineListening').hidden=!on&&value!=='pending'&&!error;
       $('#routineNoteProgress').hidden=!on;
       $('#routineMicStatus').textContent=t(error?FretboardMicrophone.errorMessage(error):value==='pending'?'Allow microphone access':'Microphone off');
-      gate.reset();settleUntil=performance.now()+400;
+      resetGates();settleUntil=performance.now()+400;
       if(exercises.length)renderInstruction();
       draw();
       if((on||value==='pending'||error)&&$('#routineDrawer').classList.contains('open'))$('#routineMenuClose').click();
@@ -82,7 +93,7 @@
       const level=Math.sqrt(energy/samples.length),chord=pitches.length>1;
       let match=false;
       if(level>=FretboardPitch.minLevel){
-        if(chord)match=detector.matches(detector.analyze(spectrum,sampleRate,fftSize),pitches);
+        if(chord)match=detector.matches(detector.analyze(spectrum,sampleRate,fftSize),pitches,{requireBass:!exercises[state.index].strumming});
         else{
           const hz=FretboardPitch.detect(samples.subarray(samples.length-8192),sampleRate,{maxFrequency:1500});
           match=Boolean(hz&&Math.abs(FretboardPitch.cents(hz,pitches[0]))<=38);
@@ -94,10 +105,12 @@
           }
         }
       }
-      if(!gate.update({match,level,now,chord}))return;
+      const isStrumming=exercises[state.index].strumming;
+      if(!(isStrumming?strumGate.update({samples,sampleRate,now,match}):gate.update({match,level,now,chord})))return;
       lastPitches=pitches;current().index++;
       draw(true);
       if(current().index===(currentSection()?.end||exercises[state.index].columns.length)){advance();return}
+      if(isStrumming){showTarget();return}
       const next=targetPitches();gate.reset(soundKey(next)===soundKey(pitches));
       settleUntil=now+200;showTarget();
     }
@@ -115,7 +128,7 @@
         button.addEventListener('click',()=>{
           cancelTransition();state.index=i;
           if(completed.has(i)||current().index===exercises[state.index].columns.length){current().index=0;current().section=0}
-          gate.reset();settleUntil=performance.now()+400;render();$('#routineTitle').focus({preventScroll:true});
+          resetGates();settleUntil=performance.now()+400;render();$('#routineTitle').focus({preventScroll:true});
           if(currentSection()&&current().index===currentSection().end)advance();
         });
         step.append(button);
@@ -140,7 +153,7 @@
       if(done)$('#routineInstruction').textContent=t('Five exercises. One key. You did it! Keep building your skills in Learn, or put your knowledge to the test in Quiz.');else renderInstruction();
       $('#routineCelebration').hidden=!done;$('#routineExercise').classList.toggle('is-complete',done);
       $('#routineTabScroll').hidden=done;$('#routineLegend').hidden=done;
-      if(done)$('#routineTriadGroups').hidden=true;
+      if(done){$('#routineTriadGroups').hidden=true;strumming.update(null)}
       $('#routineNext').hidden=done;$('#routineFinish').hidden=!done;
       $('#routineNext').textContent=t(exercise.sections&&current()?.section<exercise.sections.length-1?'Next strings →':state.index===4&&[0,1,2,3].every(i=>completed.has(i))?'Done':'Next →');
       $('#routineMic').disabled=done;
@@ -163,7 +176,7 @@
           if(state.index===5&&completed.size<5)state.index=exercises.findIndex((_,i)=>!completed.has(i));
         }
         if(state.index===5)microphone.stop();
-        else {gate.reset(soundKey(targetPitches())===soundKey(lastPitches));settleUntil=performance.now()+400}
+        else {resetGates(soundKey(targetPitches())===soundKey(lastPitches));settleUntil=performance.now()+400}
         render();$('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
         if(hasNextSection)showTarget();
       },750);
@@ -172,7 +185,7 @@
       cancelTransition();completed.clear();state.index=0;lastPitches=[];
       exercises=RoutineExercises.create({engine,root:state.root,quality:state.quality,random});
       guides=exercises.map(()=>({index:0,section:0}));
-      gate.reset();settleUntil=performance.now()+400;render();
+      resetGates();settleUntil=performance.now()+400;render();
     }
     function setup(id,values,key){
       const host=$('#'+id),feature='routine'+key[0].toUpperCase()+key.slice(1);
@@ -203,7 +216,7 @@
     if(window.ResizeObserver)new window.ResizeObserver(()=>draw()).observe($('#routineTabScroll'));
     return {
       resize(){draw()},
-      leave(){active=false;cancelTransition();microphone.stop()},
+      leave(){active=false;cancelTransition();microphone.stop();strumming.stop()},
       enter(){active=true;microphone.stop();state.root=access.unlocked?MusicTheory.NOTES[Math.floor(random()*MusicTheory.NOTES.length)]:'A';state.quality='minor';reset();if(micPreference.enabled)microphone.start()}
     };
   }

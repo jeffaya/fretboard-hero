@@ -50,13 +50,13 @@
       let energy=0,error=0;for(let i=0;i<SIZE;i++){energy+=observed[i]**2;error+=residual[i]**2}
       return {notes,fit:energy?1-error/energy:0};
     }
-    function matches(result,expected){
+    function matches(result,expected,{requireBass=true}={}){
       // A guitar chord often doubles tones across octaves. Their partials overlap,
       // so demanding a separate fitted voice for each string rejects real chords.
       // Require every chord tone in this frame and the displayed bass/inversion.
       const wanted=[...new Set(expected.map(midi=>midi%12))],heard=result.notes;
       if(result.fit<=.72||wanted.length<2||!heard.length)return false;
-      if(Math.min(...heard.map(n=>n.midi))!==Math.min(...expected))return false;
+      if(requireBass&&Math.min(...heard.map(n=>n.midi))!==Math.min(...expected))return false;
       const strongest=Math.max(...heard.map(n=>n.strength));
       const high=Math.max(...expected);
       const support=wanted.map(pc=>heard.reduce((sum,n)=>sum+(n.midi<=high+1&&n.midi%12===pc?n.strength:0),0));

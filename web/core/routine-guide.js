@@ -27,6 +27,35 @@
       }
     };
   }
-  const api={createGate};
+  // Strumming needs a fresh transient for every stroke, including the first.
+  // Look at short RMS windows in the newest audio, not the long chord FFT:
+  // its overlapping tail otherwise hides the next attack under a ringing chord.
+  function createStrumGate(){
+    let last=-Infinity,lastAttack=-Infinity,previous=0,pending=null,matches=0;
+    return {
+      reset(){last=-Infinity;lastAttack=-Infinity;previous=0;pending=null;matches=0},
+      update({samples,sampleRate,now,match}){
+        const gap=now-last;
+        if(gap>250){pending=null;matches=0}
+        const duration=Math.min(80,Number.isFinite(gap)?gap:80),size=Math.max(1,Math.round(sampleRate*.02));
+        const start=Math.max(0,samples.length-Math.round(sampleRate*duration/1000));
+        for(let i=start;i+size<=samples.length;i+=size){
+          let energy=0;for(let j=i;j<i+size;j++)energy+=samples[j]*samples[j];
+          const level=Math.sqrt(energy/size),time=now-(samples.length-i-size)*1000/sampleRate;
+          if(level>=.0005&&level>previous*1.65&&time-lastAttack>=240){pending=time;lastAttack=time;matches=0}
+          previous=level;
+        }
+        last=now;
+        if(pending===null)return false;
+        if(now-pending>600){pending=null;matches=0;return false}
+        // Let the FFT catch up with the attack before judging its harmony.
+        if(now-pending<160)return false;
+        matches=match?matches+1:0;
+        if(matches<2)return false;
+        pending=null;matches=0;return true;
+      }
+    };
+  }
+  const api={createGate,createStrumGate};
   if(typeof module==='object')module.exports=api;else root.RoutineGuide=Object.freeze(api);
 })(typeof window==='object'?window:globalThis);

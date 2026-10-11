@@ -347,5 +347,20 @@
   "Next strings →": "Next strings →",
   "Major third — {note}": "Major third — {note}",
   "Minor third — {note}": "Minor third — {note}",
-  "CAGED forms: {forms}": "CAGED forms: {forms}"
+  "CAGED forms: {forms}": "CAGED forms: {forms}",
+  "Strum {key}": "Strum {key}",
+  "Keep one comfortable chord. Four bars down, then four with upstrokes.": "Keep one comfortable chord. Four bars down, then four with upstrokes.",
+  "Strum only numbered strings; × means mute.": "Strum only numbered strings; × means mute.",
+  "Bar {n} / 8": "Bar {n} / 8",
+  "Strums: {n} / 40": "Strums: {n} / 40",
+  "Tempo": "Tempo",
+  "Start pulse": "Start pulse",
+  "Pause pulse": "Pause pulse",
+  "Next bar →": "Next bar →",
+  "Strumming pattern": "Strumming pattern",
+  "Upstroke": "Upstroke",
+  "Downstroke": "Downstroke",
+  "Each new strum counts. Timing is free; arrows suggest the direction.": "Each new strum counts. Timing is free; arrows suggest the direction.",
+  "Microphone off: follow the arrows, then move to the next bar.": "Microphone off: follow the arrows, then move to the next bar.",
+  "No stroke": "No stroke"
 }

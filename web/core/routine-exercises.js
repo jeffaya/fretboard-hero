@@ -111,6 +111,20 @@
       const arp=pick(sequences(engine,rootPC,[0,quality==='major'?4:3,7],maxFret),random);
       chordExercise=make('chords','Arpeggios',`Outline the ${key} arpeggio`,`${key} · Root, third & fifth · ${range(arp)}`,
         'Play each chord tone, then return through the same notes.',roundTrip(arp));
+    }else if(engine.profile.family==='guitar'){
+      // Familiar open chords first; otherwise a compact, low-neck voicing on
+      // the three treble strings. Never require a full movable CAGED grip here.
+      const open={major:{C:[null,3,2,0,1,0],D:[null,null,0,2,3,2],E:[0,2,2,1,0,0],G:[3,2,0,0,0,3],A:[null,0,2,2,2,0]},minor:{D:[null,null,0,2,3,1],E:[0,2,2,0,0,0],A:[null,0,2,2,1,0]}};
+      const fingering=open[quality][root];
+      const notes=fingering?fingering.flatMap((fret,string)=>fret===null?[]:[{string,fret}]):
+        TriadEngine.findShapes({engine,rootPC,quality,maxFret:5,set:'GBE'}).sort((a,b)=>a.max-b.max||a.max-a.min-(b.max-b.min))[0].notes;
+      const columns=[];
+      for(let bar=0;bar<8;bar++){
+        const beats=bar<4?[0,2,4,6]:[0,2,3,4,6,7];
+        for(const beat of beats)columns.push({notes,kind:'strum',bar,beat,direction:beat%2?'up':'down',muteMissing:true});
+      }
+      chordExercise={...make('chords','Chords',`Strum ${key}`,key,
+        'Keep one comfortable chord. Four bars down, then four with upstrokes.',columns),strumming:true};
     }else{
       const system=engine.profile.caged||engine.profile.chords;
       const all=ChordEngine.templateShapes({engine,...system,rootPC,quality,maxFret});
