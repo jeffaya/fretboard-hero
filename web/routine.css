@@ -399,8 +399,8 @@ body #app #routineMic {
 #routineNoteProgress { flex: none; margin-left: auto; padding: 5px 10px; border: 1px solid #70f7ff55; border-radius: 20px; color: #fff; font-variant-numeric: tabular-nums; }
 .routine-chord-link { stroke: transparent; stroke-width: 3; }
 .routine-tab-column.is-target .routine-chord-link { stroke: var(--ui-purple); filter: drop-shadow(0 0 5px var(--ui-purple)); }
-.routine-tab-column.is-target .routine-note-face { fill: var(--ui-purple); stroke: #ffe8ff; stroke-width: 2; filter: drop-shadow(0 0 6px var(--ui-purple)); }
-.routine-tab-column.is-target .routine-note-number { fill: #24042b; }
+.routine-tab-column.is-target .routine-note-face { fill: var(--ui-purple); stroke: var(--ui-purple); stroke-width: 2; filter: drop-shadow(0 0 6px var(--ui-purple)); }
+.routine-tab-column.is-target .routine-note-number { fill: #fff; }
 .routine-tab-column.is-played .routine-note-face { fill: #073c33; stroke: #4de7b6; stroke-width: 1; }
 .routine-tab-column.is-played .routine-note-number { fill: #88ffda; }
 .routine-tab-column.is-played .routine-chord-link { stroke: #4de7b680; }
