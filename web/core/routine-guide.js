@@ -34,7 +34,7 @@
     let last=-Infinity,lastAttack=-Infinity,previous=0,pending=null,matches=0;
     return {
       reset(){last=-Infinity;lastAttack=-Infinity;previous=0;pending=null;matches=0},
-      update({samples,sampleRate,now,match}){
+      update({samples,sampleRate,now,match,onAttack=()=>{}}){
         const gap=now-last;
         if(gap>250){pending=null;matches=0}
         const duration=Math.min(80,Number.isFinite(gap)?gap:80),size=Math.max(1,Math.round(sampleRate*.02));
@@ -42,17 +42,17 @@
         for(let i=start;i+size<=samples.length;i+=size){
           let energy=0;for(let j=i;j<i+size;j++)energy+=samples[j]*samples[j];
           const level=Math.sqrt(energy/size),time=now-(samples.length-i-size)*1000/sampleRate;
-          if(level>=.0005&&level>previous*1.65&&time-lastAttack>=240){pending=time;lastAttack=time;matches=0}
+          if(level>=.0005&&level>previous*1.65&&time-lastAttack>=240){pending=time;lastAttack=time;matches=0;onAttack(time)}
           previous=level;
         }
         last=now;
         if(pending===null)return false;
-        if(now-pending>560){pending=null;matches=0;return false}
+        if(now-pending>560){const at=pending;pending=null;matches=0;return {at,match:false}}
         // Let the FFT catch up with the attack before judging its harmony.
         if(now-pending<160)return false;
         matches=(typeof match==='function'?match(pending):match)?matches+1:0;
         if(matches<2)return false;
-        const at=pending;pending=null;matches=0;return {at};
+        const at=pending;pending=null;matches=0;return {at,match:true};
       }
     };
   }
