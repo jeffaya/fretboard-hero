@@ -144,7 +144,7 @@
     const maxFret=Math.min(engine.maxFret,state.mapMaxFret);
     $$('#mapFretControls button[data-map-frets]').forEach(b=>b.classList.toggle('active',Number(b.dataset.mapFrets)===maxFret));
     $$('#mapNoteControls button[data-map-note]').forEach(b=>{const on=b.dataset.mapNote===state.mapNote;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});
-    FretboardMap.render({svg,engine,appearance,maxFret,selectedNote:state.mapNote,allowedNotes:access.notes,renderCore:renderFretboardCore,svgEl,noteName});
+    FretboardMap.render({svg,engine,appearance,maxFret,selectedNote:state.mapNote,allowedNotes:access.notes,renderCore:renderFretboardCore,noteName});
   }
 
   $('#circlePrevious').addEventListener('click',()=>selectCircleKey(state.circleKey-1));
@@ -236,23 +236,6 @@
     return {svg,isP,W,H,fretStart,fretEnd,stringStart,stringEnd,fretPos,stringPos,visualStringPos,maxFret};
   }
 
-  function patternWindows(){
-    // Position spans are derived from the active instrument's pentatonic geometry.
-    // No Guitar tuning/fret limit is assumed by the shared application shell.
-    const geom=instrument.pentatonic?.stringPairs;if(!geom)return[];
-    const anchor=pentaAnchorFret(),out=[];
-    Object.keys(geom).map(Number).sort((a,b)=>a-b).forEach(id=>{
-      const flat=geom[id].flat(),minOffset=Math.min(...flat),maxOffset=Math.max(...flat);
-      for(let shift=-24;shift<=engine.maxFret+24;shift+=12){
-        const minFret=anchor+minOffset+shift,maxFret=anchor+maxOffset+shift;
-        if(minFret<0||minFret>engine.maxFret||maxFret<0)continue;
-        out.push({id,minFret,maxFret:Math.min(engine.maxFret,maxFret)});
-      }
-    });
-    return out;
-  }
-
-  const TRIAD_SETS=instrument.triadSets;
   function triadShapes(){return TriadEngine.findShapes({engine,rootPC:rootPC(),quality:state.quality,maxFret:state.maxFret,set:state.triadStrings})}
 
   function chordShapes(){
@@ -297,8 +280,6 @@
   // P1 Root cyan, P2 3rd pink, P3 4th orange, P4 5th yellow, P5 7th green.
   const PENTA_POSITION_COLORS=[DEGREE_COLORS.root,DEGREE_COLORS.third,DEGREE_COLORS.fourth,DEGREE_COLORS.fifth,DEGREE_COLORS.seventh];
   function fretCenter(fret,fretPos){return FretboardLayout.fretCenter(fret,fretPos)}
-  // Instrument-specific position geometry is supplied by the active profile.
-  const PENTA_STRING_PAIRS=instrument.pentatonic?.stringPairs;
   function pentaAnchorFret(){
     const anchorQuality=state.quality==='minor'?rootPC():mod(rootPC()-3),anchorString=instrument.pentatonic?.anchorCourse||0;
     return mod(anchorQuality-tuning[anchorString].pc);

@@ -147,22 +147,32 @@ body #app .routine-steps .is-current button { color: #fff; }
 
 .routine-practice { min-width: 0; }
 .routine-strumming { font-family: var(--ui-font); }
-.routine-strum-heading { display: flex; justify-content: space-between; gap: 12px; margin: 0 4px 8px; color: #fff; font-size: 16px; }
+.routine-strum-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 50px; margin: 0 4px 8px; color: #fff; font-size: 16px; }
 #routineRhythmStatus { color: #ffe8ff; }
-.routine-rhythm-tab { overflow: hidden; border-radius: 16px; margin-bottom: 12px; }
+.routine-rhythm-tab { position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 12px; }
 .routine-rhythm-tab svg { display: block; width: 100%; height: auto; }
 .rhythm-string { fill: #c6d3e6; font-size: 14px; }
 .rhythm-string-line { stroke: #899bb3; stroke-width: 1; }
 .rhythm-bar-line { stroke: #899bb3; stroke-width: 1; opacity: .35; }
 .rhythm-chord { fill: #fff; font-size: 19px; font-weight: 700; }
 .rhythm-beat { fill: #c6d3e6; font-size: 16px; }
-.rhythm-playhead { stroke: var(--ui-purple); stroke-width: 4; filter: drop-shadow(0 0 5px var(--ui-purple)); }
+.rhythm-playhead { fill: #e927ff38; stroke: var(--ui-purple); stroke-width: 2; filter: drop-shadow(0 0 5px var(--ui-purple)); }
+.rhythm-playhead-center { stroke: #ff91f5; stroke-width: 1; }
 .routine-rhythm-tab .routine-note-face,.rhythm-mute-face { fill: #0a1425; }
 .routine-rhythm-tab .routine-note-number { fill: #fff; font-size: 20px; font-weight: 800; }
 .rhythm-mute { fill: #899bb3; font-size: 16px; }
-.routine-rhythm-tab .is-missed .routine-note-face { stroke: #ff8585; }
-.routine-rhythm-tab .is-missed .rhythm-beat { fill: #ff8585; }
+.routine-rhythm-tab .is-past { opacity: .5; }
 .routine-rhythm-tab .is-played .rhythm-beat { fill: #88ffda; }
+.rhythm-count-in { position: absolute; top: 50%; left: clamp(180px,58%,360px); width: min(128px,35%); transform: translateY(-50%); border: 1px solid var(--ui-purple); border-radius: 14px; padding: 10px 4px; box-sizing: border-box; background: #091528ed; box-shadow: 0 0 18px #e927ff55; color: #fff; pointer-events: none; }
+.rhythm-count-in span { display: block; font-size: 14px; }
+.rhythm-count-in strong { display: block; font-size: 64px; line-height: 1.1; text-shadow: 0 0 16px var(--ui-purple); }
+.rhythm-feedback { text-align: right; min-width: 0; }
+.rhythm-feedback strong { display: block; color: #fff; font-size: clamp(23px,3vw,30px); line-height: 1.05; text-shadow: 0 0 12px #e927ff88; }
+.rhythm-feedback small { display: block; color: #c6d3e6; font-size: 13px; line-height: 1.3; }
+.rhythm-feedback.is-offset strong { color: #ffe38a; }
+.rhythm-feedback.is-confirmed strong { color: #88ffda; text-shadow: 0 0 12px #5cffb288; }
+.rhythm-feedback-pop strong { animation: quizScore .5s ease-out; }
+@media (prefers-reduced-motion:reduce) { .rhythm-feedback-pop strong { animation: none; } }
 .routine-strum-controls { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; }
 body #app .routine-strum-controls button { min-height: 44px; padding: 8px 12px; font-size: 14px; }
 .routine-strum-controls label { display: flex; align-items: center; gap: 6px; color: #fff; font-size: 14px; }

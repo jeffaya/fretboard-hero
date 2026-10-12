@@ -24,7 +24,6 @@
       maskable512:`${iconBase}icon-maskable-512.png`,
       ...(product.assets||{})
     };
-    const home=product.home||{};
     const name=branding.name||product.name||'Fretboard Hero';
     const url=seo.canonical||product.url||location.href;
     const ogImage=new URL(assets.ogImage||'assets/instruments/guitar/og.jpg?v=10.35.0','https://fretboard-hero.com/').href;
