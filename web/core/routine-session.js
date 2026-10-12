@@ -9,7 +9,7 @@
     const micPreference=FretboardMicrophone.preference('routine');
     const microphone=FretboardMicrophone.create({fftSize:16384,interval:80,onFrame:listen,onState:audioState});
     const strumming=RoutineStrumming.create({root,engine,
-      onProgress(index,played){current().index=index;current().strums=played},onComplete:advance,onRestart:()=>strumGate.reset()
+      onProgress(index,played){current().index=index;current().strums=played},onComplete:advance,onAudioReset:()=>strumGate.reset()
     });
     function resetGates(repeat=false){gate.reset(repeat);strumGate.reset()}
     // A short CSS celebration, created once and replayed only on completion.
@@ -62,7 +62,7 @@
       draw();
       if(on){
         showTarget();
-        if(current()?.index===(currentSection()?.end||exercises[state.index]?.columns.length))advance();
+        if(!exercises[state.index]?.strumming&&current()?.index===(currentSection()?.end||exercises[state.index]?.columns.length))advance();
       }
     }
     function renderInstruction(){
@@ -75,13 +75,13 @@
       if(!active||state.index>=5||transition||now<settleUntil)return;
       if(exercises[state.index].strumming){
         let result;
-        const hit=strumGate.update({samples,sampleRate,now,match(at){
+        const hit=strumGate.update({samples,sampleRate,now,onAttack:at=>strumming.attack(at,now),match(at){
           const column=strumming.targetAt(at);if(!column)return false;
           result??=detector.analyze(spectrum,sampleRate,fftSize);
           const pitches=column.notes.map(n=>engine.midiAt(n.string,n.fret));
           return detector.matches(result,pitches,{requireBass:false});
         }});
-        if(hit)strumming.hit(hit.at,now);
+        if(hit)strumming.confirm(hit.at,hit.match,now);
         return;
       }
       const pitches=targetPitches();if(!pitches.length)return;
@@ -120,8 +120,8 @@
         const step=document.createElement('li'),button=document.createElement('button');
         button.type='button';button.textContent=item.step;button.dataset.step=String(i+1);
         button.addEventListener('click',()=>{
-          cancelTransition();state.index=i;
-          if(completed.has(i)||current().index===exercises[state.index].columns.length){current().index=0;current().section=0}
+          strumming.stop();cancelTransition();state.index=i;
+          if(completed.has(i)||current().index===exercises[state.index].columns.length){current().index=0;current().section=0;current().strums=[]}
           resetGates();settleUntil=performance.now()+400;render();$('#routineTitle').focus({preventScroll:true});
           if(currentSection()&&current().index===currentSection().end)advance();
         });
@@ -178,7 +178,7 @@
       },750);
     }
     function reset(){
-      cancelTransition();completed.clear();state.index=0;lastPitches=[];
+      strumming.stop();cancelTransition();completed.clear();state.index=0;lastPitches=[];
       exercises=RoutineExercises.create({engine,root:state.root,quality:state.quality,random});
       guides=exercises.map(()=>({index:0,section:0}));
       resetGates();settleUntil=performance.now()+400;render();
