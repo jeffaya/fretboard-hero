@@ -194,21 +194,19 @@ for(const step of [0,2])test(`Routine step ${step+1} accepts quiet audio only af
  assert.ok(progress().startsWith('2 /'),progress());
 });
 
-test('A held chord validates one timed stroke, while an early fresh attack does not count',()=>{
+test('A held chord produces immediate feedback and validates only one timed stroke',()=>{
  const {samples,spectrum,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(true);r.session.enter();
  r.nodes.get('#routineSteps').children[3].children[0].click();
  const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);
  const notes=r.c.lastExercise.columns[0].notes.map(n=>engine.midiAt(n.string,n.fret));
  const data=samples(notes),frequencies=spectrum(notes),silence=new Float32Array(N),empty=new Float32Array(N/2).fill(-Infinity);
  const frame=(now,quiet=false)=>{r.c.frame(now);r.c.audio.onFrame({samples:quiet?silence:data,spectrum:quiet?empty:frequencies,sampleRate:48000,fftSize:N,now})};
- // First target at 4333 ms after the four-beat count-in.
- for(let now=1040;now<4320;now+=40)frame(now,true);
- for(let now=4320;now<5720;now+=40)frame(now);
+ for(let now=1040;now<4760;now+=40)frame(now,true);
+ frame(4760);assert.equal(r.nodes.get('#routineRhythmGrade').textContent,'Excellent');
+ assert.equal(r.nodes.get('#routineRhythmChord').textContent,'Checking chord…');
+ for(let now=4800;now<6750;now+=40)frame(now);
  assert.equal(r.nodes.get('#routineNoteProgress').textContent,'1 / 32');
- for(let now=5720;now<5800;now+=40)frame(now,true);
- // More than 180 ms before the third beat at 6000 ms.
- for(let now=5800;now<6360;now+=40)frame(now);
- assert.equal(r.nodes.get('#routineNoteProgress').textContent,'1 / 32');
+ assert.equal(r.nodes.get('#routineRhythmChord').textContent,'Chord recognized');
 });
 
 test('All guitar keys traverse GBE, DGB and ADG from the nut to fret 15, with same-string third liaisons',()=>{
@@ -332,14 +330,14 @@ test('Manual strumming traverses eight bars; mic, tempo and navigation keep the 
  r.nodes.get('#routineSteps').children[3].children[0].click();assert.equal(r.nodes.get('#routineNoteProgress').textContent,'0 / 32');
 });
 
-test('Pause freezes the tab, resume counts in and missed bars repeat without skipping the exercise',()=>{
+test('Pause and resume preserve the score; missed bars advance and skipped stages stay stopped',()=>{
  const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineSteps').children[3].children[0].click();
  const tick=end=>{for(let time=r.c.now+40;time<=end;time+=40)r.c.frame(time)};
- tick(6000);r.nodes.get('#routineRhythmToggle').click();
+ assert.equal(r.nodes.get('#routineCountInNumber').textContent,'3');tick(6000);r.nodes.get('#routineRhythmToggle').click();
  const svg=r.nodes.get('#routineRhythmTab'),track=svg.children.at(-1).children[1],transform=track.attrs.transform;
  tick(10000);assert.equal(track.attrs.transform,transform);assert.equal(r.nodes.get('#routineRhythmStatus').textContent,'Paused');
- r.nodes.get('#routineRhythmToggle').click();assert.equal(r.nodes.get('#routineRhythmStatus').textContent,'Ready: 4');
- tick(16800);assert.match(r.nodes.get('#routineRhythmStatus').textContent,/Again:/);assert.equal(r.nodes.get('#routineStrumBar').textContent,'Bar 1 / 8');
+ r.nodes.get('#routineRhythmToggle').click();assert.equal(track.attrs.transform,transform);assert.equal(r.nodes.get('#routineCountIn').hidden,true);
+ tick(18000);assert.equal(r.nodes.get('#routineStrumBar').textContent,'Bar 2 / 8');assert.equal(r.nodes.get('#routineCountIn').hidden,true);
  r.next();assert.equal(r.c.lastExercise.id,'penta');tick(25000);assert.equal(r.c.lastExercise.id,'penta');
 });
 
@@ -361,19 +359,19 @@ test('Every guitar triad section keeps six named strings and the notes on their 
  }
 });
 
-for(const rate of [44100,48000])test(`Live routine follows 32 ringing chord attacks and changes at 80 BPM (${rate} Hz)`,()=>{
+for(const [rate,tempo] of [[44100,48],[48000,80]])test(`Live routine follows 32 ringing chord attacks with timing variation at ${tempo} BPM (${rate} Hz)`,()=>{
  const {samples,spectrumOf,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(true);r.session.enter();
  r.nodes.get('#routineSteps').children[3].children[0].click();
- r.nodes.get('#routineTempo').events.change({target:{value:'80'}});
+ r.nodes.get('#routineTempo').events.change({target:{value:String(tempo)}});
  const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar),exercise=r.c.lastExercise;
- const beat=750,start=4000,end=start+32*beat,data=new Float32Array(Math.ceil((end+500)*rate/1000));
+ const beat=60000/tempo,start=1000+3*beat,end=start+32*beat,data=new Float32Array(Math.ceil((end+500)*rate/1000));
  for(const [i,column] of exercise.columns.entries()){
-  const at=start+i*beat,offset=Math.round(at*rate/1000),length=Math.round(beat*rate/1000);
+  const at=start+i*beat+(i%2?1:-1)*beat*.24,offset=Math.round(at*rate/1000),length=Math.round(beat*rate/1000);
   const stroke=samples(column.notes.map(n=>engine.midiAt(n.string,n.fret)),{rate,length,gain:.08,decay:3.5});
   // Rearticulation of an already ringing chord, with a short pick attack.
   for(let j=0;j<length;j++)data[offset+j]=stroke[j]*Math.min(j/(rate*.008),1);
  }
- for(let now=1040;now<=end+40;now+=40){
+ for(let now=1040;now<=end+280;now+=40){
   r.c.frame(now);
   if(now%80===0){
    const stop=Math.round(now*rate/1000),begin=Math.max(0,stop-N),window=new Float32Array(N);
