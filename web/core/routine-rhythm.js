@@ -1,7 +1,7 @@
 (function(root){
   'use strict';
-  const DEFAULT_TEMPO=48,COUNT_IN=3,HARMONY_WAIT=560;
-  // At 48 BPM: excellent ±120 ms, good ±260 ms, early/late ±450 ms.
+  const DEFAULT_TEMPO=20,COUNT_IN=3,HARMONY_WAIT=560;
+  // At 20–48 BPM: excellent ±120 ms, good ±260 ms, early/late ±450 ms.
   // Scale with the beat at faster tempos, keeping adjacent beats unambiguous.
   function timing(offset,beatMs){
     const distance=Math.abs(offset),scale=Math.min(1,beatMs/1250);

@@ -147,8 +147,6 @@ body #app .routine-steps .is-current button { color: #fff; }
 
 .routine-practice { min-width: 0; }
 .routine-strumming { font-family: var(--ui-font); }
-.routine-strum-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 50px; margin: 0 4px 8px; color: #fff; font-size: 16px; }
-#routineRhythmStatus { color: #ffe8ff; }
 .routine-rhythm-tab { position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 12px; }
 .routine-rhythm-tab svg { display: block; width: 100%; height: auto; }
 .rhythm-string { fill: #c6d3e6; font-size: 14px; }
@@ -166,16 +164,18 @@ body #app .routine-steps .is-current button { color: #fff; }
 .rhythm-count-in { position: absolute; top: 50%; left: clamp(180px,58%,360px); width: min(128px,35%); transform: translateY(-50%); border: 1px solid var(--ui-purple); border-radius: 14px; padding: 10px 4px; box-sizing: border-box; background: #091528ed; box-shadow: 0 0 18px #e927ff55; color: #fff; pointer-events: none; }
 .rhythm-count-in span { display: block; font-size: 14px; }
 .rhythm-count-in strong { display: block; font-size: 64px; line-height: 1.1; text-shadow: 0 0 16px var(--ui-purple); }
-.rhythm-feedback { text-align: right; min-width: 0; }
-.rhythm-feedback strong { display: block; color: #fff; font-size: clamp(23px,3vw,30px); line-height: 1.05; text-shadow: 0 0 12px #e927ff88; }
-.rhythm-feedback small { display: block; color: #c6d3e6; font-size: 13px; line-height: 1.3; }
+.rhythm-feedback { position: absolute; width: 190px; max-width: calc(100% - 16px); text-align: left; pointer-events: none; transform-origin: 20px bottom; text-shadow: 0 2px 4px #000,0 0 6px #000,0 0 10px #000; }
+.rhythm-feedback strong { display: block; color: #fff; font-size: clamp(23px,3vw,30px); line-height: 1.05; }
+.rhythm-feedback small { display: block; color: #e3eeff; font-size: 13px; line-height: 1.3; }
 .rhythm-feedback.is-offset strong { color: #ffe38a; }
-.rhythm-feedback.is-confirmed strong { color: #88ffda; text-shadow: 0 0 12px #5cffb288; }
-.rhythm-feedback-pop strong { animation: quizScore .5s ease-out; }
-@media (prefers-reduced-motion:reduce) { .rhythm-feedback-pop strong { animation: none; } }
-.routine-strum-controls { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; }
-body #app .routine-strum-controls button { min-height: 44px; padding: 8px 12px; font-size: 14px; }
-.routine-strum-controls label { display: flex; align-items: center; gap: 6px; color: #fff; font-size: 14px; }
+.rhythm-feedback.is-confirmed strong { color: #88ffda; }
+.rhythm-feedback-pop { animation: rhythm-note-feedback 1.4s ease-out both; }
+@keyframes rhythm-note-feedback { 0% { opacity: 0; transform: translateY(24px) scale(.85); } 15% { opacity: 1; transform: translateY(0) scale(1.06); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-8px) scale(1); } }
+@media (prefers-reduced-motion:reduce) { .rhythm-feedback-pop { animation: none; } }
+.routine-rhythm-controls { display: flex; align-items: center; flex: none; gap: 8px; }
+body #app .routine-rhythm-controls button { min-width: 44px; min-height: 44px; padding: 6px 8px; font-size: 14px; }
+.routine-rhythm-controls label { display: flex; align-items: center; gap: 4px; color: #fff; font-size: 14px; }
+body #app #routineStrumNext { padding: 4px; font-size: 24px; }
 #routineTempo { min-height: 44px; padding: 5px; background: #0a1527; color: #fff; border: 1px solid #647c9d; border-radius: 8px; font: inherit; }
 #routineStrumHelp { margin: 12px 0 0; color: #b7c9df; font-size: 13px; line-height: 1.4; }
 
@@ -406,6 +406,14 @@ body #app #routineMic {
 .routine-listening { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 8px 10px; color: #a4faff; font: 16px/1.3 var(--ui-font); text-align: left; }
 #routineMicStatus { flex: 1 1 130px; min-width: 0; margin: 0; overflow-wrap: anywhere; }
 #routineMicStatus.is-error { color: #ff8585; }
+.routine-listening.is-strumming { flex-wrap: nowrap; gap: 8px; }
+.routine-listening.is-strumming #routineMicStatus { flex: 1 1 0; }
+@media (max-width:400px) {
+  .routine-listening.is-strumming { margin-inline: 0; gap: 5px; font-size: 13px; }
+  .routine-rhythm-controls { gap: 5px; }
+  body #app .routine-listening.is-strumming #routineMic { gap: 4px; padding-inline: 0; }
+  .routine-listening.is-strumming #routineMic svg { width: 16px; }
+}
 #routineNoteProgress { flex: none; margin-left: auto; padding: 5px 10px; border: 1px solid #70f7ff55; border-radius: 20px; color: #fff; font-variant-numeric: tabular-nums; }
 .routine-chord-link { stroke: transparent; stroke-width: 3; }
 .routine-tab-column.is-target .routine-chord-link { stroke: var(--ui-purple); filter: drop-shadow(0 0 5px var(--ui-purple)); }

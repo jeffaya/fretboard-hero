@@ -46,7 +46,7 @@
     function clearFeedback(){feedback=null;$('#routineRhythmFeedback').hidden=true}
     function showFeedback(value,now){
       const fresh=!feedback||feedback.at!==value.at;
-      feedback={...value,until:now+1000};
+      feedback={...value,until:fresh?now+1400:feedback.until};
       text('#routineRhythmGrade',t(value.grade));
       text('#routineRhythmChord',t(value.match===undefined?'Checking chord…':value.match?'Chord recognized':'Chord not recognized'));
       const host=$('#routineRhythmFeedback');host.hidden=false;
@@ -83,11 +83,16 @@
       text('#routineCountInNumber',String(Math.min(3,s.countIn)));
       const show=feedback&&now<feedback.until&&!paused;
       $('#routineRhythmFeedback').hidden=!show;
-      $('#routineRhythmStatus').hidden=Boolean(show);
-      text('#routineStrumBar',t(`Bar ${s.bar+1} / 8`));
-      text('#routineRhythmStatus',t(s.finished?'Practice complete':paused?'Paused':s.countIn?'Get ready':`Beat ${Math.max(1,Math.min(4,Math.floor(s.position)-s.bar*4+1))} / 4`));
+      if(show){
+        // Follow the written chord that caused this feedback, including an
+        // early/late attack and a confirmation received after a bar change.
+        const x=motion.matches?52+(feedback.index-s.bar*4)*spacing:lineX+(feedback.index-position)*spacing;
+        const top=Math.min(...exercise.columns[feedback.index].notes.map(n=>74+(engine.stringCount-1-n.string)*27));
+        const host=$('#routineRhythmFeedback');
+        host.style.left=`${Math.max(8,Math.min(width-198,x-20))/width*100}%`;
+        host.style.top=`${Math.max(18,top-56)/252*100}%`;
+      }
       text('#routineStrumHelp',t(!guided?'Microphone off: practice without validation.':'Aim for the center. Keep playing, even after a mistake.'));
-      text('#routineNoteProgress',`${s.states.filter(state=>state==='played').length} / ${exercise.columns.length}`);
       text('#routineRhythmToggle',t(paused||s.finished?'Start':'Pause'));
       $('#routineRhythmToggle').setAttribute('aria-pressed',String(!paused&&!s.finished));
     }
@@ -136,6 +141,9 @@
       update(next,index=0,listening=false,played=[]){
         next=next?.strumming?next:null;
         $('#routineStrumming').hidden=!next;
+        $('#routineRhythmControls').hidden=!next;
+        $('#routineListening').classList.toggle('is-strumming',Boolean(next));
+        $('#routineNoteProgress').hidden=!listening||Boolean(next);
         if(!next){this.stop();return}
         if(next!==exercise){
           exercise=next;guided=listening;paused=false;savedNext=-1;clearFeedback();
@@ -144,7 +152,9 @@
         }else if(guided!==listening){
           guided=listening;clock.setGuided(guided,performance.now());onAudioReset();clearFeedback();
         }
-        text('#routineTempoLabel',t('Tempo'));text('#routineStrumNext',t('Next bar →'));
+        $('#routineTempo').setAttribute('aria-label',t('Tempo'));
+        $('#routineStrumNext').setAttribute('aria-label',t('Next bar →'));
+        $('#routineStrumNext').setAttribute('title',t('Next bar →'));
         build();paint(performance.now());
       },
       targetAt(at){
