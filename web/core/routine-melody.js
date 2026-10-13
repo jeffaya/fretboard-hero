@@ -1,0 +1,51 @@
+(() => {
+  'use strict';
+  const {mod,PC}=MusicTheory;
+  const degrees={0:'1',2:'2',3:'♭3',4:'3',5:'4',7:'5',8:'♭6',9:'6',10:'♭7',11:'7'};
+  const letters=['C','D','E','F','G','A','B'];
+  function describe(note,engine,root,rootPC){
+    const interval=mod(engine.noteAt(note.string,note.fret)-rootPC),degree=degrees[interval];
+    const letter=letters[(letters.indexOf(root[0])+Number(degree.replace('♭',''))-1)%7];
+    const accidental=mod(rootPC+interval-PC[letter]);
+    const name=letter+(accidental>6?'♭'.repeat(12-accidental):'#'.repeat(accidental));
+    return {notes:[note],noteName:name,degree};
+  }
+  function journey(up){
+    const back=up.slice(0,-1).reverse().map((column,i)=>{
+      const previous=up[up.length-1-i];
+      return {...column,slideFrom:previous.slideFrom?previous.notes[0]:undefined,fromPosition:previous.slideFrom?previous.position:undefined};
+    });
+    return {melody:true,columns:up.concat(back),sections:[
+      {start:0,end:up.length,label:'Ascending'},
+      {start:up.length,end:up.length+back.length,label:'Returning'}
+    ]};
+  }
+  function scale(notes,engine,root,rootPC){
+    return journey(notes.slice(0,8).map(note=>describe(note,engine,root,rootPC)));
+  }
+  function diagonal(engine,root,rootPC,quality,variant){
+    // Two complementary five-note cells, repeated exactly an octave higher
+    // on E/A, D/G and B/e. A minor: G A C D E (2+3), C D E G A (3+2).
+    const minorRoot=mod(rootPC-(quality==='major'?3:0));
+    const offsets=variant===1?[3,5,7,10,12]:[10,12,15,17,19],lowerCount=variant===1?3:2;
+    const firstFret=mod(minorRoot+offsets[0]-engine.courses[0].pc);
+    const firstMidi=engine.midiAt(0,firstFret),anchor=mod(minorRoot-engine.courses[0].pc);
+    const boxes=PentatonicRenderer.visiblePairs({profile:engine.profile,anchor,maxFret:engine.maxFret});
+    const up=[];
+    for(let block=0;block<3;block++){
+      const notes=offsets.map((offset,i)=>{
+        const string=block*2+(i<lowerCount?0:1);
+        return {string,fret:firstMidi+block*12+offset-offsets[0]-engine.courses[string].midi};
+      });
+      if(notes.some(n=>n.fret<0||n.fret>engine.maxFret))throw new Error('No complete diagonal for this fretboard');
+      const shift=lowerCount===3?2:4,slidingString=notes[shift].string;
+      const before=boxes.find(box=>notes.slice(0,2).every(n=>box.pairs[n.string].includes(n.fret)));
+      const after=boxes.find(box=>[notes[shift-1].fret,notes[shift].fret].every(fret=>box.pairs[slidingString].includes(fret)));
+      if(!before||!after)throw new Error('No pentatonic box for this diagonal');
+      notes.forEach((note,i)=>up.push({...describe(note,engine,root,rootPC),block:block+1,
+        position:i<shift?before.id:after.id,slideFrom:i===shift?notes[i-1]:undefined,fromPosition:i===shift?before.id:undefined}));
+    }
+    return {...journey(up),diagonal:variant+1};
+  }
+  window.RoutineMelody=Object.freeze({scale,diagonal});
+})();
