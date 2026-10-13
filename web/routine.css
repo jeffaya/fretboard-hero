@@ -120,6 +120,12 @@ body #app .routine-steps .is-current button { color: #fff; }
 
 #routineContext { margin: 0 0 8px; color: #ffe38a; font-size: 18px; }
 
+.routine-melody-block { fill: #738bb00a; stroke: #8aa5cd55; stroke-width: 1; }
+.routine-block-label { fill: #e5efff; font-size: 13px; }
+.routine-melody-name { font-size: 13px; }
+.routine-melody-degree { fill: #ffe38a; font-size: 12px; }
+.routine-slide { fill: none; stroke: #ffe38a; stroke-width: 2; }
+
 #routineInstruction {
   margin: 0 0 16px;
   color: var(--ui-muted);

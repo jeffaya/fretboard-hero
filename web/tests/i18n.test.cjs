@@ -33,3 +33,8 @@ test('Triad liaison notes and CAGED form letters localize without losing interva
  assert.equal(fr.text('CAGED forms: C / D'),'Formes CAGED : C / D');
  for(const locale of locales){const i=await create({languages:[locale]});for(const key of ['Minor third — C','Major third — C##','CAGED forms: C / D'])assert.equal(i.text(i.text(key)),i.text(key),locale+' '+key)}
 });
+test('Melodic instructions, directions, box blocks and degree labels localize in every language',async()=>{
+ const phrases=['Start on A. Play up to the octave, then return to the root.','Return to C#, reading from left to right.','Connect the A minor pentatonic boxes','One octave · Frets 5–8 · Ascending','Diagonal 2 · Frets 8–17 · Returning','Block 3','Degree ♭3','Slide 7 → 9'];
+ for(const locale of locales){const i=await create({languages:[locale]});for(const phrase of phrases){const localized=i.text(phrase);if(locale!=='en'&&!['Block 3','Slide 7 → 9'].includes(phrase))assert.notEqual(localized,phrase,locale+' '+phrase);assert.equal(i.text(localized),localized)}}
+ const fr=await create({languages:['fr']});assert.equal(fr.text(phrases[0]),'Partez de La : montez à l’octave, puis revenez à la fondamentale.');assert.equal(fr.text('Degree ♭3'),'Degré ♭3');assert.ok(fr.text(phrases[2]).includes('La Mineur'));
+});
