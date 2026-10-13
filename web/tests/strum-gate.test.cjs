@@ -12,46 +12,28 @@ function signal(rate,onsets,gain=.02){
  }
  return data;
 }
-for(const rate of [44100,48000])for(const bpm of [48,72,80])test(`Repeated ringing strums count once each at ${bpm} BPM and ${rate} Hz`,()=>{
+for(const rate of [44100,48000])for(const bpm of [20,80,120])test(`Repeated ringing strums count once each at ${bpm} BPM and ${rate} Hz`,()=>{
  const onsets=[.3];for(let i=1;i<12;i++)onsets.push(onsets.at(-1)+60/bpm/(i<4?1:2));
  for(const gain of [.02,.001]){
   const data=signal(rate,onsets,gain),gate=createStrumGate();let accepted=0;
-  for(let now=80;now<data.length/rate*1000;now+=80){
+  for(let now=20;now<data.length/rate*1000;now+=20){
    const end=Math.round(now*rate/1000),samples=new Float32Array(16384),start=Math.max(0,end-samples.length);
    samples.set(data.subarray(start,end),samples.length-(end-start));
-   if(gate.update({samples,sampleRate:rate,now,match:true})?.match)accepted++;
+   gate.update({samples,sampleRate:rate,now,onAttack:()=>accepted++});
   }
   assert.equal(accepted,onsets.length,'gain '+gain);
  }
 });
-test('A sustained chord, silence and wrong chords cannot clear repeated strums',()=>{
- for(const match of [true,false]){
-  const rate=48000,data=signal(rate,[.3]),gate=createStrumGate();let accepted=0;
-  for(let now=80;now<data.length/rate*1000;now+=80){
-   const end=Math.round(now*rate/1000),samples=new Float32Array(16384),start=Math.max(0,end-samples.length);
-   samples.set(data.subarray(start,end),samples.length-(end-start));
-   if(gate.update({samples,sampleRate:rate,now,match})?.match)accepted++;
-  }
-  assert.equal(accepted,match?1:0);
- }
+test('A sustained chord and silence do not produce repeated attacks',()=>{
+ const rate=48000,data=signal(rate,[.3]),gate=createStrumGate();let accepted=0;
+ for(let now=20;now<data.length/rate*1000;now+=20){const end=Math.round(now*rate/1000),samples=new Float32Array(16384),start=Math.max(0,end-samples.length);samples.set(data.subarray(start,end),samples.length-(end-start));gate.update({samples,sampleRate:rate,now,onAttack:()=>accepted++})}
+ assert.equal(accepted,1);
 });
 test('A delayed analysis frame does not turn a held chord into a fresh attack',()=>{
  const gate=createStrumGate(),samples=new Float32Array(16384).fill(.02);let count=0;
- for(const now of [80,160,240,320,400,800,880,960,1040,1120])if(gate.update({samples,sampleRate:48000,now,match:true})?.match)count++;
- assert.equal(count,1);
+ for(const now of [80,160,240,320,400,800,880,960,1040,1120])gate.update({samples,sampleRate:48000,now,onAttack:()=>count++});assert.equal(count,1);
 });
-
-test('Harmony is resolved against the original onset and returns that time, not the later FFT confirmation',()=>{
- const gate=createStrumGate(),samples=new Float32Array(16384).fill(.02),observed=[];
- let hit;
- for(let now=1000;now<1500;now+=80){const result=gate.update({samples,sampleRate:48000,now,match(at){observed.push(at);return true}});if(result)hit={...result,confirmed:now}}
- assert.ok(hit);assert.ok(hit.at>=920&&hit.at<=1000);assert.ok(hit.confirmed-hit.at>=160);
- assert.ok(observed.every(at=>at===hit.at));
-});
-
-test('Every attack gives immediate timing feedback, followed by a distinct unrecognized-chord result',()=>{
- const gate=createStrumGate(),samples=new Float32Array(16384).fill(.02),attacks=[];let result;
- for(let now=1000;now<1800;now+=80){const r=gate.update({samples,sampleRate:48000,now,match:false,onAttack:at=>attacks.push({at,reported:now})});if(r)result={...r,reported:now}}
- assert.equal(attacks.length,1);assert.ok(attacks[0].reported-attacks[0].at<=80);
- assert.equal(result.at,attacks[0].at);assert.equal(result.match,false);assert.ok(result.reported-result.at>560);
+test('Attack feedback is immediate and uses the sample onset, without harmony confirmation',()=>{
+ const gate=createStrumGate(),samples=new Float32Array(16384).fill(.02),attacks=[];
+ gate.update({samples,sampleRate:48000,now:1000,onAttack:at=>attacks.push(at)});assert.equal(attacks.length,1);assert.ok(attacks[0]>=980&&attacks[0]<=1000);
 });

@@ -94,13 +94,8 @@ for(const rate of [44100,48000])test(`An isolated liaison at ${rate} Hz tolerate
  }
 });
 
-test('Relaxed strumming accepts an upper-string chord without its bass but still requires all three tones',()=>{
- const {spectrum,N}=require('./audio-fixtures.cjs'),detector=require('../core/chord-detector.js').create();
- const full=[45,52,57,60,64];
- for(const rate of [44100,48000]){
-  const upper=detector.analyze(spectrum([57,60,64],{rate}),rate,N);
-  assert.equal(detector.matches(upper,full),false,'ordinary chord and triad targets retain their bass check');
-  assert.equal(detector.matches(upper,full,{requireBass:false}),true);
-  for(const notes of [[57,61,64],[57,64],[60],[57,60,64,66]])assert.equal(detector.matches(detector.analyze(spectrum(notes,{rate}),rate,N),full,{requireBass:false}),false,notes.join(','));
- }
+test('Chord and triad recognition requires the written bass',()=>{
+ const upper=detector.analyze(spectrum([57,60,64]),48000,N);
+ assert.equal(detector.matches(upper,[45,52,57,60,64]),false);
+ assert.equal(detector.matches(upper,[57,60,64]),true);
 });
