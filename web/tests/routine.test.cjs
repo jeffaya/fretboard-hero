@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const base=path.join(__dirname,'..');
-function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-exercises','core/routine-guide','core/routine-rhythm','core/routine-strumming','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
+function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-melody','core/routine-exercises','core/routine-guide','core/routine-rhythm','core/routine-strumming','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
 function rng(seed){return()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296)}
 const flatten=e=>e.columns.flatMap(c=>c.notes);
 const playedStrings=e=>[...new Set(flatten(e).map(n=>n.string))].sort().join(',');
@@ -10,7 +10,7 @@ test('All keys, qualities and instruments have five playable and musically corre
   const engine=c.FretboardEngine.createInstrumentEngine(profile),rootPC=c.MusicTheory.PC[root],label=`${profile.id} ${root} ${quality} seed ${seed}`;
   let exercises;assert.doesNotThrow(()=>exercises=c.RoutineExercises.create({engine,root,quality,random:rng(seed)}),label);
   assert.equal(exercises.length,5);
-  for(const e of exercises){assert.equal(e.root,root);assert.equal(e.quality,quality);assert.ok(e.columns.length,label);for(const n of flatten(e)){assert.ok(n.string>=0&&n.string<engine.stringCount,label);assert.ok(n.fret>=0&&n.fret<=15,label)}}
+  for(const e of exercises){assert.equal(e.root,root);assert.equal(e.quality,quality);assert.ok(e.columns.length,label);for(const n of flatten(e)){assert.ok(n.string>=0&&n.string<engine.stringCount,label);assert.ok(n.fret>=0&&n.fret<=(e.diagonal?engine.maxFret:15),label)}}
   const expected=[];engine.courses.forEach((_,string)=>{for(let fret=0;fret<=15;fret++)if(engine.noteAt(string,fret)===rootPC)expected.push(`${string}:${fret}`)});
   assert.equal(JSON.stringify(flatten(exercises[0]).map(n=>`${n.string}:${n.fret}`)),JSON.stringify(expected));
   const scale=flatten(exercises[1]),intervals=quality==='major'?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10],first=engine.midiAt(scale[0].string,scale[0].fret);
@@ -21,7 +21,7 @@ test('All keys, qualities and instruments have five playable and musically corre
   for(const col of exercises[2].columns){assert.equal(col.notes.length,col.kind==='third'?1:3);assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,col.notes.length);for(const n of col.notes)assert.ok(tones.includes(engine.noteAt(n.string,n.fret)),label)}
   for(const col of exercises[3].columns){const pcs=col.kind==='strum'?Object.values(c.MusicTheory.chordTones(col.rootPC,col.quality)):tones;for(const n of col.notes)assert.ok(pcs.includes(engine.noteAt(n.string,n.fret)),label)}
   if(profile.family==='bass'){assert.equal(exercises[3].step,'Arpeggios');const arp=flatten(exercises[3]);for(let i=1;i<(arp.length+1)/2;i++)assert.ok(arp[i].midi>arp[i-1].midi)}else{assert.ok(exercises[3].columns.length>=3,label);for(const col of exercises[3].columns)assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,3)}
-  const penta=c.MusicTheory.pentatonicPCs(rootPC,quality);assert.equal(flatten(exercises[4]).length,4*engine.stringCount-1);for(const n of flatten(exercises[4]))assert.ok(penta.includes(engine.noteAt(n.string,n.fret)),label);
+  const penta=c.MusicTheory.pentatonicPCs(rootPC,quality);assert.equal(flatten(exercises[4]).length,profile.family==='guitar'?29:4*engine.stringCount-1);for(const n of flatten(exercises[4]))assert.ok(penta.includes(engine.noteAt(n.string,n.fret)),label);
   for(const e of exercises.filter(e=>['scale','penta'].includes(e.id)||(e.id==='chords'&&profile.family==='bass'))){
    const notes=flatten(e);assert.equal(notes.length%2,1,label);
    for(let i=0;i<Math.floor(notes.length/2);i++)assert.equal(JSON.stringify(notes[i]),JSON.stringify(notes[notes.length-1-i]),label);
@@ -31,19 +31,52 @@ test('All keys, qualities and instruments have five playable and musically corre
  }
  assert.equal(count,576);
 });
-test('Repeated routines vary scales and pentatonics while the full guitar triad journey stays predictable',()=>{
+test('Scale and triads stay predictable; the two selected guitar diagonals repeat consistently',()=>{
  const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),random=rng(1234),variants=[new Set(),new Set(),new Set()];
- for(let i=0;i<30;i++){const e=c.RoutineExercises.create({engine,root:'A',quality:'minor',random});[e[1],e[2],e[4]].forEach((x,j)=>variants[j].add(JSON.stringify(x.columns)))}
- assert.ok(variants[0].size>2);assert.equal(variants[1].size,1);assert.ok(variants[2].size>2);
+ for(let i=0;i<30;i++){const e=c.RoutineExercises.create({engine,root:'A',quality:'minor',random,diagonal:i%2});[e[1],e[2],e[4]].forEach((x,j)=>variants[j].add(JSON.stringify(x.columns)))}
+ assert.equal(variants[0].size,1);assert.equal(variants[1].size,1);assert.equal(variants[2].size,2);
+});
+test('Every scale is one exact octave from root to root, with spelled notes and degrees',()=>{
+ const c=runtime();
+ for(const profile of Object.values(c.FRETBOARD_INSTRUMENTS))for(const root of c.MusicTheory.NOTES)for(const quality of ['minor','major']){
+  const engine=c.FretboardEngine.createInstrumentEngine(profile),e=c.RoutineExercises.create({engine,root,quality})[1];
+  assert.equal(e.columns.length,15);assert.equal(e.sections.map(s=>s.end-s.start).join(','),'8,7');
+  assert.equal(e.columns[0].noteName,root);assert.equal(e.columns[7].noteName,root);assert.equal(e.columns[14].noteName,root);
+  assert.equal(e.columns.slice(0,8).map(c=>c.degree).join(','),quality==='minor'?'1,2,♭3,4,5,♭6,♭7,1':'1,2,3,4,5,6,7,1');
+  const notes=flatten(e);assert.equal(engine.midiAt(notes[7].string,notes[7].fret)-engine.midiAt(notes[0].string,notes[0].fret),12);
+  if(profile.family==='guitar')assert.equal(notes[0].string,0);
+ }
+ const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
+ assert.equal(c.RoutineExercises.create({engine,root:'C#',quality:'major'})[1].columns.slice(0,8).map(c=>c.noteName).join(','),'C#,D#,E#,F#,G#,A#,B#,C#');
+});
+test('Both diagonals repeat the same complete pentatonic motif at three octaves in all keys',()=>{
+ const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
+ for(const root of c.MusicTheory.NOTES)for(const quality of ['minor','major'])for(const diagonal of [0,1]){
+  const e=c.RoutineExercises.create({engine,root,quality,diagonal})[4],label=`${root} ${quality} diagonal ${diagonal+1}`,up=e.columns.slice(0,15);
+  const anchor=c.MusicTheory.mod(c.MusicTheory.PC[root]-(quality==='major'?3:0)-engine.courses[0].pc),boxes=c.PentatonicRenderer.visiblePairs({profile:engine.profile,anchor,maxFret:engine.maxFret});
+  assert.equal(e.diagonal,diagonal+1);assert.equal(e.columns.length,29);assert.equal(e.sections.map(s=>s.end-s.start).join(','),'15,14');
+  assert.equal(up.filter(c=>c.slideFrom).length,3);
+  for(let block=0;block<3;block++){
+   const cell=up.slice(block*5,block*5+5);assert.equal(cell.map(c=>c.noteName).join(','),up.slice(0,5).map(c=>c.noteName).join(','),label);
+   assert.equal(cell.map(c=>c.degree).join(','),up.slice(0,5).map(c=>c.degree).join(','),label);
+   assert.equal(new Set(cell.map(c=>engine.noteAt(c.notes[0].string,c.notes[0].fret))).size,5);
+   cell.forEach((col,i)=>{const n=col.notes[0],first=up[i].notes[0];assert.equal(col.block,block+1);assert.equal(n.string,block*2+(i<(diagonal===0?2:3)?0:1));assert.equal(engine.midiAt(n.string,n.fret),engine.midiAt(first.string,first.fret)+12*block);assert.ok(boxes.some(box=>box.id===col.position&&box.pairs[n.string].includes(n.fret)),label);if(col.slideFrom){assert.equal(col.slideFrom.string,n.string);assert.equal(n.fret-col.slideFrom.fret,2)}});
+  }
+  for(let i=1;i<up.length;i++){const a=up[i-1].notes[0],b=up[i].notes[0];assert.ok(engine.midiAt(b.string,b.fret)>engine.midiAt(a.string,a.fret))}
+  assert.equal(e.columns.slice(15).filter(c=>c.slideFrom).length,3);
+ }
+ const e=c.RoutineExercises.create({engine,root:'A',quality:'minor',diagonal:0})[4];
+ assert.equal(e.columns.slice(0,15).map(c=>c.position).filter((p,i,a)=>i===0||p!==a[i-1]).join(','),'5,1,2,3');
 });
 test('Shared drawer is exposed inline and inert only when closed in compact mode',()=>{const nodes=new Map(),media={matches:false,addEventListener(_,f){this.change=f}},c={window:{},matchMedia:()=>media};function node(id){if(!nodes.has(id)){const classes=new Set();nodes.set(id,{attrs:{},events:{},classList:{contains:k=>classes.has(k),toggle:(k,on)=>on?classes.add(k):classes.delete(k)},setAttribute(k,v){this.attrs[k]=v},addEventListener(k,f){this.events[k]=f},focus(){c.focused=id}})}return nodes.get(id)}const root={querySelector:node};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(base,'core/controls.js'),'utf8'),c);c.window.FretboardControls.bindDrawer({root,name:'routine'});const drawer=node('#routineDrawer'),btn=node('#routineMenuBtn');assert.equal(drawer.inert,false);assert.equal(drawer.attrs['aria-hidden'],'false');media.matches=true;media.change();assert.equal(drawer.inert,true);btn.events.click();assert.equal(drawer.inert,false);assert.equal(btn.attrs['aria-expanded'],'true');drawer.events.keydown({key:'Escape',preventDefault(){}});assert.equal(drawer.inert,true);assert.equal(c.focused,'#routineMenuBtn');media.matches=false;media.change();assert.equal(drawer.inert,false)});
 class Node{
  constructor(){this.children=[];this.events={};this.attrs={};this.dataset={};this.style={};this.classes=new Set();this.classList={contains:k=>this.classes.has(k),toggle:(k,on)=>on?this.classes.add(k):this.classes.delete(k)};this.textContent='';this.hidden=false;this.parentElement={clientWidth:390}}
  append(...nodes){this.children.push(...nodes)}replaceChildren(){this.children=[]}querySelectorAll(){return this.children}querySelector(){return null}setAttribute(k,v){this.attrs[k]=v}addEventListener(k,f){this.events[k]=f}click(){this.events.click?.()}focus(){}scrollIntoView(){}
 }
-function sessionRuntime(demo=false,enabled=true){
+function sessionRuntime(demo=false,enabled=true,storage=new Map()){
  const c=runtime(),nodes=new Map(),root={querySelector:s=>{if(!nodes.has(s))nodes.set(s,new Node());return nodes.get(s)}};
  c.document={createElement:()=>new Node(),createElementNS:()=>new Node(),addEventListener(){}};c.opens=0;
+ c.localStorage={getItem:key=>storage.get(key),setItem:(key,value)=>storage.set(key,value)};
  const timers=new Map();let timerId=0;
  c.setTimeout=f=>{timers.set(++timerId,f);return timerId};c.clearTimeout=id=>timers.delete(id);c.now=1000;c.performance={now:()=>c.now};const frames=new Map();let frameId=0;c.requestAnimationFrame=f=>{frames.set(++frameId,f);return frameId};c.cancelAnimationFrame=id=>frames.delete(id);c.frame=now=>{c.now=now;for(const [id,f] of [...frames]){frames.delete(id);f(now)}};
  c.micPreference={get enabled(){return enabled},setEnabled(value){enabled=value}};
@@ -57,14 +90,31 @@ function sessionRuntime(demo=false,enabled=true){
  vm.runInContext(fs.readFileSync(path.join(base,'core/routine-session.js'),'utf8'),c);
  const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),session=c.window.RoutineSession.create({root,engine,refreshControls(){},random:rng(321)});
  const nextGroup=()=>{nodes.get('#routineNext').click();flush()};
- return {session,nodes,c,flush,nextGroup,next(){const id=c.lastExercise.id;nextGroup();while(id==='triads'&&c.lastExercise.id==='triads')nextGroup()}};
+ return {session,nodes,c,flush,nextGroup,next(){const id=c.lastExercise.id;nextGroup();while(c.lastExercise.id===id&&nodes.get('#routineFinish').hidden)nextGroup()}};
 }
+test('Diagonal alternates on entry and replay, survives reload, and remains stable through settings and navigation',()=>{
+ const storage=new Map(),r=sessionRuntime(false,false,storage),penta=()=>{r.nodes.get('#routineSteps').children[4].children[0].click();return r.c.lastExercise.diagonal};
+ r.session.enter();assert.equal(penta(),1);r.nextGroup();assert.equal(r.nodes.get('#routineContext').textContent.includes('Returning'),true);
+ r.nodes.get('#routineSteps').children[0].children[0].click();assert.equal(penta(),1);assert.ok(r.nodes.get('#routineContext').textContent.includes('Returning'));
+ r.nodes.get('#routineMic').click();r.nodes.get('#routineMic').click();assert.equal(r.c.lastExercise.diagonal,1);
+ r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value!=='A').click();r.nodes.get('#routineQualityControls').children[0].click();assert.equal(penta(),1);
+ r.session.leave();r.session.enter();assert.equal(penta(),2);
+ r.nodes.get('#routineSteps').children[0].children[0].click();for(let i=0;i<5;i++)r.next();r.nodes.get('#routineReplay').click();assert.equal(penta(),1);
+ const restored=sessionRuntime(true,false,storage);restored.session.enter();restored.nodes.get('#routineSteps').children[4].children[0].click();assert.equal(restored.c.lastExercise.diagonal,2);
+});
+test('Blocked storage still permits alternating routines and scale sections keep progress',()=>{
+ const r=sessionRuntime(true,false,{get(){throw Error('Storage blocked')},set(){throw Error('Storage blocked')}});
+ r.session.enter();r.nodes.get('#routineSteps').children[1].children[0].click();assert.equal(r.nodes.get('#routineContext').hidden,false);assert.equal(r.c.lastExercise.columns.length,8);
+ assert.equal(r.nodes.get('#routineNext').textContent,'Return →');r.nextGroup();assert.equal(r.c.lastExercise.columns.length,7);assert.ok(r.nodes.get('#routineInstruction').textContent.includes('left to right'));
+ assert.equal(r.nodes.get('#routineSteps').children[1].classes.has('is-complete'),false);r.nextGroup();assert.equal(r.c.lastExercise.id,'triads');assert.equal(r.nodes.get('#routineSteps').children[1].classes.has('is-complete'),true);
+ r.session.leave();r.session.enter();r.nodes.get('#routineSteps').children[4].children[0].click();assert.equal(r.c.lastExercise.diagonal,2);
+});
 test('Demo permits all five stages and Done, but blocks other roots and major without resetting progress',()=>{
  const r=sessionRuntime(true);r.session.enter();
  r.next();assert.equal(r.c.lastExercise.id,'scale');
  r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='C').click();r.nodes.get('#routineQualityControls').children[0].click();
  assert.equal(r.c.opens,2);assert.equal(r.c.lastExercise.id,'scale');assert.equal(r.c.lastExercise.root,'A');assert.equal(r.c.lastExercise.quality,'minor');
- for(let i=1;i<5;i++){assert.equal(r.nodes.get('#routineNext').textContent,i===2?'Next strings →':i===4?'Done':'Next →');r.next()}
+ for(let i=1;i<5;i++){assert.equal(r.nodes.get('#routineNext').textContent,i===2?'Next strings →':[1,4].includes(i)?'Return →':'Next →');r.next()}
  assert.equal(r.nodes.get('#routineTitle').textContent,'Routine complete!');assert.equal(r.nodes.get('#routineNext').hidden,true);assert.equal(r.nodes.get('#routineFinish').hidden,false);
  assert.equal(r.nodes.get('#routineSteps').children.filter(n=>n.classes.has('is-complete')).length,5);assert.equal(r.nodes.get('#routineListening').hidden,true);
  r.session.enter();assert.equal(r.c.lastExercise.id,'root');assert.equal(r.nodes.get('#routineFinish').hidden,true);
@@ -93,6 +143,23 @@ test('Tab wraps without overlapping frets, preserves chord columns and fits a st
   }
  }
 });
+test('Every diagonal section shows three repeated blocks, six strings per staff, box transitions and slides',()=>{
+ const c=runtime();c.document={createElementNS:()=>new Node()};vm.runInContext(fs.readFileSync(path.join(base,'core/routine-renderer.js'),'utf8'),c);
+ const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
+ for(const diagonal of [0,1])for(const width of [280,390,1194]){
+  const exercise=c.RoutineExercises.create({engine,root:'A',quality:'minor',diagonal})[4];
+  for(const section of exercise.sections){
+   const svg=new Node();svg.parentElement={clientWidth:width};const visible={...exercise,columns:exercise.columns.slice(section.start,section.end)};
+   c.window.RoutineRenderer.render(svg,visible,engine,{index:0});
+   const frames=svg.children.filter(n=>n.attrs.class==='routine-melody-block'),labels=svg.children.filter(n=>n.attrs.class==='routine-block-label');
+   assert.equal(frames.length,3);assert.equal(labels.length,3);assert.ok(labels.every(n=>/P\d → P\d/.test(n.textContent)),labels.map(n=>n.textContent).join(','));
+   assert.equal(svg.children.filter(n=>n.attrs.class==='routine-slide').length,3);
+   const strings=svg.children.filter(n=>n.attrs.stroke==='#899bb3');assert.equal(strings.length,width>=682?6:18);
+   const columns=svg.children.filter(n=>'data-column' in n.attrs);assert.equal(columns.length,section.end-section.start);assert.equal(columns.filter(n=>n.attrs.class.includes('is-target')).length,1);
+   for(const col of columns){const fret=col.children.find(n=>n.attrs.class==='routine-note-number'),note=visible.columns[col.attrs['data-column']].notes[0];assert.ok(strings.some(s=>s.attrs.y1===fret.attrs.y-1));assert.equal(Number(fret.textContent),note.fret)}
+  }
+ }
+});
 
 test('Progress navigation reuses exercises and marks the active step',()=>{
  const r=sessionRuntime();r.session.enter();const first=r.c.lastExercise;
@@ -105,7 +172,7 @@ test('Progress navigation reuses exercises and marks the active step',()=>{
 
 test('Skipping ahead does not complete unplayed routine stages',()=>{
  const r=sessionRuntime();r.session.enter();r.nodes.get('#routineSteps').children[4].children[0].click();
- assert.equal(r.nodes.get('#routineNext').textContent,'Next →');r.next();
+ assert.equal(r.nodes.get('#routineNext').textContent,'Return →');r.next();
  assert.equal(r.c.lastExercise.id,'root');assert.equal(r.nodes.get('#routineFinish').hidden,true);
 });
 
