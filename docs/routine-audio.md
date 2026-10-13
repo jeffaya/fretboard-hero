@@ -20,6 +20,22 @@ With the microphone on, all triad tones must sound together, then each interveni
 
 Completing a group advances automatically after the existing short success transition. Manual **Next strings** completes the current group and moves to the next; the third group's Next moves to the chord exercise. The overall Triads step is complete only after all three groups have been traversed. Group/note progress survives microphone toggling and navigation to an unfinished exercise. Reopening a completed exercise or replaying the routine starts again at GBE. All new copy is localized in the 11 supported languages.
 
+## Scales and diagonal pentatonics
+
+`RoutineMelody` builds the annotated single-note journeys. Scale remains the full major or natural minor scale on every instrument. It now uses one stable, compact octave in each key, starting on the lowest playable root; guitar starts on the low E string. The selection prefers a small fret span and a root near the lower end of that span. The seven degrees, correctly spelled note names (including E♯/B♯), and repeated octave root are written above the tablature.
+
+The outward and return passages are two named sections: **Ascending** (eight notes) and **Returning** (seven). The turning note is played once. The return is still read left to right; its instruction changes accordingly. Section completion uses the existing automatic transition or the manual **Return** button. Only the completed return marks the Scale step complete.
+
+Guitar Penta replaces a randomly chosen box with one diagonal per routine. Diagonal 1 uses two notes on the lower string and three on the next; diagonal 2 uses three then two. Each repeats exactly the same five pitch classes and intervals an octave higher on E/A, D/G and B/e. In A minor, these motifs are G–A–C–D–E and C–D–E–G–A. The three framed blocks identify these repeated cells, while P1–P5 retain the existing Learn box numbering. They are not three new position numbers. The first A minor route crosses P5 → P1 → P2 → P3. Each block labels its actual box transition, and a slash links the two same-string notes at the shift. Major uses the corresponding relative-minor geometry with major note names and degrees.
+
+These complete three-block diagonals use the instrument's full fret range when needed (A minor diagonal 2 reaches fret 17; all standard guitar keys fit by fret 20). The triad and scale exercises retain their fret-15 limit. Bass/ukulele retain their existing pentatonic boxes and now expose their position label.
+
+The guitar diagonal alternates on routine entry and replay, with the next variant saved locally per instrument. Root/quality changes, section navigation, resizing and microphone toggles preserve the chosen variant. Blocked storage falls back to in-session alternation. All six guitar strings remain visible in each staff. On narrow screens, the three blocks wrap individually; automatic following keeps the active block, its heading and its strings in view. Notes are validated through the existing single-pitch gate, including arrival after a slide; physical sliding and the string used cannot be inferred from a single pitch. No gesture detector or rhythm requirement is added.
+
+The ascent has 15 notes and the return 14. The peak is not replayed. The return reverses the same fingerings and slides. All instructions, directions, block labels, degrees and accessible descriptions are localized in the 11 languages. The former random guitar box path and unused scale instruction are removed.
+
+Tests cover every key/quality, both diagonal variants, exact octave repetition, five distinct tones per block, membership in the labelled positions, two-fret slides in both directions, stable scale spellings and fingerings, session/reload alternation, blocked storage and section completion. Browser QA includes phone/tablet/desktop layouts, translations, bass/ukulele and synthesized single notes through a real Web Audio MediaStream/analyser; this does not establish accuracy on a physical guitar microphone.
+
 ## Guitar rhythm tablature
 
 The guitar Chords stage follows three related chords: I–IV–V in major or i–iv–v in natural minor. Each uses an open grip when available, otherwise a compact GBE triad below fret 6; full movable CAGED grips are not required. Labels preserve the diatonic spelling (for example F–B♭–C). Bass arpeggios and ukulele chords are unchanged.

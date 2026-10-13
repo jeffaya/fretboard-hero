@@ -70,7 +70,7 @@
     return {columns,sections};
   }
 
-  function create({engine,root,quality,random=Math.random}){
+  function create({engine,root,quality,random=Math.random,diagonal=0}){
     const rootPC=MusicTheory.PC[root],maxFret=Math.min(15,engine.maxFret),key=`${root} ${quality}`;
     const shared={root,rootPC,quality};
     const make=(id,step,title,detail,instruction,columns)=>({...shared,id,step,title,detail,instruction,columns});
@@ -80,9 +80,14 @@
       `Play each note and say “${root}” aloud.`,single(roots));
 
     const intervals=quality==='major'?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10];
-    const scale=pick(sequences(engine,rootPC,intervals,maxFret),random);
-    const scaleExercise=make('scale','Scale',`Play the ${key} scale`,`${quality==='minor'?'Natural minor':'Major'} · ${range(scale)}`,
-      'Play up to the octave, then back to the root.',roundTrip(scale));
+    // A stable, compact octave starting on the lowest available root string.
+    const scale=sequences(engine,rootPC,intervals,maxFret).map(notes=>notes.slice(0,8)).sort((a,b)=>
+      engine.midiAt(a[0].string,a[0].fret)-engine.midiAt(b[0].string,b[0].fret)||a[0].string-b[0].string||
+      (Math.max(...a.map(n=>n.fret))-Math.min(...a.map(n=>n.fret)))-(Math.max(...b.map(n=>n.fret))-Math.min(...b.map(n=>n.fret)))||
+      (a[0].fret-Math.min(...a.map(n=>n.fret)))-(b[0].fret-Math.min(...b.map(n=>n.fret)))||
+      Math.max(...a.map(n=>n.fret))-Math.max(...b.map(n=>n.fret)))[0];
+    const scaleExercise={...make('scale','Scale',`Play the ${key} scale`,`One octave · ${range(scale)}`,
+      `Start on ${root}. Play up to the octave, then return to the root.`,[]),...RoutineMelody.scale(scale,engine,root,rootPC)};
 
     let triadExercise;
     if(engine.profile.family==='guitar'){
@@ -142,15 +147,23 @@
         unique.map(s=>({notes:s.notes,label:`${s.shape} shape`,muteMissing:true})));
     }
 
-    const anchorCourse=engine.profile.pentatonic.anchorCourse;
-    const anchor=MusicTheory.mod(rootPC-(quality==='major'?3:0)-engine.courses[anchorCourse].pc);
-    const pcs=MusicTheory.pentatonicPCs(rootPC,quality);
-    const boxes=PentatonicRenderer.visiblePairs({profile:engine.profile,anchor,maxFret}).filter(box=>box.pairs.every((pair,string)=>pair.every(fret=>fret>=0&&fret<=maxFret&&pcs.includes(engine.noteAt(string,fret)))));
-    const box=pick(boxes,random);
-    if(!box)throw new Error('No complete routine pentatonic position for this tuning');
-    const penta=box.pairs.flatMap((pair,string)=>pair.map(fret=>({string,fret})));
-    const pentaExercise=make('penta','Penta',`Play the ${key} pentatonic`,`${key} · Position ${box.id} · ${range(penta)}`,
-      `Play two notes per string, then reverse. ${engine.profile.reentrant?'The high G string makes this a fingering pattern, not an ascending pitch sequence.':''}`,roundTrip(penta));
+    let pentaExercise;
+    if(engine.profile.family==='guitar'){
+      const journey=RoutineMelody.diagonal(engine,root,rootPC,quality,diagonal);
+      const notes=journey.columns.flatMap(column=>column.notes);
+      pentaExercise={...make('penta','Penta',`Connect the ${key} pentatonic boxes`,`Diagonal ${journey.diagonal} · ${range(notes)}`,
+        'Repeat the same five notes one octave higher in each block. Sliding is optional.',[]),...journey};
+    }else{
+      const anchorCourse=engine.profile.pentatonic.anchorCourse;
+      const anchor=MusicTheory.mod(rootPC-(quality==='major'?3:0)-engine.courses[anchorCourse].pc);
+      const pcs=MusicTheory.pentatonicPCs(rootPC,quality);
+      const boxes=PentatonicRenderer.visiblePairs({profile:engine.profile,anchor,maxFret}).filter(box=>box.pairs.every((pair,string)=>pair.every(fret=>fret>=0&&fret<=maxFret&&pcs.includes(engine.noteAt(string,fret)))));
+      const box=pick(boxes,random);
+      if(!box)throw new Error('No complete routine pentatonic position for this tuning');
+      const penta=box.pairs.flatMap((pair,string)=>pair.map(fret=>({string,fret})));
+      pentaExercise=make('penta','Penta',`Play the ${key} pentatonic`,`${key} · Position ${box.id} · ${range(penta)}`,
+        `Play two notes per string, then reverse. ${engine.profile.reentrant?'The high G string makes this a fingering pattern, not an ascending pitch sequence.':''}`,roundTrip(penta));
+    }
     return [rootExercise,scaleExercise,triadExercise,chordExercise,pentaExercise];
   }
   window.RoutineExercises=Object.freeze({create});
