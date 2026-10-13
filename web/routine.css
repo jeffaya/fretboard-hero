@@ -152,38 +152,36 @@ body #app .routine-steps .is-current button { color: #fff; }
 }
 
 .routine-practice { min-width: 0; }
-.routine-strumming { font-family: var(--ui-font); }
-.routine-strum-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 50px; margin: 0 4px 8px; color: #fff; font-size: 16px; }
-#routineRhythmStatus { color: #ffe8ff; }
-.routine-rhythm-tab { position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 12px; }
-.routine-rhythm-tab svg { display: block; width: 100%; height: auto; }
-.rhythm-string { fill: #c6d3e6; font-size: 14px; }
-.rhythm-string-line { stroke: #899bb3; stroke-width: 1; }
-.rhythm-bar-line { stroke: #899bb3; stroke-width: 1; opacity: .35; }
-.rhythm-chord { fill: #fff; font-size: 19px; font-weight: 700; }
-.rhythm-beat { fill: #c6d3e6; font-size: 16px; }
-.rhythm-playhead { fill: #e927ff38; stroke: var(--ui-purple); stroke-width: 2; filter: drop-shadow(0 0 5px var(--ui-purple)); }
-.rhythm-playhead-center { stroke: #ff91f5; stroke-width: 1; }
-.routine-rhythm-tab .routine-note-face,.rhythm-mute-face { fill: #0a1425; }
-.routine-rhythm-tab .routine-note-number { fill: #fff; font-size: 20px; font-weight: 800; }
-.rhythm-mute { fill: #899bb3; font-size: 16px; }
-.routine-rhythm-tab .is-past { opacity: .5; }
-.routine-rhythm-tab .is-played .rhythm-beat { fill: #88ffda; }
-.rhythm-count-in { position: absolute; top: 50%; left: clamp(180px,58%,360px); width: min(128px,35%); transform: translateY(-50%); border: 1px solid var(--ui-purple); border-radius: 14px; padding: 10px 4px; box-sizing: border-box; background: #091528ed; box-shadow: 0 0 18px #e927ff55; color: #fff; pointer-events: none; }
-.rhythm-count-in span { display: block; font-size: 14px; }
-.rhythm-count-in strong { display: block; font-size: 64px; line-height: 1.1; text-shadow: 0 0 16px var(--ui-purple); }
-.rhythm-feedback { text-align: right; min-width: 0; }
-.rhythm-feedback strong { display: block; color: #fff; font-size: clamp(23px,3vw,30px); line-height: 1.05; text-shadow: 0 0 12px #e927ff88; }
-.rhythm-feedback small { display: block; color: #c6d3e6; font-size: 13px; line-height: 1.3; }
-.rhythm-feedback.is-offset strong { color: #ffe38a; }
-.rhythm-feedback.is-confirmed strong { color: #88ffda; text-shadow: 0 0 12px #5cffb288; }
-.rhythm-feedback-pop strong { animation: quizScore .5s ease-out; }
+.routine-strumming { border-radius: 16px; font-family: var(--ui-font); padding: clamp(12px,2vw,24px); }
+.routine-pattern-steps { display: flex; flex-wrap: wrap; gap: 6px 12px; text-align: left; color: #c6d3e6; font-size: clamp(13px,1.6vw,19px); font-weight: 700; }
+.routine-pattern-steps span + span::before { content: '›'; margin-right: 12px; color: #c6d3e6; }
+.routine-pattern-steps .is-current { color: var(--ui-purple); }
+#routinePatternHelp { margin: 8px 0 12px; color: #b7c9df; text-align: left; font-size: 14px; }
+.routine-rhythm-tab { position: relative; min-width: 0; }
+.routine-rhythm-tab svg { display: block; width: 100%; height: auto; overflow: visible; }
+.rhythm-arrow { fill: #fff; }
+.rhythm-arrow.is-current { fill: var(--ui-purple); }
+.rhythm-percussive { font: 40px/1 var(--ui-font); }
+.rhythm-beat { fill: #c6d3e6; font-size: 15px; }
+.rhythm-mark { fill: #fff; font-size: 12px; }
+.rhythm-beam { fill: none; stroke: #b7c9df; stroke-width: 1.5; }
+.rhythm-repeat { fill: #c6d3e6; font-size: 18px; }
+.rhythm-count-in { position: absolute; top: 0; right: 4%; padding: 0 8px; background: #0a1425e8; color: #fff; pointer-events: none; }
+.rhythm-count-in span { display: block; font-size: 13px; }
+.rhythm-count-in strong { display: block; font-size: 58px; line-height: 1.1; }
+.rhythm-feedback { position: absolute; transform: translateX(-50%); pointer-events: none; text-align: center; white-space: nowrap; }
+.rhythm-feedback strong { display: block; color: #fff; font-size: clamp(14px,2vw,22px); line-height: 1.2; }
+.rhythm-feedback-pop strong { animation: rhythm-feedback-rise .7s ease-out both; }
+@keyframes rhythm-feedback-rise { from { opacity: 0; transform: translateY(8px); } 30% { opacity: 1; } to { opacity: 1; transform: translateY(-6px); } }
 @media (prefers-reduced-motion:reduce) { .rhythm-feedback-pop strong { animation: none; } }
-.routine-strum-controls { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; }
-body #app .routine-strum-controls button { min-height: 44px; padding: 8px 12px; font-size: 14px; }
-.routine-strum-controls label { display: flex; align-items: center; gap: 6px; color: #fff; font-size: 14px; }
+.routine-rhythm-controls { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; margin-left: auto; }
+body #app .routine-rhythm-controls button { min-height: 44px; padding: 8px 12px; font-size: 14px; background: #0a1527; border: 1px solid #647c9d; border-radius: 9px; box-shadow: none; }
+.routine-rhythm-controls label { display: flex; align-items: center; gap: 4px; color: #fff; font-size: 14px; }
 #routineTempo { min-height: 44px; padding: 5px; background: #0a1527; color: #fff; border: 1px solid #647c9d; border-radius: 8px; font: inherit; }
-#routineStrumHelp { margin: 12px 0 0; color: #b7c9df; font-size: 13px; line-height: 1.4; }
+.routine-rhythm-footer { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+#routineStrumHelp { margin: 0; color: #b7c9df; font-size: 12px; text-align: left; flex: 1 1 200px; }
+body #app .routine-rhythm-footer button { margin-left: auto; min-width: 150px; min-height: 48px; padding: 8px 20px; font-size: 20px; }
+.has-rhythm .routine-actions { display: none; }
 
 .routine-actions { display: flex; justify-content: center; margin: 16px 0 0; }
 
@@ -409,7 +407,7 @@ body #app #routineMic {
 #routineMic svg { width: 20px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 #routineMic:focus-visible { outline: 2px solid #70f7ff; outline-offset: 2px; }
 #routineMic:disabled { opacity: .6; cursor: default; }
-.routine-listening { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 8px 10px; color: #a4faff; font: 16px/1.3 var(--ui-font); text-align: left; }
+.routine-listening { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 0 10px; padding: 8px 12px; border: 1px solid #647c9d; border-radius: 12px; background: #071426b8; color: #c6d3e6; font: 16px/1.3 var(--ui-font); text-align: left; }
 #routineMicStatus { flex: 1 1 130px; min-width: 0; margin: 0; overflow-wrap: anywhere; }
 #routineMicStatus.is-error { color: #ff8585; }
 #routineNoteProgress { flex: none; margin-left: auto; padding: 5px 10px; border: 1px solid #70f7ff55; border-radius: 20px; color: #fff; font-variant-numeric: tabular-nums; }
@@ -436,3 +434,10 @@ body #app #routineMic {
   .routine-path.is-arriving,.routine-transition { animation: none; }
   .is-transitioning #routineTabScroll { transition: none; }
 }
+
+@media (max-width: 540px) { .routine-rhythm-controls { flex: 1 1 100%; justify-content: flex-start; } .routine-rhythm-controls button { flex: 1; } }
+
+#routineRhythmPreview::before { content: '▶'; margin-right: 6px; }
+#routineRhythmPreview[aria-pressed="true"]::before { content: '■'; }
+#routineRhythmToggle::before { content: '▶'; margin-right: 6px; }
+#routineRhythmToggle[aria-pressed="true"]::before { content: 'Ⅱ'; }

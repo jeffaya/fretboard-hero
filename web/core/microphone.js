@@ -49,7 +49,7 @@
         report('on');frame=requestAnimationFrame(tick);
       }catch(error){if(token!==generation)return;stop();onState('off',error)}
     }
-    const api={start,stop,get state(){return state}};
+    const api={start,stop,setInterval(value){interval=value},get state(){return state}};
     return api;
   }
   function errorMessage(error){

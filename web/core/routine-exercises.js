@@ -70,7 +70,7 @@
     return {columns,sections};
   }
 
-  function create({engine,root,quality,random=Math.random,diagonal=0}){
+  function create({engine,root,quality,random=Math.random,diagonal=0,patterns=RoutinePatterns.defaults()}){
     const rootPC=MusicTheory.PC[root],maxFret=Math.min(15,engine.maxFret),key=`${root} ${quality}`;
     const shared={root,rootPC,quality};
     const make=(id,step,title,detail,instruction,columns)=>({...shared,id,step,title,detail,instruction,columns});
@@ -117,26 +117,8 @@
       chordExercise=make('chords','Arpeggios',`Outline the ${key} arpeggio`,`${key} · Root, third & fifth · ${range(arp)}`,
         'Play each chord tone, then return through the same notes.',roundTrip(arp));
     }else if(engine.profile.family==='guitar'){
-      // Familiar open chords first; otherwise a compact, low-neck voicing on
-      // the three treble strings. Never require a full movable CAGED grip here.
-      const open={major:{C:[null,3,2,0,1,0],D:[null,null,0,2,3,2],E:[0,2,2,1,0,0],G:[3,2,0,0,0,3],A:[null,0,2,2,2,0]},minor:{D:[null,null,0,2,3,1],E:[0,2,2,0,0,0],A:[null,0,2,2,1,0]}};
-      const letters=['C','D','E','F','G','A','B'];
-      const chords=[0,5,7].map((interval,index)=>{
-        const pc=MusicTheory.mod(rootPC+interval),letter=letters[(letters.indexOf(root[0])+[0,3,4][index])%7];
-        const alteration=MusicTheory.mod(pc-MusicTheory.PC[letter]);
-        const name=letter+(alteration<=6?'#'.repeat(alteration):'♭'.repeat(12-alteration));
-        const fingering=open[quality][MusicTheory.noteName(pc)];
-        const notes=fingering?fingering.flatMap((fret,string)=>fret===null?[]:[{string,fret}]):
-          TriadEngine.findShapes({engine,rootPC:pc,quality,maxFret:5,set:'GBE'}).sort((a,b)=>a.max-b.max||a.max-a.min-(b.max-b.min))[0].notes;
-        return {root:name,rootPC:pc,quality,notes};
-      });
-      // I–IV–V–I (i–iv–v–i in natural minor), then two beats per chord.
-      const progression=[[0,0],[1,1],[2,2],[0,0],[0,1],[2,0],[1,2],[0,0]];
-      const columns=progression.flatMap((pair,bar)=>Array.from({length:4},(_,beat)=>({
-        ...chords[pair[Math.floor(beat/2)]],kind:'strum',bar,beat,muteMissing:true
-      })));
-      chordExercise={...make('chords','Chords',`Strum ${key}`,key,
-        'Follow the line: four beats per chord, then two.',columns),strumming:true};
+      chordExercise={...make('chords','Rhythm','Right-hand warm-up','',
+        'Use any chord, or mute the strings.',[]),strumming:true,patterns};
     }else{
       const system=engine.profile.caged||engine.profile.chords;
       const all=ChordEngine.templateShapes({engine,...system,rootPC,quality,maxFret});

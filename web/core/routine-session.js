@@ -4,19 +4,21 @@
     const $=s=>root.querySelector(s),access=window.FRETBOARD_ACCESS||{unlocked:true},premium=window.FRETBOARD_PREMIUM;
     const t=value=>window.FretboardI18n?.text(value)||value;
     const state={root:'A',quality:'minor',index:0,diagonal:0},completed=new Set(),gate=RoutineGuide.createGate(),strumGate=RoutineGuide.createStrumGate();
+    let storage;try{storage=localStorage}catch{}
+    const rhythmPractice=RoutinePatterns.practice(storage);let patterns=RoutinePatterns.defaults();
     const diagonalKey='fretboard-routine-diagonal-'+engine.profile.id;
     let nextDiagonal=0;
     try{nextDiagonal=localStorage.getItem(diagonalKey)==='1'?1:0}catch{}
     function beginRoutine(){
-      state.diagonal=nextDiagonal;nextDiagonal=1-nextDiagonal;
+      if(engine.profile.family==='guitar')patterns=rhythmPractice.choose();state.diagonal=nextDiagonal;nextDiagonal=1-nextDiagonal;
       if(engine.profile.family==='guitar')try{localStorage.setItem(diagonalKey,String(nextDiagonal))}catch{}
     }
     const detector=FretboardChordDetector.create({minMidi:Math.min(...engine.courses.map(c=>c.midi)),maxMidi:Math.max(...engine.courses.map(c=>c.midi))+15});
     let exercises=[],guides=[],active=false,transition=0,settleUntil=0,lastPitches=[];
     const micPreference=FretboardMicrophone.preference('routine');
     const microphone=FretboardMicrophone.create({fftSize:16384,interval:80,onFrame:listen,onState:audioState});
-    const strumming=RoutineStrumming.create({root,engine,
-      onProgress(index,played){current().index=index;current().strums=played},onComplete:advance,onAudioReset:()=>strumGate.reset()
+    const strumming=RoutineStrumming.create({root,
+      onProgress(index,progress){if(current()){current().index=index;current().rhythm=progress}},onComplete:advance,onMeasure:(id,success)=>rhythmPractice.record(id,success),onAudioReset:()=>{strumGate.reset();settleUntil=performance.now()+120}
     });
     function resetGates(repeat=false){gate.reset(repeat);strumGate.reset()}
     // A short CSS celebration, created once and replayed only on completion.
@@ -40,11 +42,14 @@
       const guided=microphone.state==='on',exercise=exercises[state.index],section=currentSection();
       if(exercise.melody)$('#routineContext').textContent=t(`${exercise.detail} · ${section.label}`);
       $('#routineTabScroll').hidden=Boolean(exercise.strumming);
-      $('#routineLegend').textContent=t(exercise.strumming?'Strum only numbered strings; × means mute.':guided?'Highlight = target · Green = played':'Cyan = root note');
+      $('#routineLegend').hidden=Boolean(exercise.strumming);
+      $('#routineNoteProgress').hidden=!guided||Boolean(exercise.strumming);
+      microphone.setInterval?.(exercise.strumming?20:80);
+      $('#routineLegend').textContent=t(guided?'Highlight = target · Green = played':'Cyan = root note');
       if(exercise.melody)$('#routineLegend').textContent+=' · '+t(exercise.diagonal?'P1–P5 = boxes · / = slide · 1 = root':'Numbers above = degrees · 1 = root');
       const visible=section?{...exercise,columns:exercise.columns.slice(section.start,section.end)}:exercise;
       if(!exercise.strumming)RoutineRenderer.render($('#routineTab'),visible,engine,guided?{index:current().index-(section?.start||0),animate}:null);
-      strumming.update(active?exercise:null,current().index,guided,current().strums);
+      strumming.update(active?exercise:null,current().index,guided,current().rhythm);
       if(guided){
         const guide=current();
         const count=section?section.end-section.start:exercise.columns.length;
@@ -67,7 +72,7 @@
       $('#routineMic').setAttribute('aria-checked',String(on||value==='pending'));
       $('#routineMic').setAttribute('aria-busy',String(value==='pending'));
       $('#routineListening').hidden=!active||state.index===5;
-      $('#routineNoteProgress').hidden=!on;
+      $('#routineNoteProgress').hidden=!on||Boolean(exercises[state.index]?.strumming);
       $('#routineMicStatus').classList.toggle('is-error',Boolean(error));
       $('#routineMicStatus').textContent=t(error?FretboardMicrophone.errorMessage(error):value==='pending'?'Allow microphone access':'Microphone off');
       resetGates();settleUntil=performance.now()+400;
@@ -87,14 +92,7 @@
     function listen({samples,spectrum,sampleRate,fftSize,now}){
       if(!active||state.index>=5||transition||now<settleUntil)return;
       if(exercises[state.index].strumming){
-        let result;
-        const hit=strumGate.update({samples,sampleRate,now,onAttack:at=>strumming.attack(at,now),match(at){
-          const column=strumming.targetAt(at);if(!column)return false;
-          result??=detector.analyze(spectrum,sampleRate,fftSize);
-          const pitches=column.notes.map(n=>engine.midiAt(n.string,n.fret));
-          return detector.matches(result,pitches,{requireBass:false});
-        }});
-        if(hit)strumming.confirm(hit.at,hit.match,now);
+        strumGate.update({samples,sampleRate,now,refractory:strumming.refractory,onAttack:at=>strumming.attack(at,now)});
         return;
       }
       const pitches=targetPitches();if(!pitches.length)return;
@@ -131,10 +129,10 @@
       $('#routineSteps').replaceChildren();
       exercises.forEach((item,i)=>{
         const step=document.createElement('li'),button=document.createElement('button');
-        button.type='button';button.textContent=item.step;button.dataset.step=String(i+1);
+        button.type='button';button.textContent=t(item.step);button.dataset.step=String(i+1);
         button.addEventListener('click',()=>{
           strumming.stop();cancelTransition();state.index=i;
-          if(completed.has(i)||current().index===exercises[state.index].columns.length){current().index=0;current().section=0;current().strums=[]}
+          if(completed.has(i)||(!exercises[state.index].strumming&&current().index===exercises[state.index].columns.length)){current().index=0;current().section=0;current().rhythm=null}
           resetGates();settleUntil=performance.now()+400;render();$('#routineTitle').focus({preventScroll:true});
           if(currentSection()&&current().index===currentSection().end)advance();
           else if(exercises[state.index].melody)showTarget();
@@ -145,8 +143,8 @@
         $('#routineSteps').append(step);
       });
       const title=$('#routineTitle');
-      title.textContent=done?t('Routine complete!'):exercise.title;
-      if(!done){
+      title.textContent=done?t('Routine complete!'):t(exercise.title);
+      if(!done&&!exercise.strumming){
         const target=exercise.id==='root'?(window.FretboardI18n?.note(state.root)||state.root):t(`${state.root} ${state.quality}`);
         const label=t(exercise.id==='root'?'Find the root note':exercise.title);
         const at=exercise.id==='root'?-1:label.indexOf(target);
@@ -160,7 +158,9 @@
       $('#routineContext').textContent=t(done?`${state.root} ${state.quality} · Five exercises completed`:exercise.detail);
       if(done)$('#routineInstruction').textContent=t('Five exercises. One key. You did it! Keep building your skills in Learn, or put your knowledge to the test in Quiz.');else renderInstruction();
       $('#routineCelebration').hidden=!done;$('#routineExercise').classList.toggle('is-complete',done);
-      $('#routineTabScroll').hidden=done;$('#routineLegend').hidden=done;
+      $('#routineTabScroll').hidden=done;$('#routineLegend').hidden=done||Boolean(exercise.strumming);
+      const rhythm=!done&&exercise.strumming;$('#routineExercise').classList.toggle('has-rhythm',Boolean(rhythm));
+      (rhythm?$('#routineRhythmFooter'):$('#routineActions')).append($('#routineNext'));
       if(done)strumming.update(null);
       $('#routineNext').hidden=done;$('#routineFinish').hidden=!done;
       $('#routineNext').textContent=t(exercise.sections&&current()?.section<exercise.sections.length-1?(exercise.melody?'Return →':'Next strings →'):state.index===4&&[0,1,2,3].every(i=>completed.has(i))?'Done':'Next →');
@@ -193,7 +193,7 @@
     }
     function reset(){
       strumming.stop();cancelTransition();completed.clear();state.index=0;lastPitches=[];
-      exercises=RoutineExercises.create({engine,root:state.root,quality:state.quality,random,diagonal:state.diagonal});
+      exercises=RoutineExercises.create({engine,root:state.root,quality:state.quality,random,diagonal:state.diagonal,patterns});
       guides=exercises.map(()=>({index:0,section:0}));
       resetGates();settleUntil=performance.now()+400;render();
     }
@@ -210,7 +210,7 @@
       });
     }
     setup('routineRootControls',MusicTheory.NOTES,'root');setup('routineQualityControls',['major','minor'],'quality');
-    $('#routineNext').addEventListener('click',advance);
+    $('#routineNext').addEventListener('click',()=>{if(exercises[state.index]?.strumming)strumming.next();else advance()});
     $('#routineMic').addEventListener('click',()=>{
       if(!active||state.index>=5)return;
       const enable=microphone.state==='off';micPreference.setEnabled(enable);
