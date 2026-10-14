@@ -1,8 +1,8 @@
 (function(root){
   'use strict';
-  const DEFAULT_TEMPO=20,REQUIRED_BARS=3;
-  function create({pattern,tempo=DEFAULT_TEMPO,guided=true,now=0,onBar=()=>{}}){
-    let beatMs=60000/tempo,origin=now+3*beatMs,anchor=0,pausedAt=null,validFrom=now,closed=0,successes=0,finishBeat=null,finished=false;
+  const DEFAULT_TEMPO=80,REQUIRED_REPEATS=3;
+  function create({pattern,tempo=DEFAULT_TEMPO,guided=true,now=0,onRepeat=()=>{}}){
+    let beatMs=60000/tempo,origin=now,anchor=0,pausedAt=null,validFrom=now,closed=0,successes=0,finished=false;
     const hits=new Set(),extras=new Map(),events=pattern.slots.flatMap((stroke,slot)=>stroke?[{slot,beat:slot/pattern.division}]:[]);
     const position=now=>anchor+((pausedAt??now)-origin)/beatMs;
     const gap=Math.min(...events.map((event,i)=>((events[(i+1)%events.length].beat-event.beat+pattern.beats)%pattern.beats||pattern.beats)));
@@ -16,47 +16,44 @@
       attack(at){
         if(!guided||finished||pausedAt!==null||at<validFrom)return null;
         const p=position(at),target=nearest(p);if(!target||p<-.2)return null;
-        const offset=p-target.beat,distance=Math.abs(offset),bar=Math.floor(target.beat/4);
-        if(bar<closed)return null;
+        const offset=p-target.beat,distance=Math.abs(offset),repeat=Math.floor(target.beat/pattern.beats);
+        if(repeat<closed)return null;
         const inTime=distance<=windowBeats,duplicate=hits.has(target.id);
         const grade=distance<=.05?'Excellent':distance<=.1?'Good':inTime?(offset<0?'Early':'Late'):(offset<0?'Too early':'Too late');
         if(inTime&&!duplicate)hits.add(target.id);
-        else if(!inTime)extras.set(bar,(extras.get(bar)||0)+1);
+        else if(!inTime)extras.set(repeat,(extras.get(repeat)||0)+1);
         return {at,slot:target.slot,offset:offset*beatMs,grade,inTime,accepted:inTime&&!duplicate};
       },
       tick(now){
         if(finished||pausedAt!==null)return false;
         const p=position(now);
         // Allow the last microphone frame (20 ms cadence plus scheduling
-        // jitter) to deliver attacks preceding the measure boundary.
-        while(p>=(closed+1)*4+100/beatMs){
-          const cycle=Math.floor(closed*4/pattern.beats),localBar=closed%(pattern.beats/4);
-          const expected=events.filter(e=>Math.floor(e.beat/4)===localBar);
-          const count=expected.filter(e=>hits.has(cycle*pattern.slots.length+e.slot)).length;
-          const success=guided&&count/(expected.length+(extras.get(closed)||0))>=.75;
-          if(guided){if(success)successes++;onBar(success)}
-          for(const e of expected)hits.delete(cycle*pattern.slots.length+e.slot);extras.delete(closed);closed++;
-          if(successes>=REQUIRED_BARS&&finishBeat===null)finishBeat=Math.ceil(closed*4/pattern.beats)*pattern.beats;
-          if(finishBeat!==null&&closed*4>=finishBeat){finished=true;return true}
+        // jitter) to deliver attacks preceding the complete motif boundary.
+        while(p>=(closed+1)*pattern.beats+100/beatMs){
+          const count=events.filter(e=>hits.has(closed*pattern.slots.length+e.slot)).length;
+          const success=guided&&count/(events.length+(extras.get(closed)||0))>=.75;
+          if(guided){if(success)successes++;onRepeat(success)}
+          for(const e of events)hits.delete(closed*pattern.slots.length+e.slot);extras.delete(closed);closed++;
+          if(successes>=REQUIRED_REPEATS){finished=true;return true}
         }
         return false;
       },
       snapshot(now){
         const p=position(now),local=((p%pattern.beats)+pattern.beats)%pattern.beats;
-        return {position:p,slot:p<0||finished?-1:Math.floor(local*pattern.division+1e-7)%pattern.slots.length,countIn:Math.max(0,Math.ceil(-p-1e-8)),successes,finished,guided,paused:pausedAt!==null,beatMs};
+        return {position:p,slot:p<0||finished?-1:Math.floor(local*pattern.division+1e-7)%pattern.slots.length,successes,finished,guided,paused:pausedAt!==null,beatMs};
       },
       pause(now){if(pausedAt===null)pausedAt=now},
       resume(now){if(pausedAt!==null){origin+=now-pausedAt;pausedAt=null;validFrom=now}},
       shift(duration){origin+=duration;validFrom+=duration},
       setTempo(value,now){const time=pausedAt??now;anchor=position(time);origin=time;beatMs=60000/value;validFrom=now},
       setGuided(value,now){
-        // A partly unmonitored measure cannot count as a successful one.
+        // A partly unmonitored motif cannot count as a successful repeat.
         guided=value;validFrom=now;hits.clear();extras.clear();
-        closed=Math.max(closed,Math.ceil(Math.max(0,position(now))/4));
+        closed=Math.max(closed,Math.ceil(Math.max(0,position(now))/pattern.beats));
       },
       get refractory(){return Math.max(60,Math.min(150,gap*beatMs*.45))}
     };
   }
-  const api={create,DEFAULT_TEMPO,REQUIRED_BARS};
+  const api={create,DEFAULT_TEMPO,REQUIRED_REPEATS};
   if(typeof module==='object')module.exports=api;else root.RoutineRhythm=Object.freeze(api);
 })(typeof window==='object'?window:globalThis);
