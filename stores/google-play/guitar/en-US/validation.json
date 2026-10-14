@@ -1,425 +1,638 @@
 {
-  "status": "passed",
-  "locale": "en-US",
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-14T15:03:51.601Z",
+  "status": "passed-with-warnings",
   "instrument": "guitar",
+  "locale": "en-US",
+  "requirements": "../../requirements.json",
+  "scope": "Measured current upload files only; source artwork and the previous validation.json are not inputs.",
   "text": [
     {
       "file": "title.txt",
       "characters": 21,
-      "limit": 30
+      "limit": 30,
+      "sha256": "f1e42385984ec78ae1cb9c16fac7ebd60bd376b05f09e894ede837ce78ba216c",
+      "status": "passed"
     },
     {
       "file": "short-description.txt",
       "characters": 78,
-      "limit": 80
+      "limit": 80,
+      "sha256": "001aac58117bf0730f1f6ac2543e7741f734dc8a3302b51b1764c8d458e77ea2",
+      "status": "passed"
     },
     {
       "file": "full-description.txt",
       "characters": 2154,
-      "limit": 4000
+      "limit": 4000,
+      "sha256": "ea582f530e3fe08731e58675aa1353f08b1e3aec852ac4fada8eeca8db90bdc8",
+      "status": "passed"
+    }
+  ],
+  "groups": [
+    {
+      "folder": "phone",
+      "count": 8,
+      "minCount": 2,
+      "maxCount": 8,
+      "draft": false
+    },
+    {
+      "folder": "tablet-7",
+      "count": 8,
+      "minCount": 4,
+      "maxCount": 8,
+      "draft": false
+    },
+    {
+      "folder": "tablet-10",
+      "count": 8,
+      "minCount": 4,
+      "maxCount": 8,
+      "draft": false
+    },
+    {
+      "folder": "desktop",
+      "count": 8,
+      "minCount": 4,
+      "maxCount": 8,
+      "draft": false
+    },
+    {
+      "folder": "android-xr",
+      "count": 8,
+      "minCount": 4,
+      "maxCount": 8,
+      "draft": true
     }
   ],
   "assets": [
     {
-      "file": "common/app-icon-512x512.png",
+      "file": "icon/app-icon-512x512.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 512,
       "height": 512,
       "bytes": 463712,
+      "format": "png",
       "alpha": true,
-      "status": "ready-for-review"
+      "channels": 4,
+      "depth": "uchar",
+      "sha256": "4b04235ff4f9cd47cf9dbcc44903f8c0c85bd9754bbb199e920149bbec535ef8"
     },
     {
-      "file": "common/feature-graphic-1024x500.png",
+      "file": "icon/feature-graphic-1024x500.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1024,
       "height": 500,
-      "bytes": 1097656,
+      "bytes": 750261,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "f5e108d2490d0a1f8c9159048f89ced7fbd3274bc0895992568588b4c502ed57"
     },
     {
       "file": "phone/01-routine-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 1066251,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "e48eba0765a47b7c312ebc0dac8df77a98ed68e2cbd7657b5890fdcd07636d89"
     },
     {
       "file": "phone/02-triads-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 834884,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "f6be1c11f4f3f337d16a69cc84b2221e977085a0ce8d14ff241d1453738c058a"
     },
     {
       "file": "phone/03-pentatonic-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 1232226,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "120dd90d599acf0cbaf58a90fd4a91686a1fb0e4a382bdbad09a1219a452ec72"
     },
     {
       "file": "phone/04-feedback-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 953629,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "f2337108e18f0ad7ee101a2e3c3ac18808e0fa4d93731f65d5e51d7cd39dbe81"
     },
     {
       "file": "phone/05-quiz-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 1313281,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "496670247babccde166d92213fdff841d4b95df6050401dddc14462a6f8ba834"
     },
     {
       "file": "phone/06-tuner-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 765920,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "7a049ba690511693f575b90c778797897034591424b39ee9f1c30ab01f134fe3"
     },
     {
       "file": "phone/07-map-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 1403222,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "f2e06f9bd2f8b4407d8e4dd9cda88505f445edab2abd2fee76db5df1f4d23cfa"
     },
     {
       "file": "phone/08-circle-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 845983,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "509177aae29ab3b99d811a348ec1e7d85a2955ba5f73645acbbc530a6a0a2abf"
     },
     {
       "file": "tablet-7/01-routine-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 1242887,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "bece4f1569d7dfe381f4384fb7949382468b384315348aa65681283bd15e7ae0"
     },
     {
       "file": "tablet-7/02-triads-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 1069858,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "20f1d03de407c26a89d22a08bca202e8c178b093cb1b804f27b6c3fce65947d2"
     },
     {
       "file": "tablet-7/03-pentatonic-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 1859644,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "230c8862858978cfb425f60b7d495a23f7a834878fbb11c8f8878105c2fe89c1"
     },
     {
       "file": "tablet-7/04-feedback-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 1258853,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "08cc88ff9e6c971e4fa5c8f27f5f40037fa1ce46f7a83dd7c93ea8e5c2cae11d"
     },
     {
       "file": "tablet-7/05-quiz-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 2154520,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "300916040f5dc42a2cf9c3807a4de01f0822d5985a155ae8445e945ae8e462f5"
     },
     {
       "file": "tablet-7/06-tuner-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 499405,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "8d9a74426d85991bc6f57d04107e1f6c762ba5e20aafded6105b76e134700b61"
     },
     {
       "file": "tablet-7/07-map-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 2183390,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "6b7a42717efff0c2303d5fa60c961bb4904c3a3dd63083060c9328d0c3fa3ecb"
     },
     {
       "file": "tablet-7/08-circle-1080x1920.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1080,
       "height": 1920,
       "bytes": 635251,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "15eb49e52226b1a4b7e483973c9684742d16bf3ead6417bc20bc626aa54d8563"
     },
     {
       "file": "tablet-10/01-routine-2560x1440.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3407735,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "fe659229e505edecc25e379e4d0c882b602af5e20ee85ea184d4133536580824"
     },
     {
       "file": "tablet-10/02-triads-2560x1440.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3511358,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "b0cda1a1a04a32982062437dce7008aa01cb503e7d8b9e7dd8c513b7c18defae"
     },
     {
       "file": "tablet-10/03-pentatonic-2560x1440.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3191187,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "1a92858120b5e7c8673ec38a582fcd31239c78fc54499b592470c89c0a8c27aa"
     },
     {
       "file": "tablet-10/04-feedback-2560x1440.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3581321,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "b924da57aab4cae64073560e23d62732d0254dcdc5557ece7b7bd46e05094e1a"
     },
     {
       "file": "tablet-10/05-quiz-2560x1440.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3301700,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "3825ac1cf4f5acea84ff970783a107268f7db2a50a2c0a2442171e3719f5f6bf"
     },
     {
       "file": "tablet-10/06-tuner-2560x1440.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 863864,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "c000d94220e6623b64adb2f9e30a7958eba140c1c3542d68ce7f4758b9674d2b"
     },
     {
       "file": "tablet-10/07-map-2560x1440.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3368356,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "1a8768d374a81b137c1120d8c1cd7849ab89215ca05691b9927174335421f141"
     },
     {
       "file": "tablet-10/08-circle-2560x1440.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 2377795,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "0deb734d0d28a93d2e8852790cbf9d2304024a32ff30c632820d872c1db611d6"
     },
     {
       "file": "desktop/01-routine-1920x1080.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1920,
       "height": 1080,
       "bytes": 2344158,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "0f67b17e8344f931571d412db1e1d0cbe60339c6c07da49751cfe771545e440d"
     },
     {
       "file": "desktop/02-triads-1920x1080.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1920,
       "height": 1080,
       "bytes": 2385684,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "f14f95be8a3c01d234b837e18967e3c98dc6987b9d2c1ea69f16068a2598318c"
     },
     {
       "file": "desktop/03-pentatonic-1920x1080.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1920,
       "height": 1080,
       "bytes": 2061312,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "fbd53db354381795034145e79c100225a65509d33c340f3c126ad1f17841c209"
     },
     {
       "file": "desktop/04-feedback-1920x1080.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1920,
       "height": 1080,
       "bytes": 2411157,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "753a5b7f67a39964c6deb8f4381d2659c446d4a09b852931972dcbf10a7f729b"
     },
     {
       "file": "desktop/05-quiz-1920x1080.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1920,
       "height": 1080,
       "bytes": 2105692,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "8579bab59bdd4767660f269f26c8daad22ec14fc2f311dcddba7610a815982a6"
     },
     {
       "file": "desktop/06-tuner-1920x1080.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1920,
       "height": 1080,
       "bytes": 588540,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "62762c738044f45bd9d3cf43d3c8169398ec5591e1c10c04420f360563073937"
     },
     {
       "file": "desktop/07-map-1920x1080.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1920,
       "height": 1080,
       "bytes": 2195245,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "c1b07a197a53c362a45afc3af21cc91605517c514d02f0ada3ae71b5baa2f353"
     },
     {
       "file": "desktop/08-circle-1920x1080.png",
+      "status": "ready-for-review",
+      "errors": [],
       "width": 1920,
       "height": 1080,
       "bytes": 1767219,
+      "format": "png",
       "alpha": false,
-      "status": "ready-for-review"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "c3aee4aa302987d15864bc23b8bc769e7782e4d7980b4dbbf6d8e6d593ed1cfb"
     },
     {
-      "file": "android-xr/drafts-16x9/01-routine-2560x1440.png",
+      "file": "android-xr/01-routine-2560x1440.png",
+      "status": "draft",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3407735,
+      "format": "png",
       "alpha": false,
-      "status": "draft"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "fe659229e505edecc25e379e4d0c882b602af5e20ee85ea184d4133536580824",
+      "matchesPublishedXRDimensions": false
     },
     {
-      "file": "android-xr/drafts-16x9/02-triads-2560x1440.png",
+      "file": "android-xr/02-triads-2560x1440.png",
+      "status": "draft",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3511358,
+      "format": "png",
       "alpha": false,
-      "status": "draft"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "b0cda1a1a04a32982062437dce7008aa01cb503e7d8b9e7dd8c513b7c18defae",
+      "matchesPublishedXRDimensions": false
     },
     {
-      "file": "android-xr/drafts-16x9/03-pentatonic-2560x1440.png",
+      "file": "android-xr/03-pentatonic-2560x1440.png",
+      "status": "draft",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3191187,
+      "format": "png",
       "alpha": false,
-      "status": "draft"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "1a92858120b5e7c8673ec38a582fcd31239c78fc54499b592470c89c0a8c27aa",
+      "matchesPublishedXRDimensions": false
     },
     {
-      "file": "android-xr/drafts-16x9/04-feedback-2560x1440.png",
+      "file": "android-xr/04-feedback-2560x1440.png",
+      "status": "draft",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3581321,
+      "format": "png",
       "alpha": false,
-      "status": "draft"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "b924da57aab4cae64073560e23d62732d0254dcdc5557ece7b7bd46e05094e1a",
+      "matchesPublishedXRDimensions": false
     },
     {
-      "file": "android-xr/drafts-16x9/05-quiz-2560x1440.png",
+      "file": "android-xr/05-quiz-2560x1440.png",
+      "status": "draft",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3348057,
+      "format": "png",
       "alpha": false,
-      "status": "draft"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "e4183dbf875dee0d424f927b6c78e6412213d5be4ba8535b13c92d67f23eab80",
+      "matchesPublishedXRDimensions": false
     },
     {
-      "file": "android-xr/drafts-16x9/06-tuner-2560x1440.png",
+      "file": "android-xr/06-tuner-2560x1440.png",
+      "status": "draft",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 863864,
+      "format": "png",
       "alpha": false,
-      "status": "draft"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "c000d94220e6623b64adb2f9e30a7958eba140c1c3542d68ce7f4758b9674d2b",
+      "matchesPublishedXRDimensions": false
     },
     {
-      "file": "android-xr/drafts-16x9/07-map-2560x1440.png",
+      "file": "android-xr/07-map-2560x1440.png",
+      "status": "draft",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 3368356,
+      "format": "png",
       "alpha": false,
-      "status": "draft"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "1a8768d374a81b137c1120d8c1cd7849ab89215ca05691b9927174335421f141",
+      "matchesPublishedXRDimensions": false
     },
     {
-      "file": "android-xr/drafts-16x9/08-circle-2560x1440.png",
+      "file": "android-xr/08-circle-2560x1440.png",
+      "status": "draft",
+      "errors": [],
       "width": 2560,
       "height": 1440,
       "bytes": 2377795,
+      "format": "png",
       "alpha": false,
-      "status": "draft"
-    },
-    {
-      "file": "android-xr/drafts-8x5/01-routine-3840x2400.png",
-      "width": 3840,
-      "height": 2400,
-      "bytes": 7023356,
-      "alpha": false,
-      "status": "draft"
-    },
-    {
-      "file": "android-xr/drafts-8x5/02-triads-3840x2400.png",
-      "width": 3840,
-      "height": 2400,
-      "bytes": 7256609,
-      "alpha": false,
-      "status": "draft"
-    },
-    {
-      "file": "android-xr/drafts-8x5/03-pentatonic-3840x2400.png",
-      "width": 3840,
-      "height": 2400,
-      "bytes": 6786189,
-      "alpha": false,
-      "status": "draft"
-    },
-    {
-      "file": "android-xr/drafts-8x5/04-feedback-3840x2400.png",
-      "width": 3840,
-      "height": 2400,
-      "bytes": 7423750,
-      "alpha": false,
-      "status": "draft"
-    },
-    {
-      "file": "android-xr/drafts-8x5/05-quiz-3840x2400.png",
-      "width": 3840,
-      "height": 2400,
-      "bytes": 6840768,
-      "alpha": false,
-      "status": "draft"
-    },
-    {
-      "file": "android-xr/drafts-8x5/06-tuner-3840x2400.png",
-      "width": 3840,
-      "height": 2400,
-      "bytes": 1560910,
-      "alpha": false,
-      "status": "draft"
-    },
-    {
-      "file": "android-xr/drafts-8x5/07-map-3840x2400.png",
-      "width": 3840,
-      "height": 2400,
-      "bytes": 7071901,
-      "alpha": false,
-      "status": "draft"
-    },
-    {
-      "file": "android-xr/drafts-8x5/08-circle-3840x2400.png",
-      "width": 3840,
-      "height": 2400,
-      "bytes": 4794126,
-      "alpha": false,
-      "status": "draft"
+      "channels": 3,
+      "depth": "uchar",
+      "sha256": "0deb734d0d28a93d2e8852790cbf9d2304024a32ff30c632820d872c1db611d6",
+      "matchesPublishedXRDimensions": false
     }
   ],
-  "xrStatus": "Draft only; no XR runtime validation"
+  "errors": [],
+  "warnings": [
+    "Android XR files are 2D drafts; headset/emulator compatibility remains unverified.",
+    "Current XR dimensions follow the photographed console, but not the published 8:5 XR guidance. Confirm the target before upload."
+  ],
+  "xrStatus": "Draft only; no XR runtime validation",
+  "summary": {
+    "images": 42,
+    "readyForReview": 34,
+    "drafts": 8,
+    "errors": 0,
+    "warnings": 2
+  }
 }

@@ -7,14 +7,13 @@ const { chromium } = require('playwright');
 const sharp = require('sharp');
 const repo = path.resolve(__dirname, '../..');
 const web = path.join(repo, 'web');
-const out = path.join(repo, 'store/google-play/guitar/en-US');
+const out = path.join(repo, 'stores/google-play/guitar/en-US');
 const variants = [
   {id:'phone', width:432, height:768, dpr:2.5, touch:true, folder:'source/screens-phone'},
   {id:'tablet-7', width:720, height:1280, dpr:1.5, touch:true, folder:'tablet-7'},
   {id:'tablet-10', width:1600, height:900, dpr:1.6, touch:true, folder:'tablet-10'},
   {id:'desktop', width:1920, height:1080, dpr:1, touch:false, folder:'desktop'},
-  {id:'android-xr-console', width:1600, height:900, dpr:1.6, touch:false, folder:'android-xr/drafts-16x9'},
-  {id:'android-xr-help', width:1536, height:960, dpr:2.5, touch:false, folder:'android-xr/drafts-8x5'}
+  {id:'android-xr-console', width:1600, height:900, dpr:1.6, touch:false, folder:'android-xr'}
 ];
 const names = ['01-routine','02-triads','03-pentatonic','04-feedback','05-quiz','06-tuner','07-map','08-circle'];
 const evidence = {sourceCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),locale:'en-US',instrument:'guitar',capture:'Chromium rendering of local web source; viewport emulation, not physical-device certification',access:'Local capture-only unlocked configuration; production config unchanged',audio:'Synthetic microphone input processed by the real detector',variants:[]};

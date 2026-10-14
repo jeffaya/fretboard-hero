@@ -53,15 +53,17 @@ Built for guitarists who want to know the neck, connect their shapes and make re
 
 ## Fichiers à importer
 
+Voir le [guide commun Android et ses dimensions](../../README.md). Le rapport `validation.json` est recalculé depuis les fichiers présents ; il ne définit pas les tailles attendues.
+
 | Champ de la console | Fichier ou dossier | Format livré |
 | --- | --- | --- |
-| Éléments visuels courants : icône de l'application | `common/app-icon-512x512.png` | PNG RGBA, 512 × 512 |
-| Éléments visuels courants : image de présentation | `common/feature-graphic-1024x500.png` | PNG RGB, 1 024 × 500 |
+| Éléments visuels courants : icône de l'application | `icon/app-icon-512x512.png` | PNG RGBA, 512 × 512 |
+| Éléments visuels courants : image de présentation | `icon/feature-graphic-1024x500.png` | PNG RGB, 1 024 × 500 |
 | Captures d'écran pour téléphone | `phone/` | 8 PNG RGB, 1 080 × 1 920, portrait |
 | Captures d'écran pour tablette 7 pouces | `tablet-7/` | 8 PNG RGB, 1 080 × 1 920, portrait |
 | Captures d'écran pour tablette 10 pouces | `tablet-10/` | 8 PNG RGB, 2 560 × 1 440, paysage |
 | Desktop assets : captures d'écran sur ordinateur | `desktop/` | 8 PNG RGB, 1 920 × 1 080, paysage |
-| Éléments pour Android XR | `android-xr/` | Deux séries de 8 brouillons : lire son README avant utilisation |
+| Éléments pour Android XR | `android-xr/` | 8 brouillons 2D en 2 560 × 1 440 : lire son README avant utilisation |
 
 Importer les images de chaque dossier dans l'ordre **01 à 08**. Les noms indiquent le thème et la résolution. `alt-text.json` contient les textes alternatifs anglais, si la console les demande. `validation.json` indique les dimensions, poids et contrôles techniques de chaque export.
 
@@ -84,13 +86,13 @@ Importer les images de chaque dossier dans l'ordre **01 à 08**. Les noms indiqu
 
 Les visuels téléphone reprennent le design validé : ruban cyan continu, fond magenta et marine, titres blancs/cyan et icônes néon. Les captures intégrées ont été renouvelées avec le code actuel, en anglais. Les vues tablette et ordinateur montrent directement l'interface dans des tailles de fenêtres distinctes ; elles ne sont pas des agrandissements des captures téléphone.
 
-Les captures proviennent de la version web partagée avec l'application Capacitor, rendue dans Chromium avec des tailles d'écran simulées. Elles ne constituent pas un test de l'AAB sur des appareils physiques. Le README technique de `store/` et les fichiers `source/capture-*.json` conservent les paramètres et le commit source. Certaines pages sont déroulantes : une capture montre la portion visible de l'interface.
+Les captures proviennent de la version web partagée avec l'application Capacitor, rendue dans Chromium avec des tailles d'écran simulées. Elles ne constituent pas un test de l'AAB sur des appareils physiques. Le README technique de `stores/` et les fichiers `source/capture-*.json` conservent les paramètres et le commit source. Certaines pages sont déroulantes : une capture montre la portion visible de l'interface.
 
 L'icône est celle du dépôt. La bannière est un nouvel élément marketing reprenant l'identité existante. Les sources éditables sont dans `source/` ; ne pas les importer comme captures supplémentaires.
 
 ## Android XR et vidéos
 
-Les fichiers XR sont des **brouillons 2D pour relecture**, pas des captures prises dans un casque ou l'émulateur Android XR. La compatibilité XR de l'application n'a pas été validée. Deux ratios sont fournis parce que la console photographiée indique 16:9, tandis que la page d'aide consultée indique 8:5. Conserver ces fichiers en brouillon jusqu'à vérification de la cible et du format accepté.
+Les fichiers XR sont des **brouillons 2D pour relecture**, pas des captures prises dans un casque ou l'émulateur Android XR. La compatibilité XR de l'application n'a pas été validée. La série conservée est en 16:9, comme la console photographiée, tandis que l'aide publique indique 8:5. Conserver ces fichiers en brouillon jusqu'à vérification de la cible et du format accepté.
 
 Les champs vidéo et vidéos XR sont facultatifs. Aucun lien YouTube ni contenu spatial n'est inventé ; les laisser vides pour ce premier jet.
 

@@ -86,5 +86,6 @@
     ],
     "maxMB": 8
   },
-  "xrStatus": "Draft only; conflicting source ratios; no XR runtime capture or compatibility validation."
+  "xrStatus": "Draft only; conflicting source ratios; no XR runtime capture or compatibility validation.",
+  "role": "Historical source evidence only; current shared rules are ../../../requirements.json."
 }
