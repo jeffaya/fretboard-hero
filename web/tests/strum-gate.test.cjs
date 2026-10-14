@@ -30,10 +30,48 @@ test('A sustained chord and silence do not produce repeated attacks',()=>{
  assert.equal(accepted,1);
 });
 test('A delayed analysis frame does not turn a held chord into a fresh attack',()=>{
- const gate=createStrumGate(),samples=new Float32Array(16384).fill(.02);let count=0;
- for(const now of [80,160,240,320,400,800,880,960,1040,1120])gate.update({samples,sampleRate:48000,now,onAttack:()=>count++});assert.equal(count,1);
+ const gate=createStrumGate(),samples=Float32Array.from({length:16384},(_,i)=>.02*Math.sin(2*Math.PI*110*i/48000));let count=0;
+ for(const now of [80,160,240,320,400,800,880,960,1040,1120])gate.update({samples,sampleRate:48000,now,onAttack:()=>count++});assert.equal(count,0);
 });
-test('Attack feedback is immediate and uses the sample onset, without harmony confirmation',()=>{
- const gate=createStrumGate(),samples=new Float32Array(16384).fill(.02),attacks=[];
- gate.update({samples,sampleRate:48000,now:1000,onAttack:at=>attacks.push(at)});assert.equal(attacks.length,1);assert.ok(attacks[0]>=980&&attacks[0]<=1000);
+test('A fresh attack reports the original onset after a short confirmation, without harmony analysis',()=>{
+ const rate=48000,attacks=capture(signal(rate,[.5]),rate);
+ assert.equal(attacks.length,1);assert.ok(Math.abs(attacks[0].at-500)<=10);
+ assert.ok(attacks[0].delivered-500<=40);
+});
+
+function capture(data,rate,{resetAt=[],startAt=20}={}){
+ const gate=createStrumGate(),attacks=[];
+ for(let now=startAt;now<data.length/rate*1000;now+=20){
+  if(resetAt.includes(now))gate.reset();
+  const end=Math.round(now*rate/1000),samples=new Float32Array(16384),start=Math.max(0,end-samples.length);
+  samples.set(data.subarray(start,end),samples.length-(end-start));
+  gate.update({samples,sampleRate:rate,now,onAttack:at=>attacks.push({at,delivered:now})});
+ }
+ return attacks;
+}
+function roomNoise(rate,seconds,gain=.003){
+ let seed=19;return Float32Array.from({length:rate*seconds},(_,i)=>{
+  seed=(seed*16807)%2147483647;const t=i/rate;
+  return .004+gain*(1+.3*Math.sin(t*2.7)+.15*Math.sin(t*17))*(seed/2147483647*2-1)+gain*.3*Math.sin(2*Math.PI*50*t);
+ });
+}
+for(const rate of [44100,48000])test(`Room noise, microphone offset and repeated resets never produce practice attacks (${rate} Hz)`,()=>{
+ for(const gain of [.0008,.003,.02])assert.deepEqual(capture(roomNoise(rate,8,gain),rate,{resetAt:[800,1600,2400,4000,6000]}),[],'noise gain '+gain);
+});
+test('Isolated electrical clicks and a slowly rising noise floor do not count as strums',()=>{
+ const rate=48000,data=roomNoise(rate,5,.001);
+ for(let i=0;i<data.length;i++)data[i]*=1+i/data.length*3;
+ for(const time of [.8,1.5,2.1,3.2,4])data[Math.round(time*rate)]+=.5;
+ assert.deepEqual(capture(data,rate),[]);
+});
+for(const rate of [44100,48000])test(`Quiet rearticulated guitar attacks remain detectable over room noise (${rate} Hz)`,()=>{
+ const onsets=[.6,1.35,2.1,2.85],data=signal(rate,onsets,.001),noise=roomNoise(rate,4,.00015);
+ for(let i=0;i<data.length;i++)data[i]+=noise[i];
+ const attacks=capture(data,rate);assert.equal(attacks.length,onsets.length);
+ attacks.forEach((hit,i)=>assert.ok(Math.abs(hit.at-onsets[i]*1000)<=20));
+});
+
+test('Resuming during a ringing sound ignores its tail but still accepts the next fresh attack',()=>{
+ const rate=48000,attacks=capture(signal(rate,[.3,1.5]),rate,{startAt:400});
+ assert.equal(attacks.length,1);assert.ok(Math.abs(attacks[0].at-1500)<=20);
 });
