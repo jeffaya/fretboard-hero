@@ -30,82 +30,64 @@
   text-align: center;
 }
 
-.routine-steps {
-  display: flex;
+/* Shared step navigation: numbered slate, magenta current, mint completed.
+   Main stages are buttons; pattern stages reuse the same noninteractive shell. */
+.ui-steps {
+  --step-accent: var(--ui-purple);
+  --step-done: #70f7df;
+  display: grid;
+  grid-template-columns: repeat(var(--step-count,5),minmax(0,1fr));
   list-style: none;
   gap: 8px;
-  width: 100%;
   padding: 0;
-  margin: 0 0 18px;
+  margin: 0;
 }
-
-.routine-steps li {
-  position: relative;
-  flex: 1;
-  min-width: 0;
-  text-align: center;
-  color: #adb9cf;
-}
-
-.routine-steps li+li::before {
-  content: "";
-  position: absolute;
-  right: calc(50% + 28px);
-  top: 22px;
-  width: calc(100% - 48px);
-  height: 2px;
-  background: #526781;
-}
-
-.routine-steps li.is-complete::before,
-.routine-steps li.is-current::before { background: #70f7ff; }
-
-body #app .routine-steps button {
-  position: relative;
+.ui-steps > li { min-width: 0; display: flex; }
+body #app .ui-steps .ui-step {
+  box-sizing: border-box;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   width: 100%;
-  min-height: 64px;
-  padding: 0 2px;
-  border: 0;
-  border-radius: var(--ui-radius);
-  background: transparent;
+  min-height: 56px;
+  padding: 10px 12px;
+  border: 1px solid #768eae50;
+  border-radius: 12px;
+  background: linear-gradient(160deg,#27354a90,#0a1527e8);
   box-shadow: none;
-  color: inherit;
-  font: 700 16px/1.15 var(--ui-font);
-  cursor: pointer;
+  color: #b7c9df;
+  font: 700 16px/1.2 var(--ui-font);
+  text-align: left;
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
-
-.routine-steps button::before {
+.ui-steps .ui-step::before {
   content: attr(data-step);
   display: grid;
   place-items: center;
-  box-sizing: border-box;
-  width: 44px;
-  height: 44px;
-  border: 2px solid #647c9d;
-  border-radius: 50%;
-  background: #0a1527;
-  font-size: 22px;
-  color: #adb9cf;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #768eae20;
+  color: #c6d3e6;
+  font-size: 17px;
 }
-
-.routine-steps .is-current button::before { color: #70f7ff; border-color: #70f7ff; box-shadow: 0 0 16px #70f7ff55; }
-
-.routine-steps .is-complete button::before {
-  content: "✓";
-  background: #00ae82;
-  color: white;
-  border-color: #41ffcb;
-  font-size: 28px;
-  box-shadow: 0 0 12px #00dca744;
+body #app .ui-steps button { cursor: pointer; }
+body #app .ui-steps button:hover { border-color: #70f7ff; color: #fff; }
+body #app .ui-steps button:focus-visible { outline: 2px solid #70f7ff; outline-offset: 3px; }
+body #app .ui-steps .is-complete .ui-step { color: var(--step-done); border-color: #70f7df55; }
+.ui-steps .is-complete .ui-step::before { content: '✓'; background: #00dca726; color: var(--step-done); }
+body #app .ui-steps .is-current .ui-step {
+  border-color: var(--step-accent);
+  background: linear-gradient(135deg,#7b1e8755,#15182eef);
+  box-shadow: inset 0 -3px var(--step-accent),0 0 16px #e927ff18;
+  color: #fff;
 }
-
-body #app .routine-steps .is-current button { color: #fff; }
-
-.routine-steps button:focus-visible { outline: 2px solid #70f7ff; outline-offset: 3px; }
+.ui-steps .is-current .ui-step::before { background: var(--step-accent); color: #fff; }
+.routine-steps { margin-bottom: 18px; }
+.routine-pattern-steps { --step-count: 3; }
+body #app .routine-pattern-steps .ui-step { min-height: 48px; padding: 8px 10px; font-size: 15px; }
 
 .routine-exercise h2 {
   margin: 0 0 8px;
@@ -149,13 +131,12 @@ body #app .routine-steps .is-current button { color: #fff; }
   font-size: 14px;
   color: #70f7ff;
   margin: 8px 8px 0;
+  white-space: pre-line;
+  line-height: 1.4;
 }
 
 .routine-practice { min-width: 0; }
 .routine-strumming { border-radius: 16px; font-family: var(--ui-font); padding: clamp(12px,2vw,24px); }
-.routine-pattern-steps { display: flex; flex-wrap: wrap; gap: 6px 12px; text-align: left; color: #c6d3e6; font-size: clamp(13px,1.6vw,19px); font-weight: 700; }
-.routine-pattern-steps span + span::before { content: '›'; margin-right: 12px; color: #c6d3e6; }
-.routine-pattern-steps .is-current { color: var(--ui-purple); }
 #routinePatternHelp { margin: 8px 0 12px; color: #b7c9df; text-align: left; font-size: 14px; }
 .routine-rhythm-tab { position: relative; min-width: 0; }
 .routine-rhythm-tab svg { display: block; width: 100%; height: auto; overflow: visible; }
@@ -165,10 +146,6 @@ body #app .routine-steps .is-current button { color: #fff; }
 .rhythm-beat { fill: #c6d3e6; font-size: 15px; }
 .rhythm-mark { fill: #fff; font-size: 12px; }
 .rhythm-beam { fill: none; stroke: #b7c9df; stroke-width: 1.5; }
-.rhythm-repeat { fill: #c6d3e6; font-size: 18px; }
-.rhythm-count-in { position: absolute; top: 0; right: 4%; padding: 0 8px; background: #0a1425e8; color: #fff; pointer-events: none; }
-.rhythm-count-in span { display: block; font-size: 13px; }
-.rhythm-count-in strong { display: block; font-size: 58px; line-height: 1.1; }
 .rhythm-feedback { position: absolute; transform: translateX(-50%); pointer-events: none; text-align: center; white-space: nowrap; }
 .rhythm-feedback strong { display: block; color: #fff; font-size: clamp(14px,2vw,22px); line-height: 1.2; }
 .rhythm-feedback-pop strong { animation: rhythm-feedback-rise .7s ease-out both; }
@@ -178,10 +155,14 @@ body #app .routine-steps .is-current button { color: #fff; }
 body #app .routine-rhythm-controls button { min-height: 44px; padding: 8px 12px; font-size: 14px; background: #0a1527; border: 1px solid #647c9d; border-radius: 9px; box-shadow: none; }
 .routine-rhythm-controls label { display: flex; align-items: center; gap: 4px; color: #fff; font-size: 14px; }
 #routineTempo { min-height: 44px; padding: 5px; background: #0a1527; color: #fff; border: 1px solid #647c9d; border-radius: 8px; font: inherit; }
-.routine-rhythm-footer { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
-#routineStrumHelp { margin: 0; color: #b7c9df; font-size: 12px; text-align: left; flex: 1 1 200px; }
-body #app .routine-rhythm-footer button { margin-left: auto; min-width: 150px; min-height: 48px; padding: 8px 20px; font-size: 20px; }
-.has-rhythm .routine-actions { display: none; }
+.routine-repeat-progress { padding-top: 14px; border-top: 1px solid #768eae35; text-align: left; }
+.routine-repeat-heading { display: flex; align-items: baseline; gap: 12px; font-size: 16px; color: #fff; }
+#routineRepeatCount { color: #70f7df; font-variant-numeric: tabular-nums; }
+.routine-repeat-dots { display: flex; gap: 5px; width: 96px; margin-block: 7px; }
+.routine-repeat-dots span { flex: 1; height: 4px; border-radius: 4px; background: #768eae55; }
+.routine-repeat-dots .is-complete { background: #70f7df; box-shadow: 0 0 8px #00dca744; }
+#routineRepeatHint,#routineRepeatStatus { margin: 3px 0 0; color: #c6d3e6; font-size: 14px; line-height: 1.35; }
+#routineRepeatStatus { color: #ffe38a; }
 
 .routine-actions { display: flex; justify-content: center; margin: 16px 0 0; }
 
@@ -226,11 +207,7 @@ body #app .routine-rhythm-footer button { margin-left: auto; min-width: 150px; m
 
   .routine-steps { margin-bottom: 8px; }
 
-  body #app .routine-steps button { min-height: 52px; font-size: 14px; gap: 3px; }
-
-  .routine-steps button::before { width: 34px; height: 34px; font-size: 18px; }
-
-  .routine-steps li+li::before { top: 17px; }
+  body #app .routine-steps .ui-step { min-height: 48px; font-size: 14px; }
 
   .routine-exercise h2 { font-size: 28px; margin-bottom: 4px; }
 
@@ -246,20 +223,11 @@ body #app .routine-rhythm-footer button { margin-left: auto; min-width: 150px; m
 @media (max-width:767px),(orientation:landscape) and (max-width:1000px) and (max-height:599px) {
   .routine-content { padding: 0 10px; margin-top: 0; }
 
-  .routine-steps { gap: 2px; margin-bottom: 14px; }
-
-  body #app .routine-steps button {
-    font-size: 12px;
-    min-height: 56px;
-    gap: 5px;
-    overflow-wrap: anywhere;
-  }
-
-  .routine-steps button::before { width: 32px; height: 32px; font-size: 18px; }
-
-  .routine-steps .is-complete button::before { font-size: 22px; }
-
-  .routine-steps li+li::before { top: 16px; right: calc(50% + 20px); width: calc(100% - 38px); }
+  .ui-steps { gap: 5px; }
+  .routine-steps { margin-bottom: 14px; }
+  body #app .routine-steps .ui-step { flex-direction: column; justify-content: flex-start; text-align: center; font-size: clamp(9.5px,3vw,12px); min-height: 68px; padding: 8px 1px; gap: 6px; border-radius: 9px; }
+  .routine-steps .ui-step::before { flex-basis: 24px; width: 24px; height: 24px; font-size: 15px; }
+  body #app .routine-pattern-steps .ui-step { flex-direction: column; text-align: center; padding: 8px 4px; gap: 5px; font-size: 13px; }
 
   .routine-exercise h2 { font-size: 26px; }
 
@@ -439,5 +407,3 @@ body #app #routineMic {
 
 #routineRhythmPreview::before { content: '▶'; margin-right: 6px; }
 #routineRhythmPreview[aria-pressed="true"]::before { content: '■'; }
-#routineRhythmToggle::before { content: '▶'; margin-right: 6px; }
-#routineRhythmToggle[aria-pressed="true"]::before { content: 'Ⅱ'; }
