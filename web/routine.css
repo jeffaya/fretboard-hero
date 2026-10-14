@@ -406,4 +406,4 @@ body #app #routineMic {
 @media (max-width: 540px) { .routine-rhythm-controls { flex: 1 1 100%; justify-content: flex-start; } .routine-rhythm-controls button { flex: 1; } }
 
 #routineRhythmPreview::before { content: '▶'; margin-right: 6px; }
-#routineRhythmPreview[aria-pressed="true"]::before { content: '■'; }
+#routineRhythmPreview[aria-pressed="true"]::before { content: 'Ⅱ'; }
