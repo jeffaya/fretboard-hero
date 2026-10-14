@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const languages=[['en','us','English'],['es','es','Español'],['fr','fr','Français'],['de','de','Deutsch'],['it','it','Italiano'],['ja','jp','日本語'],['ko','kr','한국어'],['zh-CN','cn','简体中文'],['pt-BR','br','Português (Brasil)'],['hi','in','हिन्दी'],['id','id','Bahasa Indonesia']];
+  const languages=[['en','English'],['es','Español'],['fr','Français'],['de','Deutsch'],['it','Italiano'],['ja','日本語'],['ko','한국어'],['zh-CN','简体中文'],['pt-BR','Português (Brasil)'],['hi','हिन्दी'],['id','Bahasa Indonesia']];
   const supported=new Set(languages.map(x=>x[0])),storageKey='fretboard-language';
   function match(value){
     if(typeof value!=='string')return null;
@@ -74,41 +74,42 @@
     const structured=document.querySelector('#productStructuredData');if(structured){try{const data=JSON.parse(structured.textContent);data.inLanguage=locale;data.description=description;data.featureList=['Learn','Daily Routine','Fretboard Map','Circle of Fifths','Quiz'].map(value=>text(value));structured.textContent=JSON.stringify(data)}catch{}}
   }
   function mount(){
-    const wrapper=document.createElement('div');wrapper.className='language-picker';
-    const detected=detect(navigator.languages?.length?navigator.languages:[navigator.language]);
+    const wrapper=document.querySelector('.language-picker');
     let saved;try{saved=localStorage.getItem(storageKey)}catch{}
     const requested=new URL(location.href).searchParams.get('lang');
     const selected=supported.has(requested)?requested:supported.has(saved)?saved:'auto';
-    const countries=Object.fromEntries(languages.map(([value,country])=>[value,country]));
-    const choices=[['auto',detected,text('Automatic')],...languages.map(([value,,name])=>[value,value,name])];
-    const trigger=document.createElement('button');trigger.type='button';trigger.className='language-trigger ui-secondary';
+    const choices=[['auto',text('Automatic')],...languages];
+    const trigger=document.createElement('button');trigger.type='button';trigger.className='language-trigger home-footer-link';
     trigger.setAttribute('aria-haspopup','menu');trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-controls','language-menu');
+    trigger.setAttribute('popovertarget','language-menu');
     const menu=document.createElement('div');menu.id='language-menu';menu.className='language-menu';menu.setAttribute('popover','auto');menu.setAttribute('role','menu');menu.setAttribute('aria-label',text('Language'));
-    function label(node,language,name){
-      const flag=document.createElement('img');flag.src='./assets/flags/'+countries[language]+'.svg';flag.alt='';flag.width=24;flag.height=18;
-      const caption=document.createElement('span');caption.textContent=name;node.append(flag,caption);
-    }
-    const chosen=choices.find(([value])=>value===selected);label(trigger,chosen[1],chosen[2]);
-    trigger.setAttribute('aria-label',text('Language')+': '+chosen[2]);
-    choices.forEach(([value,language,name])=>{
+    trigger.innerHTML='<svg class="language-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></svg>';
+    const caption=document.createElement('span');caption.textContent=languages.find(([value])=>value===locale)[1];caption.lang=locale;trigger.append(caption);
+    trigger.setAttribute('aria-label',text('Language')+': '+caption.textContent);
+    choices.forEach(([value,name])=>{
       const option=document.createElement('button');option.type='button';option.dataset.language=value;option.setAttribute('role','menuitemradio');option.setAttribute('aria-checked',String(value===selected));
-      label(option,language,name);
+      option.textContent=name;option.autofocus=value===selected;if(value!=='auto')option.lang=value;
       option.addEventListener('click',()=>{
+        menu.hidePopover();
         try{if(value==='auto')localStorage.removeItem(storageKey);else localStorage.setItem(storageKey,value)}catch{}
         const url=new URL(location.href);if(value==='auto')url.searchParams.delete('lang');else url.searchParams.set('lang',value);location.assign(url.href);
       });menu.append(option);
     });
     function positionMenu(){
-      const r=trigger.getBoundingClientRect(),height=Math.min(360,innerHeight-24),width=Math.min(Math.max(240,r.width),innerWidth-24);
-      menu.style.width=width+'px';menu.style.maxHeight=height+'px';
+      const r=trigger.getBoundingClientRect(),width=Math.min(240,innerWidth-24);
+      menu.style.width=width+'px';menu.style.maxHeight=Math.min(360,Math.max(44,r.top-20))+'px';
       menu.style.left=Math.max(12,Math.min(r.left,innerWidth-width-12))+'px';
-      const top=r.bottom+6+height<=innerHeight-12?r.bottom+6:r.top-height-6;
-      menu.style.top=Math.max(12,Math.min(top,innerHeight-height-12))+'px';
+      menu.style.bottom=Math.max(12,innerHeight-r.top+8)+'px';
     }
-    function open(){positionMenu();menu.showPopover();menu.querySelector('[aria-checked="true"]').focus({preventScroll:true})}
-    trigger.addEventListener('click',()=>menu.matches(':popover-open')?menu.hidePopover():open());
-    trigger.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();open()}});
-    menu.addEventListener('toggle',()=>trigger.setAttribute('aria-expanded',String(menu.matches(':popover-open'))));
+    trigger.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(!menu.matches(':popover-open'))menu.showPopover()}});
+    menu.addEventListener('beforetoggle',e=>{if(e.newState==='open')positionMenu()});
+    menu.addEventListener('toggle',()=>{
+      const isOpen=menu.matches(':popover-open');trigger.setAttribute('aria-expanded',String(isOpen));
+      if(isOpen){
+        const focused=menu.contains(document.activeElement)?document.activeElement:menu.querySelector('[aria-checked="true"]');
+        menu.scrollTop=focused.offsetTop-(menu.clientHeight-focused.offsetHeight)/2;
+      }
+    });
     menu.addEventListener('keydown',e=>{
       if(e.key==='Escape'){e.preventDefault();menu.hidePopover();trigger.focus();return}
       const options=[...menu.querySelectorAll('button')],index=options.indexOf(document.activeElement);
@@ -118,9 +119,13 @@
     });
     menu.addEventListener('focusout',e=>{if(e.relatedTarget&&e.relatedTarget!==trigger&&!menu.contains(e.relatedTarget)&&menu.matches(':popover-open'))menu.hidePopover()});
     window.addEventListener('resize',()=>{if(menu.matches(':popover-open'))positionMenu()});
+    document.querySelector('#home').addEventListener('scroll',()=>{
+      if(!menu.matches(':popover-open'))return;
+      const r=trigger.getBoundingClientRect();
+      if(r.top<64||r.bottom>innerHeight)menu.hidePopover();else positionMenu();
+    });
     window.addEventListener('languagechange',()=>{if(selected==='auto'&&detect(navigator.languages)!==locale)location.reload()});
     wrapper.append(trigger,menu);
-    document.querySelector('.home-language').append(wrapper);
     translateNode(document.body);metadata();
     // Legacy renderers write text directly. Observe only changed nodes/labels,
     // never rewrite HTML, canonical gameplay attributes, or event handlers.
