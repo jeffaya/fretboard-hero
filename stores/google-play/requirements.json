@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-14",
+  "sources": {
+    "console": "User-supplied Play Console screenshots, 2026-10-14: upload limits for this listing",
+    "help": "https://support.google.com/googleplay/android-developer/answer/9866151?hl=en"
+  },
+  "textLimits": { "title.txt": 30, "short-description.txt": 80, "full-description.txt": 4000 },
+  "commonAssets": {
+    "icon/app-icon-512x512.png": { "dimensions": [512, 512], "formats": ["png"], "alpha": true, "maxBytes": 1048576 },
+    "icon/feature-graphic-1024x500.png": { "dimensions": [1024, 500], "formats": ["png", "jpeg"], "alpha": false, "maxBytes": 15728640 }
+  },
+  "screenshotGroups": {
+    "phone": { "required": true, "minCount": 2, "maxCount": 8, "recommendedMinCount": 4, "minEdge": 320, "maxEdge": 3840, "ratios": [[16, 9], [9, 16]], "formats": ["png", "jpeg"], "alpha": false, "maxBytes": 8388608 },
+    "tablet-7": { "required": false, "minCount": 4, "maxCount": 8, "minEdge": 1080, "maxEdge": 3840, "ratios": [[16, 9], [9, 16]], "formats": ["png", "jpeg"], "alpha": false, "maxBytes": 8388608 },
+    "tablet-10": { "required": false, "minCount": 4, "maxCount": 8, "minEdge": 1080, "maxEdge": 7680, "ratios": [[16, 9], [9, 16]], "formats": ["png", "jpeg"], "alpha": false, "maxBytes": 8388608 },
+    "desktop": { "required": false, "minCount": 4, "maxCount": 8, "minEdge": 1080, "maxEdge": 7680, "ratios": [[16, 9], [9, 16]], "formats": ["png", "jpeg"], "alpha": false, "maxBytes": 8388608 },
+    "android-xr": { "required": false, "draft": true, "minCount": 4, "maxCount": 8, "minEdge": 720, "maxEdge": 7680, "ratios": [[16, 9], [9, 16], [8, 5]], "formats": ["png", "jpeg"], "alpha": false, "maxBytes": 15728640 }
+  },
+  "xrHelp": { "ratio": [8, 5], "minimum": [1920, 1200], "recommended": [3840, 2400], "maxBytes": 8388608 },
+  "notes": [
+    "This project profile combines the photographed console limits with large-screen recommendations; it is not a universal Google Play acceptance certificate.",
+    "Tablet-7 uses a conservative profile satisfying both sources: at least four images, 1080–3840 pixels per edge.",
+    "XR accepts the existing console-ratio drafts for inspection, with a separate warning when published XR dimensions are not met.",
+    "Optional screenshot groups are checked when their folders exist. Absent platform folders are not recreated."
+  ]
+}
