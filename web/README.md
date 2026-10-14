@@ -137,6 +137,12 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Release notes
 
+### V10.45.0 — Play along with the rhythm example
+- Listen now keeps microphone grading and successful-repeat progression active, using the same clock as the audio and highlighted arrows.
+- Pause silences the example; restarting Listen joins the current phase without losing played hits or successful repeats. Audio that is unavailable or waiting for a gesture no longer blocks playing.
+- Rhythm requests browser echo cancellation; other exercises retain raw input. Updated the eleven languages with a play-along/headphone hint and removed the obsolete pause-before-playing guidance and separate preview clock.
+- Regression coverage includes PCM play-along, automatic advancement, silence, tempo and sound changes, and microphone constraint/lifecycle races. Physical speaker echo and device latency still depend on the browser and hardware.
+
 ### V10.44.1 — Rhythm playback controls
 - Ordered the rhythm toolbar as playback button → BPM label → tempo selector.
 - Replaced font-dependent play/pause characters with matching SVG icons, centered beside the existing translated label. Pause uses two clean, slightly rounded bars.
