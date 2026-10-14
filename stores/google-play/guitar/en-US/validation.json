@@ -1,0 +1,425 @@
+{
+  "status": "passed",
+  "locale": "en-US",
+  "instrument": "guitar",
+  "text": [
+    {
+      "file": "title.txt",
+      "characters": 21,
+      "limit": 30
+    },
+    {
+      "file": "short-description.txt",
+      "characters": 78,
+      "limit": 80
+    },
+    {
+      "file": "full-description.txt",
+      "characters": 2154,
+      "limit": 4000
+    }
+  ],
+  "assets": [
+    {
+      "file": "common/app-icon-512x512.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 463712,
+      "alpha": true,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "common/feature-graphic-1024x500.png",
+      "width": 1024,
+      "height": 500,
+      "bytes": 1097656,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "phone/01-routine-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1066251,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "phone/02-triads-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 834884,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "phone/03-pentatonic-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1232226,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "phone/04-feedback-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 953629,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "phone/05-quiz-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1313281,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "phone/06-tuner-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 765920,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "phone/07-map-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1403222,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "phone/08-circle-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 845983,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-7/01-routine-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1242887,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-7/02-triads-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1069858,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-7/03-pentatonic-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1859644,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-7/04-feedback-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1258853,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-7/05-quiz-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 2154520,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-7/06-tuner-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 499405,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-7/07-map-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 2183390,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-7/08-circle-1080x1920.png",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 635251,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-10/01-routine-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3407735,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-10/02-triads-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3511358,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-10/03-pentatonic-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3191187,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-10/04-feedback-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3581321,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-10/05-quiz-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3301700,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-10/06-tuner-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 863864,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-10/07-map-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3368356,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "tablet-10/08-circle-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 2377795,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "desktop/01-routine-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2344158,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "desktop/02-triads-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2385684,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "desktop/03-pentatonic-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2061312,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "desktop/04-feedback-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2411157,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "desktop/05-quiz-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2105692,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "desktop/06-tuner-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 588540,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "desktop/07-map-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2195245,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "desktop/08-circle-1920x1080.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1767219,
+      "alpha": false,
+      "status": "ready-for-review"
+    },
+    {
+      "file": "android-xr/drafts-16x9/01-routine-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3407735,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-16x9/02-triads-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3511358,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-16x9/03-pentatonic-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3191187,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-16x9/04-feedback-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3581321,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-16x9/05-quiz-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3348057,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-16x9/06-tuner-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 863864,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-16x9/07-map-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 3368356,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-16x9/08-circle-2560x1440.png",
+      "width": 2560,
+      "height": 1440,
+      "bytes": 2377795,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-8x5/01-routine-3840x2400.png",
+      "width": 3840,
+      "height": 2400,
+      "bytes": 7023356,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-8x5/02-triads-3840x2400.png",
+      "width": 3840,
+      "height": 2400,
+      "bytes": 7256609,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-8x5/03-pentatonic-3840x2400.png",
+      "width": 3840,
+      "height": 2400,
+      "bytes": 6786189,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-8x5/04-feedback-3840x2400.png",
+      "width": 3840,
+      "height": 2400,
+      "bytes": 7423750,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-8x5/05-quiz-3840x2400.png",
+      "width": 3840,
+      "height": 2400,
+      "bytes": 6840768,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-8x5/06-tuner-3840x2400.png",
+      "width": 3840,
+      "height": 2400,
+      "bytes": 1560910,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-8x5/07-map-3840x2400.png",
+      "width": 3840,
+      "height": 2400,
+      "bytes": 7071901,
+      "alpha": false,
+      "status": "draft"
+    },
+    {
+      "file": "android-xr/drafts-8x5/08-circle-3840x2400.png",
+      "width": 3840,
+      "height": 2400,
+      "bytes": 4794126,
+      "alpha": false,
+      "status": "draft"
+    }
+  ],
+  "xrStatus": "Draft only; no XR runtime validation"
+}

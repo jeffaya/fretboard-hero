@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-14",
+  "sources": {
+    "console": "Six user-supplied Play Console photographs",
+    "help": "https://support.google.com/googleplay/android-developer/answer/9866151?hl=en"
+  },
+  "textLimits": {
+    "title": 30,
+    "shortDescription": 80,
+    "fullDescription": 4000
+  },
+  "console": {
+    "icon": {
+      "width": 512,
+      "height": 512,
+      "maxMB": 1
+    },
+    "featureGraphic": {
+      "width": 1024,
+      "height": 500,
+      "maxMB": 15
+    },
+    "phone": {
+      "minCount": 2,
+      "maxCount": 8,
+      "ratio": [
+        "16:9",
+        "9:16"
+      ],
+      "minEdge": 320,
+      "maxEdge": 3840,
+      "maxMB": 8
+    },
+    "tablet7": {
+      "maxCount": 8,
+      "ratio": [
+        "16:9",
+        "9:16"
+      ],
+      "minEdge": 320,
+      "maxEdge": 3840,
+      "maxMB": 8
+    },
+    "tablet10": {
+      "maxCount": 8,
+      "ratio": [
+        "16:9",
+        "9:16"
+      ],
+      "minEdge": 1080,
+      "maxEdge": 7680,
+      "maxMB": 8
+    },
+    "desktop": {
+      "minCount": 4,
+      "maxCount": 8,
+      "ratio": [
+        "16:9",
+        "9:16"
+      ],
+      "minEdge": 1080,
+      "maxEdge": 7680,
+      "maxMB": 8
+    },
+    "xr": {
+      "minCount": 4,
+      "maxCount": 8,
+      "ratio": [
+        "16:9",
+        "9:16"
+      ],
+      "minEdge": 720,
+      "maxEdge": 7680,
+      "maxMB": 15
+    }
+  },
+  "helpXR": {
+    "ratio": "8:5",
+    "recommended": [
+      3840,
+      2400
+    ],
+    "minimum": [
+      1920,
+      1200
+    ],
+    "maxMB": 8
+  },
+  "xrStatus": "Draft only; conflicting source ratios; no XR runtime capture or compatibility validation."
+}

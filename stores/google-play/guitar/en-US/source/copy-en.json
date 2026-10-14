@@ -1,0 +1,64 @@
+{
+  "version": 5,
+  "locale": "en-US",
+  "instrument": "guitar",
+  "cards": [
+    {
+      "id": "01-routine",
+      "source_capture_id": "01-routine",
+      "headline": "Daily routine for huge progress.",
+      "supporting_text": "Transform your playing, one daily routine at a time.",
+      "source": "screens-phone/01-routine-1080x1920.png"
+    },
+    {
+      "id": "02-triads",
+      "source_capture_id": "02-triads",
+      "headline": "Play with more confidence.",
+      "supporting_text": "Find your way around the neck with simple triad shapes.",
+      "source": "screens-phone/02-triads-1080x1920.png"
+    },
+    {
+      "id": "03-pentatonic",
+      "source_capture_id": "03-pentatonic",
+      "headline": "Break out of the box.",
+      "supporting_text": "Connect all five pentatonic positions across the neck.",
+      "source": "screens-phone/03-pentatonic-1080x1920.png"
+    },
+    {
+      "id": "04-feedback",
+      "source_capture_id": "04-feedback",
+      "headline": "Get feedback as you play.",
+      "supporting_text": "Play notes and chords. Your microphone checks them live.",
+      "source": "screens-phone/04-feedback-1080x1920.png"
+    },
+    {
+      "id": "05-quiz",
+      "source_capture_id": "05-quiz",
+      "headline": "Test your knowledge.",
+      "supporting_text": "Put your fretboard skills to the test in 60 seconds.",
+      "source": "screens-phone/05-quiz-1080x1920.png"
+    },
+    {
+      "id": "06-tuner",
+      "source_capture_id": "06-tuner",
+      "headline": "Get in tune. Get playing.",
+      "supporting_text": "Tune your guitar with the built-in tuner.",
+      "source": "screens-phone/06-tuner-1080x1920.png"
+    },
+    {
+      "id": "07-map",
+      "source_capture_id": "07-map",
+      "headline": "Know your fretboard.",
+      "supporting_text": "Find the notes. Know where to play.",
+      "source": "screens-phone/07-map-1080x1920.png"
+    },
+    {
+      "id": "08-circle",
+      "source_capture_id": "08-circle",
+      "headline": "Make harmony make sense.",
+      "supporting_text": "Discover how keys and chords connect.",
+      "source": "screens-phone/08-circle-1080x1920.png"
+    }
+  ],
+  "note": "Approved marketing copy with refreshed current-app viewport screenshots."
+}

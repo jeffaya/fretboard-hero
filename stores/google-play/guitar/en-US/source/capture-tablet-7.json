@@ -1,0 +1,77 @@
+{
+  "sourceCommit": "867736513472f5af8b280201790c9150ae71f93d",
+  "locale": "en-US",
+  "instrument": "guitar",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "tablet-7",
+      "width": 720,
+      "height": 1280,
+      "dpr": 1.5,
+      "touch": true,
+      "folder": "tablet-7",
+      "outputs": [
+        {
+          "file": "tablet-7/01-routine-1080x1920.png",
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Microphone off",
+          "sizeBytes": 1242887
+        },
+        {
+          "file": "tablet-7/02-triads-1080x1920.png",
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Microphone off",
+          "sizeBytes": 1069858
+        },
+        {
+          "file": "tablet-7/03-pentatonic-1080x1920.png",
+          "screen": "learn",
+          "title": "A MINOR\nPENTATONIC",
+          "mic": "Microphone off",
+          "sizeBytes": 1859644
+        },
+        {
+          "file": "tablet-7/04-feedback-1080x1920.png",
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Listening…",
+          "sizeBytes": 1258853
+        },
+        {
+          "file": "tablet-7/05-quiz-1080x1920.png",
+          "screen": "quiz",
+          "title": "FRETBOARD QUIZ\nKNOW THE NECK • OWN THE NECK",
+          "mic": "Microphone off",
+          "sizeBytes": 2154520
+        },
+        {
+          "file": "tablet-7/06-tuner-1080x1920.png",
+          "screen": "home",
+          "title": "PRACTICE",
+          "mic": "Microphone off",
+          "sizeBytes": 499405
+        },
+        {
+          "file": "tablet-7/07-map-1080x1920.png",
+          "screen": "fretmap",
+          "title": "FRETBOARD MAP\nEVERY NOTE • ONE NECK",
+          "mic": "Microphone off",
+          "sizeBytes": 2183390
+        },
+        {
+          "file": "tablet-7/08-circle-1080x1920.png",
+          "screen": "circle",
+          "title": "CIRCLE OF FIFTHS\nKEYS • CHORDS • HARMONY",
+          "mic": "Microphone off",
+          "sizeBytes": 635251
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
