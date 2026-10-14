@@ -88,7 +88,7 @@ Les visuels téléphone reprennent le design validé : ruban cyan continu, fond 
 
 Les captures proviennent de la version web partagée avec l'application Capacitor, rendue dans Chromium avec des tailles d'écran simulées. Elles ne constituent pas un test de l'AAB sur des appareils physiques. Le README technique de `stores/` et les fichiers `source/capture-*.json` conservent les paramètres et le commit source. Certaines pages sont déroulantes : une capture montre la portion visible de l'interface.
 
-L'icône est celle du dépôt. La bannière est un nouvel élément marketing reprenant l'identité existante. Les sources éditables sont dans `source/` ; ne pas les importer comme captures supplémentaires.
+L'icône est celle du dépôt. La bannière est la copie exacte du visuel OG guitare du site en 1024 × 500, avec Tuner et les cinq autres fonctionnalités. Les sources éditables sont dans `source/` ; ne pas les importer comme captures supplémentaires.
 
 ## Android XR et vidéos
 

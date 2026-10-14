@@ -1,3 +1,5 @@
+> Historical generation prompts. Current exports are 1024 × 500; see [README.md](README.md).
+
 # OG artwork prompts — 10.35.0
 
 Generated with the built-in imagegen tool. The previous approved JPEGs were the
