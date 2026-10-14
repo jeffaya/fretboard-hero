@@ -294,7 +294,8 @@ Android APKs and AABs** GitHub workflow are documented in
 The site and both native apps support English, Spanish, French, German, Italian, Japanese,
 Korean, Simplified Chinese, Brazilian Portuguese, Hindi and Indonesian. Language
 is detected from browser/device preferences, with English fallback. The home
-flag/name selector saves a manual choice; Automatic restores detection.
+footer language link opens a menu above it, beside Privacy policy. A manual
+choice is saved; Automatic restores detection.
 See [localization maintenance](docs/LOCALIZATION.md) for catalogs and validation.
 
 ### Privacy policy

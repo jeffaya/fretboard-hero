@@ -16,8 +16,12 @@ Priority is a supported `?lang=` URL parameter, then the saved manual selection,
 then the first supported entry in `navigator.languages`, then English. A failed
 catalog load also falls back to English instead of blocking the app.
 
-The language selector at the bottom of Home shows flags **and native language names**, and offers
-Automatic to remove the saved preference. Choices persist in localStorage across
+The language link sits beside Privacy policy in the Home footer. A monochrome globe
+and the active language's native name remain visible even in Automatic mode. Its
+compact popover opens upward, shows native language names and a check beside the
+selected preference, and scrolls when necessary. Automatic removes the saved
+preference. Escape, a second click on the trigger or an outside click closes it;
+arrow keys and Home/End navigate the choices. Choices persist in localStorage across
 visits and instrument changes. The language URL parameter keeps selection usable
 when storage is blocked. A selection reloads the application from Home.
 Automatic mode responds to browser language-change events.
@@ -72,8 +76,8 @@ After adding a native error message or renderer text, add it to every catalog.
 Japanese, Korean, Chinese and Hindi use locally bundled Noto font subsets with
 500/800 weights and SIL OFL licenses in `web/assets/fonts`. Regenerate subsets
 with `python scripts/subset-locale-fonts.py` (requires fonttools and network at
-development time) after extending those catalogs. System fonts cover flags and
-unlisted glyphs. Existing Latin typography remains in use.
+development time) after extending those catalogs. System fonts cover unlisted
+glyphs. Existing Latin typography remains in use.
 
 Validation:
 
