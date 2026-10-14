@@ -254,9 +254,10 @@ body #app #home .home-instruments button[aria-pressed="true"]::after {
     width: min(1120px, 100%);
   }
 
-  #home .home-brand { align-self: center; }
+  #home .home-brand,
+  #home .home-menu { align-self: end; }
 
-  #home .hero-logo { width: min(100%, 520px); }
+  #home .hero-logo { width: min(100%, 440px); }
 
   #home .tagline { font-size: 18px; }
 
@@ -267,6 +268,28 @@ body #app #home .home-instruments button[aria-pressed="true"]::after {
   #home .home-instruments button { flex-direction: column; padding: 7px 3px 9px; font-size: 16px; }
 
   #home .instrument-art { width: 42px; height: 56px; }
+}
+
+/* A full-height desktop menu uses the same row treatment as Daily Routine.
+   On shorter screens the compact grid keeps every action within reach. */
+@media (min-width: 1000px) and (min-height: 740px) and (orientation: landscape) {
+  #home .home-brand { align-self: stretch; display: flex; flex-direction: column; }
+
+  #home .hero-logo { width: min(100%, 520px); }
+
+  #home .home-setup { margin-top: auto; padding-top: 28px; }
+
+  #home .home-action-grid { grid-template-columns: minmax(0, 1fr); }
+
+  #home .hero-btn { grid-template-columns: 80px minmax(0, 1fr) 18px; gap: 18px; min-height: 80px; padding-right: 16px; }
+
+  #home .hero-icon img { width: 48px; height: 48px; }
+
+  #home .hero-btn strong { font-size: 20px; }
+
+  #home .hero-btn small { font-size: 16px; }
+
+  #home .home-chevron { display: block; }
 }
 
 @media (orientation: landscape) and (max-height: 600px) {
