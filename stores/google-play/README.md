@@ -30,6 +30,8 @@ Tablette 10 pouces et ordinateur : côtés de 1080 à 7680. Ratios 16:9 ou 9:16.
 | `short-description.txt` | 80 caractères |
 | `full-description.txt` | 4000 caractères |
 
+Les fichiers `.txt` sont facultatifs si les trois blocs `text` du README de la langue sont conservés sous les rubriques « Nom de l'application », « Brève description » et « Description complète ». Le validateur lit ces blocs lorsque les fichiers séparés sont absents.
+
 ## Référence à utiliser
 
 - **Ce README** : guide de préparation réutilisable pour chaque application Android.
@@ -43,10 +45,11 @@ Depuis la racine du dépôt :
 
 ```sh
 npm --prefix stores/tools ci
+node stores/tools/export-og.cjs
 node stores/tools/export-feature.cjs stores/google-play/guitar/en-US
 node stores/tools/validate.cjs stores/google-play/guitar/en-US
 ```
 
-Pour une autre application ou langue, remplacer le dernier chemin. L'export utilise `source/feature-graphic-original.png`, conserve les proportions, centre le recadrage et produit le PNG opaque dans `icon/`. Vérifier visuellement que les textes restent entiers.
+Pour une autre application ou langue, remplacer le dernier chemin. `export-og.cjs` produit les trois PNG 1024 × 500 du site à partir des masters `tools/assets/og/`, puis les copie dans les trois dossiers `icon/`. `export-feature.cjs` recopie uniquement le PNG du site pour l'instrument choisi : les fichiers web et store sont identiques, octet pour octet. Les anciennes sources `source/feature-graphic-original.png` sont historiques et ne sont plus utilisées. Vérifier visuellement que les textes restent entiers après chaque nouvelle création.
 
 Références : [aide officielle Google Play](https://support.google.com/googleplay/android-developer/answer/9866151?hl=en), vérifiée le 14 octobre 2026, et les six photos de console fournies pour ce projet. Confirmer les exigences de la console lors d'une nouvelle publication.

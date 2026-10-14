@@ -16,7 +16,7 @@ export default {
     const canonical = `https://fretboard-hero.com/${instrument.key === 'guitar' ? '' : `?instrument=${instrument.key === 'bass' ? 'bass-4' : instrument.key}`}`;
     const title = `${instrument.name} Fretboard Hero — Tune, Learn & Play`;
     const description = `Tune your ${instrument.name.toLowerCase()}, play Daily Routine with live mic feedback, and explore fretboard notes, scales, triads and ${instrument.shapes}. Test yourself in the quiz.`;
-    const image = `https://fretboard-hero.com/assets/instruments/${instrument.key}/og.jpg?v=10.35.0`;
+    const image = `https://fretboard-hero.com/assets/instruments/${instrument.key}/og.png?v=20261014.2`;
     const imageAlt = `${instrument.name} Fretboard Hero neon concert artwork with a ${instrument.neck} neck, Tuner, Daily Routine with live mic feedback, Learn, Fretboard Map, Circle of Fifths and Quiz`;
     const attr = (name, value) => ({ element(el) { el.setAttribute(name, value); } });
     return new HTMLRewriter()
@@ -26,6 +26,9 @@ export default {
       .on('meta[property="og:title"], meta[name="twitter:title"]', attr('content', title))
       .on('meta[name="description"], meta[property="og:description"], meta[name="twitter:description"]', attr('content', description))
       .on('meta[property="og:image"], meta[name="twitter:image"]', attr('content', image))
+      .on('meta[property="og:image:type"]', attr('content', 'image/png'))
+      .on('meta[property="og:image:width"]', attr('content', '1024'))
+      .on('meta[property="og:image:height"]', attr('content', '500'))
       .on('meta[property="og:image:alt"], meta[name="twitter:image:alt"]', attr('content', imageAlt))
       .transform(response);
   }

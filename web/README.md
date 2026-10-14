@@ -277,7 +277,7 @@ keys and preserves only the selected instrument.
 
 `assets/instruments/{guitar,bass,ukulele}/` owns each approved pick icon source,
 16–1024 px icon exports, iPhone/iPad touch icons (120/152/167/180), maskable PWA
-icons, lightweight loader WebP and 1200×630 OG JPEG. Rebuild icons with
+icons, lightweight loader WebP and 1024×500 OG PNG. Rebuild icons with
 `python tools/generate-instrument-icons.py` from the repository root (Pillow).
 An optional instrument argument also refreshes checked-in native icons.
 Android builds use each instrument's 1024 px source; `sync-web.ps1` copies the
@@ -309,3 +309,5 @@ neon graduation cap. The locked-mode dialog copies this icon and the Learn label
 from the home menu through `FretboardAccess.mount`; no duplicate menu list exists.
 The current OG bitmap artwork also uses Learn. The generic practice wording
 inside Play and Circle of Fifths is independent of the renamed section.
+
+Shared OG/store graphics use `og.png` in each instrument asset directory. Rebuild all three and their exact store copies with `node stores/tools/export-og.cjs`. Native preparation copies these assets with the rest of `web/`. See [the export guide](../tools/assets/og/README.md).
