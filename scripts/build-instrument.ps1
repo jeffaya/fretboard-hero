@@ -175,6 +175,9 @@ try {
         if (-not (Test-Path $built)) {
             throw "Build did not produce the expected $extension at $built"
         }
+        # Inspect the actual archive, not only the source config: stale native
+        # assets must never turn an already-paid APK/AAB back into a demo.
+        & (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $built -Instrument $Instrument
         $output = Join-Path $distDir "fretboard-hero-$Instrument-$buildTypeLower.$extension"
         Copy-Item -Path $built -Destination $output -Force
         Write-Host "Built $output (version $VersionName, code $VersionCode)" -ForegroundColor Green

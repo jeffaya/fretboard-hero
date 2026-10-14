@@ -1,141 +1,76 @@
-# Google Play: free download and permanent unlock
+# Android: already-paid APKs and AABs
 
-## Commercial model
+## Access contract
 
-| Store app | Android package | In-app product |
+Every Android package produced by this repository is already paid for. This
+applies to APK and AAB, Debug and Release, guitar, bass and ukulele.
+
+| Store app | Android package | Access |
 | --- | --- | --- |
-| Guitar Fretboard Hero | `com.guitar.fretboardhero` | `full_access` |
-| Bass Fretboard Hero | `com.bass.fretboardhero` | `full_access` |
-| Ukulele Fretboard Hero | `com.ukulele.fretboardhero` | `full_access` |
+| Guitar Fretboard Hero | `com.guitar.fretboardhero` | Full |
+| Bass Fretboard Hero | `com.bass.fretboardhero` | Full |
+| Ukulele Fretboard Hero | `com.ukulele.fretboardhero` | Full |
 
-Upload one AAB per app, containing both the demo and full experience. There is no
-separate demo/full AAB. Each app is free to download. One non-consumable purchase
-unlocks all notes, keys, major/minor, positions and learning modes for **all three
-instruments within that installed app**. Switching instruments does not require
-another purchase. This is a permanent purchase, not a subscription.
+Owners must have all notes, keys, positions, learning modes, Circle of Fifths
+and Daily Routine options from the first launch. Switching instruments within
+the app keeps full access. An empty or expired legacy purchase cache, no network,
+or unavailable Google Play must not lock the app or request another payment.
+There are no Android in-app purchase or restore buttons in this distribution.
 
-Purchases are scoped to the installed package and Google Play account. Buying
-in the guitar app does not automatically unlock the separately installed bass
-or ukulele app. State this clearly in store descriptions; direct existing buyers
-to the instrument selector inside their purchased app.
+`scripts/sync-web.ps1 -Platform Android` writes `unlocked: true` and
+`nativeBilling: false`, and removes `testKeyHash`. The bootstrap uses the full
+access policy and never initializes the billing bridge. Web remains a demo;
+iOS retains its separate [StoreKit flow](APPLE_BILLING.md).
 
-## Play Console setup (required before release)
-
-1. Configure each app as free to download and complete its store/account setup.
-2. In each app, create a one-time product with product ID **`full_access`**.
-3. Create an active permanent **buy** purchase option whose ID is **`buy`**.
-   Set the price and available countries, and activate the product/option.
-   Use one standard permanent offer; rentals and preorders are deliberately
-   rejected by this integration. The displayed price comes from Google Play.
-4. Enable the Google Play Android Developer API in your Google Cloud project.
-   Create a dedicated service account and invite its email in Play Console
-   Users and permissions, scoped to these three apps. Grant the permissions
-   needed to view purchase/order information and manage orders (including
-   acknowledgement). Follow Google's current API setup guidance below.
-5. Generate a service-account JSON key and keep it outside this repository.
-   It is a backend credential: never bundle it in the APK, site config or JS.
-6. Add license testers and an internal testing track. Upload signed AABs with
-   a version code greater than the last upload, then install through the
-   testing opt-in link with an authorized Google account.
-
-Official references:
-- https://developer.android.com/google/play/billing/one-time-products
-- https://developers.google.com/android-publisher/getting_started
-- https://developer.android.com/google/play/billing/test
-
-## Verification backend (required before release)
-
-The existing Cloudflare Worker serves
-`POST https://fretboard-hero.com/api/billing/google/verify` before static assets.
-It verifies package/product/token with Google, acknowledges a completed purchase,
-and never consumes it. Pending, canceled, consumed or invalid purchases do not
-unlock. Upstream failures return a generic error, not a successful entitlement.
-
-In the Cloudflare account/environment that serves the official domain, configure
-these two Worker secrets using Wrangler's interactive input:
-
-```sh
-npx wrangler secret put PLAY_SERVICE_ACCOUNT_EMAIL
-npx wrangler secret put PLAY_SERVICE_ACCOUNT_PRIVATE_KEY
-```
-
-For the email, paste the service account JSON's `client_email` value. For the
-private key, paste the decoded `private_key` value, including its PKCS8
-`BEGIN PRIVATE KEY`/`END PRIVATE KEY` lines. The server also accepts escaped
-newlines. Do not paste the entire JSON document or put credentials in Git.
-Deploy the updated Worker through the existing deployment workflow after review.
-Confirm the production route is active before distributing the paid flow.
-Missing credentials or insufficient Google permissions prevent verification.
-
-Requests are bounded, package/product allowlisted, and rate-limited to 30 per
-minute per IP. Browser-origin requests are rejected: this endpoint is used by
-the native Android HTTP client. The endpoint does not log purchase tokens or
-upstream error bodies. CORS rejection is not authentication; access is granted
-only after Google validates the purchase token for the requested package.
-
-## App behavior
-
-Android sync sets `nativeBilling: true`, `unlocked: false`, and removes the web
-testing override. The plugin uses the installed Android package, never the
-selected instrument, for verification. The shared unlock modal presents Google's
-localized price, a purchase button and Restore purchases. Home also provides
-Restore purchases. A verified access change reloads the app so all existing
-access controls use the new entitlement.
-
-The app checks purchases on launch, returning to the foreground, and every
-15 minutes while visible. Pending payments unlock only after completion and
-verification. Restore supports reinstalling with the purchasing Google account.
-The backend acknowledges purchases only after they enter PURCHASED state.
-
-A locally cached entitlement allows offline access for up to **seven days since
-the last successful server verification**. It is stored in Android no-backup
-storage and is not extended on errors. A definitive loss of ownership removes
-access immediately on the next check. Refund/revocation while offline can remain
-unnoticed for the grace period; this implementation does not use real-time
-Developer Notifications. A device clock rollback before the verification time
-invalidates the cache. Like other client-side content gates, this does not claim
-to make bundled static content impossible to extract from a modified APK.
-
-The web demo and its store links are unchanged. iPhone/iPad use a separate
-StoreKit implementation with the same commercial model; see
-[App Store billing setup](APPLE_BILLING.md). Both native bundles start in demo
-mode. Purchases are not automatically shared across stores.
-
-## Build and validation
+## Build and package guard
 
 ```powershell
 .\scripts\build-all.ps1 -BuildType Release -Format Both -VersionCode 3 -VersionName 1.2.0
 ```
 
-The version values above are examples; choose values above existing releases.
-Signing instructions remain in [Android distribution](TECHNICAL.md#android-distribution-apk--aab).
-If you have previously sold an app as a paid download or distributed paid full
-APKs, decide how to honor those customers before replacing their access with
-this model: no legacy-purchase migration is included.
+Version values are examples; increase the version code above existing releases.
+Use the existing signing key and application ID when updating customers' apps.
+See [Android distribution](TECHNICAL.md#android-distribution-apk--aab).
 
-Automated checks:
+`scripts/validate-android-access.ps1` checks the generated configuration and then
+the actual `assets/public/site.config.json` in each APK, or
+`base/assets/public/site.config.json` in each AAB, before copying to `dist/`.
+Missing/duplicate configuration, wrong instrument, demo access, billing enabled,
+non-boolean flags or a web test key fail the build. These checks cover both
+Debug and Release outputs because they share the same packaging code.
 
-```sh
-node --test server/tests/*.test.mjs web/tests/*.test.cjs app/tests/*.test.js
+To inspect an existing package independently:
+
+```powershell
+.\scripts\validate-android-access.ps1 -Path .\dist\fretboard-hero-guitar-debug.apk -Instrument guitar
 ```
 
-These cover server verification/acknowledgement, invalid and pending purchases,
-Google errors, all package IDs, frontend purchase/restore states, cache expiry,
-and existing demo/routine behavior. Google responses and native bridge calls
-are mocked; they do not prove a real transaction succeeds.
+## Regression tests
 
-Before production, test on a physical Android device through the internal track,
-for **each package**:
+From the repository root, with Node 22+ and PowerShell 7 on PATH:
 
-- Localized price and purchase sheet; successful purchase unlocks all instruments.
-- Cancellation leaves demo usable; delayed payment stays locked until approved.
-- Closing/reopening during payment and already-owned purchases restore correctly.
-- Reinstall and Restore purchases using the purchasing account.
-- Refund/revoke, then restore: access returns to demo.
-- Offline startup within grace; expired cache returns to demo without payment loss.
-- Google/API outage shows a retry message, preserves only unexpired cached access.
-- A different Play account/package does not inherit another package's purchase.
-- Portrait and landscape layouts on phone/tablet, including the unlock modal.
+```sh
+node --test web/tests/*.test.cjs app/tests/*.test.cjs app/tests/*.test.js server/tests/*.test.mjs
+```
 
-A real signed Android build and Play transaction must be validated in that track;
-backend credentials, active products and tester accounts are external setup steps.
+Set `PWSH` to the PowerShell executable if it is not on PATH. The suite exercises
+the real sync script for all instruments, including switching from iOS to
+Android, and validates good and deliberately broken APK/AAB archive fixtures.
+Startup tests execute bootstrap, access and billing together with an unavailable
+store and fresh, expired or previously unlocked caches. They assert full access,
+no billing calls, no reload and no purchase controls/status messages.
+Both the PR check and the Android release workflow run these tests.
+
+On a device, verify a fresh install and an update over the previous APK, then
+restart offline and check Learn, Map, Circle and Daily Routine. Automated tests
+do not establish real-device installation or production signing compatibility.
+
+## Retained legacy billing code
+
+The Android `PlayBillingPlugin`, verification backend and their tests remain in
+the repository for the older in-app-purchase implementation. They are inactive
+in paid Android builds. Do not enable `nativeBilling` to work around a build or
+store setup issue: that would ask existing owners to pay again. Their cached
+entitlement is not used by the current paid distribution. Backend payment
+credentials and a `full_access` product are not prerequisites for full access
+in these APKs/AABs.

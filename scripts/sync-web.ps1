@@ -41,12 +41,17 @@ Copy-Item -Path (Join-Path $webSource "*") -Destination $wwwPath -Recurse -Force
 $siteConfigPath = Join-Path $wwwPath "site.config.json"
 $siteConfig = Get-Content $siteConfigPath -Raw | ConvertFrom-Json
 $siteConfig.instrument = $Instrument
-# Both native platforms use their store entitlement; no native bundle is pre-unlocked.
-$siteConfig | Add-Member -NotePropertyName unlocked -NotePropertyValue $false -Force
-$siteConfig | Add-Member -NotePropertyName nativeBilling -NotePropertyValue $true -Force
+# Android APKs/AABs are already paid for. Never ask their owners to buy again.
+# iOS keeps its separate StoreKit purchase flow.
+$paidAndroid = $Platform -eq "Android"
+$siteConfig | Add-Member -NotePropertyName unlocked -NotePropertyValue $paidAndroid -Force
+$siteConfig | Add-Member -NotePropertyName nativeBilling -NotePropertyValue (-not $paidAndroid) -Force
 $siteConfig.PSObject.Properties.Remove("testKeyHash")
 $utf8Config = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllText($siteConfigPath, ($siteConfig | ConvertTo-Json -Depth 8), $utf8Config)
+if ($paidAndroid) {
+    & (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $siteConfigPath -Instrument $Instrument
+}
 
 
 # Keep the universal iOS App Store icon and Capacitor source aligned with this build.
