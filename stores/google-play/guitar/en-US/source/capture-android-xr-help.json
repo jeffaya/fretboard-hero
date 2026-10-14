@@ -1,0 +1,77 @@
+{
+  "sourceCommit": "867736513472f5af8b280201790c9150ae71f93d",
+  "locale": "en-US",
+  "instrument": "guitar",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "android-xr-help",
+      "width": 1536,
+      "height": 960,
+      "dpr": 2.5,
+      "touch": false,
+      "folder": "android-xr/drafts-8x5",
+      "outputs": [
+        {
+          "file": "android-xr/drafts-8x5/01-routine-3840x2400.png",
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Microphone off",
+          "sizeBytes": 7023356
+        },
+        {
+          "file": "android-xr/drafts-8x5/02-triads-3840x2400.png",
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Microphone off",
+          "sizeBytes": 7256609
+        },
+        {
+          "file": "android-xr/drafts-8x5/03-pentatonic-3840x2400.png",
+          "screen": "learn",
+          "title": "A MINOR\nPENTATONIC",
+          "mic": "Microphone off",
+          "sizeBytes": 6786189
+        },
+        {
+          "file": "android-xr/drafts-8x5/04-feedback-3840x2400.png",
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Listening…",
+          "sizeBytes": 7423750
+        },
+        {
+          "file": "android-xr/drafts-8x5/05-quiz-3840x2400.png",
+          "screen": "quiz",
+          "title": "FRETBOARD QUIZ\nKNOW THE NECK • OWN THE NECK",
+          "mic": "Microphone off",
+          "sizeBytes": 6840768
+        },
+        {
+          "file": "android-xr/drafts-8x5/06-tuner-3840x2400.png",
+          "screen": "home",
+          "title": "PRACTICE",
+          "mic": "Microphone off",
+          "sizeBytes": 1560910
+        },
+        {
+          "file": "android-xr/drafts-8x5/07-map-3840x2400.png",
+          "screen": "fretmap",
+          "title": "FRETBOARD MAP\nEVERY NOTE • ONE NECK",
+          "mic": "Microphone off",
+          "sizeBytes": 7071901
+        },
+        {
+          "file": "android-xr/drafts-8x5/08-circle-3840x2400.png",
+          "screen": "circle",
+          "title": "CIRCLE OF FIFTHS\nKEYS • CHORDS • HARMONY",
+          "mic": "Microphone off",
+          "sizeBytes": 4794126
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

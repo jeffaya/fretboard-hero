@@ -1,0 +1,12 @@
+{
+  "app-icon": "Neon guitar pick with a six-string electric guitar, outlined in magenta and cyan.",
+  "feature-graphic": "Guitar Fretboard Hero logo, a glowing guitar neck and the words Know your fretboard.",
+  "01-routine": "A minor scale exercise with note names, degrees and guitar tablature in Daily Routine.",
+  "02-triads": "A minor triads and connecting thirds shown as six-string guitar tablature.",
+  "03-pentatonic": "Connected A minor pentatonic positions with colored notes across the guitar fretboard.",
+  "04-feedback": "Daily Routine highlights the next A note while the microphone follows the notes played.",
+  "05-quiz": "Timed guitar fretboard quiz with a note target, score and accuracy streak.",
+  "06-tuner": "Automatic guitar tuner detecting the A string at 110 Hz and showing In tune.",
+  "07-map": "Guitar Fretboard Map showing note names across all six strings.",
+  "08-circle": "Circle of Fifths with G major selected, relative E minor and harmony information."
+}

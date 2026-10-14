@@ -1,0 +1,77 @@
+{
+  "sourceCommit": "867736513472f5af8b280201790c9150ae71f93d",
+  "locale": "en-US",
+  "instrument": "guitar",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "phone",
+      "width": 432,
+      "height": 768,
+      "dpr": 2.5,
+      "touch": true,
+      "folder": "source/screens-phone",
+      "outputs": [
+        {
+          "file": "source/screens-phone/01-routine-1080x1920.png",
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Microphone off",
+          "sizeBytes": 1070669
+        },
+        {
+          "file": "source/screens-phone/02-triads-1080x1920.png",
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Microphone off",
+          "sizeBytes": 780719
+        },
+        {
+          "file": "source/screens-phone/03-pentatonic-1080x1920.png",
+          "screen": "learn",
+          "title": "A MINOR\nPENTATONIC",
+          "mic": "Microphone off",
+          "sizeBytes": 1844520
+        },
+        {
+          "file": "source/screens-phone/04-feedback-1080x1920.png",
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Listening…",
+          "sizeBytes": 1217232
+        },
+        {
+          "file": "source/screens-phone/05-quiz-1080x1920.png",
+          "screen": "quiz",
+          "title": "FRETBOARD QUIZ\nKNOW THE NECK • OWN THE NECK",
+          "mic": "Microphone off",
+          "sizeBytes": 2073468
+        },
+        {
+          "file": "source/screens-phone/06-tuner-1080x1920.png",
+          "screen": "home",
+          "title": "PRACTICE",
+          "mic": "Microphone off",
+          "sizeBytes": 633996
+        },
+        {
+          "file": "source/screens-phone/07-map-1080x1920.png",
+          "screen": "fretmap",
+          "title": "FRETBOARD MAP\nEVERY NOTE • ONE NECK",
+          "mic": "Microphone off",
+          "sizeBytes": 2128240
+        },
+        {
+          "file": "source/screens-phone/08-circle-1080x1920.png",
+          "screen": "circle",
+          "title": "CIRCLE OF FIFTHS\nKEYS • CHORDS • HARMONY",
+          "mic": "Microphone off",
+          "sizeBytes": 821062
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
