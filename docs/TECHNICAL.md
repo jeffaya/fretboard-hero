@@ -183,10 +183,10 @@ checkout, so builds must be sequential, not concurrent.
 
 ### 4.4 Prerequisites for building
 
-- Node.js, JDK 21.
+- Node.js 22 or newer, JDK 21.
 - Android SDK with `ANDROID_HOME` set, `platform-tools`,
   `platforms;android-36`, `build-tools;35.0.0` installed.
-- `npm install` run once inside `app/`.
+- `npm ci` run inside `app/` before the first build and after dependency updates.
 - **Windows-specific**: a `User`-scope environment variable set via
   `[Environment]::SetEnvironmentVariable(..., "User")` in one PowerShell
   process is **not** visible as `$env:VAR` in a different, freshly-spawned
@@ -207,7 +207,7 @@ Used to provision a build+test machine without the Android Studio GUI:
    `[Environment]::SetEnvironmentVariable("ANDROID_HOME", $path, "User")`
    (see the environment-variable gotcha in §4.4).
 4. `sdkmanager --licenses`, then install `platform-tools`,
-   `platforms;android-34`, `build-tools;34.0.0`, `emulator`, and a system
+   `platforms;android-36`, `build-tools;35.0.0`, `emulator`, and a system
    image (`system-images;android-34;google_apis;x86_64`).
 5. Create an AVD headlessly:
    ```
