@@ -1,6 +1,6 @@
 # Privacy policy and Google Play release
 
-## Publication status: draft — do not merge or submit yet
+## Policy and publication
 
 The page is implemented at `web/privacy.html`. Cloudflare Workers static assets
 serve this file at **https://fretboard-hero.com/privacy** with the existing default
@@ -12,29 +12,31 @@ screen links to the public URL; its label is translated in all 11 app languages.
 The native build copies `web/`, so rebuilding each app includes the home link.
 Already-installed APKs/AABs do not acquire this link from a website deployment.
 
-Before publication:
+The user confirmed the publisher/data controller as **Jean-François Seignemorte**,
+acting personally in France, and selected **hello@fretboard-hero.com** as the
+public privacy contact on 2026-10-14. Both language versions use this address.
+The former contact placeholders and draft notice have been removed. Selecting
+an address does not test mail delivery; this change does not configure email
+routing, send test messages or publish a personal destination mailbox.
 
-1. Confirm the legal publisher/data controller. `Jean-François Seignemorte` comes
-   from the existing public author metadata; it does not establish whether the
-   app is legally published personally or by a company.
-2. Supply a monitored privacy email address. Replace both `.privacy-contact`
-   placeholders and both controller paragraphs. Do not invent a mailbox.
-3. Confirm production Cloudflare services, logs/retention, dashboard-injected
-   analytics/cookies and applicable provider transfer safeguards. Repository
-   configuration cannot establish those account settings. Make the hosting,
-   recipients and retention paragraphs more specific if those settings require it.
-   Identify the support mail provider once the contact is known. The draft does
-   not claim that all infrastructure logs are deleted when a request completes.
-4. Confirm the actual release SDKs, merged Android manifest and Play target
-   audience. The policy does not invent an age restriction or claim Families
-   compliance. Additional child-directed obligations need separate validation if
-   children are included in the selected target audience.
-5. Remove the visible draft notice and release-blocker comment, then merge and
-   deploy through the existing main-branch workflow. Check the public `/privacy`
-   URL returns readable HTML without login or regional restrictions. Keep the
-   link in each native app and publish updated AABs as needed.
-6. Complete Data safety using the exact shipped build and provider configuration.
-   A privacy policy alone is not proof of regulatory compliance or Play approval.
+Release notes:
+
+- Merge and deploy through the existing main-branch workflow, then check the
+  public `/privacy` URL returns readable HTML. Rebuild the native apps to include
+  the home link in installed versions.
+- Production Cloudflare services, log retention, dashboard-injected analytics,
+  cookies and applicable transfer safeguards are external account settings.
+  The policy describes the known hosting/verification flow without inventing
+  a fixed log retention period or claiming zero infrastructure logging. Review
+  these settings and the support email provider when completing Data safety
+  or changing the hosting/messaging configuration.
+- Keep the policy aligned with the actual release SDKs, merged Android manifest
+  and Play target audience. It does not invent an age restriction or claim
+  Families compliance. Child-directed releases require the relevant additional
+  checks if children are included in the selected target audience.
+- Complete Data safety using the exact shipped build and provider configuration.
+  The policy and code audit do not constitute a guarantee of regulatory
+  compliance or Google Play approval.
 
 ## Data inventory checked against main
 
@@ -56,7 +58,7 @@ SDKs or hosting settings change.
 | iOS purchase entitlement | `StoreBillingPlugin.swift` | Verified StoreKit transactions; no forwarding to Android backend |
 | IP address / request metadata | Cloudflare network and `PLAY_BILLING_LIMITER` | IP used for rate limiting (30 requests per 60 seconds); infrastructure retention must be checked separately |
 | System backup | Android `allowBackup=true`; OS settings | Some local data may be backed up or transferred; no-backup Android entitlement excluded |
-| Support email | External to app; contact not yet provided | Address, content, optional attachments; verify actual mail provider and operational deletion practices |
+| Support email | External to app; `hello@fretboard-hero.com` selected by publisher | Address, content, optional attachments; verify actual mail provider and operational deletion practices |
 
 The source has no Fretboard Hero account registration, remote progression sync,
 advertising SDK, advertising identifier, Firebase Analytics or crash-reporting
