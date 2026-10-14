@@ -1,56 +1,57 @@
 const {test}=require('node:test'),assert=require('node:assert/strict');
 const {create,DEFAULT_TEMPO}=require('../core/routine-rhythm.js');
-const columns=Array.from({length:32},(_,index)=>({bar:Math.floor(index/4),beat:index%4}));
-test('The default is 48 BPM with three preparation beats',()=>{
- assert.equal(DEFAULT_TEMPO,48);const clock=create({columns});
- assert.equal(clock.snapshot(0).countIn,3);assert.equal(clock.snapshot(1250).countIn,2);assert.equal(clock.snapshot(2500).countIn,1);assert.equal(clock.snapshot(3750).position,0);
+const {catalog,practice}=require('../core/routine-patterns.js');
+const {createStrumGate}=require('../core/routine-guide.js');
+const pulse=catalog[0];
+test('Catalogue has ten fixed motifs, both user sixteenth patterns, muted strokes and eight-beat phrases',()=>{
+ assert.equal(catalog.length,10);assert.equal(new Set(catalog.map(p=>p.id)).size,10);
+ for(const p of catalog){assert.ok([4,8].includes(p.beats));assert.equal(p.slots.length,p.beats*p.division);for(let b=0;b<p.beats/4;b++)assert.ok(p.slots.slice(b*4*p.division,(b+1)*4*p.division).some(Boolean))}
+ const notation=p=>p.slots.map(s=>!s?'-':s.direction==='up'?'U':'D').join('');
+ assert.equal(notation(catalog[8]),'D-DUD-DUD-DUD-DU');assert.equal(notation(catalog[9]).slice(0,16),'D-DUDUD-D-D-D-DU');
+ assert.ok(catalog.some(p=>p.slots.some(s=>s?.mute==='palm')));assert.ok(catalog.some(p=>p.slots.some(s=>s?.mute==='percussive')));
 });
-test('All seven signed timing zones are visible and the enlarged window accepts recognized chords',()=>{
- for(const [offset,grade,accepted] of [[-550,'Too early',false],[-350,'Early',true],[-200,'Good',true],[0,'Excellent',true],[200,'Good',true],[350,'Late',true],[550,'Too late',false]]){
-  const clock=create({columns}),at=3750+offset;
-  assert.equal(clock.attack(at).grade,grade);assert.equal(clock.targetAt(at),0);
-  const result=clock.confirm(at,true,at+400);assert.equal(result.accepted,accepted);
-  assert.equal(clock.snapshot(at+400).states[0],accepted?'played':'waiting');
+test('20 BPM and three visible preparation beats; all six timing labels use beat percentages',()=>{
+ assert.equal(DEFAULT_TEMPO,20);const clock=create({pattern:pulse});assert.equal(clock.snapshot(0).countIn,3);assert.equal(clock.snapshot(3000).countIn,2);assert.equal(clock.snapshot(6000).countIn,1);
+ for(const [fraction,grade,accepted] of [[-.25,'Too early',false],[-.16,'Early',true],[-.08,'Good',true],[0,'Excellent',true],[.08,'Good',true],[.16,'Late',true],[.25,'Too late',false]]){
+  const c=create({pattern:pulse});const r=c.attack(12000+fraction*3000);assert.equal(r.grade,grade);assert.equal(r.accepted,accepted);
  }
 });
-for(const tempo of [48,72,80])test(`At ${tempo} BPM silence and errors never rewind or stop the score`,()=>{
- const clock=create({columns,tempo}),beat=60000/tempo;
- for(let i=0;i<32;i++){
-  const due=(i+3)*beat;
-  if(i%3===0){clock.attack(due);clock.confirm(due,false,due+600)}
-  clock.tick(due+beat/2);const s=clock.snapshot(due+beat/2);
-  assert.equal(s.bar,Math.floor(i/4));assert.equal(s.next,i+1);assert.equal(s.countIn,0);
+for(const tempo of [20,48,80,120])for(const pattern of catalog)test(`${pattern.id} accepts three measures and completes the phrase at ${tempo} BPM`,()=>{
+ const beat=60000/tempo,clock=create({pattern,tempo}),end=pattern.beats===8?16:12;
+ for(let slot=0;slot<end*pattern.division;slot++){
+  const p=slot/pattern.division,stroke=pattern.slots[slot%pattern.slots.length];
+  if(stroke){const hit=clock.attack((3+p+.04)*beat);assert.equal(hit.accepted,true);assert.equal(hit.grade,'Excellent');assert.equal(clock.attack((3+p+.045)*beat).accepted,false)}
+  clock.tick((3+p+.06)*beat);
  }
- assert.equal(clock.tick(36*beat),true);assert.equal(clock.tick(37*beat),false);
- assert.equal(clock.snapshot(37*beat).states.filter(s=>s==='played').length,0);
+ assert.equal(clock.tick((3+end)*beat+101),true);assert.ok(clock.snapshot((3+end)*beat+101).successes>=3);assert.equal(clock.tick(1e9),false);
 });
-test('A delayed chord confirmation remains bound to the onset across a bar/chord change',()=>{
- const clock=create({columns,tempo:80}),at=5250-100;
- assert.equal(clock.attack(at).index,4);clock.tick(5250);
- assert.equal(clock.targetAt(at),4);assert.equal(clock.confirm(at,true,at+400).accepted,true);
+test('Successful measures accumulate through failures; silence and extra offbeat strokes do not auto-complete',()=>{
+ const results=[],c=create({pattern:pulse,onBar:s=>results.push(s)}),beat=3000;
+ for(let bar=0;bar<5;bar++){
+  if(bar!==1&&bar!==3)for(let i=0;i<3;i++)c.attack((3+bar*4+i)*beat);
+  c.tick((3+(bar+1)*4)*beat+101);
+ }
+ assert.deepEqual(results,[true,false,true,false,true]);assert.equal(c.snapshot(70000).finished,true);
+ const silent=create({pattern:pulse});silent.tick(100000);assert.equal(silent.snapshot(100000).successes,0);assert.equal(silent.snapshot(100000).finished,false);
+ const busy=create({pattern:pulse});for(let i=0;i<32;i++)busy.attack((3+i/2)*beat);busy.tick(20*beat);assert.equal(busy.snapshot(20*beat).successes,0);
 });
-test('Pause, tempo changes and microphone toggles preserve phase and accepted strokes',()=>{
- const clock=create({columns});clock.attack(3750);clock.confirm(3750,true,4000);
- clock.pause(4300);const before=clock.snapshot(4300).position;
- assert.equal(clock.snapshot(20000).position,before);clock.resume(20000);assert.equal(clock.snapshot(20000).position,before);
- clock.setTempo(80,20000);assert.equal(clock.snapshot(20000).position,before);
- clock.setGuided(false,20000);assert.equal(clock.attack(20500),null);
- clock.setGuided(true,20500);assert.equal(clock.snapshot(20500).states[0],'played');
- assert.ok(clock.snapshot(20500).position>before);assert.equal(clock.snapshot(20500).countIn,0);
+test('Pause, tempo, microphone changes and stalled frames preserve phase and completed measures',()=>{
+ const c=create({pattern:pulse});for(let i=0;i<4;i++)c.attack((3+i)*3000);c.tick(21101);const before=c.snapshot(22000).position;
+ c.pause(22000);assert.equal(c.snapshot(55000).position,before);c.setTempo(80,55000);c.resume(60000);assert.equal(c.snapshot(60000).position,before);
+ c.shift(9000);assert.equal(c.snapshot(69000).position,before);c.setGuided(false,69000);assert.equal(c.attack(70000),null);assert.equal(c.snapshot(70000).successes,1);
+ c.setGuided(true,70500);assert.equal(c.snapshot(70500).successes,1);
 });
-test('A stalled frame shifts the clock without replaying a beat or count-in',()=>{
- const clock=create({columns});const before=clock.snapshot(6000);
- clock.shift(9000);const after=clock.snapshot(15000);
- assert.equal(after.position,before.position);assert.equal(after.next,before.next);assert.equal(after.countIn,0);
+test('Practice repeats motifs, covers all ten, reviews difficulties and persists despite unavailable storage',()=>{
+ const data=new Map(),storage={getItem:k=>data.get(k),setItem:(k,v)=>data.set(k,v)};let p=practice(storage);const first=p.choose().map(p=>p.id);assert.deepEqual(p.choose().map(p=>p.id),first);
+ const seen=new Set(first);for(let i=0;i<20;i++){p=practice(storage);for(const chosen of p.choose()){seen.add(chosen.id);p.record(chosen.id,chosen.id!=='pop')}}assert.equal(seen.size,10);
+ const blocked=practice({getItem(){throw Error()},setItem(){throw Error()}});assert.equal(blocked.choose().length,3);assert.doesNotThrow(()=>blocked.record('pulse',true));
 });
-test('Held or stale attacks cannot turn into extra credit; changing tempo clears pending recognition',()=>{
- const clock=create({columns});clock.attack(3750);assert.equal(clock.confirm(3750,true,4311).accepted,false);
- clock.attack(5000);clock.setTempo(80,5100);assert.equal(clock.confirm(5000,true,5300),null);
- clock.attack(5500);clock.confirm(5500,true,5800);assert.equal(clock.confirm(5500,true,5810),null);
-});
-test('Microphone-off practice does not fabricate successful strokes, including after re-entry',()=>{
- const clock=create({columns,guided:false,index:8});assert.equal(clock.attack(3750),null);
- assert.equal(clock.tick(50000),true);assert.equal(clock.snapshot(50000).states.filter(s=>s==='played').length,0);
- const resumed=create({columns,index:8,played:columns.map((_,i)=>i<4?'played':'waiting')});
- assert.equal(resumed.snapshot(0).states.filter(s=>s==='played').length,4);
+for(const rate of [44100,48000])test(`Onset detector recognizes fast pitchless muted strums without double-counting sustain (${rate} Hz)`,()=>{
+ const hits=[],gate=createStrumGate(),tempo=120,pattern=catalog[9],clock=create({pattern,tempo}),beat=60000/tempo,duration=12,buffer=new Float32Array(Math.ceil(rate*duration));
+ let seed=123;const noise=()=>{seed=(seed*16807)%2147483647;return seed/2147483647*2-1};
+ const times=[];
+ for(let slot=0;slot<64;slot++){if(!pattern.slots[slot%pattern.slots.length])continue;const at=(3+slot/4)*beat;times.push(at);const start=Math.round(at*rate/1000);for(let j=0;j<rate*.08;j++)buffer[start+j]+=noise()*.025*Math.exp(-j/(rate*.018))}
+ for(let now=20;now<11500;now+=20){const samples=new Float32Array(16384),end=Math.round(now*rate/1000),start=Math.max(0,end-samples.length);samples.set(buffer.subarray(start,end),samples.length-(end-start));gate.update({samples,sampleRate:rate,now,refractory:clock.refractory,onAttack:at=>hits.push(at)})}
+ assert.equal(hits.length,times.length);for(let i=0;i<hits.length;i++)assert.ok(Math.abs(hits[i]-times[i])<=12,`${hits[i]} vs ${times[i]}`);
+ const held=createStrumGate(),sustained=[];for(let now=20;now<2000;now+=20){const data=new Float32Array(16384);for(let j=0;j<data.length;j++)data[j]=.02*Math.sin(2*Math.PI*110*(now/1000-(data.length-j)/rate));held.update({samples:data,sampleRate:rate,now,onAttack:at=>sustained.push(at)})}assert.equal(sustained.length,1);
 });

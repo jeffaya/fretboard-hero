@@ -1,68 +1,62 @@
 (function(root){
   'use strict';
-  const DEFAULT_TEMPO=48,COUNT_IN=3,HARMONY_WAIT=560;
-  // At 48 BPM: excellent ±120 ms, good ±260 ms, early/late ±450 ms.
-  // Scale with the beat at faster tempos, keeping adjacent beats unambiguous.
-  function timing(offset,beatMs){
-    const distance=Math.abs(offset),scale=Math.min(1,beatMs/1250);
-    if(distance<=120*scale)return 'Excellent';
-    if(distance<=260*scale)return 'Good';
-    if(distance<=450*scale)return offset<0?'Early':'Late';
-    return offset<0?'Too early':'Too late';
-  }
-  function create({columns,tempo=DEFAULT_TEMPO,index=0,guided=true,played=[],now=0}){
-    let beatMs=60000/tempo,anchor=index,origin=now+COUNT_IN*beatMs,pausedAt=null,validFrom=now,finished=false;
-    const first=index,states=columns.map((_,i)=>played[i]==='played'?'played':'waiting'),attacks=new Map();
+  const DEFAULT_TEMPO=20,REQUIRED_BARS=3;
+  function create({pattern,tempo=DEFAULT_TEMPO,guided=true,now=0,onBar=()=>{}}){
+    let beatMs=60000/tempo,origin=now+3*beatMs,anchor=0,pausedAt=null,validFrom=now,closed=0,successes=0,finishBeat=null,finished=false;
+    const hits=new Set(),extras=new Map(),events=pattern.slots.flatMap((stroke,slot)=>stroke?[{slot,beat:slot/pattern.division}]:[]);
     const position=now=>anchor+((pausedAt??now)-origin)/beatMs;
-    function locate(at){
-      if(!guided||finished||pausedAt!==null||at<validFrom)return null;
-      const beat=position(at),index=Math.round(beat)||0;
-      if(index<first||index>=columns.length)return null;
-      const offset=(beat-index)*beatMs,grade=timing(offset,beatMs);
-      return {at,index,offset,grade,inTime:grade!=='Too early'&&grade!=='Too late'};
+    const gap=Math.min(...events.map((event,i)=>((events[(i+1)%events.length].beat-event.beat+pattern.beats)%pattern.beats||pattern.beats)));
+    const windowBeats=Math.min(.2,gap*.45);
+    function nearest(p){
+      const cycle=Math.floor(p/pattern.beats),candidates=[];
+      for(let c=Math.max(0,cycle-1);c<=cycle+1;c++)for(const event of events)candidates.push({...event,beat:c*pattern.beats+event.beat,id:c*pattern.slots.length+event.slot});
+      return candidates.sort((a,b)=>Math.abs(a.beat-p)-Math.abs(b.beat-p))[0];
     }
-    function attack(at){
-      const target=locate(at);if(!target)return null;
-      // Keep the target assigned at the attack, even if confirmation crosses
-      // a chord/bar boundary. Timing feedback need not wait for the FFT.
-      for(const [key] of attacks)if(at-key>1000)attacks.delete(key);
-      attacks.set(at,target);return target;
-    }
-    function confirm(at,match,now){
-      const target=attacks.get(at);if(!target||finished||pausedAt!==null)return null;
-      attacks.delete(at);
-      const recognized=Boolean(match&&now>=at&&now-at<=HARMONY_WAIT);
-      const accepted=recognized&&target.inTime;
-      if(accepted)states[target.index]='played';
-      return {...target,match:recognized,accepted};
-    }
-    function snapshot(now){
-      const p=position(now),next=Math.max(first,Math.min(columns.length,Math.ceil(p-1e-8)));
-      return {position:p,next,bar:Math.max(Math.floor(first/4),Math.min(columns.length/4-1,Math.floor(p/4))),countIn:Math.max(0,Math.ceil(first-p-1e-8)),states:states.slice(),finished,paused:pausedAt!==null};
-    }
-    return {attack,confirm,snapshot,
-      targetAt(at){return attacks.get(at)?.index??-1},
+    return {
+      attack(at){
+        if(!guided||finished||pausedAt!==null||at<validFrom)return null;
+        const p=position(at),target=nearest(p);if(!target||p<-.2)return null;
+        const offset=p-target.beat,distance=Math.abs(offset),bar=Math.floor(target.beat/4);
+        if(bar<closed)return null;
+        const inTime=distance<=windowBeats,duplicate=hits.has(target.id);
+        const grade=distance<=.05?'Excellent':distance<=.1?'Good':inTime?(offset<0?'Early':'Late'):(offset<0?'Too early':'Too late');
+        if(inTime&&!duplicate)hits.add(target.id);
+        else if(!inTime)extras.set(bar,(extras.get(bar)||0)+1);
+        return {at,slot:target.slot,offset:offset*beatMs,grade,inTime,accepted:inTime&&!duplicate};
+      },
       tick(now){
         if(finished||pausedAt!==null)return false;
-        // Let a late final attack finish recognition; never repeat a measure.
-        const tail=Math.max(0,HARMONY_WAIT/beatMs-.5);
-        if(position(now)<columns.length+tail)return false;
-        finished=true;return true;
+        const p=position(now);
+        // Allow the last microphone frame (20 ms cadence plus scheduling
+        // jitter) to deliver attacks preceding the measure boundary.
+        while(p>=(closed+1)*4+100/beatMs){
+          const cycle=Math.floor(closed*4/pattern.beats),localBar=closed%(pattern.beats/4);
+          const expected=events.filter(e=>Math.floor(e.beat/4)===localBar);
+          const count=expected.filter(e=>hits.has(cycle*pattern.slots.length+e.slot)).length;
+          const success=guided&&count/(expected.length+(extras.get(closed)||0))>=.75;
+          if(guided){if(success)successes++;onBar(success)}
+          for(const e of expected)hits.delete(cycle*pattern.slots.length+e.slot);extras.delete(closed);closed++;
+          if(successes>=REQUIRED_BARS&&finishBeat===null)finishBeat=Math.ceil(closed*4/pattern.beats)*pattern.beats;
+          if(finishBeat!==null&&closed*4>=finishBeat){finished=true;return true}
+        }
+        return false;
       },
-      pause(now){if(pausedAt===null){pausedAt=now;attacks.clear()}},
+      snapshot(now){
+        const p=position(now),local=((p%pattern.beats)+pattern.beats)%pattern.beats;
+        return {position:p,slot:p<0||finished?-1:Math.floor(local*pattern.division+1e-7)%pattern.slots.length,countIn:Math.max(0,Math.ceil(-p-1e-8)),successes,finished,guided,paused:pausedAt!==null,beatMs};
+      },
+      pause(now){if(pausedAt===null)pausedAt=now},
       resume(now){if(pausedAt!==null){origin+=now-pausedAt;pausedAt=null;validFrom=now}},
-      shift(duration){origin+=duration;validFrom+=duration;attacks.clear()},
-      setTempo(value,now){
-        const time=pausedAt??now;anchor=position(time);origin=time;beatMs=60000/value;validFrom=now;attacks.clear();
+      shift(duration){origin+=duration;validFrom+=duration},
+      setTempo(value,now){const time=pausedAt??now;anchor=position(time);origin=time;beatMs=60000/value;validFrom=now},
+      setGuided(value,now){
+        // A partly unmonitored measure cannot count as a successful one.
+        guided=value;validFrom=now;hits.clear();extras.clear();
+        closed=Math.max(closed,Math.ceil(Math.max(0,position(now))/4));
       },
-      setGuided(value,now){guided=value;validFrom=now;attacks.clear()},
-      skip(now){
-        anchor=Math.min(columns.length,(snapshot(now).bar+1)*4);origin=now;validFrom=now;attacks.clear();
-        if(pausedAt!==null)pausedAt=now;
-        if(anchor===columns.length){finished=true;return true}return false;
-      }
+      get refractory(){return Math.max(60,Math.min(150,gap*beatMs*.45))}
     };
   }
-  const api={create,DEFAULT_TEMPO,HARMONY_WAIT};
+  const api={create,DEFAULT_TEMPO,REQUIRED_BARS};
   if(typeof module==='object')module.exports=api;else root.RoutineRhythm=Object.freeze(api);
 })(typeof window==='object'?window:globalThis);
