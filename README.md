@@ -301,6 +301,7 @@ See [localization maintenance](docs/LOCALIZATION.md) for catalogs and validation
 
 `web/privacy.html` provides the French/English policy for all three apps at
 `https://fretboard-hero.com/privacy`. The home link is translated in all app
-languages. **The policy is a draft pending a verified privacy contact and
-publisher confirmation.** See the [data inventory and publication requirements](docs/PRIVACY.md)
-before merging, deploying or completing Google Play Data safety.
+languages. The publisher is Jean-François Seignemorte, acting personally, and the
+public privacy contact is `hello@fretboard-hero.com`. See the
+[data inventory and release notes](docs/PRIVACY.md) when deploying or updating
+Google Play Data safety.
