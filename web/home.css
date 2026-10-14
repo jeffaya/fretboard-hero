@@ -30,6 +30,11 @@
 #home .home-brand,
 #home .home-menu { min-width: 0; }
 
+#home .home-legal { grid-column: 1 / -1; padding: 0 0 8px; }
+#home .home-legal a { display: inline-flex; align-items: center; min-height: 44px; color: #b8c7df; font-size: 13px; text-underline-offset: 3px; }
+#home .home-legal a:hover { color: #fff; }
+#home .home-legal a:focus-visible { outline: 2px solid #7ce5fa; outline-offset: 4px; border-radius: 2px; }
+
 #home .hero-logo {
   display: block;
   width: min(100%, 310px);
