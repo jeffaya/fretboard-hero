@@ -30,6 +30,14 @@ test('Denied and missing APIs stay recoverable and never retain an audio context
  const pending=mic.start();await new Promise(setImmediate);r.requests[0].reject({name:'NotAllowedError'});await pending;assert.equal(mic.state,'off');assert.equal(r.contexts[0].state,'closed');assert.deepEqual(errors,['NotAllowedError']);
  delete r.c.navigator.mediaDevices;await mic.start();assert.deepEqual(errors,['NotAllowedError','Unsupported']);
 });
+test('An explicit retry after denied permission starts a fresh capture without immediately switching off',async()=>{
+ const r=environment(),states=[],mic=r.api.create({onFrame(){},onState:state=>states.push(state)});
+ const denied=mic.start();await new Promise(setImmediate);r.requests[0].reject({name:'NotAllowedError'});await denied;
+ assert.equal(mic.state,'off');assert.equal(r.contexts[0].state,'closed');
+ const retry=mic.start();await new Promise(setImmediate);r.requests[1].resolve(r.stream());await retry;
+ assert.equal(r.requests.length,2);assert.equal(mic.state,'on');assert.equal(r.tracks[0].readyState,'live');assert.equal(r.contexts[1].state,'running');
+ assert.equal(states.at(-1),'on');mic.stop();assert.equal(r.tracks[0].readyState,'ended');
+});
 for(const event of ['visibilitychange','pagehide','native','interrupted','ended'])test(`${event} stops capture and requires a fresh user start`,async()=>{
  const r=environment(),mic=r.api.create({onFrame(){}}),pending=mic.start();await new Promise(setImmediate);r.requests[0].resolve(r.stream());await pending;
  if(event==='native')r.native.appStateChange({isActive:false});

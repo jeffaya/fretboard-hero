@@ -11,3 +11,12 @@ Android declares RECORD_AUDIO and uses Capacitor's WebChromeClient runtime permi
 Validation: Node tests cover all open pitches at 44.1/48 kHz with stronger second harmonics and ± detuning, silence, octave distinction, plus existing regression tests. Browser QA uses synthetic microphone input for correct/flat/sharp, denial, late permissions and cleanup on all three instruments. Portrait, landscape, tablet and desktop layouts are checked.
 
 Before store release, test real guitar, bass and ukulele microphones on Android and iPhone/iPad: grant/deny permissions, each open string, background/resume, close/reopen, unplug a microphone, and quiet/noisy rooms. Browser simulation does not establish real-device accuracy; low bass fundamentals and electric instruments at low acoustic volume especially need this validation.
+
+Android's Capacitor WebView audio request requires both `RECORD_AUDIO` and
+`MODIFY_AUDIO_SETTINGS` in the manifest. Missing either makes the native bridge
+deny `getUserMedia`, so the microphone switches off immediately, even when the
+user has granted recording access. `scripts/validate-android-microphone.ps1`
+blocks local APK/AAB builds with missing or SDK-limited declarations. The CI
+tests check this contract against the installed Capacitor source and exercise
+denial followed by an explicit retry. Do not override the WebView permission
+callback to grant requests unconditionally; user consent remains required.

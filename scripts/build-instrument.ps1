@@ -61,6 +61,9 @@ if (-not $entry) {
     throw "Unknown instrument '$Instrument'. Check instruments.json."
 }
 
+# Fail before generating a package whose WebView would immediately reject audio.
+& (Join-Path $PSScriptRoot "validate-android-microphone.ps1") -Path (Join-Path $appRoot "android/app/src/main/AndroidManifest.xml")
+
 # Validate the source before touching native resources. The asset generator can
 # print a decoding error and still exit 0, leaving empty launcher PNGs behind.
 $iconKey = if ($entry.iconKey) { $entry.iconKey } else { $Instrument }
