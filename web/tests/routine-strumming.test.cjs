@@ -15,13 +15,27 @@ function runtime(open=async()=>true){
  controller.update(exercise,0,true);
  return {nodes,controller,exercise,audio,scheduled,document,events,get progress(){return progress},get completed(){return completed},setTime(t){now=t},setTuner(value){tuner=value},frame(t){now=t;for(const [id,f] of [...frames]){frames.delete(id);f(t)}},click(s){return nodes.get(s).events.click()}};
 }
-test('Entering Rhythm starts the example at its first stroke without a frame or countdown; Pause enables practice',async()=>{
- const r=runtime();await settle();r.setTime(1500);const before=r.progress.clock.snapshot(1500).position;
- assert.equal(r.scheduled[0].position,0);assert.equal(r.scheduled[0].slot,0);assert.equal(r.progress.clock.snapshot(1500).paused,true);
+test('Listen shares the practice clock and accepts live grades; toggling sound preserves phase and hits',async()=>{
+ const r=runtime();await settle();
+ assert.equal(r.scheduled[0].position,0);assert.equal(r.scheduled[0].slot,0);
+ assert.equal(r.progress.clock.snapshot(0).paused,false);
  assert.equal(r.nodes.get('#routineRhythmPreview').textContent,'Pause');
- r.controller.attack(1500,1500);assert.equal(r.nodes.get('#routineRhythmFeedback').hidden,true);
- r.setTime(9000);await r.click('#routineRhythmPreview');assert.equal(r.progress.clock.snapshot(9000).paused,false);assert.equal(r.progress.clock.snapshot(9000).position,before);
+ r.controller.attack(0,0);assert.equal(r.nodes.get('#routineRhythmFeedback').hidden,false);
+ assert.equal(r.nodes.get('#routineRhythmGrade').textContent,'Excellent');
+ r.setTime(900);const before=r.progress.clock.snapshot(900).position;
+ await r.click('#routineRhythmPreview');assert.equal(r.progress.clock.snapshot(900).position,before);
  assert.equal(r.nodes.get('#routineRhythmPreview').attrs['aria-pressed'],'false');
+ r.controller.attack(750,900);r.setTime(1500);await r.click('#routineRhythmPreview');
+ assert.equal(r.scheduled.at(-1).position,2);
+ r.controller.attack(1500,1500);r.controller.attack(2250,2250);r.progress.clock.tick(3101);
+ assert.equal(r.progress.clock.snapshot(3101).successes,1);
+});
+test('Listening alone keeps looping without awarding grades or repeats',async()=>{
+ const r=runtime();await settle();
+ for(let now=100;now<=20000;now+=100)r.frame(now);
+ assert.ok(r.scheduled.length>100);assert.equal(r.progress.clock.snapshot(20000).successes,0);
+ assert.equal(r.nodes.get('#routineRhythmFeedback').hidden,true);assert.equal(r.completed,0);
+ assert.equal(r.progress.index,0);assert.equal(r.nodes.get('#routineRhythmPreview').textContent,'Pause');
 });
 test('Unavailable audio leaves practice running and shows the error',async()=>{
  const r=runtime(async()=>false);await settle();
@@ -36,16 +50,17 @@ test('A late preview opening after navigation cannot start playback',async()=>{
 test('A browser waiting for a gesture leaves Listen usable and ignores the superseded opening',async()=>{
  let resolve;const r=runtime(()=>new Promise(done=>resolve=done));
  assert.ok(!r.nodes.get('#routineRhythmPreview').disabled);assert.equal(r.nodes.get('#routineRhythmPreview').textContent,'Listen');
- r.controller.attack(0,0);assert.equal(r.nodes.get('#routineRhythmFeedback').hidden,true);
+ r.controller.attack(0,0);assert.equal(r.nodes.get('#routineRhythmFeedback').hidden,false);
+ r.setTime(1500);
  r.audio.open=async()=>true;await r.click('#routineRhythmPreview');resolve(true);await settle();
- assert.equal(r.scheduled.length,1);assert.equal(r.scheduled[0].position,0);assert.equal(r.nodes.get('#routineRhythmPreview').textContent,'Pause');
+ assert.equal(r.scheduled.length,1);assert.equal(r.scheduled[0].position,2);assert.equal(r.nodes.get('#routineRhythmPreview').textContent,'Pause');
 });
 test('Changing tempo during Listen keeps the example audible and preserves successful practice repeats',async()=>{
- const r=runtime();await settle();await r.click('#routineRhythmPreview');
+ const r=runtime();await settle();
  for(let i=0;i<4;i++)r.progress.clock.attack(i*750);r.progress.clock.tick(3101);r.setTime(3200);
- await r.click('#routineRhythmPreview');r.nodes.get('#routineTempo').events.change({target:{value:'120'}});
- assert.equal(r.progress.clock.snapshot(3200).successes,1);assert.equal(r.progress.clock.snapshot(3200).paused,true);assert.equal(r.progress.clock.snapshot(3200).beatMs,500);
- assert.equal(r.scheduled.at(-1).beatMs,500);assert.equal(r.nodes.get('#routineRhythmPreview').textContent,'Pause');
+ r.nodes.get('#routineTempo').events.change({target:{value:'120'}});
+ assert.equal(r.progress.clock.snapshot(3200).successes,1);assert.equal(r.progress.clock.snapshot(3200).paused,false);assert.equal(r.progress.clock.snapshot(3200).beatMs,500);
+ assert.equal(r.scheduled.at(-1).beatMs,500);assert.equal(r.scheduled.at(-1).position,r.progress.clock.snapshot(3200).position);assert.equal(r.nodes.get('#routineRhythmPreview').textContent,'Pause');
  await r.click('#routineRhythmPreview');assert.equal(r.progress.clock.snapshot(3200).paused,false);
 });
 test('Background and tuner stop the example; returning resumes only visual practice after the tuner closes',async()=>{
@@ -53,7 +68,7 @@ test('Background and tuner stop the example; returning resumes only visual pract
  r.document.hidden=true;r.events.visibilitychange();r.setTime(10000);r.document.hidden=false;r.events.visibilitychange();
  assert.equal(r.progress.clock.snapshot(10000).paused,true);
  r.setTuner(false);r.events.close({target:{classList:{contains:()=>true}}});
- assert.equal(r.progress.clock.snapshot(10000).paused,false);assert.equal(r.progress.clock.snapshot(10000).position,0);
+ assert.equal(r.progress.clock.snapshot(10000).paused,false);assert.equal(r.progress.clock.snapshot(10000).position,1000/750);
  assert.equal(r.nodes.get('#routineRhythmPreview').textContent,'Listen');
 });
 test('Redraws preserve playback and Pause; revisiting a practiced pattern does not restart its example',async()=>{
@@ -64,10 +79,10 @@ test('Redraws preserve playback and Pause; revisiting a practiced pattern does n
  r.controller.stop();r.controller.update(r.exercise,0,true,r.progress);await settle();
  assert.equal(r.nodes.get('#routineRhythmPreview').textContent,'Listen');assert.equal(opens,1);assert.equal(r.progress.clock.snapshot(0).paused,false);
 });
-test('Three complete played repeats advance each pattern, start its example, then finish the exercise',async()=>{
+test('Three complete repeats played over Listen advance each pattern and finish the exercise',async()=>{
  const r=runtime();let now=0;
  for(let index=0;index<3;index++){
-  await settle();assert.equal(r.nodes.get('#routineRhythmPreview').textContent,'Pause');await r.click('#routineRhythmPreview');
+  await settle();assert.equal(r.nodes.get('#routineRhythmPreview').textContent,'Pause');
   const pattern=r.exercise.patterns[index],start=now;
   for(let repeat=0;repeat<3;repeat++){
    for(let slot=0;slot<pattern.slots.length;slot++){

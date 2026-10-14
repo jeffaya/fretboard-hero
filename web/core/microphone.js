@@ -13,10 +13,27 @@
     };
   }
   function create({fftSize=8192,interval=90,onFrame,onState=()=>{}}){
-    let stream,context,source,analyser,frame=0,generation=0,state='off';
+    let stream,context,source,analyser,frame=0,generation=0,state='off',echoCancellation=false;
+    let configuring=Promise.resolve();
     const report=(value,error)=>{state=value;onState(value,error)};
+    function configure(captured){
+      // Serialize live changes so leaving Rhythm always restores raw input,
+      // even when a previous browser constraint request is still pending.
+      const value=echoCancellation;
+      configuring=configuring.then(async()=>{
+        if(stream!==captured)return;
+        await Promise.all(captured.getAudioTracks().map(async track=>{
+          try{
+            const cancellation=value&&track.getCapabilities?.().echoCancellation?.includes('all')?'all':value;
+            await track.applyConstraints?.({echoCancellation:cancellation,noiseSuppression:false,autoGainControl:false});
+          }catch{}
+        }));
+      });
+      return configuring;
+    }
     function stop(){
       generation++;cancelAnimationFrame(frame);
+      configuring=Promise.resolve();
       stream?.getTracks().forEach(track=>track.stop());stream=null;
       source?.disconnect();source=null;analyser=null;
       const old=context;context=null;if(old&&old.state!=='closed')old.close().catch(()=>{});
@@ -31,9 +48,13 @@
         if(!navigator.mediaDevices?.getUserMedia||!Audio)throw {name:'Unsupported'};
         const pendingContext=new Audio();context=pendingContext;await pendingContext.resume();
         if(token!==generation)return;
-        const captured=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false});
+        const requestedEcho=echoCancellation;
+        const captured=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:requestedEcho,noiseSuppression:false,autoGainControl:false},video:false});
         if(token!==generation){captured.getTracks().forEach(track=>track.stop());return}
-        stream=captured;analyser=context.createAnalyser();analyser.fftSize=fftSize;analyser.smoothingTimeConstant=0;
+        stream=captured;
+        if(echoCancellation||requestedEcho!==echoCancellation)await configure(captured);
+        if(token!==generation)return;
+        analyser=context.createAnalyser();analyser.fftSize=fftSize;analyser.smoothingTimeConstant=0;
         source=context.createMediaStreamSource(stream);source.connect(analyser);
         // No connection to the speakers, MediaRecorder, storage or upload.
         stream.getAudioTracks().forEach(track=>track.addEventListener('ended',()=>{if(token===generation)stop()}));
@@ -49,7 +70,10 @@
         report('on');frame=requestAnimationFrame(tick);
       }catch(error){if(token!==generation)return;stop();onState('off',error)}
     }
-    const api={start,stop,setInterval(value){interval=value},get state(){return state}};
+    const api={start,stop,setInterval(value){interval=value},setEchoCancellation(value){
+      value=Boolean(value);if(value===echoCancellation)return configuring;
+      echoCancellation=value;return stream?configure(stream):Promise.resolve();
+    },get state(){return state}};
     return api;
   }
   function errorMessage(error){
