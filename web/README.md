@@ -13,9 +13,9 @@ The stylesheet order is explicit in `index.html`. Layout rules are split by resp
 | `theme.css` | Shared typography, surfaces and button variants |
 | `routine.css`, `premium.css`, `locales.css`, `tuner.css` | Feature-specific presentation |
 
-Home keeps branding on the left and activities on the right in landscape, with the same blocks stacked in portrait. Instrument selection and language live together below the brand. The bottoms of both landscape columns align; the whole composition stays vertically centered when it fits. At 1000 px wide and 740 px high or above in landscape, all six menu cards use full-width rows and the instrument selector anchors the bottom of the brand column. Shorter landscape screens retain the compact card grid and a smaller logo. The tuner has a dedicated first card; Practice groups Daily Routine, Learn and Quiz, while Explore groups the map and circle. Home layout and instrument selection styling belong in `home.css`. The tuner binds the static `data-open-tuner` card and the existing routine shortcut; there is no generated home footer or breakpoint-based relocation of language controls.
+Home keeps branding on the left and activities on the right in landscape, with the same blocks stacked in portrait. Instrument selection lives below the brand; language selection shares the static footer with Privacy policy. The bottoms of both landscape columns align; the whole composition stays vertically centered when it fits. At 1000 px wide and 740 px high or above in landscape, all six menu cards use full-width rows and the instrument selector anchors the bottom of the brand column. Shorter landscape screens retain the compact card grid and a smaller logo. The tuner has a dedicated first card; Practice groups Daily Routine, Learn and Quiz, while Explore groups the map and circle. Home layout, instrument selection and shared footer links belong in `home.css`; the upward language popover belongs in `locales.css` and `core/i18n.js`. The tuner binds the static `data-open-tuner` card and the existing routine shortcut. Language controls stay in the footer at every breakpoint.
 
-Edit the owning component and its responsive rule instead of appending a new versioned override to the global stylesheet. Keep intentional state selectors (active, locked, hidden, focus, reduced motion) explicit. The remaining `!important` declarations protect typography, hidden content, language-menu states and reduced-motion preferences; avoid adding them to layout rules.
+Edit the owning component and its responsive rule instead of appending a new versioned override to the global stylesheet. Keep intentional state selectors (active, locked, hidden, focus, reduced motion) explicit. The remaining `!important` declarations protect typography, hidden content and reduced-motion preferences; avoid adding them to layout rules.
 
 The compact drawer and inline toolbar breakpoints are shared with `core/controls.js` and `app.js`. Preserve their behavior when changing CSS. Fixed safe-area padding is intentional for native WebViews. `scripts/sync-web.ps1` copies every stylesheet into native builds; generated `app/www` must not be edited.
 
@@ -136,6 +136,11 @@ The deployment rule remains: same package everywhere; edit only `site.config.jso
 The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele Fretboard Hero. String/course count stays an instrument-profile detail.
 
 ## Release notes
+
+### V10.44.0 — Footer language menu
+- Moved language selection beside Privacy policy with a small globe, native language name and chevron, matching the footer link styling and retaining 44px touch targets.
+- The dark translucent popover opens upward, with eleven languages, Automatic mode, a selected checkmark, scrolling, keyboard navigation and outside-click dismissal.
+- Removed the old header selector layout, flag rendering, unused flag assets and redundant menu style overrides. Detection, saved preferences and URL precedence are preserved.
 
 ### V10.4.5
 - Responsive CSS cleanup with no intentional visual or gameplay changes.
