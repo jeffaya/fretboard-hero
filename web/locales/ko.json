@@ -389,9 +389,12 @@
   "Stop preview": "미리 듣기 중지",
   "Audio preview unavailable.": "오디오 미리 듣기를 사용할 수 없습니다.",
   "Privacy policy": "개인정보 처리방침",
-  "Accent": "강세",
   "Successful repeats": "성공한 반복",
   "3 successful repeats → continue automatically.": "3회 성공하면 자동으로 다음으로 넘어갑니다.",
   "Turn on the mic to advance automatically.": "자동으로 넘어가려면 마이크를 켜세요.",
-  "Listening does not count as practice.": "듣기는 연습 횟수에 포함되지 않습니다."
+  "Listening does not count as practice.": "듣기는 연습 횟수에 포함되지 않습니다.",
+  "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ 다운 스트로크 · ↑ 업 스트로크 · × 뮤트 타격 · PM 손바닥으로 뮤트 · > 강세 (더 세게 연주)",
+  "Numbers = beats · & = halfway between beats · Beams = one beat": "숫자 = 박 · & = 박의 중간 · 연결선 = 한 박",
+  "e / a = second / fourth sixteenth of the beat": "e / a = 박의 두 번째 / 네 번째 16분음표",
+  "No arrow = keep moving without striking · Pink = current stroke": "화살표 없음 = 줄을 치지 않고 움직이기 · 분홍색 = 현재 스트로크"
 }

@@ -389,9 +389,12 @@
   "Stop preview": "Hentikan contoh",
   "Audio preview unavailable.": "Contoh audio tidak tersedia.",
   "Privacy policy": "Kebijakan privasi",
-  "Accent": "Aksen",
   "Successful repeats": "Pengulangan berhasil",
   "3 successful repeats → continue automatically.": "3 pengulangan berhasil → lanjut otomatis.",
   "Turn on the mic to advance automatically.": "Aktifkan mikrofon untuk lanjut otomatis.",
-  "Listening does not count as practice.": "Mendengarkan tidak dihitung sebagai latihan."
+  "Listening does not count as practice.": "Mendengarkan tidak dihitung sebagai latihan.",
+  "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ Petikan ke bawah · ↑ Petikan ke atas · × Pukulan senar teredam · PM Redam dengan telapak tangan · > Aksen (mainkan lebih keras)",
+  "Numbers = beats · & = halfway between beats · Beams = one beat": "Angka = ketukan · & = tengah ketukan · Garis penghubung = satu ketukan",
+  "e / a = second / fourth sixteenth of the beat": "e / a = not seperenam belas kedua / keempat dalam ketukan",
+  "No arrow = keep moving without striking · Pink = current stroke": "Tanpa panah = gerakkan tangan tanpa memetik · Merah muda = petikan saat ini"
 }

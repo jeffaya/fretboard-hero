@@ -389,9 +389,12 @@
   "Stop preview": "Stop preview",
   "Audio preview unavailable.": "Audio preview unavailable.",
   "Privacy policy": "Privacy policy",
-  "Accent": "Accent",
   "Successful repeats": "Successful repeats",
   "3 successful repeats → continue automatically.": "3 successful repeats → continue automatically.",
   "Turn on the mic to advance automatically.": "Turn on the mic to advance automatically.",
-  "Listening does not count as practice.": "Listening does not count as practice."
+  "Listening does not count as practice.": "Listening does not count as practice.",
+  "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)",
+  "Numbers = beats · & = halfway between beats · Beams = one beat": "Numbers = beats · & = halfway between beats · Beams = one beat",
+  "e / a = second / fourth sixteenth of the beat": "e / a = second / fourth sixteenth of the beat",
+  "No arrow = keep moving without striking · Pink = current stroke": "No arrow = keep moving without striking · Pink = current stroke"
 }

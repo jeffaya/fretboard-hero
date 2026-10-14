@@ -42,11 +42,13 @@
       const guided=microphone.state==='on',exercise=exercises[state.index],section=currentSection();
       if(exercise.melody)$('#routineContext').textContent=t(`${exercise.detail} · ${section.label}`);
       $('#routineTabScroll').hidden=Boolean(exercise.strumming);
-      $('#routineLegend').hidden=Boolean(exercise.strumming);
+      $('#routineLegend').hidden=false;
       $('#routineNoteProgress').hidden=!guided||Boolean(exercise.strumming);
       microphone.setInterval?.(exercise.strumming?20:80);
-      $('#routineLegend').textContent=t(guided?'Highlight = target · Green = played':'Cyan = root note');
-      if(exercise.melody)$('#routineLegend').textContent+=' · '+t(exercise.diagonal?'P1–P5 = boxes · / = slide · 1 = root':'Numbers above = degrees · 1 = root');
+      if(!exercise.strumming){
+        $('#routineLegend').textContent=t(guided?'Highlight = target · Green = played':'Cyan = root note');
+        if(exercise.melody)$('#routineLegend').textContent+=' · '+t(exercise.diagonal?'P1–P5 = boxes · / = slide · 1 = root':'Numbers above = degrees · 1 = root');
+      }
       const visible=section?{...exercise,columns:exercise.columns.slice(section.start,section.end)}:exercise;
       if(!exercise.strumming)RoutineRenderer.render($('#routineTab'),visible,engine,guided?{index:current().index-(section?.start||0),animate}:null);
       strumming.update(active?exercise:null,current().index,guided,current().rhythm);
@@ -158,9 +160,7 @@
       $('#routineContext').textContent=t(done?`${state.root} ${state.quality} · Five exercises completed`:exercise.detail);
       if(done)$('#routineInstruction').textContent=t('Five exercises. One key. You did it! Keep building your skills in Learn, or put your knowledge to the test in Quiz.');else renderInstruction();
       $('#routineCelebration').hidden=!done;$('#routineExercise').classList.toggle('is-complete',done);
-      $('#routineTabScroll').hidden=done;$('#routineLegend').hidden=done||Boolean(exercise.strumming);
-      const rhythm=!done&&exercise.strumming;$('#routineExercise').classList.toggle('has-rhythm',Boolean(rhythm));
-      (rhythm?$('#routineRhythmFooter'):$('#routineActions')).append($('#routineNext'));
+      $('#routineTabScroll').hidden=done;$('#routineLegend').hidden=done;
       if(done)strumming.update(null);
       $('#routineNext').hidden=done;$('#routineFinish').hidden=!done;
       $('#routineNext').textContent=t(exercise.sections&&current()?.section<exercise.sections.length-1?(exercise.melody?'Return →':'Next strings →'):state.index===4&&[0,1,2,3].every(i=>completed.has(i))?'Done':'Next →');

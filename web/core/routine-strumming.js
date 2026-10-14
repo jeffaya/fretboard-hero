@@ -46,12 +46,12 @@
       });
       nav.setAttribute('aria-label',t('Warm-up patterns'));
       text('#routinePatternHelp',t('Keep your hand moving through the gaps.'));
-      const legend=$('#routineStrumHelp');legend.replaceChildren();
-      const marks=[['↓','Down',s=>s.direction==='down'&&s.mute!=='percussive'],['↑','Up',s=>s.direction==='up'&&s.mute!=='percussive'],['×','Muted hit',s=>s.mute==='percussive'],['PM','Palm mute',s=>s.mute==='palm'],['>','Accent',s=>s.accent]];
-      for(const [mark,label,used] of marks)if(p.slots.some(s=>s&&used(s))){
-        const item=document.createElement('li'),symbol=document.createElement('strong'),definition=document.createElement('span');
-        symbol.textContent=mark;symbol.setAttribute('aria-hidden','true');definition.textContent=t(label);item.append(symbol,definition);legend.append(item);
-      }
+      const timing=t('Numbers = beats · & = halfway between beats · Beams = one beat');
+      text('#routineLegend',[
+        t('↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)'),
+        timing+(p.division===4?' · '+t('e / a = second / fourth sixteenth of the beat'):''),
+        t('No arrow = keep moving without striking · Pink = current stroke')
+      ].join('\n'));
       text('#routineRepeatLabel',t('Successful repeats'));
       text('#routineRepeatHint',t('3 successful repeats → continue automatically.'));
       const dots=$('#routineRepeatDots');dots.replaceChildren();
