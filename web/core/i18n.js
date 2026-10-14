@@ -88,7 +88,7 @@
     trigger.setAttribute('aria-label',text('Language')+': '+caption.textContent);
     choices.forEach(([value,name])=>{
       const option=document.createElement('button');option.type='button';option.dataset.language=value;option.setAttribute('role','menuitemradio');option.setAttribute('aria-checked',String(value===selected));
-      option.textContent=name;if(value!=='auto')option.lang=value;
+      option.textContent=name;option.autofocus=value===selected;if(value!=='auto')option.lang=value;
       option.addEventListener('click',()=>{
         menu.hidePopover();
         try{if(value==='auto')localStorage.removeItem(storageKey);else localStorage.setItem(storageKey,value)}catch{}
@@ -106,8 +106,8 @@
     menu.addEventListener('toggle',()=>{
       const isOpen=menu.matches(':popover-open');trigger.setAttribute('aria-expanded',String(isOpen));
       if(isOpen){
-        const checked=menu.querySelector('[aria-checked="true"]');checked.focus({preventScroll:true});
-        menu.scrollTop=checked.offsetTop-(menu.clientHeight-checked.offsetHeight)/2;
+        const focused=menu.contains(document.activeElement)?document.activeElement:menu.querySelector('[aria-checked="true"]');
+        menu.scrollTop=focused.offsetTop-(menu.clientHeight-focused.offsetHeight)/2;
       }
     });
     menu.addEventListener('keydown',e=>{
@@ -139,7 +139,7 @@
     const requested=new URL(location.href).searchParams.get('lang');
     locale=supported.has(requested)?requested:supported.has(saved)?saved:detect(navigator.languages?.length?navigator.languages:[navigator.language]);
     if(locale!=='en'){
-      try{const response=await fetch('./locales/'+locale+'.json?v=10.43.1');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
+      try{const response=await fetch('./locales/'+locale+'.json?v=10.43.3');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
     }
     document.documentElement.lang=locale;document.documentElement.dir='ltr';
     return locale;
