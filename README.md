@@ -296,3 +296,12 @@ Korean, Simplified Chinese, Brazilian Portuguese, Hindi and Indonesian. Language
 is detected from browser/device preferences, with English fallback. The home
 flag/name selector saves a manual choice; Automatic restores detection.
 See [localization maintenance](docs/LOCALIZATION.md) for catalogs and validation.
+
+### Privacy policy
+
+`web/privacy.html` provides the French/English policy for all three apps at
+`https://fretboard-hero.com/privacy`. The home link is translated in all app
+languages. The publisher is Jean-François Seignemorte, acting personally, and the
+public privacy contact is `hello@fretboard-hero.com`. See the
+[data inventory and release notes](docs/PRIVACY.md) when deploying or updating
+Google Play Data safety.
