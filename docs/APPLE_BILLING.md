@@ -77,8 +77,9 @@ Ask to Buy, purchases completed outside the app and revocations. Updates receive
 while a purchase is open are rechecked when it finishes. Pending/canceled results
 do not themselves grant access.
 
-Offline entitlement uses StoreKit's locally available verified transaction data;
-there is no extra seven-day cache like the Android implementation. Refund and
+Offline entitlement uses StoreKit's locally available verified transaction data.
+Android APKs/AABs are separately distributed with full access already included;
+see [Android paid access](GOOGLE_PLAY_BILLING.md). Refund and
 revocation detection depends on StoreKit receiving updated information. This
 integration does not provide server notifications or cross-store account linking.
 

@@ -384,6 +384,12 @@ The existing Windows PowerShell scripts now accept `-Format Apk`, `Aab`, or
 `Both`. Omitting the option preserves the debug APK build. Use Release for
 store submissions; debug packages are for local testing only.
 
+Both formats, in both build types, are already-paid Android apps. Sync sets
+`unlocked: true` and `nativeBilling: false`; the web demo remains unchanged.
+`scripts/validate-android-access.ps1` checks the generated config and the config
+embedded in each final archive before it can be copied to `dist/`. This prevents
+a stale native bundle from reintroducing a paywall for existing customers.
+
 ```powershell
 # All three instruments: three signed APKs + three signed AABs.
 .\scripts\build-all.ps1 -BuildType Release -Format Both -VersionCode 2 -VersionName 1.1.0

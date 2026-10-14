@@ -70,6 +70,13 @@ jobs:
         working-directory: app
         run: npm ci
 
+      - name: Verify paid access before building
+        shell: pwsh
+        run: |
+          $tests = Get-ChildItem web/tests/*.test.cjs, app/tests/*.test.cjs, app/tests/*.test.js, server/tests/*.test.mjs
+          node --test $tests.FullName
+          if ($LASTEXITCODE -ne 0) { throw "Regression tests failed; refusing to distribute Android packages" }
+
       - name: Set up release signing
         shell: pwsh
         env:

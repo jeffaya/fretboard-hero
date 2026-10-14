@@ -253,23 +253,33 @@ unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-br
 - `stores`: Android and iOS HTTPS store URLs for each instrument. Empty URLs
   show disabled “Coming soon” buttons in the shared unlock dialog.
 
-The native `scripts/sync-web.ps1` step sets
-`unlocked: false`, `nativeBilling: true`, and removes `testKeyHash` in
-`app/www/site.config.json`. Google Play or StoreKit purchase verification controls access.
-One non-consumable purchase unlocks all three instruments within the installed
-app; purchases are separate between the three app packages. The web configuration
-is untouched. Run the existing build scripts to regenerate the bundle; never edit
-`app/www` by hand. Use `scripts/prepare-ios.ps1 -Instrument guitar` to prepare the iPhone/iPad variant.
+The native `scripts/sync-web.ps1` step removes `testKeyHash` and writes the
+platform's access policy into `app/www/site.config.json`:
 
-Before distributing, follow [Google Play billing setup](docs/GOOGLE_PLAY_BILLING.md)
-or [App Store billing setup](docs/APPLE_BILLING.md).
+| Distribution | `unlocked` | `nativeBilling` | Access |
+| --- | --- | --- | --- |
+| Android APK / AAB (Debug and Release) | `true` | `false` | Already paid; full access from first launch, including offline |
+| iOS | `false` | `true` | Existing StoreKit purchase verification |
+
+Android must never ask an existing buyer to pay again, restore an in-app purchase,
+or connect to Google Play to keep access. The build validates the actual APK/AAB
+before copying it to `dist/`; a demo config, enabled billing, wrong instrument or
+web preview key stops the build. The web configuration remains unchanged.
+Run the build scripts to regenerate the bundle; never edit `app/www` by hand.
+Use `scripts/prepare-ios.ps1 -Instrument guitar` to prepare the iPhone/iPad variant.
+
+See [Android paid access](docs/GOOGLE_PLAY_BILLING.md) and
+[App Store billing setup](docs/APPLE_BILLING.md).
 
 A temporary web testing override accepts `?key=<test-key>` when its SHA-256
 hex digest matches `testKeyHash`. Without a matching key the site stays in demo
 mode. Remove `testKeyHash` to disable the override. The raw key is not committed.
 This client-side preview gate is not a payment system or secure access control.
 
-Validation: `node --test web/tests/*.test.cjs`.
+Validation: `node --test web/tests/*.test.cjs app/tests/*.test.cjs` from the repo
+root (Node 22+ and PowerShell 7 on PATH; `PWSH` can select its executable).
+The paid-access tests run the real sync script for all instruments and validate
+APK/AAB archive fixtures. PR and Android release workflows run these checks.
 
 The unlock dialog uses the shared `ui-modal` neon outline and the existing home
 SVG icons. On phones and portrait touch tablets the two store buttons stack;
