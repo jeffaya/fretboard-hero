@@ -61,6 +61,16 @@ if (-not $entry) {
     throw "Unknown instrument '$Instrument'. Check instruments.json."
 }
 
+# Validate the source before touching native resources. The asset generator can
+# print a decoding error and still exit 0, leaving empty launcher PNGs behind.
+$iconKey = if ($entry.iconKey) { $entry.iconKey } else { $Instrument }
+$iconSource = Join-Path $RepoPath "web/assets/instruments/$iconKey/icon-1024.png"
+$imageValidator = Join-Path $PSScriptRoot "validate-android-images.cjs"
+& node $imageValidator $iconSource
+if ($LASTEXITCODE -ne 0) {
+    throw "Android icon validation failed for '$Instrument'. See the error above."
+}
+
 if (-not (Test-Path $distDir)) {
     New-Item -ItemType Directory -Path $distDir -Force | Out-Null
 }
@@ -110,11 +120,6 @@ try {
     $stringsXml.Save($stringsPath)
 
     # 3b. Generate the Android launcher icon for this instrument from its web icon
-    $iconKey = if ($entry.iconKey) { $entry.iconKey } else { $Instrument }
-    $iconSource = Join-Path $RepoPath "web\assets\instruments\$iconKey\icon-1024.png"
-    if (-not (Test-Path $iconSource)) {
-        throw "Missing icon source for instrument '$Instrument' at $iconSource"
-    }
     # @capacitor/assets joins projectRoot + assetPath with path.join, which breaks
     # if assetPath is absolute. Use a path relative to $appRoot (we're Push-Location'd there).
     $assetsTemp = Join-Path $appRoot "assets"
@@ -130,6 +135,11 @@ try {
     Remove-Item $assetsTemp -Recurse -Force -ErrorAction SilentlyContinue
     if ($assetsExitCode -ne 0) {
         throw "npx @capacitor/assets generate failed with exit code $assetsExitCode"
+    }
+
+    & node $imageValidator (Join-Path $appRoot "android/app/src/main/res")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Android resource validation failed. Refusing to package invalid images."
     }
 
     # 4. Sync web assets + config into the native Android project

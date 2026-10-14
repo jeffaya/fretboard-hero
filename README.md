@@ -226,11 +226,15 @@ Output APKs land in `dist/fretboard-hero-<instrument>-debug.apk`.
 
 ### Prerequisites
 
-- Node.js
+- Node.js 22 or newer
 - JDK 21
 - Android SDK (`ANDROID_HOME` set), with `platform-tools`,
-  `platforms;android-34`, and `build-tools;34.0.0` installed
-- Run `npm install` inside `app/` once before the first build
+  `platforms;android-36`, and `build-tools;35.0.0` installed
+- Run `npm ci` inside `app/` before the first build and after dependency updates
+
+The build fully decodes the source icon and generated Android PNGs before
+packaging. An `Invalid Android image` error identifies a damaged file directly,
+instead of continuing with empty launcher resources and failing later in Gradle.
 
 ## Native back-button bridge
 
