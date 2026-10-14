@@ -50,7 +50,7 @@
   <link rel="stylesheet" href="./circle.css?v=10.31.0">
   <link rel="stylesheet" href="./home.css?v=10.42.2">
   <link rel="stylesheet" href="./theme.css?v=10.33.0">
-  <link rel="stylesheet" href="./routine.css?v=10.42.0">
+  <link rel="stylesheet" href="./routine.css?v=10.43.0">
   <link rel="stylesheet" href="./premium.css?v=10.31.0">
   <link rel="stylesheet" href="./locales.css?v=10.33.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
@@ -121,7 +121,7 @@
       <div id="routineDrawerBackdrop" class="drawer-backdrop"></div>
       <div class="routine-content">
         <article id="routineExercise" class="routine-exercise">
-          <ol id="routineSteps" class="routine-steps" aria-label="Routine progress"></ol>
+          <ol id="routineSteps" class="routine-steps ui-steps" aria-label="Routine progress"></ol>
           <div id="routineCelebration" class="routine-celebration" aria-hidden="true" hidden>
             <div id="routineConfetti" class="routine-confetti"></div>
             <div class="routine-medal"><svg viewBox="0 0 64 64"><path d="M20 9h24v15c0 12-6 18-12 18s-12-6-12-18Z M20 13H9v8c0 8 5 12 13 12 M44 13h11v8c0 8-5 12-13 12 M32 42v11 M22 56h20" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="m26 24 4 4 9-10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -133,8 +133,7 @@
             <button id="routineMic" class="microphone-switch" type="button" role="switch" aria-label="Microphone" aria-checked="false" aria-describedby="routineMicStatus"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg></button>
             <p id="routineMicStatus" role="status" aria-live="polite" data-no-i18n></p>
             <div id="routineRhythmControls" class="routine-rhythm-controls" hidden data-no-i18n>
-              <button id="routineRhythmToggle" class="ui-secondary" type="button" aria-pressed="true"></button>
-              <label><select id="routineTempo" aria-label="Tempo"><option selected>20</option><option>24</option><option>30</option><option>36</option><option>40</option><option>48</option><option>56</option><option>64</option><option>72</option><option>80</option><option>100</option><option>120</option></select> BPM</label>
+              <label><select id="routineTempo" aria-label="Tempo"><option>20</option><option>24</option><option>30</option><option>36</option><option>40</option><option>48</option><option>56</option><option>64</option><option>72</option><option selected>80</option><option>100</option><option>120</option></select> BPM</label>
               <button id="routineRhythmPreview" class="ui-secondary" type="button" aria-pressed="false"></button>
             </div>
             <span id="routineNoteProgress" data-no-i18n></span>
@@ -143,14 +142,21 @@
           <div class="routine-practice">
           <div id="routineTabScroll" class="routine-tab-scroll ui-panel"><svg id="routineTab" role="img"></svg></div>
           <div id="routineStrumming" class="routine-strumming ui-panel" hidden data-no-i18n>
-            <div id="routinePatternSteps" class="routine-pattern-steps"></div>
+            <ol id="routinePatternSteps" class="routine-pattern-steps ui-steps"></ol>
             <p id="routinePatternHelp"></p>
+            <ul id="routineStrumHelp" class="routine-strum-legend"></ul>
             <div class="routine-rhythm-tab">
               <svg id="routineRhythmTab" role="img" aria-describedby="routineStrumHelp"></svg>
-              <div id="routineCountIn" class="rhythm-count-in" role="status" aria-live="polite" aria-atomic="true" hidden><span id="routineCountInLabel"></span><strong id="routineCountInNumber"></strong></div>
               <div id="routineRhythmFeedback" class="rhythm-feedback" role="status" aria-live="polite" aria-atomic="true" hidden><strong id="routineRhythmGrade"></strong></div>
             </div>
-            <div id="routineRhythmFooter" class="routine-rhythm-footer"><p id="routineStrumHelp"></p></div>
+            <div id="routineRhythmFooter" class="routine-rhythm-footer">
+              <div class="routine-repeat-progress">
+                <div class="routine-repeat-heading" role="status" aria-live="polite" aria-atomic="true"><span id="routineRepeatLabel"></span><strong id="routineRepeatCount"></strong></div>
+                <div id="routineRepeatDots" class="routine-repeat-dots" aria-hidden="true"></div>
+                <p id="routineRepeatHint"></p>
+                <p id="routineRepeatStatus"></p>
+              </div>
+            </div>
           </div>
           </div>
           <p id="routineLegend" class="routine-legend"><span>Cyan = root note</span></p>
@@ -286,7 +292,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.42.2" defer></script>
+  <script src="./bootstrap.js?v=10.43.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

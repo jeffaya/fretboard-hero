@@ -18,7 +18,7 @@
     const micPreference=FretboardMicrophone.preference('routine');
     const microphone=FretboardMicrophone.create({fftSize:16384,interval:80,onFrame:listen,onState:audioState});
     const strumming=RoutineStrumming.create({root,
-      onProgress(index,progress){if(current()){current().index=index;current().rhythm=progress}},onComplete:advance,onMeasure:(id,success)=>rhythmPractice.record(id,success),onAudioReset:()=>{strumGate.reset();settleUntil=performance.now()+120}
+      onProgress(index,progress){if(current()){current().index=index;current().rhythm=progress}},onComplete:advance,onRepeat:(id,success)=>rhythmPractice.record(id,success),onAudioReset:()=>{strumGate.reset();settleUntil=performance.now()+120}
     });
     function resetGates(repeat=false){gate.reset(repeat);strumGate.reset()}
     // A short CSS celebration, created once and replayed only on completion.
@@ -129,7 +129,7 @@
       $('#routineSteps').replaceChildren();
       exercises.forEach((item,i)=>{
         const step=document.createElement('li'),button=document.createElement('button');
-        button.type='button';button.textContent=t(item.step);button.dataset.step=String(i+1);
+        button.type='button';button.className='ui-step';button.textContent=t(item.step);button.dataset.step=String(i+1);
         button.addEventListener('click',()=>{
           strumming.stop();cancelTransition();state.index=i;
           if(completed.has(i)||(!exercises[state.index].strumming&&current().index===exercises[state.index].columns.length)){current().index=0;current().section=0;current().rhythm=null}
