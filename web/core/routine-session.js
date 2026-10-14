@@ -45,6 +45,7 @@
       $('#routineLegend').hidden=false;
       $('#routineNoteProgress').hidden=!guided||Boolean(exercise.strumming);
       microphone.setInterval?.(exercise.strumming?20:80);
+      microphone.setEchoCancellation?.(Boolean(exercise.strumming));
       if(!exercise.strumming){
         $('#routineLegend').textContent=t(guided?'Highlight = target · Green = played':'Cyan = root note');
         if(exercise.melody)$('#routineLegend').textContent+=' · '+t(exercise.diagonal?'P1–P5 = boxes · / = slide · 1 = root':'Numbers above = degrees · 1 = root');

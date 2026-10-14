@@ -8,7 +8,7 @@ function environment(saved=new Map()){
   createAnalyser(){return {fftSize:8192,getFloatTimeDomainData(){},getFloatFrequencyData(){}}}
   createMediaStreamSource(){return {connect(){},disconnect(){}}}
  }
- const c={localStorage:{getItem:key=>saved.get(key)??null,setItem:(key,value)=>saved.set(key,value)},window:{AudioContext:Context,addEventListener:(n,f)=>events[n]=f,Capacitor:{Plugins:{App:{addListener:(n,f)=>native[n]=f}}}},document:{hidden:false,addEventListener:(n,f)=>events[n]=f},navigator:{mediaDevices:{getUserMedia:()=>new Promise((resolve,reject)=>requests.push({resolve,reject}))}},requestAnimationFrame:f=>{frames.set(++id,f);return id},cancelAnimationFrame:id=>frames.delete(id),Float32Array};
+ const c={localStorage:{getItem:key=>saved.get(key)??null,setItem:(key,value)=>saved.set(key,value)},window:{AudioContext:Context,addEventListener:(n,f)=>events[n]=f,Capacitor:{Plugins:{App:{addListener:(n,f)=>native[n]=f}}}},document:{hidden:false,addEventListener:(n,f)=>events[n]=f},navigator:{mediaDevices:{getUserMedia:constraints=>new Promise((resolve,reject)=>requests.push({resolve,reject,constraints}))}},requestAnimationFrame:f=>{frames.set(++id,f);return id},cancelAnimationFrame:id=>frames.delete(id),Float32Array};
  vm.runInNewContext(fs.readFileSync(require.resolve('../core/microphone.js'),'utf8'),c);
  function stream(){const track={readyState:'live',events:{},stop(){this.readyState='ended'},addEventListener(n,f){this.events[n]=f}};tracks.push(track);return {getTracks:()=>[track],getAudioTracks:()=>[track]}}
  return {c,api:c.window.FretboardMicrophone,events,native,contexts,tracks,requests,stream};
@@ -48,4 +48,40 @@ test('Each microphone defaults on; explicit off survives reload and stays indepe
 test('Unavailable storage still allows on/off within the current visit',()=>{
  const r=environment();r.c.localStorage={getItem(){throw Error('blocked')},setItem(){throw Error('blocked')}};
  const preference=r.api.preference('routine');assert.equal(preference.enabled,true);preference.setEnabled(false);assert.equal(preference.enabled,false);
+});
+
+test('Rhythm requests echo cancellation, prefers all output when supported, and restores raw capture',async()=>{
+ const r=environment(),mic=r.api.create({onFrame(){}}),applied=[];
+ await mic.setEchoCancellation(true);const pending=mic.start();await new Promise(setImmediate);
+ assert.equal(r.requests[0].constraints.audio.echoCancellation,true);
+ const stream=r.stream();r.tracks[0].getCapabilities=()=>({echoCancellation:[true,false,'all']});
+ r.tracks[0].applyConstraints=async value=>applied.push(value);
+ r.requests[0].resolve(stream);await pending;
+ assert.equal(applied[0].echoCancellation,'all');assert.equal(mic.state,'on');
+ await mic.setEchoCancellation(false);assert.equal(applied[1].echoCancellation,false);
+ assert.ok(applied.every(c=>c.noiseSuppression===false&&c.autoGainControl===false));
+ assert.equal(r.requests.length,1);assert.equal(r.tracks[0].readyState,'live');
+});
+test('Changing mode while permission is pending uses the latest echo setting',async()=>{
+ const r=environment(),mic=r.api.create({onFrame(){}}),pending=mic.start();await new Promise(setImmediate);
+ assert.equal(r.requests[0].constraints.audio.echoCancellation,false);
+ await mic.setEchoCancellation(true);const stream=r.stream(),applied=[];
+ r.tracks[0].applyConstraints=async value=>applied.push(value.echoCancellation);
+ r.requests[0].resolve(stream);await pending;
+ assert.deepEqual(applied,[true]);assert.equal(mic.state,'on');
+});
+test('Rapid mode switches serialize constraints and unsupported changes leave capture usable',async()=>{
+ const r=environment(),mic=r.api.create({onFrame(){}}),pending=mic.start();await new Promise(setImmediate);
+ r.requests[0].resolve(r.stream());await pending;
+ let release;const applied=[];r.tracks[0].applyConstraints=value=>{applied.push(value.echoCancellation);return value.echoCancellation?new Promise(resolve=>release=resolve):Promise.reject(Error('Unsupported'))};
+ const on=mic.setEchoCancellation(true);await new Promise(setImmediate);const off=mic.setEchoCancellation(false);
+ assert.deepEqual(applied,[true]);release();await Promise.all([on,off]);
+ assert.deepEqual(applied,[true,false]);assert.equal(mic.state,'on');assert.equal(r.requests.length,1);
+});
+test('Stopping during input reconfiguration cannot revive a released stream',async()=>{
+ const r=environment(),mic=r.api.create({onFrame(){}});await mic.setEchoCancellation(true);
+ const pending=mic.start();await new Promise(setImmediate);const stream=r.stream();let release;
+ r.tracks[0].applyConstraints=()=>new Promise(resolve=>release=resolve);
+ r.requests[0].resolve(stream);await new Promise(setImmediate);mic.stop();release();await pending;
+ assert.equal(mic.state,'off');assert.equal(r.tracks[0].readyState,'ended');
 });

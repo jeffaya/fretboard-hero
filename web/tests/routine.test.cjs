@@ -73,19 +73,20 @@ class Node{
  constructor(){this.children=[];this.events={};this.attrs={};this.dataset={};this.style={};this.classes=new Set();this.classList={contains:k=>this.classes.has(k),toggle:(k,on)=>on?this.classes.add(k):this.classes.delete(k)};this.textContent='';this.hidden=false;this.parentElement={clientWidth:390}}
  append(...nodes){this.children.push(...nodes)}replaceChildren(){this.children=[]}querySelectorAll(){return this.children}querySelector(){return null}getAttribute(k){return this.attrs[k]}setAttribute(k,v){this.attrs[k]=v}addEventListener(k,f){this.events[k]=f}click(){this.events.click?.()}focus(){}scrollIntoView(){}
 }
-function sessionRuntime(demo=false,enabled=true,storage=new Map()){
+function sessionRuntime(demo=false,enabled=true,storage=new Map(),playback=false){
  const c=runtime(),nodes=new Map(),root={querySelector:s=>{if(!nodes.has(s))nodes.set(s,new Node());return nodes.get(s)}};
  c.document={createElement:()=>new Node(),createElementNS:()=>new Node(),addEventListener(){}};c.opens=0;
  c.localStorage={getItem:key=>storage.get(key),setItem:(key,value)=>storage.set(key,value)};
  const timers=new Map();let timerId=0;
  c.setTimeout=f=>{timers.set(++timerId,f);return timerId};c.clearTimeout=id=>timers.delete(id);c.now=1000;c.performance={now:()=>c.now};const frames=new Map();let frameId=0;c.requestAnimationFrame=f=>{frames.set(++frameId,f);return frameId};c.cancelAnimationFrame=id=>frames.delete(id);c.frame=now=>{c.now=now;for(const [id,f] of [...frames]){frames.delete(id);f(now)}};
  c.micPreference={get enabled(){return enabled},setEnabled(value){enabled=value}};
- c.FretboardMicrophone={preference:()=>c.micPreference,create({onFrame,onState}){let state='off';c.audio={onFrame,start(){state='on';onState(state)},stop(){state='off';onState(state)},get state(){return state}};return c.audio}};
+ c.FretboardMicrophone={preference:()=>c.micPreference,create({onFrame,onState}){let state='off';c.audio={onFrame,setEchoCancellation(value){c.echoCancellation=value},start(){state='on';onState(state)},stop(){state='off';onState(state)},get state(){return state}};return c.audio}};
  c.window.matchMedia=()=>({matches:true});
  const flush=()=>{for(const [id,f] of timers){timers.delete(id);f()}};
  vm.runInContext(fs.readFileSync(path.join(base,'core/access.js'),'utf8'),c);
  c.window.FRETBOARD_ACCESS=c.window.FretboardAccess.create(!demo);c.window.FRETBOARD_PREMIUM={mark(){},open(){c.opens++}};
  c.RoutineRenderer={render:(_,exercise)=>{c.lastExercise=exercise}};
+ if(playback)c.RoutineRhythmAudio={create:()=>({open:async()=>true,close(){},stop(){},schedule(){c.scheduled=(c.scheduled||0)+1}})};
  const createStrumming=c.RoutineStrumming.create;c.RoutineStrumming={create(options){const strumming=createStrumming(options),update=strumming.update;strumming.update=function(e,...rest){if(e?.strumming)c.lastExercise=e;return update.call(this,e,...rest)};return strumming}};
  vm.runInContext(fs.readFileSync(path.join(base,'core/routine-session.js'),'utf8'),c);
  const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),session=c.window.RoutineSession.create({root,engine,refreshControls(){},random:rng(321)});
@@ -377,8 +378,9 @@ test('Every guitar triad section keeps six named strings and the notes on their 
 });
 
 test('Ambient microphone input never displays a rhythm grade or advances progress after entering or changing tempo',async()=>{
- const r=sessionRuntime(true,true);r.session.enter();r.nodes.get('#routineSteps').children[3].children[0].click();
- await new Promise(resolve=>setImmediate(resolve)); // No AudioContext in this harness: finish the preview fallback before testing practice.
+ const r=sessionRuntime(true,true,new Map(),true);
+ r.session.enter();r.nodes.get('#routineSteps').children[3].children[0].click();
+ await new Promise(resolve=>setImmediate(resolve));
  const samples=new Float32Array(16384);let seed=13;
  for(let i=0;i<samples.length;i++){seed=(seed*16807)%2147483647;samples[i]=.003+.001*(seed/2147483647*2-1)}
  for(let now=1400;now<7000;now+=20){
@@ -386,7 +388,30 @@ test('Ambient microphone input never displays a rhythm grade or advances progres
   if(now===4000)r.nodes.get('#routineTempo').events.change({target:{value:'120'}});
   r.c.audio.onFrame({samples,sampleRate:48000,now});
   assert.equal(r.nodes.get('#routineRhythmFeedback').hidden,true);
+  assert.equal(r.nodes.get('#routineRhythmPreview').attrs['aria-pressed'],'true');
   assert.equal(r.nodes.get('#routineRepeatCount').textContent,'0 / 3');
  }
  assert.equal(r.nodes.get('#routinePatternSteps').children[0].attrs['aria-current'],'step');
+});
+
+test('Microphone PCM strums validate repeats during Listen; other exercises restore raw input',async()=>{
+ const r=sessionRuntime(true,true,new Map(),true);r.session.enter();
+ assert.equal(r.c.echoCancellation,false);r.nodes.get('#routineSteps').children[3].children[0].click();
+ await new Promise(setImmediate);assert.equal(r.c.echoCancellation,true);
+ const rate=48000,samples=new Float32Array(16384);let sawGrade=false;
+ // The first motif is quarter-note downstrokes. Start on its second beat,
+ // leaving the normal microphone settling window intact.
+ for(let now=1020;now<=10120;now+=20){
+  const end=Math.round(now*rate/1000);
+  for(let i=0;i<samples.length;i++){
+   const time=(end-samples.length+i)/rate,beat=Math.floor((time-1)/.75),age=time-(1+beat*.75);
+   samples[i]=beat<1?0:.03*Math.min(age/.008,1)*Math.exp(-age*12)*(Math.sin(2*Math.PI*110*time)+.5*Math.sin(2*Math.PI*220*time));
+  }
+  r.c.frame(now);r.c.audio.onFrame({samples,sampleRate:rate,now});
+  if(!r.nodes.get('#routineRhythmFeedback').hidden)sawGrade=true;
+ }
+ assert.ok(sawGrade);assert.ok(r.c.scheduled>100);
+ assert.equal(r.nodes.get('#routinePatternSteps').children[1].attrs['aria-current'],'step');
+ await new Promise(setImmediate);assert.equal(r.nodes.get('#routineRhythmPreview').attrs['aria-pressed'],'true');
+ r.nodes.get('#routineSteps').children[0].children[0].click();assert.equal(r.c.echoCancellation,false);
 });
