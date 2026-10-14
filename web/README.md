@@ -137,6 +137,11 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Release notes
 
+### V10.44.1 — Rhythm playback controls
+- Ordered the rhythm toolbar as playback button → BPM label → tempo selector.
+- Replaced font-dependent play/pause characters with matching SVG icons, centered beside the existing translated label. Pause uses two clean, slightly rounded bars.
+- Consolidated playback and mobile toolbar styles with their component rules; audio behavior and the default tempo remain unchanged.
+
 ### V10.44.0 — Footer language menu
 - Moved language selection beside Privacy policy with a small globe, native language name and chevron, matching the footer link styling and retaining 44px touch targets.
 - The dark translucent popover opens upward, with eleven languages, Automatic mode, a selected checkmark, scrolling, keyboard navigation and outside-click dismissal.
