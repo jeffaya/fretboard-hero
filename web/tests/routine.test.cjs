@@ -376,8 +376,9 @@ test('Every guitar triad section keeps six named strings and the notes on their 
  }
 });
 
-test('Ambient microphone input never displays a rhythm grade or advances progress after entering or changing tempo',()=>{
+test('Ambient microphone input never displays a rhythm grade or advances progress after entering or changing tempo',async()=>{
  const r=sessionRuntime(true,true);r.session.enter();r.nodes.get('#routineSteps').children[3].children[0].click();
+ await new Promise(resolve=>setImmediate(resolve)); // No AudioContext in this harness: finish the preview fallback before testing practice.
  const samples=new Float32Array(16384);let seed=13;
  for(let i=0;i<samples.length;i++){seed=(seed*16807)%2147483647;samples[i]=.003+.001*(seed/2147483647*2-1)}
  for(let now=1400;now<7000;now+=20){
