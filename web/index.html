@@ -50,7 +50,7 @@
   <link rel="stylesheet" href="./circle.css?v=10.31.0">
   <link rel="stylesheet" href="./home.css?v=10.42.2">
   <link rel="stylesheet" href="./theme.css?v=10.33.0">
-  <link rel="stylesheet" href="./routine.css?v=10.43.0">
+  <link rel="stylesheet" href="./routine.css?v=10.43.1">
   <link rel="stylesheet" href="./premium.css?v=10.31.0">
   <link rel="stylesheet" href="./locales.css?v=10.33.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
@@ -144,22 +144,19 @@
           <div id="routineStrumming" class="routine-strumming ui-panel" hidden data-no-i18n>
             <ol id="routinePatternSteps" class="routine-pattern-steps ui-steps"></ol>
             <p id="routinePatternHelp"></p>
-            <ul id="routineStrumHelp" class="routine-strum-legend"></ul>
             <div class="routine-rhythm-tab">
-              <svg id="routineRhythmTab" role="img" aria-describedby="routineStrumHelp"></svg>
+              <svg id="routineRhythmTab" role="img" aria-describedby="routineLegend"></svg>
               <div id="routineRhythmFeedback" class="rhythm-feedback" role="status" aria-live="polite" aria-atomic="true" hidden><strong id="routineRhythmGrade"></strong></div>
             </div>
-            <div id="routineRhythmFooter" class="routine-rhythm-footer">
-              <div class="routine-repeat-progress">
-                <div class="routine-repeat-heading" role="status" aria-live="polite" aria-atomic="true"><span id="routineRepeatLabel"></span><strong id="routineRepeatCount"></strong></div>
-                <div id="routineRepeatDots" class="routine-repeat-dots" aria-hidden="true"></div>
-                <p id="routineRepeatHint"></p>
-                <p id="routineRepeatStatus"></p>
-              </div>
+            <div class="routine-repeat-progress">
+              <div class="routine-repeat-heading" role="status" aria-live="polite" aria-atomic="true"><span id="routineRepeatLabel"></span><strong id="routineRepeatCount"></strong></div>
+              <div id="routineRepeatDots" class="routine-repeat-dots" aria-hidden="true"></div>
+              <p id="routineRepeatHint"></p>
+              <p id="routineRepeatStatus"></p>
             </div>
           </div>
           </div>
-          <p id="routineLegend" class="routine-legend"><span>Cyan = root note</span></p>
+          <p id="routineLegend" class="routine-legend" data-no-i18n><span>Cyan = root note</span></p>
         <div id="routineActions" class="routine-actions"><button id="routineNext" class="ui-primary" type="button">Next →</button><div id="routineFinish" class="routine-finish" hidden><button id="routineReplay" class="ui-primary" type="button">Repeat my routine</button><button class="learn-card" type="button" data-go="learn"><img src="./assets/home/learn.svg" alt="" width="28" height="28">Learn</button><button class="quiz-card" type="button" data-go="quiz"><img src="./assets/home/quiz.svg?v=10.24.2" alt="" width="28" height="28">Quiz</button></div></div>
         </article>
       </div>
@@ -292,7 +289,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.43.0" defer></script>
+  <script src="./bootstrap.js?v=10.43.1" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

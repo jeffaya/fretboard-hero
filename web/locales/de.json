@@ -389,9 +389,12 @@
   "Stop preview": "Vorschau stoppen",
   "Audio preview unavailable.": "Audiovorschau nicht verfügbar.",
   "Privacy policy": "Datenschutzerklärung",
-  "Accent": "Akzent",
   "Successful repeats": "Geschaffte Wiederholungen",
   "3 successful repeats → continue automatically.": "3 geschaffte Wiederholungen → automatisch weiter.",
   "Turn on the mic to advance automatically.": "Aktiviere das Mikrofon, um automatisch weiterzugehen.",
-  "Listening does not count as practice.": "Anhören zählt nicht als Übung."
+  "Listening does not count as practice.": "Anhören zählt nicht als Übung.",
+  "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ Abschlag · ↑ Aufschlag · × Gedämpfter Schlag · PM Mit dem Handballen dämpfen · > Akzent (lauter spielen)",
+  "Numbers = beats · & = halfway between beats · Beams = one beat": "Zahlen = Zählzeiten · & = halbe Zählzeit · Balken = eine Zählzeit",
+  "e / a = second / fourth sixteenth of the beat": "e / a = zweite / vierte Sechzehntel der Zählzeit",
+  "No arrow = keep moving without striking · Pink = current stroke": "Ohne Pfeil = Bewegung ohne Anschlag · Pink = aktueller Schlag"
 }

@@ -389,9 +389,12 @@
   "Stop preview": "Arrêter l’écoute",
   "Audio preview unavailable.": "Aperçu sonore indisponible.",
   "Privacy policy": "Politique de confidentialité",
-  "Accent": "Accent",
   "Successful repeats": "Répétitions réussies",
   "3 successful repeats → continue automatically.": "3 répétitions réussies → passage automatique à la suite.",
   "Turn on the mic to advance automatically.": "Active le micro pour passer automatiquement à la suite.",
-  "Listening does not count as practice.": "L’écoute ne compte pas comme une répétition jouée."
+  "Listening does not count as practice.": "L’écoute ne compte pas comme une répétition jouée.",
+  "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ Coup vers le bas · ↑ Coup vers le haut · × Frappe étouffée · PM Cordes étouffées avec la paume · > Accent (jouer plus fort)",
+  "Numbers = beats · & = halfway between beats · Beams = one beat": "Chiffres = temps · & = milieu du temps · Barres = un temps",
+  "e / a = second / fourth sixteenth of the beat": "e / a = deuxième / quatrième double croche du temps",
+  "No arrow = keep moving without striking · Pink = current stroke": "Sans flèche = mouvement sans gratter · Rose = coup en cours"
 }

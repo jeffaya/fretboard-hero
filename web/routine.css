@@ -131,6 +131,8 @@ body #app .routine-pattern-steps .ui-step { min-height: 48px; padding: 8px 10px;
   font-size: 14px;
   color: #70f7ff;
   margin: 8px 8px 0;
+  white-space: pre-line;
+  line-height: 1.4;
 }
 
 .routine-practice { min-width: 0; }
@@ -153,13 +155,7 @@ body #app .routine-pattern-steps .ui-step { min-height: 48px; padding: 8px 10px;
 body #app .routine-rhythm-controls button { min-height: 44px; padding: 8px 12px; font-size: 14px; background: #0a1527; border: 1px solid #647c9d; border-radius: 9px; box-shadow: none; }
 .routine-rhythm-controls label { display: flex; align-items: center; gap: 4px; color: #fff; font-size: 14px; }
 #routineTempo { min-height: 44px; padding: 5px; background: #0a1527; color: #fff; border: 1px solid #647c9d; border-radius: 8px; font: inherit; }
-.routine-rhythm-footer { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
-/* Definitions live with the notation; the footer explains advancement. */
-.routine-strum-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; list-style: none; margin: 0 0 10px; padding: 0 0 12px; border-bottom: 1px solid #768eae35; color: #c6d3e6; font-size: 14px; }
-.routine-strum-legend li { display: flex; align-items: center; gap: 6px; }
-.routine-strum-legend strong { color: #70f7ff; font-size: 18px; line-height: 1; }
-.routine-rhythm-footer { padding-top: 14px; border-top: 1px solid #768eae35; }
-.routine-repeat-progress { flex: 1 1 220px; text-align: left; }
+.routine-repeat-progress { padding-top: 14px; border-top: 1px solid #768eae35; text-align: left; }
 .routine-repeat-heading { display: flex; align-items: baseline; gap: 12px; font-size: 16px; color: #fff; }
 #routineRepeatCount { color: #70f7df; font-variant-numeric: tabular-nums; }
 .routine-repeat-dots { display: flex; gap: 5px; width: 96px; margin-block: 7px; }
@@ -167,8 +163,6 @@ body #app .routine-rhythm-controls button { min-height: 44px; padding: 8px 12px;
 .routine-repeat-dots .is-complete { background: #70f7df; box-shadow: 0 0 8px #00dca744; }
 #routineRepeatHint,#routineRepeatStatus { margin: 3px 0 0; color: #c6d3e6; font-size: 14px; line-height: 1.35; }
 #routineRepeatStatus { color: #ffe38a; }
-body #app .routine-rhythm-footer button { margin-left: auto; min-width: 150px; min-height: 48px; padding: 8px 20px; font-size: 20px; }
-.has-rhythm .routine-actions { display: none; }
 
 .routine-actions { display: flex; justify-content: center; margin: 16px 0 0; }
 
