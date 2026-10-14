@@ -3,16 +3,21 @@ const path = require('node:path');
 const sharp = require('sharp');
 const rules = require('../google-play/requirements.json');
 const out = process.argv[2] ? path.resolve(process.argv[2]) : path.resolve(__dirname, '../google-play/guitar/en-US');
+const instrument = path.basename(path.dirname(out));
 const file = 'icon/feature-graphic-1024x500.png';
-const [width, height] = rules.commonAssets[file].dimensions;
 (async () => {
+  if (!['guitar', 'bass', 'ukulele'].includes(instrument)) throw new Error(`No shared OG asset for instrument: ${instrument}`);
+  const input = path.resolve(__dirname, '../../web/assets/instruments', instrument, 'og.png');
+  const bytes = fs.readFileSync(input);
+  const m = await sharp(bytes, { failOn: 'warning' }).metadata();
+  const rule = rules.commonAssets[file];
+  if (m.width !== rule.dimensions[0] || m.height !== rule.dimensions[1] || m.format !== 'png' || m.hasAlpha || m.channels !== 3 || m.depth !== 'uchar' || bytes.length > rule.maxBytes) {
+    throw new Error('Shared OG image must be an opaque RGB PNG, 1024 x 500, within the feature graphic size limit. Run export-og.cjs first.');
+  }
+  await sharp(bytes, { failOn: 'warning' }).stats();
   const output = path.join(out, file);
-  const bytes = await sharp(path.join(out, 'source/feature-graphic-original.png')).rotate()
-    .resize(width, height, { fit: 'cover', position: 'centre' })
-    .flatten({ background: '#03051b' }).toColourspace('srgb').removeAlpha()
-    .png({ compressionLevel: 9, adaptiveFiltering: true, palette: false }).toBuffer();
   fs.mkdirSync(path.dirname(output), { recursive: true });
   fs.writeFileSync(output + '.tmp', bytes);
   fs.renameSync(output + '.tmp', output);
-  console.log(JSON.stringify({ file: output, width, height, bytes: bytes.length, alpha: false }));
+  console.log(JSON.stringify({ instrument, file: path.relative(path.resolve(__dirname, '../..'), output), width: m.width, height: m.height, bytes: bytes.length, copiedFrom: path.relative(path.resolve(__dirname, '../..'), input) }));
 })().catch(error => { console.error(error.message); process.exitCode = 1; });

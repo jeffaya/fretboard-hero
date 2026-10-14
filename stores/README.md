@@ -7,8 +7,8 @@ Dedicated distribution-listing assets. These files are separate from the shipped
 | Path | Purpose |
 | --- | --- |
 | `google-play/guitar/en-US/` | First draft: Guitar Fretboard Hero, English (United States) |
-| `google-play/bass/` | Reserved for the bass listing |
-| `google-play/ukulele/` | Reserved for the ukulele listing |
+| `google-play/bass/` | Shared feature graphic; remaining listing assets pending |
+| `google-play/ukulele/` | Shared feature graphic; remaining listing assets pending |
 | `tools/` | Capture, render and validation scripts |
 
 Future Apple listings belong in `apple-app-store/<instrument>/<locale>/`. That directory is intentionally not populated in this first Google Play draft.
@@ -26,7 +26,7 @@ npm --prefix stores/tools install
 npx --prefix stores/tools playwright install chromium
 node stores/tools/capture.cjs
 node stores/tools/render.cjs
-node stores/tools/export-feature.cjs
+node stores/tools/export-og.cjs
 node stores/tools/validate.cjs
 ```
 
@@ -36,6 +36,6 @@ The capture server only binds localhost. It serves the current `web/` source and
 
 The phone artwork keeps the approved continuous ribbon and eight English messages. The screen inserts are refreshed from the local app. Tablet and desktop uploads show the interface directly, in their own emulated viewports, without marketing text or a phone frame.
 
-The feature graphic is generated artwork, not a screenshot. Its source and prompt are retained under the locale's `source/` directory. All other screenshots show the app's actual UI.
+Feature graphics are exact copies of the shared `web/assets/instruments/<instrument>/og.png` (1024 × 500). Editable export masters and provenance are documented in `tools/assets/og/README.md`. Historical locale artwork is no longer used by the exporter. All other screenshots show the app's actual UI.
 
 The common Android specifications live in `google-play/requirements.json`. Each locale’s `validation.json` is a generated inventory of its current files, not an input to the validator.

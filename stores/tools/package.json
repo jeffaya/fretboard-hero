@@ -5,7 +5,8 @@
     "capture": "node capture.cjs",
     "render": "node render.cjs",
     "validate": "node validate.cjs",
-    "export-feature": "node export-feature.cjs"
+    "export-feature": "node export-feature.cjs",
+    "export-og": "node export-og.cjs"
   },
   "devDependencies": {
     "playwright": "1.62.1",
