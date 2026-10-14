@@ -1,4 +1,4 @@
-/* Home composition, session groups and instrument/language setup. */
+/* Home composition, session groups, instrument setup and footer. */
 
 #home.home-screen {
   position: relative;
@@ -30,10 +30,36 @@
 #home .home-brand,
 #home .home-menu { min-width: 0; }
 
-#home .home-legal { grid-column: 1 / -1; padding: 0 0 8px; }
-#home .home-legal a { display: inline-flex; align-items: center; min-height: 44px; color: #b8c7df; font-size: 13px; text-underline-offset: 3px; }
-#home .home-legal a:hover { color: #fff; }
-#home .home-legal a:focus-visible { outline: 2px solid #7ce5fa; outline-offset: 4px; border-radius: 2px; }
+#home .home-footer {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, max-content) 1px minmax(0, max-content);
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 3vw, 16px);
+  min-width: 0;
+  padding-bottom: 8px;
+}
+
+body #app .home-footer-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 4px 0;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ui-muted);
+  font: 500 13px/1.4 var(--ui-font);
+  text-underline-offset: 3px;
+}
+
+body #app .home-footer-link:hover { color: #fff; box-shadow: none; }
+body #app .home-footer-link:focus-visible { outline: 2px solid #7ce5fa; outline-offset: 4px; }
+
+#home .home-footer-separator { height: 14px; background: #b8c7df40; }
 
 #home .hero-logo {
   display: block;
@@ -55,13 +81,7 @@
 
 #home .home-setup { width: min(100%, 420px); margin: 22px auto 0; }
 
-#home .home-setup-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 8px;
-}
+#home .home-setup > .home-section-label { margin-bottom: 12px; }
 
 #home .home-section-label {
   margin: 0;
@@ -71,16 +91,6 @@
   text-transform: uppercase;
   letter-spacing: .12em;
 }
-
-#home .home-language { min-width: 0; max-width: 55%; }
-
-#home .language-picker { margin: 0; font-size: 14px; }
-
-#home .language-trigger { max-width: 100%; gap: 6px; padding-inline: 8px; }
-
-#home .language-trigger span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-#home .language-trigger::after { flex: none; margin-left: 2px; }
 
 #home .home-instruments {
   display: grid;
@@ -332,10 +342,6 @@ body #app #home .home-instruments button[aria-pressed="true"]::after {
   #home .home-content { grid-template-columns: minmax(180px, .65fr) minmax(430px, 1.35fr); gap: 12px 24px; }
 
   #home .tagline { font-size: 13px; }
-
-  #home .home-setup-heading { flex-wrap: wrap; justify-content: center; gap: 2px; }
-
-  #home .home-language { max-width: 100%; }
 
   #home .home-instruments { gap: 4px; }
 
