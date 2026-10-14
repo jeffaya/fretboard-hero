@@ -2,7 +2,7 @@
   'use strict';
   const NS='http://www.w3.org/2000/svg';
   const el=(tag,attrs={},text='')=>{const node=document.createElementNS(NS,tag);for(const [key,value] of Object.entries(attrs))node.setAttribute(key,value);if(text)node.textContent=text;return node};
-  function create({root,onProgress,onComplete,onAudioReset,onMeasure}){
+  function create({root,onProgress,onComplete,onAudioReset,onRepeat}){
     const $=selector=>root.querySelector(selector),t=value=>window.FretboardI18n?.text(value)||value,svg=$('#routineRhythmTab'),audio=RoutineRhythmAudio.create();
     let exercise=null,index=0,clock=null,preview=null,guided=false,frame=0,lastFrame=0,tempo=RoutineRhythm.DEFAULT_TEMPO,feedback=null,cells=[],request=0,lastSlot=-1;
     const pattern=()=>exercise.patterns[index],activeClock=()=>preview||clock;
@@ -10,12 +10,16 @@
     function cancel(){cancelAnimationFrame(frame);frame=0;lastFrame=0}
     function save(){if(clock)onProgress(index,{clock,index,tempo})}
     function clearFeedback(){feedback=null;$('#routineRhythmFeedback').hidden=true}
-    function makeClock(listening){return RoutineRhythm.create({pattern:pattern(),tempo,guided:listening,now:performance.now(),onBar:success=>onMeasure(pattern().id,success)})}
+    function makeClock(listening,now=performance.now()){return RoutineRhythm.create({pattern:pattern(),tempo,guided:listening,now,onRepeat:success=>onRepeat(pattern().id,success)})}
+    function resumePractice(){
+      if(!clock||document.hidden||document.querySelector?.('.tuner-dialog[open]'))return;
+      clock.resume(performance.now());onAudioReset();save();start();paint(performance.now());
+    }
     function build(){
       if(!exercise)return;
       const p=pattern(),width=Math.max(240,Math.round(svg.parentElement.clientWidth));
       const perRow=p.division===4?(width<600?2:width<1050?4:8):(width<680?4:8),beats=Math.min(p.beats,perRow),slots=beats*p.division;
-      const spacing=(width-32)/slots,rows=Math.ceil(p.beats/beats),height=rows*126+36;
+      const spacing=(width-32)/slots,rows=Math.ceil(p.beats/beats),height=rows*126;
       svg.replaceChildren();svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.setAttribute('aria-label',t(p.name));cells=[];
       p.slots.forEach((stroke,slot)=>{
         const row=Math.floor(slot/slots),column=slot%slots,x=16+(column+.5)*spacing,y=45+row*126;
@@ -33,15 +37,25 @@
         group.append(el('text',{x,y:y+46,'text-anchor':'middle','class':'rhythm-beat'},label));svg.append(group);
         if(sub===0){const right=x+(p.division-1)*spacing;svg.append(el('path',{d:`M${x} ${y+57} v7 H${right} v-7`,'class':'rhythm-beam'}));if(p.division===4)svg.append(el('line',{x1:x,x2:right,y1:y+69,y2:y+69,'class':'rhythm-beam'}))}
       });
-      // The first beat is visible again after the ending, making the join
-      // explicit without adding a second lane or another target highlight.
-      const first=p.slots.slice(0,p.division).map(s=>!s?'·':s.mute==='percussive'?'×':s.direction==='up'?'↑':'↓').join('  ');
-      svg.append(el('text',{x:width-16,y:height-9,'text-anchor':'end','class':'rhythm-repeat'},'↻  '+first));
       const nav=$('#routinePatternSteps');nav.replaceChildren();
-      exercise.patterns.forEach((p,i)=>{const span=document.createElement('span');span.textContent=`${i+1} · ${t(p.name)}`;span.className=i===index?'is-current':'';if(i===index)span.setAttribute('aria-current','step');nav.append(span)});
+      exercise.patterns.forEach((p,i)=>{
+        const step=document.createElement('li'),label=document.createElement('span');
+        label.className='ui-step';label.dataset.step=String(i+1);label.textContent=t(p.name);
+        step.classList.toggle('is-current',i===index);step.classList.toggle('is-complete',i<index);
+        if(i===index)step.setAttribute('aria-current','step');step.append(label);nav.append(step);
+      });
       nav.setAttribute('aria-label',t('Warm-up patterns'));
       text('#routinePatternHelp',t('Keep your hand moving through the gaps.'));
-      text('#routineStrumHelp',t('↓ Down · ↑ Up · × Muted hit · PM Palm mute'));
+      const legend=$('#routineStrumHelp');legend.replaceChildren();
+      const marks=[['↓','Down',s=>s.direction==='down'&&s.mute!=='percussive'],['↑','Up',s=>s.direction==='up'&&s.mute!=='percussive'],['×','Muted hit',s=>s.mute==='percussive'],['PM','Palm mute',s=>s.mute==='palm'],['>','Accent',s=>s.accent]];
+      for(const [mark,label,used] of marks)if(p.slots.some(s=>s&&used(s))){
+        const item=document.createElement('li'),symbol=document.createElement('strong'),definition=document.createElement('span');
+        symbol.textContent=mark;symbol.setAttribute('aria-hidden','true');definition.textContent=t(label);item.append(symbol,definition);legend.append(item);
+      }
+      text('#routineRepeatLabel',t('Successful repeats'));
+      text('#routineRepeatHint',t('3 successful repeats → continue automatically.'));
+      const dots=$('#routineRepeatDots');dots.replaceChildren();
+      for(let i=0;i<RoutineRhythm.REQUIRED_REPEATS;i++)dots.append(document.createElement('span'));
       $('#routineTempo').setAttribute('aria-label',t('Tempo'));
       paint(performance.now());
     }
@@ -49,12 +63,14 @@
       if(!clock)return;
       const s=activeClock().snapshot(now),slot=s.slot;
       cells.forEach((cell,i)=>{if(cell)cell.arrow.classList.toggle('is-current',i===slot&&!s.paused)});
-      $('#routineCountIn').hidden=s.countIn===0||s.paused;
-      text('#routineCountInLabel',t('Get ready'));text('#routineCountInNumber',String(Math.min(3,s.countIn)));
       const show=feedback&&now<feedback.until&&!s.paused&&!preview;
       $('#routineRhythmFeedback').hidden=!show;
       if(show){const cell=cells[feedback.slot];if(cell){const box=svg.viewBox?.baseVal,width=box?.width||Number(svg.getAttribute('viewBox').split(' ')[2]),height=box?.height||Number(svg.getAttribute('viewBox').split(' ')[3]);$('#routineRhythmFeedback').style.left=`${Math.max(15,Math.min(85,cell.x/width*100))}%`;$('#routineRhythmFeedback').style.top=`${Math.max(0,(cell.y-43)/height*100)}%`}}
-      text('#routineRhythmToggle',t(s.paused?'Start':'Pause'));$('#routineRhythmToggle').setAttribute('aria-pressed',String(!s.paused));
+      const successes=clock.snapshot(now).successes;
+      text('#routineRepeatCount',`${successes} / ${RoutineRhythm.REQUIRED_REPEATS}`);
+      Array.from($('#routineRepeatDots').children).forEach((dot,i)=>dot.classList.toggle('is-complete',i<successes));
+      text('#routineRepeatStatus',t(preview?'Listening does not count as practice.':!guided?'Turn on the mic to advance automatically.':''));
+      $('#routineRepeatStatus').hidden=guided&&!preview;
       text('#routineRhythmPreview',t(preview?'Stop preview':'Listen'));$('#routineRhythmPreview').setAttribute('aria-pressed',String(Boolean(preview)));
       $('#routineNoteProgress').hidden=true;
       if(slot!==lastSlot&&slot>=0&&!s.paused){
@@ -79,31 +95,28 @@
       if(index===exercise.patterns.length){save();onComplete();return}
       clock=makeClock(guided);save();onAudioReset();lastSlot=-1;build();start();
     }
-    $('#routineRhythmToggle').addEventListener('click',()=>{
-      if(!clock)return;const now=performance.now();
-      if(preview||$('#routineRhythmPreview').disabled)stopPreview()
-      else if(clock.snapshot(now).paused)clock.resume(now);else clock.pause(now);
-      onAudioReset();clearFeedback();save();start();paint(now);
-    });
     $('#routineTempo').value=String(tempo);
     $('#routineTempo').addEventListener('change',event=>{
       const value=Number(event.target.value);if(!Number.isFinite(value)||value<20||value>120)return;tempo=value;if(!clock)return;
-      if(preview||$('#routineRhythmPreview').disabled)stopPreview();clock.setTempo(tempo,performance.now());onAudioReset();clearFeedback();save();start();paint(performance.now());
+      if(preview||$('#routineRhythmPreview').disabled)stopPreview();clock.setTempo(tempo,performance.now());clearFeedback();resumePractice();
     });
     $('#routineRhythmPreview').addEventListener('click',async()=>{
       if(!clock)return;
-      if(preview){stopPreview();cancel();paint(performance.now());return}
+      if(preview){stopPreview();resumePractice();return}
       clock.pause(performance.now());cancel();clearFeedback();save();onAudioReset();paint(performance.now());
       const token=++request;$('#routineRhythmPreview').disabled=true;
       const ready=await audio.open();if(token!==request||!exercise)return;
       $('#routineRhythmPreview').disabled=false;
-      if(!ready){text('#routinePatternHelp',t('Audio preview unavailable.'));return}
-      preview=makeClock(false);start();paint(performance.now());
+      if(!ready){stopPreview();text('#routinePatternHelp',t('Audio preview unavailable.'));resumePractice();return}
+      text('#routinePatternHelp',t('Keep your hand moving through the gaps.'));
+      const now=performance.now();preview=makeClock(false,now);audio.schedule(pattern(),preview.snapshot(now));start();paint(now);
     });
     $('#routineTuner').addEventListener('click',()=>{if(clock){stopPreview();clock.pause(performance.now());save();cancel();paint(performance.now())}});
     document.addEventListener('visibilitychange',()=>{
       if(document.hidden&&clock){stopPreview();clock.pause(performance.now());save();cancel();paint(performance.now())}
+      else if(!document.hidden)resumePractice();
     });
+    document.addEventListener('close',event=>{if(event.target.classList?.contains('tuner-dialog'))resumePractice()},true);
     return {
       next,
       stop(){if(clock){clock.pause(performance.now());save()}stopPreview();cancel();exercise=null;clock=null;cells=[];lastSlot=-1},
