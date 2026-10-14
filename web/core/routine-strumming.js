@@ -4,7 +4,7 @@
   const el=(tag,attrs={},text='')=>{const node=document.createElementNS(NS,tag);for(const [key,value] of Object.entries(attrs))node.setAttribute(key,value);if(text)node.textContent=text;return node};
   function create({root,onProgress,onComplete,onAudioReset,onRepeat}){
     const $=selector=>root.querySelector(selector),t=value=>window.FretboardI18n?.text(value)||value,svg=$('#routineRhythmTab'),audio=RoutineRhythmAudio.create();
-    let exercise=null,index=0,clock=null,preview=null,guided=false,frame=0,lastFrame=0,tempo=RoutineRhythm.DEFAULT_TEMPO,feedback=null,cells=[],request=0,lastSlot=-1;
+    let exercise=null,index=0,clock=null,preview=null,opening=false,guided=false,frame=0,lastFrame=0,tempo=RoutineRhythm.DEFAULT_TEMPO,feedback=null,cells=[],request=0,lastSlot=-1;
     const pattern=()=>exercise.patterns[index],activeClock=()=>preview||clock;
     function text(selector,value){const node=$(selector);if(node.textContent!==value)node.textContent=value}
     function cancel(){cancelAnimationFrame(frame);frame=0;lastFrame=0}
@@ -12,7 +12,7 @@
     function clearFeedback(){feedback=null;$('#routineRhythmFeedback').hidden=true}
     function makeClock(listening,now=performance.now()){return RoutineRhythm.create({pattern:pattern(),tempo,guided:listening,now,onRepeat:success=>onRepeat(pattern().id,success)})}
     function resumePractice(){
-      if(!clock||document.hidden||document.querySelector?.('.tuner-dialog[open]'))return;
+      if(!clock||preview||opening||document.hidden||document.querySelector?.('.tuner-dialog[open]'))return;
       clock.resume(performance.now());onAudioReset();save();start();paint(performance.now());
     }
     function build(){
@@ -69,9 +69,9 @@
       const successes=clock.snapshot(now).successes;
       text('#routineRepeatCount',`${successes} / ${RoutineRhythm.REQUIRED_REPEATS}`);
       Array.from($('#routineRepeatDots').children).forEach((dot,i)=>dot.classList.toggle('is-complete',i<successes));
-      text('#routineRepeatStatus',t(preview?'Listening does not count as practice.':!guided?'Turn on the mic to advance automatically.':''));
+      text('#routineRepeatStatus',t(preview?'Pause the example when you are ready to play.':!guided?'Turn on the mic to advance automatically.':''));
       $('#routineRepeatStatus').hidden=guided&&!preview;
-      text('#routineRhythmPreview',t(preview?'Stop preview':'Listen'));$('#routineRhythmPreview').setAttribute('aria-pressed',String(Boolean(preview)));
+      text('#routineRhythmPreview',t(preview?'Pause':'Listen'));$('#routineRhythmPreview').setAttribute('aria-pressed',String(Boolean(preview)));
       $('#routineNoteProgress').hidden=true;
       if(slot!==lastSlot&&slot>=0&&!s.paused){
         const cell=cells[slot],previous=cells[lastSlot];
@@ -88,28 +88,36 @@
       paint(now);frame=requestAnimationFrame(tick);
     }
     function start(){cancel();if(clock&&!activeClock().snapshot(performance.now()).paused)frame=requestAnimationFrame(tick)}
-    function stopPreview(){request++;audio.close();preview=null;$('#routineRhythmPreview').disabled=false;clearFeedback();onAudioReset()}
+    function stopPreview(){request++;audio.close();preview=null;opening=false;$('#routineRhythmPreview').setAttribute('aria-busy','false');clearFeedback();onAudioReset()}
+    async function startPreview(){
+      if(!clock||preview||document.hidden||document.querySelector?.('.tuner-dialog[open]'))return;
+      clock.pause(performance.now());cancel();clearFeedback();save();onAudioReset();paint(performance.now());
+      const token=++request;opening=true;$('#routineRhythmPreview').setAttribute('aria-busy','true');
+      // A browser may leave resume() pending until a user gesture. Keep Listen
+      // clickable so a tap can unlock audio; stale openings cannot start it.
+      const ready=await audio.open();if(token!==request||!exercise)return;
+      opening=false;$('#routineRhythmPreview').setAttribute('aria-busy','false');
+      if(!ready){stopPreview();text('#routinePatternHelp',t('Audio preview unavailable.'));resumePractice();return}
+      text('#routinePatternHelp',t('Keep your hand moving through the gaps.'));
+      const now=performance.now();preview=makeClock(false,now);audio.schedule(pattern(),preview.snapshot(now));start();paint(now);
+    }
     function next(){
       if(!exercise)return;
       stopPreview();cancel();index++;
       if(index===exercise.patterns.length){save();onComplete();return}
-      clock=makeClock(guided);save();onAudioReset();lastSlot=-1;build();start();
+      clock=makeClock(guided);save();onAudioReset();lastSlot=-1;build();startPreview();
     }
     $('#routineTempo').value=String(tempo);
     $('#routineTempo').addEventListener('change',event=>{
       const value=Number(event.target.value);if(!Number.isFinite(value)||value<20||value>120)return;tempo=value;if(!clock)return;
-      if(preview||$('#routineRhythmPreview').disabled)stopPreview();clock.setTempo(tempo,performance.now());clearFeedback();resumePractice();
+      const now=performance.now();clock.setTempo(tempo,now);clearFeedback();save();
+      if(preview){preview.setTempo(tempo,now);audio.stop();audio.schedule(pattern(),preview.snapshot(now));start();paint(now)}
+      else resumePractice();
     });
     $('#routineRhythmPreview').addEventListener('click',async()=>{
       if(!clock)return;
       if(preview){stopPreview();resumePractice();return}
-      clock.pause(performance.now());cancel();clearFeedback();save();onAudioReset();paint(performance.now());
-      const token=++request;$('#routineRhythmPreview').disabled=true;
-      const ready=await audio.open();if(token!==request||!exercise)return;
-      $('#routineRhythmPreview').disabled=false;
-      if(!ready){stopPreview();text('#routinePatternHelp',t('Audio preview unavailable.'));resumePractice();return}
-      text('#routinePatternHelp',t('Keep your hand moving through the gaps.'));
-      const now=performance.now();preview=makeClock(false,now);audio.schedule(pattern(),preview.snapshot(now));start();paint(now);
+      await startPreview();
     });
     $('#routineTuner').addEventListener('click',()=>{if(clock){stopPreview();clock.pause(performance.now());save();cancel();paint(performance.now())}});
     document.addEventListener('visibilitychange',()=>{
@@ -124,17 +132,18 @@
         const next=nextExercise?.strumming?nextExercise:null;
         $('#routineStrumming').hidden=!next;$('#routineRhythmControls').hidden=!next;
         if(!next){this.stop();return}
+        let firstVisit=false;
         if(next!==exercise){
           this.stop();exercise=next;index=Math.min(next.patterns.length-1,nextIndex);guided=listening;
           tempo=progress?.tempo||tempo;$('#routineTempo').value=String(tempo);
           clock=progress?.clock||makeClock(guided);if(clock.snapshot(performance.now()).guided!==guided)clock.setGuided(guided,performance.now());
           if(progress?.clock)clock.resume(performance.now());
-          save();onAudioReset();start();
+          firstVisit=!progress?.clock;save();onAudioReset();start();
         }else if(guided!==listening){guided=listening;clock.setGuided(guided,performance.now());onAudioReset()}
-        build();
+        build();if(firstVisit)startPreview();
       },
       attack(at,now){
-        if(!clock||preview)return;const value=clock.attack(at);if(!value||!value.accepted&&value.inTime)return;
+        if(!clock||preview||opening)return;const value=clock.attack(at);if(!value||!value.accepted&&value.inTime)return;
         feedback={...value,until:now+Math.min(900,clock.snapshot(now).beatMs)};
         text('#routineRhythmGrade',t(value.grade));const host=$('#routineRhythmFeedback');host.classList.toggle('rhythm-feedback-pop',false);void host.offsetWidth;host.classList.toggle('rhythm-feedback-pop',true);paint(now);
       },
