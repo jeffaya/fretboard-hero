@@ -26,7 +26,7 @@
     };
     const name=branding.name||product.name||'Fretboard Hero';
     const url=seo.canonical||product.url||location.href;
-    const ogImage=new URL(assets.ogImage||'assets/instruments/guitar/og.jpg?v=10.35.0','https://fretboard-hero.com/').href;
+    const ogImage=new URL(assets.ogImage||'assets/instruments/guitar/og.png?v=20261014.2','https://fretboard-hero.com/').href;
 
     document.title=seo.title||name;
     setMeta('meta[name="application-name"]',name);
@@ -39,6 +39,9 @@
     setMeta('meta[property="og:site_name"]',seo.siteName||name);
     setMeta('meta[property="og:url"]',url);
     setMeta('meta[property="og:image"]',ogImage);
+    setMeta('meta[property="og:image:type"]','image/png');
+    setMeta('meta[property="og:image:width"]',1024);
+    setMeta('meta[property="og:image:height"]',500);
     setMeta('meta[property="og:image:alt"]',seo.ogImageAlt||`${name} fretboard trainer`);
     setMeta('meta[name="twitter:title"]',seo.twitterTitle||seo.ogTitle||seo.title||name);
     setMeta('meta[name="twitter:description"]',seo.twitterDescription||seo.ogDescription||seo.description||'Interactive fretboard trainer.');

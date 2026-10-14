@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-14T15:03:51.601Z",
+  "generatedAt": "2026-10-14T15:18:15.666Z",
   "status": "passed-with-warnings",
   "instrument": "guitar",
   "locale": "en-US",
@@ -8,24 +8,27 @@
   "scope": "Measured current upload files only; source artwork and the previous validation.json are not inputs.",
   "text": [
     {
-      "file": "title.txt",
+      "file": "README.md",
+      "field": "title.txt",
       "characters": 21,
       "limit": 30,
-      "sha256": "f1e42385984ec78ae1cb9c16fac7ebd60bd376b05f09e894ede837ce78ba216c",
+      "contentSha256": "db66ca09ca973451fa30b3fa5c2a98a9d9150b638976a022d600344a9609a5ca",
       "status": "passed"
     },
     {
-      "file": "short-description.txt",
+      "file": "README.md",
+      "field": "short-description.txt",
       "characters": 78,
       "limit": 80,
-      "sha256": "001aac58117bf0730f1f6ac2543e7741f734dc8a3302b51b1764c8d458e77ea2",
+      "contentSha256": "6f29bad30578bde912b411366bb90fa3ca5407ce0f3037a4690658497cfa6e2e",
       "status": "passed"
     },
     {
-      "file": "full-description.txt",
+      "file": "README.md",
+      "field": "full-description.txt",
       "characters": 2154,
       "limit": 4000,
-      "sha256": "ea582f530e3fe08731e58675aa1353f08b1e3aec852ac4fada8eeca8db90bdc8",
+      "contentSha256": "ffc2a619488e05005c60b041c8d519b152f68dd617847a3782e9560e7fe97c96",
       "status": "passed"
     }
   ],
@@ -86,12 +89,12 @@
       "errors": [],
       "width": 1024,
       "height": 500,
-      "bytes": 750261,
+      "bytes": 775724,
       "format": "png",
       "alpha": false,
       "channels": 3,
       "depth": "uchar",
-      "sha256": "f5e108d2490d0a1f8c9159048f89ced7fbd3274bc0895992568588b4c502ed57"
+      "sha256": "12621e053d5310f137fc642a9110c5a5b97bb8268ccb8412763d94d87ddc8e4a"
     },
     {
       "file": "phone/01-routine-1080x1920.png",

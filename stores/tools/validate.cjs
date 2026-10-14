@@ -44,10 +44,24 @@ async function main() {
   if (!fs.statSync(out).isDirectory()) throw new Error('Listing directory does not exist');
   for (const [file, limit] of Object.entries(rules.textLimits)) {
     try {
-      const bytes = fs.readFileSync(path.join(out, file));
+      let source = file;
+      let bytes;
+      if (fs.existsSync(path.join(out, file))) {
+        bytes = fs.readFileSync(path.join(out, file));
+      } else {
+        // Listing copy may live exclusively in README after removing the .txt duplicates.
+        const readme = fs.readFileSync(path.join(out, 'README.md'), 'utf8');
+        const sections = { 'title.txt': "Nom de l'application", 'short-description.txt': 'Brève description', 'full-description.txt': 'Description complète' };
+        const title = sections[file];
+        const section = readme.split(/^### /m).find(part => part.startsWith(title + ' —'));
+        const match = section && /```text\r?\n([\s\S]*?)\r?\n```/.exec(section);
+        if (!match) throw new Error(`Missing ${file} and its README copy block`);
+        source = 'README.md';
+        bytes = Buffer.from(match[1], 'utf8');
+      }
       const characters = [...bytes.toString('utf8').trimEnd()].length;
       const valid = characters > 0 && characters <= limit;
-      report.text.push({ file, characters, limit, sha256: digest(bytes), status: valid ? 'passed' : 'failed' });
+      report.text.push({ file: source, field: file, characters, limit, contentSha256: digest(bytes), status: valid ? 'passed' : 'failed' });
       if (!valid) report.errors.push(`${file}: expected 1–${limit} characters`);
     } catch (error) { report.errors.push(`${file}: ${error.message}`); }
   }

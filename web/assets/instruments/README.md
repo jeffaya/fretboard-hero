@@ -2,15 +2,17 @@ Approved icon artwork: user-provided three-pick sheet, exported without text or
 floor reflections. `icon-source.png` preserves each approved tile. All web and
 native sizes derive from it; maskable images use a 64% square safe area.
 
-OG artwork (10.35.0): refreshed guitar, bass and ukulele compositions keep the
-approved concert background, neon palette, brush wordmarks and instrument necks.
-Six cards now lead with Tuner, then Daily Routine with live mic feedback, Learn,
-Fretboard Map, Circle of Fifths and Quiz. Bass uses Arpeggios in the Learn card.
-The built-in image generator produced all three edits; the guitar update served
-as the layout reference for the two four-string variants. Exact prompts are in
-`og-prompts.md`.
+The guitar, bass and ukulele OG images all show Tuner, Daily Routine with live mic
+feedback, Learn, Fretboard Map, Circle of Fifths and Quiz. Bass uses Arpeggios.
+The approved artwork was already updated; this export aligns site, app and store.
 
-Exports: 1200×630 JPEG, quality 90, 4:4:4, stripped metadata. The OG/Twitter image
-URLs use `?v=10.35.0` in the initial HTML, worker and client product profiles so
-new crawls request the updated artwork. Platforms may still cache page previews
-until they crawl the shared URL again.
+The canonical share asset is `og.png`: **1024 × 500, opaque RGB PNG**. The store
+feature graphic is an exact file copy. `og.jpg` remains at the same dimensions
+for legacy links. Current OG/Twitter URLs use `og.png?v=20261014.2` in initial HTML,
+the worker and client profiles. Native builds copy these files from `web/` through
+`scripts/sync-web.ps1`; do not maintain separate native artwork.
+
+Rebuild with `npm --prefix stores/tools ci` and `node stores/tools/export-og.cjs`.
+Masters and export details: [tools/assets/og/README.md](../../../tools/assets/og/README.md).
+The original image-generation prompts remain in `og-prompts.md` as provenance;
+the common-size export does not generate or replace any lettering.
