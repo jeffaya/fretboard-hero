@@ -95,7 +95,8 @@
     function listen({samples,spectrum,sampleRate,fftSize,now}){
       if(!active||state.index>=5||transition||now<settleUntil)return;
       if(exercises[state.index].strumming){
-        strumGate.update({samples,sampleRate,now,refractory:strumming.refractory,onAttack:at=>strumming.attack(at,now)});
+        strumGate.update({samples,sampleRate,now,refractory:strumming.refractory,onAttack:at=>strumming.captureAttack(at,now)});
+        strumming.processInput({samples,sampleRate,now});
         return;
       }
       const pitches=targetPitches();if(!pitches.length)return;

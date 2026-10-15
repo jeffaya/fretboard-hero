@@ -13,7 +13,7 @@
     };
   }
   function create({fftSize=8192,interval=90,onFrame,onState=()=>{}}){
-    let stream,context,source,analyser,frame=0,generation=0,state='off',echoCancellation=false;
+    let stream,context,source,analyser,silentOutput,frame=0,generation=0,state='off',echoCancellation=false,recovering=false;
     let configuring=Promise.resolve();
     const report=(value,error)=>{state=value;onState(value,error)};
     function configure(captured){
@@ -35,7 +35,7 @@
       generation++;cancelAnimationFrame(frame);
       configuring=Promise.resolve();
       stream?.getTracks().forEach(track=>track.stop());stream=null;
-      source?.disconnect();source=null;analyser=null;
+      source?.disconnect();analyser?.disconnect();silentOutput?.disconnect();source=null;analyser=null;silentOutput=null;recovering=false;
       const old=context;context=null;if(old&&old.state!=='closed')old.close().catch(()=>{});
       if(owner===api)owner=null;
       report('off');
@@ -46,8 +46,10 @@
       try{
         const Audio=window.AudioContext||window.webkitAudioContext;
         if(!navigator.mediaDevices?.getUserMedia||!Audio)throw {name:'Unsupported'};
-        const pendingContext=new Audio();context=pendingContext;await pendingContext.resume();
-        if(token!==generation)return;
+        const pendingContext=new Audio();context=pendingContext;
+        // Start both requests in the user gesture. An autoplay-suspended context
+        // can leave resume() pending until mic consent; do not block that prompt.
+        pendingContext.resume().catch(()=>{});
         const requestedEcho=echoCancellation;
         const captured=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:requestedEcho,noiseSuppression:false,autoGainControl:false},video:false});
         if(token!==generation){captured.getTracks().forEach(track=>track.stop());return}
@@ -56,14 +58,33 @@
         if(token!==generation)return;
         analyser=context.createAnalyser();analyser.fftSize=fftSize;analyser.smoothingTimeConstant=0;
         source=context.createMediaStreamSource(stream);source.connect(analyser);
-        // No connection to the speakers, MediaRecorder, storage or upload.
+        // Keep the graph rendering on mobile WebViews without monitoring the mic.
+        silentOutput=context.createGain();silentOutput.gain.value=0;
+        analyser.connect(silentOutput);silentOutput.connect(context.destination);
+        // The permission sheet / audio route can suspend the context after the
+        // first resume. Resume again after acquiring the stream and wiring it.
+        await pendingContext.resume();if(token!==generation)return;
+        if(pendingContext.state!=='running')throw {name:'AudioSuspended'};
         stream.getAudioTracks().forEach(track=>track.addEventListener('ended',()=>{if(token===generation)stop()}));
-        context.addEventListener('statechange',()=>{if(token===generation&&context?.state!=='running')stop()});
+        context.addEventListener('statechange',async()=>{
+          if(token!==generation||pendingContext.state==='running'||recovering)return;
+          if(document.hidden||pendingContext.state==='closed'){stop();return}
+          // A foreground interruption is recoverable. Actual navigation or
+          // backgrounding still releases capture via the lifecycle handlers.
+          recovering=true;report('pending');
+          try{
+            await pendingContext.resume();if(token!==generation)return;
+            if(pendingContext.state!=='running')throw {name:'AudioSuspended'};
+            report('on');
+          }catch(error){if(token===generation){stop();onState('off',error)}}
+          finally{if(token===generation)recovering=false}
+        });
         const samples=new Float32Array(fftSize),spectrum=new Float32Array(fftSize/2);
         let last=-Infinity;
         function tick(now){
           if(token!==generation)return;
           frame=requestAnimationFrame(tick);if(now-last<interval)return;last=now;
+          if(pendingContext.state!=='running'||state!=='on')return;
           analyser.getFloatTimeDomainData(samples);analyser.getFloatFrequencyData(spectrum);
           onFrame({samples,spectrum,sampleRate:context.sampleRate,fftSize,now});
         }
