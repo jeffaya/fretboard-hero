@@ -151,9 +151,9 @@ body #app .routine-pattern-steps .ui-step { min-height: 48px; padding: 8px 10px;
 .rhythm-feedback-pop strong { animation: rhythm-feedback-rise .7s ease-out both; }
 @keyframes rhythm-feedback-rise { from { opacity: 0; transform: translateY(8px); } 30% { opacity: 1; } to { opacity: 1; transform: translateY(-6px); } }
 @media (prefers-reduced-motion:reduce) { .rhythm-feedback-pop strong { animation: none; } }
-.routine-rhythm-controls { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px; margin-left: auto; }
+.routine-rhythm-controls { display: flex; justify-content: flex-end; align-items: center; flex-wrap: nowrap; gap: 8px; margin-left: auto; }
 body #app .routine-rhythm-controls button { min-height: 44px; padding: 8px 12px; font-size: 14px; background: #0a1527; border: 1px solid #647c9d; border-radius: 9px; box-shadow: none; }
-.routine-rhythm-controls label { display: flex; align-items: center; gap: 4px; color: #fff; font-size: 14px; }
+.routine-rhythm-controls label { display: flex; flex: none; align-items: center; gap: 4px; color: #fff; font-size: 14px; white-space: nowrap; }
 #routineTempo { min-height: 44px; padding: 5px; background: #0a1527; color: #fff; border: 1px solid #647c9d; border-radius: 8px; font: inherit; }
 
 #routineRhythmPreview {
@@ -176,10 +176,6 @@ body #app .routine-rhythm-controls button { min-height: 44px; padding: 8px 12px;
   --rhythm-playback-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='6' y='4' width='4' height='16' rx='1'/%3E%3Crect x='14' y='4' width='4' height='16' rx='1'/%3E%3C/svg%3E");
 }
 
-@media (max-width: 540px) {
-  .routine-rhythm-controls { flex: 1 1 100%; justify-content: flex-start; }
-  .routine-rhythm-controls button { flex: 1; }
-}
 .routine-repeat-progress { padding-top: 14px; border-top: 1px solid #768eae35; text-align: left; }
 .routine-repeat-heading { display: flex; align-items: baseline; gap: 12px; font-size: 16px; color: #fff; }
 #routineRepeatCount { color: #70f7df; font-variant-numeric: tabular-nums; }
@@ -404,6 +400,30 @@ body #app #routineMic {
 #routineMicStatus { flex: 1 1 130px; min-width: 0; margin: 0; overflow-wrap: anywhere; }
 #routineMicStatus.is-error { color: #ff8585; }
 #routineNoteProgress { flex: none; margin-left: auto; padding: 5px 10px; border: 1px solid #70f7ff55; border-radius: 20px; color: #fff; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 540px) {
+  /* Keep mic, playback and tempo together. The switch already shows on/off;
+     retain its live status for assistive technology and show actionable messages. */
+  .routine-listening:has(#routineRhythmControls:not([hidden])) {
+    display: grid;
+    grid-template-columns: auto minmax(0,1fr);
+    padding-inline: 8px;
+  }
+  .routine-rhythm-controls { grid-column: 2; grid-row: 1; min-width: 0; width: 100%; margin-left: 0; }
+  #routineRhythmPreview { flex: 1; min-width: 0; white-space: nowrap; }
+  .routine-listening:has(#routineRhythmControls:not([hidden])) #routineMicStatus {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .routine-listening:has(#routineRhythmControls:not([hidden])):has(#routineMic[aria-busy="false"]) #routineMicStatus:not(.is-error) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
 .routine-chord-link { stroke: transparent; stroke-width: 3; }
 .routine-tab-column.is-target .routine-chord-link { stroke: var(--ui-purple); filter: drop-shadow(0 0 5px var(--ui-purple)); }
 .routine-tab-column.is-target .routine-note-face { fill: var(--ui-purple); stroke: var(--ui-purple); stroke-width: 2; filter: drop-shadow(0 0 6px var(--ui-purple)); }
