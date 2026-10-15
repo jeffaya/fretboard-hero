@@ -163,6 +163,13 @@ test('Tab wraps without overlapping frets, preserves chord columns and fits a st
    const frets=descendants(svg).filter(n=>n.attrs['font-weight']===800&&n.textContent!=='×');assert.equal(frets.length,flatten(exercise).length);
    for(const n of frets){assert.ok(n.attrs.x-14>=0&&n.attrs.x+14<=width);assert.ok(n.attrs['font-size']>=18)}
    for(const a of frets)for(const b of frets)if(a!==b&&a.attrs.y===b.attrs.y)assert.ok(Math.abs(a.attrs.x-b.attrs.x)>=30);
+   const labels=svg.children.filter(n=>n.attrs.class==='routine-string-label'),strings=svg.children.filter(n=>n.attrs.stroke==='#899bb3');
+   assert.equal(labels.length,strings.length);
+   if(width<600)labels.forEach((label,i)=>{
+    assert.equal(label.attrs['text-anchor'],'end');
+    assert.ok(strings[i].attrs.x1-label.attrs.x>=4&&strings[i].attrs.x1-label.attrs.x<=10,'Compact label-to-string gap');
+    assert.ok(strings[i].attrs.x1<=30,'Recover horizontal room for frets');
+   });
    if(exercise.id==='root'&&width>=360)assert.ok(Number(svg.attrs.viewBox.split(' ')[3])<240,'root exercise fits one staff');
    assert.match(svg.children[0].textContent,/fret/);
   }
@@ -176,8 +183,9 @@ test('Every diagonal section shows three repeated blocks, six strings per staff,
   for(const section of exercise.sections){
    const svg=new Node();svg.parentElement={clientWidth:width};const visible={...exercise,columns:exercise.columns.slice(section.start,section.end)};
    c.window.RoutineRenderer.render(svg,visible,engine,{index:0});
-   const frames=svg.children.filter(n=>n.attrs.class==='routine-melody-block'),labels=svg.children.filter(n=>n.attrs.class==='routine-block-label');
-   assert.equal(frames.length,3);assert.equal(labels.length,3);assert.ok(labels.every(n=>/P\d → P\d/.test(n.textContent)),labels.map(n=>n.textContent).join(','));
+   const labels=svg.children.filter(n=>n.attrs.class==='routine-block-label');
+   assert.equal(svg.children.filter(n=>'rx' in n.attrs).length,0,'Blocks share the outer tablature panel without extra card backgrounds');
+   assert.equal(labels.length,3);assert.ok(labels.every(n=>/P\d → P\d/.test(n.textContent)),labels.map(n=>n.textContent).join(','));
    assert.equal(svg.children.filter(n=>n.attrs.class==='routine-slide').length,3);
    const strings=svg.children.filter(n=>n.attrs.stroke==='#899bb3');assert.equal(strings.length,width>=682?6:18);
    const columns=svg.children.filter(n=>'data-column' in n.attrs);assert.equal(columns.length,section.end-section.start);assert.equal(columns.filter(n=>n.attrs.class.includes('is-target')).length,1);
@@ -412,7 +420,7 @@ test('Every guitar triad section keeps six named strings and the notes on their 
  for(const width of [280,390,1194])for(const section of exercise.sections){
   const visible={...exercise,columns:exercise.columns.slice(section.start,section.end)},svg=new Node();svg.parentElement={clientWidth:width};
   c.window.RoutineRenderer.render(svg,visible,engine,{index:1,animate:false});
-  const strings=svg.children.filter(n=>n.attrs.x===4),lines=svg.children.filter(n=>n.attrs.stroke==='#899bb3');
+  const strings=svg.children.filter(n=>n.attrs.class==='routine-string-label'),lines=svg.children.filter(n=>n.attrs.stroke==='#899bb3');
   assert.ok(strings.length>=6);assert.equal(strings.length%6,0);assert.equal(lines.length,strings.length);
   for(let i=0;i<strings.length;i+=6)assert.equal(strings.slice(i,i+6).map(n=>n.textContent).join(','),'E,A,D,G,B,E');
   const columns=svg.children.filter(n=>'data-column' in n.attrs);

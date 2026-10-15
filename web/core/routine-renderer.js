@@ -2,10 +2,22 @@
   'use strict';
   const NS='http://www.w3.org/2000/svg';
   const el=(tag,attrs={},text='')=>{const n=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,v);if(text)n.textContent=text;return n};
+  function tabLayout(svg){
+    const width=Math.max(240,Math.round(svg.parentElement.clientWidth)),compact=width<600;
+    return {width,compact,left:compact?28:42,right:10,font:compact?18:21,
+      row:compact?25:window.innerWidth>=1001&&window.innerHeight<=580?26:32};
+  }
+  function renderStaff(svg,engine,{width,compact,left,right,row},top){
+    engine.courses.forEach((course,string)=>{
+      const y=top+(engine.stringCount-1-string)*row,name=window.FretboardI18n?.note(course.name)||course.name;
+      svg.append(el('text',{x:compact?left-8:4,y:y+5,'text-anchor':compact?'end':'start',fill:'#c6d3e6','font-size':compact?12:14,'class':'routine-string-label','data-no-i18n':''},name),
+        el('line',{x1:left,y1:y,x2:width-right,y2:y,stroke:'#899bb3','stroke-width':1}));
+    });
+  }
   function renderMelody(svg,exercise,engine,guide,t){
     svg.replaceChildren();
-    const width=Math.max(240,Math.round(svg.parentElement.clientWidth)),left=42,right=10,available=width-left-right;
-    const compact=width<600,font=compact?18:21,row=compact?25:30,top=72,lineHeight=top+(engine.stringCount-1)*row+32;
+    const layout=tabLayout(svg),{width,left,right,font,row}=layout,available=width-left-right;
+    const top=72,lineHeight=top+(engine.stringCount-1)*row+26;
     const groups=[];
     exercise.columns.forEach((column,index)=>{
       let group=groups.at(-1);
@@ -26,10 +38,7 @@
     svg.append(paths);
     lines.forEach((groups,line)=>{
       const offset=line*lineHeight,groupWidth=available/groups.length;
-      engine.courses.forEach((course,string)=>{
-        const y=offset+top+(engine.stringCount-1-string)*row;
-        svg.append(el('text',{x:4,y:y+5,fill:'#c6d3e6','font-size':13,'data-no-i18n':''},window.FretboardI18n?.note(course.name)||course.name),el('line',{x1:left,y1:y,x2:width-right,y2:y,stroke:'#899bb3','stroke-width':1}));
-      });
+      renderStaff(svg,engine,layout,offset+top);
       groups.forEach((group,g)=>{
         const start=left+g*groupWidth,step=groupWidth/group.items.length;
         if(group.block){
@@ -37,8 +46,7 @@
           const from=group.items[0].column.fromPosition;
           if(from&&from!==positions[0])positions.unshift(from);
           // A block is a repeated two-string motif; P1…P5 name the existing boxes.
-          svg.append(el('rect',{x:start+2,y:offset+2,width:groupWidth-4,height:lineHeight-12,rx:9,'class':'routine-melody-block','data-block':group.block}),
-            el('text',{x:start+groupWidth/2,y:offset+18,'text-anchor':'middle','class':'routine-block-label','data-no-i18n':''},`${t(`Block ${group.block}`)} · ${positions.map(p=>'P'+p).join(' → ')}`));
+          svg.append(el('text',{x:start+groupWidth/2,y:offset+18,'text-anchor':'middle','class':'routine-block-label','data-no-i18n':''},`${t(`Block ${group.block}`)} · ${positions.map(p=>'P'+p).join(' → ')}`));
         }
         group.items.forEach(({column,index},i)=>{
           const note=column.notes[0],x=start+(i+.5)*step,y=offset+top+(engine.stringCount-1-note.string)*row;
@@ -52,7 +60,7 @@
             svg.append(el('path',{d:`M${x1} ${y+(up?6:-6)} L${x2} ${y+(up?-6:6)}`,'class':'routine-slide','data-slide':`${from}:${note.fret}`}));
           }
           const target=guide&&guide.index===index,played=guide&&index<guide.index;
-          const node=el('g',{'data-column':index,'data-position':column.position||'','data-block':column.block||'','class':'routine-tab-column'+(played?' is-played':'')+(target?' is-target':'')});
+          const node=el('g',{'data-column':index,'data-position':column.position||'','class':'routine-tab-column'+(played?' is-played':'')+(target?' is-target':'')});
           node.append(el('rect',{x:x-font*.7,y:y-font*.6,width:font*1.4,height:font*1.2,rx:5,fill:'#0a1425','class':'routine-note-face'}),
             el('text',{x,y:y+1,'text-anchor':'middle','dominant-baseline':'central',fill:isRoot?'#70f7ff':'#fff','font-size':font,'font-weight':800,'class':'routine-note-number'},String(note.fret)));
           svg.append(node);points[index]={x,y,line};
@@ -71,9 +79,9 @@
     if(exercise.melody){renderMelody(svg,exercise,engine,guide,t);return}
     exercise={...exercise,title:t(exercise.title),detail:t(exercise.detail),columns:exercise.columns.map(column=>({...column,label:column.label?t(column.label):'',subLabel:column.subLabel?t(column.subLabel):''}))};
     svg.replaceChildren();
-    const width=Math.max(240,Math.round(svg.parentElement.clientWidth)),compact=width<600;
+    const layout=tabLayout(svg),{width,left,right,font,row}=layout;
     const strings=engine.courses.map((_,i)=>i),journey=Boolean(exercise.sections);
-    const labelled=exercise.columns.some(c=>c.label),left=42,right=10,font=compact?18:21,labelFont=journey?12:Math.min(22,font*.65);
+    const labelled=exercise.columns.some(c=>c.label),labelFont=journey?12:Math.min(22,font*.65);
     const widths=labelled?exercise.columns.map(c=>{
       if(!journey)return c.label.length*8;
       return Math.max(...[c.label,c.subLabel].map(label=>{
@@ -85,7 +93,6 @@
     const minimum=labelled?Math.max(102,...widths.map(w=>w+20)):30,capacity=Math.max(1,Math.floor((width-left-right)/minimum));
     const lines=Math.ceil(exercise.columns.length/capacity),count=Math.ceil(exercise.columns.length/lines);
     const top=journey?52:labelled?34:20;
-    const row=compact?25:window.innerWidth>=1001&&window.innerHeight<=580?26:32;
     const lineHeight=top+(strings.length-1)*row+26,height=lines*lineHeight;
     svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.style.minWidth='0';
     const description=exercise.columns.map(c=>`${c.label?c.label+': ':''}${c.subLabel?c.subLabel+'. ':''}${c.notes.map(n=>t(`${engine.tuning[n.string].name} string ${engine.stringCount-n.string}, fret ${n.fret}`)).join(', ')}`).join('; ');
@@ -94,10 +101,7 @@
     if(guide)svg.append(paths);
     for(let line=0;line<lines;line++){
       const columns=exercise.columns.slice(line*count,(line+1)*count),used=Math.min(width-left-right,columns.length*(labelled?Math.max(120,minimum):76)),step=used/columns.length,start=left+(width-left-right-used)/2,offset=line*lineHeight;
-      strings.forEach((string,i)=>{const course=engine.tuning[string],y=offset+top+(strings.length-1-i)*row;
-        const name=window.FretboardI18n?.note(course.name)||course.name;
-        svg.append(el('text',{x:4,y:y+5,fill:'#c6d3e6','font-size':Math.min(22,font*.65),'data-no-i18n':''},name),el('line',{x1:left,y1:y,x2:width-right,y2:y,stroke:'#899bb3','stroke-width':1}));
-      });
+      renderStaff(svg,engine,layout,offset+top);
       columns.forEach((column,i)=>{
         const x=start+(i+.5)*step,index=line*count+i;
         const group=el('g',{'data-column':index,'data-kind':column.kind||'','class':'routine-tab-column'+(guide&&index<guide.index?' is-played':'')+(guide&&guide.index===index?' is-target':'')});
