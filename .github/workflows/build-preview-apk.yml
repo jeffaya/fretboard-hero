@@ -84,14 +84,14 @@ jobs:
       - name: Build an unlocked, debug-signed guitar APK
         shell: pwsh
         run: |
-          ./scripts/build-instrument.ps1 -Instrument guitar -BuildType Debug -Format Apk -VersionCode 4 -VersionName '1.0.3'
+          ./scripts/build-instrument.ps1 -Instrument guitar -BuildType Debug -Format Apk -VersionCode 5 -VersionName '1.0.4'
           if ($LASTEXITCODE -ne 0) { throw 'APK build failed' }
-          Move-Item dist/fretboard-hero-guitar-debug.apk dist/guitar-fretboard-hero-1.0.3-preview.apk
+          Move-Item dist/fretboard-hero-guitar-debug.apk dist/guitar-fretboard-hero-1.0.4-preview.apk
 
       - name: Verify signature, identity and paid access
         shell: pwsh
         run: |
-          $apk = 'dist/guitar-fretboard-hero-1.0.3-preview.apk'
+          $apk = 'dist/guitar-fretboard-hero-1.0.4-preview.apk'
           $buildTools = Join-Path $env:ANDROID_HOME 'build-tools/35.0.0'
           & (Join-Path $buildTools 'apksigner.bat') verify --verbose $apk
           if ($LASTEXITCODE -ne 0) { throw 'APK signature verification failed' }
@@ -107,8 +107,8 @@ jobs:
           $info = @{
             sourceCommit = (git rev-parse HEAD)
             appId = 'com.guitar.fretboardhero.preview'
-            versionName = '1.0.3'
-            versionCode = 4
+            versionName = '1.0.4'
+            versionCode = 5
             signing = 'debug'
             fullyUnlocked = $true
             sha256 = (Get-FileHash $apk -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -120,7 +120,7 @@ jobs:
         with:
           name: guitar-preview-apk
           path: |
-            dist/guitar-fretboard-hero-1.0.3-preview.apk
+            dist/guitar-fretboard-hero-1.0.4-preview.apk
             dist/guitar-preview-build-info.json
           if-no-files-found: error
           retention-days: 14
