@@ -45,7 +45,9 @@
       $('#routineLegend').hidden=false;
       $('#routineNoteProgress').hidden=!guided||Boolean(exercise.strumming);
       microphone.setInterval?.(exercise.strumming?20:80);
-      microphone.setEchoCancellation?.(Boolean(exercise.strumming));
+      // Match the known guide against raw instrument input. Speech-oriented
+      // browser cancellation can suppress guitar and alter that reference.
+      microphone.setEchoCancellation?.(false);
       if(!exercise.strumming){
         $('#routineLegend').textContent=t(guided?'Highlight = target · Green = played':'Cyan = root note');
         if(exercise.melody)$('#routineLegend').textContent+=' · '+t(exercise.diagonal?'P1–P5 = boxes · / = slide · 1 = root':'Numbers above = degrees · 1 = root');
@@ -95,7 +97,8 @@
     function listen({samples,spectrum,sampleRate,fftSize,now}){
       if(!active||state.index>=5||transition||now<settleUntil)return;
       if(exercises[state.index].strumming){
-        strumGate.update({samples,sampleRate,now,refractory:strumming.refractory,onAttack:at=>strumming.attack(at,now)});
+        strumGate.update({samples,sampleRate,now,refractory:strumming.refractory,onAttack:at=>strumming.captureAttack(at,now)});
+        strumming.processInput({samples,sampleRate,now});
         return;
       }
       const pitches=targetPitches();if(!pitches.length)return;

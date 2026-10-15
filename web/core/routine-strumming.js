@@ -4,12 +4,12 @@
   const el=(tag,attrs={},text='')=>{const node=document.createElementNS(NS,tag);for(const [key,value] of Object.entries(attrs))node.setAttribute(key,value);if(text)node.textContent=text;return node};
   function create({root,onProgress,onComplete,onAudioReset,onRepeat}){
     const $=selector=>root.querySelector(selector),t=value=>window.FretboardI18n?.text(value)||value,svg=$('#routineRhythmTab'),audio=RoutineRhythmAudio.create();
-    let exercise=null,index=0,clock=null,playing=false,guided=false,frame=0,lastFrame=0,tempo=RoutineRhythm.DEFAULT_TEMPO,feedback=null,cells=[],request=0,lastSlot=-1;
+    let exercise=null,index=0,clock=null,playing=false,guided=false,frame=0,lastFrame=0,tempo=RoutineRhythm.DEFAULT_TEMPO,feedback=null,cells=[],request=0,lastSlot=-1,pendingAttacks=[];
     const pattern=()=>exercise.patterns[index];
     function text(selector,value){const node=$(selector);if(node.textContent!==value)node.textContent=value}
     function cancel(){cancelAnimationFrame(frame);frame=0;lastFrame=0}
     function save(){if(clock)onProgress(index,{clock,index,tempo})}
-    function clearFeedback(){feedback=null;$('#routineRhythmFeedback').hidden=true}
+    function clearFeedback(){pendingAttacks=[];feedback=null;$('#routineRhythmFeedback').hidden=true}
     function makeClock(listening,now=performance.now()){return RoutineRhythm.create({pattern:pattern(),tempo,guided:listening,now,onRepeat:success=>onRepeat(pattern().id,success)})}
     function resumePractice(){
       if(!clock||document.hidden||document.querySelector?.('.tuner-dialog[open]'))return;
@@ -138,8 +138,23 @@
           clock=progress?.clock||makeClock(guided);if(clock.snapshot(performance.now()).guided!==guided)clock.setGuided(guided,performance.now());
           if(progress?.clock)clock.resume(performance.now());
           firstVisit=!progress?.clock;save();onAudioReset();start();
-        }else if(guided!==listening){guided=listening;clock.setGuided(guided,performance.now());onAudioReset()}
+        }else if(guided!==listening){pendingAttacks=[];guided=listening;clock.setGuided(guided,performance.now());onAudioReset()}
         build();if(firstVisit)startPlayback();
+      },
+      captureAttack(at,now){
+        if(!clock||!guided||clock.snapshot(now).paused)return;
+        if(audio.reference?.(now))pendingAttacks.push(at);
+        else this.attack(at,now);
+      },
+      processInput({samples,sampleRate,now}){
+        if(!clock||!guided||clock.snapshot(now).paused){pendingAttacks=[];return}
+        const ready=pendingAttacks.filter(at=>now-at>=60);pendingAttacks=pendingAttacks.filter(at=>now-at<60);
+        if(!ready.length)return;
+        const reference=audio.reference?.(now);
+        // Classify the waveform after its attack, then grade its original time.
+        // A simultaneous guitar stroke remains eligible: no beat is muted.
+        const echo=reference&&RoutineEcho.isGuideOnly(samples,sampleRate,reference);
+        for(const at of ready)if(now-at<=120&&!echo)this.attack(at,now);
       },
       attack(at,now){
         if(!clock)return;const value=clock.attack(at);if(!value||!value.accepted&&value.inTime)return;

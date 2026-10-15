@@ -5,11 +5,11 @@ class Node{
  constructor(){this.children=[];this.events={};this.attrs={};this.dataset={};this.style={};this.classes=new Set();this.classList={contains:k=>this.classes.has(k),toggle:(k,on)=>on?this.classes.add(k):this.classes.delete(k)};this.textContent='';this.parentElement={clientWidth:900}}
  append(...children){this.children.push(...children)}replaceChildren(){this.children=[]}setAttribute(k,v){this.attrs[k]=v}getAttribute(k){return this.attrs[k]}addEventListener(k,f){this.events[k]=f}querySelector(){return null}
 }
-function runtime(open=async()=>true){
+function runtime(open=async()=>true,playback=null){
  const nodes=new Map(),root={querySelector:s=>{if(!nodes.has(s))nodes.set(s,new Node());return nodes.get(s)}},events={},frames=new Map();let id=0,now=0,progress,completed=0,tuner=false;
- const scheduled=[],audio={open,close(){},stop(){},schedule(_,s){scheduled.push(s)}};
+ const scheduled=[],audio=playback||{open,close(){},stop(){},schedule(_,s){scheduled.push(s)}};
  const document={hidden:false,createElement:()=>new Node(),createElementNS:()=>new Node(),querySelector:()=>tuner,addEventListener:(name,f)=>events[name]=f};
- const c={window:{},document,RoutineRhythm:rhythm,RoutineRhythmAudio:{create:()=>audio},performance:{now:()=>now},requestAnimationFrame:f=>{frames.set(++id,f);return id},cancelAnimationFrame:id=>frames.delete(id)};
+ const c={window:{},document,RoutineRhythm:rhythm,RoutineEcho:require('../core/routine-echo.js'),RoutineRhythmAudio:{create:()=>audio},performance:{now:()=>now},requestAnimationFrame:f=>{frames.set(++id,f);return id},cancelAnimationFrame:id=>frames.delete(id)};
  vm.createContext(c);vm.runInContext(fs.readFileSync(require.resolve('../core/routine-strumming.js'),'utf8'),c);
  const exercise={strumming:true,patterns:defaults()},controller=c.window.RoutineStrumming.create({root,onProgress:(_,p)=>progress=p,onComplete:()=>completed++,onRepeat(){},onAudioReset(){}});
  controller.update(exercise,0,true);
@@ -97,4 +97,31 @@ test('Three complete repeats played over Listen advance each pattern and finish 
   assert.equal(r.progress.index,index+1);
  }
  assert.equal(r.completed,1);
+});
+
+
+for(const guitar of [false,true])test(`Actual synthesized guide through microphone onset detection ${guitar?'accepts simultaneous guitar':'never earns repeats by itself'}`,async()=>{
+ const {runtime:playbackRuntime}=require('./echo-fixtures.cjs'),playback=playbackRuntime(48000);playback.setTime(0);
+ const r=runtime(async()=>true,playback.audio);await settle();
+ const c={window:{}};vm.runInNewContext(fs.readFileSync(require.resolve('../core/routine-guide.js'),'utf8'),c);const gate=c.window.RoutineGuide.createStrumGate();
+ const rate=48000,track=new Float32Array(rate*11),window=new Float32Array(16384);let emitted=0,attacks=0;
+ if(guitar)for(let stroke=0;stroke<16;stroke++){
+  const start=Math.round((stroke*750+60)*rate/1000);
+  for(let i=0;i<rate*.2&&start+i<track.length;i++){
+   const t=i/rate;let value=0;for(const f of [110,164.81,220,261.63,329.63])value+=.035*Math.sin(2*Math.PI*f*t)*Math.exp(-t*14);
+   track[start+i]+=value;
+  }
+ }
+ for(let now=0;now<=9200;now+=20){
+  playback.setTime(now);r.frame(now);
+  while(emitted<playback.sources.length){
+   const source=playback.sources[emitted++],pcm=source.buffer.getChannelData(0),start=Math.round((source.at+.060)*rate);
+   for(let i=0;i<pcm.length&&start+i<track.length;i++)track[start+i]+=.6*pcm[i];
+  }
+  const end=Math.round(now*rate/1000);window.fill(0);const start=Math.max(0,end-window.length);window.set(track.subarray(start,end),Math.max(0,window.length-end));
+  gate.update({samples:window,sampleRate:rate,now,refractory:r.controller.refractory,onAttack:at=>{attacks++;r.controller.captureAttack(at,now)}});
+  r.controller.processInput({samples:window,sampleRate:rate,now});
+  if(!guitar){assert.equal(r.nodes.get('#routineRhythmFeedback').hidden,true,`false grade at ${now}`);assert.equal(r.progress.clock.snapshot(now).successes,0)}
+ }
+ assert.ok(attacks>=10,`expected audible attacks, got ${attacks}`);assert.equal(r.progress.index,guitar?1:0);
 });

@@ -140,7 +140,8 @@
       const anchor=MusicTheory.mod(rootPC-(quality==='major'?3:0)-engine.courses[anchorCourse].pc);
       const pcs=MusicTheory.pentatonicPCs(rootPC,quality);
       const boxes=PentatonicRenderer.visiblePairs({profile:engine.profile,anchor,maxFret}).filter(box=>box.pairs.every((pair,string)=>pair.every(fret=>fret>=0&&fret<=maxFret&&pcs.includes(engine.noteAt(string,fret)))));
-      const box=pick(boxes,random);
+      // Start nearest the nut; never randomly choose the octave at fret 12+.
+      const box=boxes.sort((a,b)=>Math.max(...a.pairs.flat())-Math.max(...b.pairs.flat())||Math.min(...a.pairs.flat())-Math.min(...b.pairs.flat())||a.id-b.id)[0];
       if(!box)throw new Error('No complete routine pentatonic position for this tuning');
       const penta=box.pairs.flatMap((pair,string)=>pair.map(fret=>({string,fret})));
       pentaExercise=make('penta','Penta',`Play the ${key} pentatonic`,`${key} · Position ${box.id} · ${range(penta)}`,

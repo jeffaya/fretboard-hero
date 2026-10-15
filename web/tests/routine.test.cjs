@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const base=path.join(__dirname,'..');
-function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-melody','core/routine-patterns','core/routine-exercises','core/routine-guide','core/routine-rhythm','core/routine-rhythm-audio','core/routine-strumming','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
+function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-melody','core/routine-patterns','core/routine-exercises','core/routine-guide','core/routine-rhythm','core/routine-echo','core/routine-rhythm-audio','core/routine-strumming','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
 function rng(seed){return()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296)}
 const flatten=e=>e.columns.flatMap(c=>c.notes);
 const playedStrings=e=>[...new Set(flatten(e).map(n=>n.string))].sort().join(',');
@@ -60,13 +60,36 @@ test('Both diagonals repeat the same complete pentatonic motif at three octaves 
    const cell=up.slice(block*5,block*5+5);assert.equal(cell.map(c=>c.noteName).join(','),up.slice(0,5).map(c=>c.noteName).join(','),label);
    assert.equal(cell.map(c=>c.degree).join(','),up.slice(0,5).map(c=>c.degree).join(','),label);
    assert.equal(new Set(cell.map(c=>engine.noteAt(c.notes[0].string,c.notes[0].fret))).size,5);
-   cell.forEach((col,i)=>{const n=col.notes[0],first=up[i].notes[0];assert.equal(col.block,block+1);assert.equal(n.string,block*2+(i<(diagonal===0?2:3)?0:1));assert.equal(engine.midiAt(n.string,n.fret),engine.midiAt(first.string,first.fret)+12*block);assert.ok(boxes.some(box=>box.id===col.position&&box.pairs[n.string].includes(n.fret)),label);if(col.slideFrom){assert.equal(col.slideFrom.string,n.string);assert.equal(n.fret-col.slideFrom.fret,2)}});
+   cell.forEach((col,i)=>{const n=col.notes[0],first=up[i].notes[0];assert.equal(col.block,block+1);assert.equal(n.string,block*2+(i<(diagonal===0?2:3)?0:1));assert.equal(engine.midiAt(n.string,n.fret),engine.midiAt(first.string,first.fret)+12*block);assert.ok(boxes.some(box=>box.id===col.position&&box.pairs[n.string].includes(n.fret)),label);if(col.slideFrom){assert.equal(col.slideFrom.string,n.string);assert.ok([2,3].includes(n.fret-col.slideFrom.fret),label)}});
   }
   for(let i=1;i<up.length;i++){const a=up[i-1].notes[0],b=up[i].notes[0];assert.ok(engine.midiAt(b.string,b.fret)>engine.midiAt(a.string,a.fret))}
   assert.equal(e.columns.slice(15).filter(c=>c.slideFrom).length,3);
  }
  const e=c.RoutineExercises.create({engine,root:'A',quality:'minor',diagonal:0})[4];
- assert.equal(e.columns.slice(0,15).map(c=>c.position).filter((p,i,a)=>i===0||p!==a[i-1]).join(','),'5,1,2,3');
+ assert.equal(e.columns.slice(0,15).map(c=>c.position).filter((p,i,a)=>i===0||p!==a[i-1]).join(','),'4,5,1,2');
+});
+test('Pentatonics use the earliest playable start and never cross fret 12 in any guitar key',()=>{
+ const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
+ for(const root of c.MusicTheory.NOTES)for(const quality of ['major','minor'])for(const diagonal of [0,1]){
+  const e=c.RoutineExercises.create({engine,root,quality,diagonal})[4],label=`${root} ${quality} ${diagonal}`;
+  assert.ok(flatten(e).every(n=>n.fret>=0&&n.fret<=12),label);
+  const selected=e.columns[0].notes[0].fret,pcs=c.MusicTheory.pentatonicPCs(c.MusicTheory.PC[root],quality);
+  const anchor=c.MusicTheory.mod(c.MusicTheory.PC[root]-(quality==='major'?3:0)-engine.courses[0].pc),boxes=c.PentatonicRenderer.visiblePairs({profile:engine.profile,anchor,maxFret:12});
+  // Independent brute-force oracle: every lower starting fret, consecutive
+  // scale pitches, fixed string allocation, then playable box membership.
+  for(let start=0;start<selected;start++){
+   const first=engine.midiAt(0,start);if(!pcs.includes(first%12))continue;
+   const pitches=[];for(let midi=first;pitches.length<5;midi++)if(pcs.includes(midi%12))pitches.push(midi);
+   let playable=true;
+   for(let block=0;block<3;block++){
+    const notes=pitches.map((midi,i)=>{const string=block*2+(i<(diagonal?3:2)?0:1);return {string,fret:midi+block*12-engine.courses[string].midi}}),shift=diagonal?2:4;
+    if(notes.some(n=>n.fret<0||n.fret>12)){playable=false;break}
+    if(!boxes.some(box=>notes.slice(0,shift).every(n=>box.pairs[n.string].includes(n.fret))))playable=false;
+    if(!boxes.some(box=>notes.slice(shift-1).every(n=>box.pairs[n.string].includes(n.fret))))playable=false;
+   }
+   assert.equal(playable,false,`${label}: skipped lower start ${start}`);
+  }
+ }
 });
 test('Shared drawer is exposed inline and inert only when closed in compact mode',()=>{const nodes=new Map(),media={matches:false,addEventListener(_,f){this.change=f}},c={window:{},matchMedia:()=>media};function node(id){if(!nodes.has(id)){const classes=new Set();nodes.set(id,{attrs:{},events:{},classList:{contains:k=>classes.has(k),toggle:(k,on)=>on?classes.add(k):classes.delete(k)},getAttribute(k){return this.attrs[k]},setAttribute(k,v){this.attrs[k]=v},addEventListener(k,f){this.events[k]=f},focus(){c.focused=id}})}return nodes.get(id)}const root={querySelector:node};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(base,'core/controls.js'),'utf8'),c);c.window.FretboardControls.bindDrawer({root,name:'routine'});const drawer=node('#routineDrawer'),btn=node('#routineMenuBtn');assert.equal(drawer.inert,false);assert.equal(drawer.attrs['aria-hidden'],'false');media.matches=true;media.change();assert.equal(drawer.inert,true);btn.events.click();assert.equal(drawer.inert,false);assert.equal(btn.attrs['aria-expanded'],'true');drawer.events.keydown({key:'Escape',preventDefault(){}});assert.equal(drawer.inert,true);assert.equal(c.focused,'#routineMenuBtn');media.matches=false;media.change();assert.equal(drawer.inert,false)});
 class Node{
@@ -394,10 +417,10 @@ test('Ambient microphone input never displays a rhythm grade or advances progres
  assert.equal(r.nodes.get('#routinePatternSteps').children[0].attrs['aria-current'],'step');
 });
 
-test('Microphone PCM strums validate repeats during Listen; other exercises restore raw input',async()=>{
+test('Microphone PCM strums validate repeats during Listen with raw instrument input in every exercise',async()=>{
  const r=sessionRuntime(true,true,new Map(),true);r.session.enter();
  assert.equal(r.c.echoCancellation,false);r.nodes.get('#routineSteps').children[3].children[0].click();
- await new Promise(setImmediate);assert.equal(r.c.echoCancellation,true);
+ await new Promise(setImmediate);assert.equal(r.c.echoCancellation,false);
  const rate=48000,samples=new Float32Array(16384);let sawGrade=false;
  // The first motif is quarter-note downstrokes. Start on its second beat,
  // leaving the normal microphone settling window intact.
