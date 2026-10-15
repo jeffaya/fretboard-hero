@@ -1,7 +1,7 @@
 ﻿{
-    "appId":  "com.ukulele.fretboardhero",
+    "appId":  "com.guitar.fretboardhero",
     "webDir":  "www",
-    "appName":  "Ukulele Fretboard Hero",
+    "appName":  "Fretboard Hero",
     "plugins":  {
                     "SplashScreen":  {
                                          "launchAutoHide":  true,

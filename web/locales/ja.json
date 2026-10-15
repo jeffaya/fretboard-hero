@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "解き放とう",
   "FRETBOARD SKILLS": "指板のスキル",
   "Stop switching tools. Start playing solos worth sharing.": "ツールを切り替える手間を減らして、聴かせたくなるソロを弾こう。",
-  "One purchase. Every skill unlocked.": "1回の購入ですべての機能を解除。",
   "One purchase. Three instruments. Every skill unlocked.": "1回の購入、3つの楽器、すべての機能。",
   "← Continue exploring": "← 探索を続ける",
   "Get it on": "入手先",
@@ -178,7 +177,6 @@
   "Could not restore purchases. Check your App Store account and connection, then try again.": "復元できません。App Storeアカウントと接続を確認して再試行してください。",
   "Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry.": "購入確認を一時的に利用できません。接続して「購入を復元」を押してください。",
   "Payment could not be completed. Please try again or restore purchases.": "支払いを完了できませんでした。再試行するか購入を復元してください。",
-  "Allow session storage to change instruments on this device.": "この端末で楽器を変更するにはセッションストレージを許可してください。",
   "Virtuoso": "ヴィルトゥオーゾ",
   "{instrument} virtuoso": "{instrument}の達人",
   "{instrument} legend": "{instrument}の伝説",
@@ -407,5 +405,8 @@
   "Even a short session counts.": "短い練習にも意味がある。",
   "The basics can take you far.": "基礎が遠くまで連れていってくれる。",
   "Practice to play better.": "よりよい演奏のために練習する。",
-  "Repetition can become discovery.": "繰り返しが発見につながる。"
+  "Repetition can become discovery.": "繰り返しが発見につながる。",
+  "Get the app": "アプリをダウンロード",
+  "Free download. One purchase unlocks all three instruments.": "無料でダウンロード。1回の購入で3つの楽器すべてを利用できます。",
+  "Could not read purchase status. Please restore purchases.": "購入状況を読み取れませんでした。購入を復元してください。"
 }

@@ -10,7 +10,7 @@ on the neck.
 
 The app runs on a shared multi-instrument engine: guitar, 4-string bass,
 and ukulele. The same code ships both as a **website** and
-as **3 native Android apps** (Guitar, Bass, Ukulele), via
+as **one native app for Android and iOS**, with Guitar, Bass and Ukulele, via
 [Capacitor](https://capacitorjs.com/).
 
 > 🔧 **Technical doc**: detailed architecture, build pipeline, gotchas and
@@ -251,25 +251,28 @@ unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-br
 - `unlocked: true`: complete access.
 - `publicUrl`: public website URL included in Quiz score sharing, including native builds. Change it when moving to a new domain. Query parameters and fragments are omitted.
 - `stores`: Android and iOS HTTPS store URLs for each instrument. Empty URLs
-  show disabled “Coming soon” buttons in the shared unlock dialog.
+  show disabled store buttons in the shared unlock dialog.
 
-The native `scripts/sync-web.ps1` step removes `testKeyHash` and writes the
-platform's access policy into `app/www/site.config.json`:
+One **Fretboard Hero** app contains all three instruments. Its installation
+identity comes from `app/distribution.json`. `app/instruments.json` holds only
+presentation profiles. One non-consumable `full_access` purchase unlocks all
+notes, keys, positions, learning modes and premium routines for all instruments.
+The chosen instrument is remembered in local storage (`fretboard-instrument`).
+
+Native sync removes `testKeyHash` and selects an explicit access profile:
 
 | Distribution | `unlocked` | `nativeBilling` | Access |
 | --- | --- | --- | --- |
-| Android APK / AAB (Debug and Release) | `true` | `false` | Already paid; full access from first launch, including offline |
-| iOS | `false` | `true` | Existing StoreKit purchase verification |
+| Store (Android/iOS, default) | `false` | `true` | Free demo, verified purchase/restore |
+| Preview (explicit) | `true` | `false` | Fully unlocked, separate `.preview` installation |
 
-Android must never ask an existing buyer to pay again, restore an in-app purchase,
-or connect to Google Play to keep access. The build validates the actual APK/AAB
-before copying it to `dist/`; a demo config, enabled billing, wrong instrument or
-web preview key stops the build. The web configuration remains unchanged.
-Run the build scripts to regenerate the bundle; never edit `app/www` by hand.
-Use `scripts/prepare-ios.ps1 -Instrument guitar` to prepare the iPhone/iPad variant.
+The Android build validates the actual APK/AAB against the expected profile
+before copying it to `dist/`. Both platforms keep verified paid access offline;
+a temporary store outage must not revoke access. Never edit `app/www` by hand.
 
-See [Android paid access](docs/GOOGLE_PLAY_BILLING.md) and
-[App Store billing setup](docs/APPLE_BILLING.md).
+See [Google Play billing and release setup](docs/GOOGLE_PLAY_BILLING.md) and
+[App Store billing setup](docs/APPLE_BILLING.md). These documents include the
+three targeted store pages, real purchase tests and external configuration.
 
 A temporary web testing override accepts `?key=<test-key>` when its SHA-256
 hex digest matches `testKeyHash`. Without a matching key the site stays in demo
@@ -278,8 +281,8 @@ This client-side preview gate is not a payment system or secure access control.
 
 Validation: `node --test web/tests/*.test.cjs app/tests/*.test.cjs` from the repo
 root (Node 22+ and PowerShell 7 on PATH; `PWSH` can select its executable).
-The paid-access tests run the real sync script for all instruments and validate
-APK/AAB archive fixtures. PR and Android release workflows run these checks.
+The distribution tests run the real sync script for both profiles/platforms
+and all initial instruments, then validate APK/AAB archive fixtures. PR and Android release workflows run these checks.
 
 The unlock dialog uses the shared `ui-modal` neon outline and the existing home
 SVG icons. On phones and portrait touch tablets the two store buttons stack;

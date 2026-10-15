@@ -24,7 +24,7 @@ fretoboard-hero/
 │   ├── ios/          # Native iOS scaffold (not actively built in this workflow).
 │   ├── native-assets/capacitor-bridge.js   # Back-button bridge, copied into www/core/ at sync time.
 │   ├── tests/capacitor-bridge.test.js      # Unit tests for the bridge logic.
-│   ├── instruments.json                    # instrument -> {appId, name} map.
+│   ├── instruments.json                    # instrument presentation profiles.
 │   └── capacitor.config.json               # Regenerated per-build by build-instrument.ps1. Don't hand-edit for a release.
 ├── scripts/          # Build orchestration (PowerShell), run from repo root.
 ├── dist/             # Gitignored. Output APKs land here: fretboard-hero-<instrument>-debug.apk
@@ -100,15 +100,10 @@ Known product identities (see `web/README.md` for full changelog):
 - Viewport meta already sets `user-scalable=no` in `web/index.html` — this
   is what disables pinch-zoom in both the web and native builds; no
   additional native-side configuration is needed for that.
-- `app/instruments.json` is the single mapping of instrument key → Android
-  `applicationId` + display name, consumed by the build scripts:
-  ```json
-  {
-    "guitar":  { "appId": "com.guitar.fretboardhero",  "name": "Guitar Fretboard Hero" },
-    "bass-4":  { "appId": "com.bass.fretboardhero",    "name": "Bass Fretboard Hero" },
-    "ukulele": { "appId": "com.ukulele.fretboardhero", "name": "Ukulele Fretboard Hero" }
-  }
-  ```
+- `app/distribution.json` owns one installation identity (`com.guitar.fretboardhero`),
+  the Fretboard Hero display name and shared launcher icon. `app/instruments.json`
+  contains the guitar/bass/ukulele presentation profiles. Instrument selection
+  never changes the app ID or the global `full_access` entitlement.
 
 ## 4. Build pipeline — exact mechanics
 
@@ -117,10 +112,8 @@ Known product identities (see `web/README.md` for full changelog):
 Regenerates `app/www/` from scratch for one instrument:
 
 1. Deletes `app/www/` entirely and copies `web/` into it verbatim.
-2. Overwrites `app/www/site.config.json` with `{ "instrument": "<Instrument>" }`
-   — this is what forces the build to lock to one instrument (the web
-   deployment instead lets the hosting environment's `site.config.json`
-   decide).
+2. Sets the initial instrument, writes the Store/Preview access flags and removes
+   the web preview key. All three instruments remain available in the shared app.
 3. Copies `app/native-assets/capacitor-bridge.js` into
    `app/www/core/capacitor-bridge.js`, then injects
    `<script src="./core/capacitor-bridge.js" defer></script>` right before
@@ -143,10 +136,10 @@ Full orchestration for one instrument:
 
 1. Calls `sync-web.ps1` (§4.1).
 2. Writes `app/capacitor.config.json` with `appId`/`appName` from
-   `instruments.json`, `webDir: "www"`, and the splash/status-bar plugin
+   `distribution.json`, `webDir: "www"`, and the splash/status-bar plugin
    config (`#05070b` background).
 3. Patches `app/android/app/build.gradle`: regex-replaces
-   `applicationId "..."` with the instrument's `appId`.
+   `applicationId "..."` with the shared app ID (plus `.preview` for Preview).
    **Critical gotcha — BOM**: this file must be written via
    `[System.IO.File]::WriteAllText(path, content, New-Object System.Text.UTF8Encoding $false)`.
    `Set-Content -Encoding UTF8` injects a UTF-8 BOM, and Gradle's Groovy
@@ -166,7 +159,7 @@ Full orchestration for one instrument:
    intermittently fail on successful builds.
 5. Copies the built
    `app/android/app/build/outputs/apk/debug/app-debug.apk` to
-   `dist/fretboard-hero-<instrument>-debug.apk`.
+   `dist/fretboard-hero-<profile>-debug.apk`.
 
 Note: `sdkmanager`/`avdmanager`/`sdkmanager --licenses` commands frequently
 return a non-zero exit code even when they succeeded (e.g. license
@@ -222,19 +215,18 @@ Used to provision a build+test machine without the Android Studio GUI:
 
 ## 6. Manual / scripted verification workflow
 
-### 6.1 Installing all 3 APKs side-by-side
+### 6.1 Installing the shared app and preview
 
-Because each instrument has a distinct `applicationId`, all three debug
-APKs can be installed simultaneously on the same device/emulator:
+Store and Preview use separate IDs and may coexist. All three instruments are
+inside each package. Updating an installed APK requires a compatible signing key.
 
+```sh
+adb install -r dist/fretboard-hero-store-debug.apk
+adb install -r dist/fretboard-hero-preview-debug.apk
 ```
-adb install -r dist\fretboard-hero-guitar-debug.apk
-adb install -r dist\fretboard-hero-bass-4-debug.apk
-adb install -r dist\fretboard-hero-ukulele-debug.apk
-```
 
-Launch a specific one with
-`adb shell monkey -p <applicationId> -c android.intent.category.LAUNCHER 1`.
+Launch with `adb shell monkey -p com.guitar.fretboardhero -c android.intent.category.LAUNCHER 1`
+(or the `.preview` ID for Preview).
 
 ### 6.2 Simulating offline mode on the emulator
 
@@ -301,12 +293,11 @@ during the run.
    `web/products/` (branding, SEO/OG metadata, quiz ranks, tuning/fret
    range as needed) — follow the existing `bass-4`/`ukulele` profiles as a
    template. **Never** add instrument-conditional code to `web/core/`.
-2. Add the new instrument key to `app/instruments.json` with a unique
-   Android `appId` (reverse-DNS style, must not collide with existing
-   ones) and display `name`.
+2. Add the new presentation profile to `app/instruments.json`. Keep the shared
+   app ID in `app/distribution.json`; do not create another app for it.
 3. Add the new key to the `ValidateSet` list in both
-   `scripts/sync-web.ps1` and `scripts/build-instrument.ps1`, and to the
-   `$instruments` array in `scripts/build-all.ps1`.
+   `scripts/sync-web.ps1`, `scripts/build-instrument.ps1`, the access validator
+   and iOS preparation script, then extend the sync/startup tests.
 4. Build with `.\scripts\build-instrument.ps1 -Instrument <new-key>` and
    verify with the §6 workflow before considering it done.
 
@@ -322,19 +313,18 @@ version number, it does not duplicate the changelog.
 
 ## 9. Things intentionally NOT automated / open items
 
-- iOS (`app/ios/`) is scaffolded but not part of the build/verification
-  workflow used so far — treat it as unverified if picked up later.
-- There is no CI pipeline; all builds/verification in this repo have been
-  run manually/locally via the scripts above.
+- CI runs regression tests, Android Store/Preview builds and an unsigned iOS
+  simulator build. Real store payments, device microphone behavior and production
+  provisioning still require the documented device/store tests.
 - `tools/verify-webview-navigation.py` is a manual diagnostic tool, not
   wired into any automated test suite — running it is a manual step during
   verification, not part of `build-instrument.ps1`.
 
 ## Shared neon theme (V10.7.0)
 
-`web/theme.css` is the canonical shared appearance layer, loaded after legacy styles and `web/home.css`. It owns self-hosted typography, the single concert background, color tokens, gloss, button states and frame surfaces across Home, Learn, Fretboard Map, Circle and Quiz. Geometry remains in existing screen styles. `body[data-screen]` follows navigation; exercises dim the shared scene for readability. `web/home.js` loads before `app.js` and only handles the instrument dock. Settings, stats dialogs and their progress tracking were removed; the home does not read or write localStorage. Existing legacy progress data is inert. Motion runs automatically while home is active and honors prefers-reduced-motion.
+`web/theme.css` is the canonical shared appearance layer, loaded after legacy styles and `web/home.css`. It owns self-hosted typography, the single concert background, color tokens, gloss, button states and frame surfaces across Home, Learn, Fretboard Map, Circle and Quiz. Geometry remains in existing screen styles. `body[data-screen]` follows navigation; exercises dim the shared scene for readability. `web/home.js` loads before `app.js` and only handles the instrument dock. Settings, stats dialogs and their progress tracking were removed; the home remembers the selected instrument in localStorage. Existing legacy progress data is inert. Motion runs automatically while home is active and honors prefers-reduced-motion.
 
-The instrument dock stores `fretboard-home-instrument` in sessionStorage and reloads bootstrap. Bootstrap validates the key against CATALOG, otherwise uses `site.config.json`. The original configuration is retained as `defaultInstrument`; it controls dock order independently of the active session selection. Unknown saved selections are cleared and fall back to the configured instrument. This does not alter build configuration or native app ID.
+The instrument dock stores `fretboard-instrument` in localStorage (with a legacy session fallback on startup) and reloads bootstrap. Bootstrap validates the key against CATALOG, otherwise uses `site.config.json`. The original configuration is retained as `defaultInstrument`; it controls dock order independently of the active session selection. Unknown saved selections are cleared and fall back to the configured instrument. This does not alter build configuration or native app ID.
 
 Play Mode and Quiz are two entry points to the existing quiz intro, not independent game modes. Quiz scoring and the results screen remain unchanged.
 
@@ -354,7 +344,7 @@ The selector contains Guitar, Bass and Ukulele only. The configured product come
 
 ## Startup readiness (V10.8.3)
 
-The page shows a single loading status until the chosen product, interaction handlers and loaded logo are ready. Classic scripts use async=false: requests are queued concurrently while execution follows dependency order. If a logo request fails, a readable product title replaces it and the app remains usable. Switching instruments still reloads bootstrap with the saved session selection.
+The page shows a single loading status until the chosen product, interaction handlers and loaded logo are ready. Classic scripts use async=false: requests are queued concurrently while execution follows dependency order. If a logo request fails, a readable product title replaces it and the app remains usable. Switching instruments still reloads bootstrap with the saved instrument preference.
 
 The product wordmarks share one 2700×550 WebP sprite, displayed through independent 900×550 SVG viewports. Instrument switching reuses the same cached artwork URL. Bootstrap waits for that shared image to load before revealing the home.
 
@@ -384,35 +374,29 @@ The existing Windows PowerShell scripts now accept `-Format Apk`, `Aab`, or
 `Both`. Omitting the option preserves the debug APK build. Use Release for
 store submissions; debug packages are for local testing only.
 
-Both formats, in both build types, are already-paid Android apps. Sync sets
-`unlocked: true` and `nativeBilling: false`; the web demo remains unchanged.
-`scripts/validate-android-access.ps1` checks the generated config and the config
-embedded in each final archive before it can be copied to `dist/`. This prevents
-a stale native bundle from reintroducing a paywall for existing customers.
+Both formats use an explicit `-Profile Store` (default) or `-Profile Preview`.
+Store starts in demo with native billing; Preview is fully unlocked, uses a
+separate `.preview` package ID and never initializes payments. The archive gate
+validates the final config against the requested profile. See
+[Google Play billing](GOOGLE_PLAY_BILLING.md) for the full access contract.
 
 ```powershell
-# All three instruments: three signed APKs + three signed AABs.
-.\scripts\build-all.ps1 -BuildType Release -Format Both -VersionCode 2 -VersionName 1.1.0
+# One shared app, signed APK + AAB for all instruments.
+.\scripts\build-all.ps1 -Profile Store -BuildType Release -Format Both -VersionCode 7 -VersionName 1.1.0
 
-# One instrument, AAB only.
-.\scripts\build-instrument.ps1 -Instrument guitar -BuildType Release -Format Aab -VersionCode 2 -VersionName 1.1.0
+# Fully unlocked preview, initially showing bass.
+.\scripts\build-instrument.ps1 -Instrument bass-4 -Profile Preview -BuildType Debug -Format Apk -VersionCode 7 -VersionName 1.1.0
 ```
 
-Choose a `VersionCode` higher than the last uploaded code for each app; `2`
-is only an example. The script does not query Play Console. Both formats
-receive the same version via Gradle properties. `VersionName` is the displayed
-version. The three existing application IDs remain unchanged.
+Choose a VersionCode above the last uploaded code. `app/distribution.json` owns
+one stable app ID, name and icon; `-Instrument` changes only the initial universe.
+`build-all.ps1` is a compatibility entry point and builds the shared app once.
 
-Outputs in `dist/`:
-
-- `fretboard-hero-guitar-release.apk` and `fretboard-hero-guitar-release.aab`
-- `fretboard-hero-bass-4-release.apk` and `fretboard-hero-bass-4-release.aab`
-- `fretboard-hero-ukulele-release.apk` and `fretboard-hero-ukulele-release.aab`
-
-APKs install directly. Upload the corresponding signed AAB to that app's
-Google Play Console release track; an AAB does not install directly on a
-phone. This workflow creates packages, not a Play Store listing or a Play
-publication. Play Console still validates the bundle and app requirements.
+Outputs: `dist/fretboard-hero-store-release.apk`,
+`dist/fretboard-hero-store-release.aab`, or
+`dist/fretboard-hero-preview-debug.apk` for the example Preview command.
+Upload the signed Store AAB to Play Console. Builds do not create store products,
+listings, purchase credentials or publish a Play release.
 
 ### Signing locally
 

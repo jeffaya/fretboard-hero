@@ -37,7 +37,7 @@
       <img class="premium-neck" src="./assets/premium-neck.svg" alt="" width="800" height="130">
       <ul class="premium-skills" aria-label="Skills included"></ul>
       <div class="premium-stores"></div>
-      <p class="premium-promise">One purchase. Every skill unlocked.</p>
+      <p class="premium-promise">Free download. One purchase unlocks all three instruments.</p>
       <button type="button" class="ui-back premium-close">← Continue exploring</button>
     </section>`;
     document.querySelector('#app').append(overlay);

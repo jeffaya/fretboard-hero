@@ -1,76 +1,124 @@
-# Android: already-paid APKs and AABs
+# Google Play: free demo with one permanent unlock
 
-## Access contract
+## Product and distribution
 
-Every Android package produced by this repository is already paid for. This
-applies to APK and AAB, Debug and Release, guitar, bass and ukulele.
+Publish one **Fretboard Hero** app. `app/distribution.json` owns its installation
+identity (`com.guitar.fretboardhero`, retained from the existing project), display
+name and launcher icon. `app/instruments.json` now contains presentation profiles,
+not separate application IDs. Guitar, bass and ukulele all run in this one app.
 
-| Store app | Android package | Access |
-| --- | --- | --- |
-| Guitar Fretboard Hero | `com.guitar.fretboardhero` | Full |
-| Bass Fretboard Hero | `com.bass.fretboardhero` | Full |
-| Ukulele Fretboard Hero | `com.ukulele.fretboardhero` | Full |
+The app is free to download. A single **non-consumable** product, `full_access`,
+unlocks all notes, keys, positions, modes and premium routines for all three
+instruments. Switching instrument never requires another purchase. The preferred
+instrument is saved locally. No Fretboard Hero account or license key is required.
+This replaces the pre-release rule “every APK/AAB is already paid”; the app has
+not been publicly released, so there is no legacy paid customer migration.
 
-Owners must have all notes, keys, positions, learning modes, Circle of Fifths
-and Daily Routine options from the first launch. Switching instruments within
-the app keeps full access. An empty or expired legacy purchase cache, no network,
-or unavailable Google Play must not lock the app or request another payment.
-There are no Android in-app purchase or restore buttons in this distribution.
+## Configure Play Console and the verification service
 
-`scripts/sync-web.ps1 -Platform Android` writes `unlocked: true` and
-`nativeBilling: false`, and removes `testKeyHash`. The bootstrap uses the full
-access policy and never initializes the billing bridge. Web remains a demo;
-iOS retains its separate [StoreKit flow](APPLE_BILLING.md).
+1. Use the existing app record for `com.guitar.fretboardhero`; set the download
+   price to free and the display name to Fretboard Hero. Do not publish the old
+   bass/ukulele package variants.
+2. Create a one-time product with the exact ID **`full_access`** and a permanent
+   **buy** purchase option whose ID is **`buy`**. Set the price, countries and
+   localized title/description, then activate the product and purchase option.
+   Describe all three instruments as included. Do not configure it as a rental,
+   preorder, consumable or subscription. Prices in the app come from Google;
+   no amount is hard-coded.
+3. Enable the Google Play Android Developer API and create a service account.
+   Invite its email in Play Console and grant the necessary access to this app
+   for viewing purchases and managing orders. Keep the private key off devices
+   and out of git.
+4. Add **`PLAY_SERVICE_ACCOUNT_EMAIL`** and **`PLAY_SERVICE_ACCOUNT_PRIVATE_KEY`**
+   as secrets on the Cloudflare Worker. The latter is the PEM private key (real
+   newlines or escaped `\n` are supported). The Worker exposes
+   `POST https://fretboard-hero.com/api/billing/google/verify` through `worker.js`.
+   Existing deployment to main publishes the implementation, not the secrets.
+5. Build a release-signed Store AAB and upload it to an internal test track.
+   Add license testers and install through the Play test link with the matching
+   account. Configure and test the catalog before a public release.
 
-## Build and package guard
+These account settings are manual prerequisites; source code and CI cannot prove
+that the production product, permissions or secrets are configured.
+
+## Store and Preview profiles
 
 ```powershell
-.\scripts\build-all.ps1 -BuildType Release -Format Both -VersionCode 3 -VersionName 1.2.0
+# One signed APK and AAB, containing all three instruments.
+.\scripts\build-all.ps1 -Profile Store -BuildType Release -Format Both -VersionCode 7 -VersionName 1.1.0
+
+# Fully unlocked developer preview; separate package ID, no billing calls.
+.\scripts\build-instrument.ps1 -Profile Preview -Instrument guitar -BuildType Debug -Format Apk -VersionCode 7 -VersionName 1.1.0
 ```
 
-Version values are examples; increase the version code above existing releases.
-Use the existing signing key and application ID when updating customers' apps.
-See [Android distribution](TECHNICAL.md#android-distribution-apk--aab).
+Version numbers are examples; use a code above the last uploaded version.
+`Store` is the default, including Debug builds. `Preview` must be explicit.
 
-`scripts/validate-android-access.ps1` checks the generated configuration and then
-the actual `assets/public/site.config.json` in each APK, or
-`base/assets/public/site.config.json` in each AAB, before copying to `dist/`.
-Missing/duplicate configuration, wrong instrument, demo access, billing enabled,
-non-boolean flags or a web test key fail the build. These checks cover both
-Debug and Release outputs because they share the same packaging code.
+| Profile | Package ID | Config | Output example |
+| --- | --- | --- | --- |
+| Store | `com.guitar.fretboardhero` | `accessProfile: Store`, `unlocked: false`, `nativeBilling: true` | `dist/fretboard-hero-store-release.aab` |
+| Preview | `com.guitar.fretboardhero.preview` | `accessProfile: Preview`, `unlocked: true`, `nativeBilling: false` | `dist/fretboard-hero-preview-debug.apk` |
 
-To inspect an existing package independently:
+Both remove the web `testKeyHash`. The script checks the actual APK/AAB config,
+not just the source, before copying it to `dist/`. Wrong profiles, wrong default
+instrument, missing/duplicate entries, non-boolean flags or preview keys stop the
+build. A Preview archive cannot pass the Store gate. Build one profile at a time:
+the shared native working tree is regenerated by these scripts.
 
-```powershell
-.\scripts\validate-android-access.ps1 -Path .\dist\fretboard-hero-guitar-debug.apk -Instrument guitar
-```
+## Verification, offline use and restoration
 
-## Regression tests
+- The native bridge requests `full_access`; the server allowlists the one app ID
+  and product, verifies Google's purchase state and acknowledges it. It never
+  consumes the purchase. Pending, canceled or unverifiable payments do not grant
+  new access. Tokens are not logged or returned to JavaScript.
+- After successful server verification, Android stores the token in an AES-GCM
+  authenticated file under `getNoBackupFilesDir()`. Its key remains in Android
+  Keystore; authenticated data binds it to the app ID and product. Writes are
+  atomic. The old unprotected seven-day cache is not trusted or imported.
+- A verified permanent purchase has **no offline time limit**. Launch, resume and
+  foreground checks refresh ownership. Network/server errors preserve the last
+  verified access and remain silent during automatic checks.
+- An empty Play query does not by itself revoke an existing purchase: the stored
+  token is checked with the server first. A confirmed refund/invalidated purchase
+  clears the proof and returns to demo. A pending response does not erase an
+  earlier verified purchase. Refund detection requires a successful online check.
+- **Restore purchases** is visible even when unlocked. Reinstallation/new-device
+  restore requires the same purchasing Google account and an online check. No
+  purchase is copied through Android backup. Clearing app data removes the local
+  proof but does not remove the store purchase.
+- Store purchases remain platform-specific: an Android purchase does not also
+  grant an Apple purchase. No cross-store account system is implemented.
 
-From the repository root, with Node 22+ and PowerShell 7 on PATH:
+## Three audiences, one app
 
-```sh
-node --test web/tests/*.test.cjs app/tests/*.test.cjs app/tests/*.test.js server/tests/*.test.mjs
-```
+Reuse the existing guitar/bass/ukulele marketing assets to create three custom
+store listings under this one app. Target them using appropriate keywords or
+unique listing URLs. Once the pages actually exist, put their real URLs in the
+matching instrument entries of `web/site.config.json` (`stores.*.android`).
+Until then all entries link to the same default app listing.
 
-Set `PWSH` to the PowerShell executable if it is not on PATH. The suite exercises
-the real sync script for all instruments, including switching from iOS to
-Android, and validates good and deliberately broken APK/AAB archive fixtures.
-Startup tests execute bootstrap, access and billing together with an unavailable
-store and fresh, expired or previously unlocked caches. They assert full access,
-no billing calls, no reload and no purchase controls/status messages.
-Both the PR check and the Android release workflow run these tests.
+A custom listing changes the marketing presentation. This implementation does
+not add Install Referrer/deferred deep linking; users choose their instrument in
+the app and it is remembered on subsequent launches. The website continues to
+support `?instrument=guitar`, `bass-4` or `ukulele`. The test key stays web-only.
 
-On a device, verify a fresh install and an update over the previous APK, then
-restart offline and check Learn, Map, Circle and Daily Routine. Automated tests
-do not establish real-device installation or production signing compatibility.
+## Verification before publication
 
-## Retained legacy billing code
+Run `node --test web/tests/*.test.cjs app/tests/*.test.cjs app/tests/*.test.js server/tests/*.test.mjs`
+with Node 22+ and PowerShell 7 (`PWSH` can select its executable). Android's
+`testDebugUnitTest` exercises the real encrypted-cache implementation. CI builds
+both profiles and validates final APK/AAB policies; iOS compiles separately.
 
-The Android `PlayBillingPlugin`, verification backend and their tests remain in
-the repository for the older in-app-purchase implementation. They are inactive
-in paid Android builds. Do not enable `nativeBilling` to work around a build or
-store setup issue: that would ask existing owners to pay again. Their cached
-entitlement is not used by the current paid distribution. Backend payment
-credentials and a `full_access` product are not prerequisites for full access
-in these APKs/AABs.
+Complete real Play internal-track checks: fresh demo, localized price, successful
+purchase, cancellation, pending payment then completion, interruption after
+payment, restore after reinstall, offline restart, server outage, refund/revoke
+and repurchase. After buying, switch across all instruments and inspect full
+Learn/Map/Circle/Routine access. Also verify microphone behavior on a device.
+Automated fixtures and debug APK builds do not prove a live Google transaction.
+
+References:
+- https://developer.android.com/google/play/billing/integrate
+- https://developer.android.com/google/play/billing/security
+- https://developer.android.com/google/play/billing/test
+- https://developer.android.com/privacy-and-security/keystore
+- https://support.google.com/googleplay/android-developer/answer/9867158

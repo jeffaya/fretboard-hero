@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "UNLOCK YOUR",
   "FRETBOARD SKILLS": "FRETBOARD SKILLS",
   "Stop switching tools. Start playing solos worth sharing.": "Stop switching tools. Start playing solos worth sharing.",
-  "One purchase. Every skill unlocked.": "One purchase. Every skill unlocked.",
   "One purchase. Three instruments. Every skill unlocked.": "One purchase. Three instruments. Every skill unlocked.",
   "← Continue exploring": "← Continue exploring",
   "Get it on": "Get it on",
@@ -178,7 +177,6 @@
   "Could not restore purchases. Check your App Store account and connection, then try again.": "Could not restore purchases. Check your App Store account and connection, then try again.",
   "Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry.": "Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry.",
   "Payment could not be completed. Please try again or restore purchases.": "Payment could not be completed. Please try again or restore purchases.",
-  "Allow session storage to change instruments on this device.": "Allow session storage to change instruments on this device.",
   "Virtuoso": "Virtuoso",
   "{instrument} virtuoso": "{instrument} virtuoso",
   "{instrument} legend": "{instrument} legend",
@@ -407,5 +405,8 @@
   "Even a short session counts.": "Even a short session counts.",
   "The basics can take you far.": "The basics can take you far.",
   "Practice to play better.": "Practice to play better.",
-  "Repetition can become discovery.": "Repetition can become discovery."
+  "Repetition can become discovery.": "Repetition can become discovery.",
+  "Get the app": "Get the app",
+  "Free download. One purchase unlocks all three instruments.": "Free download. One purchase unlocks all three instruments.",
+  "Could not read purchase status. Please restore purchases.": "Could not read purchase status. Please restore purchases."
 }

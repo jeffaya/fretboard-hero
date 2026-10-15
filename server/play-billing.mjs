@@ -1,5 +1,5 @@
 // Purchase tokens are bearer credentials: never log them or return Google errors.
-export const PACKAGES = new Set(['com.guitar.fretboardhero', 'com.bass.fretboardhero', 'com.ukulele.fretboardhero']);
+export const PACKAGES = new Set(['com.guitar.fretboardhero']);
 export const PRODUCT = 'full_access';
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
 const encode = value => btoa(String.fromCharCode(...new Uint8Array(value))).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
@@ -36,7 +36,9 @@ export async function verifyPurchase(input, { fetcher = fetch, getAccessToken, e
   if ([400, 404, 410].includes(response.status)) return { unlocked: false, status: 'not_owned' };
   if (!response.ok) throw new Error('Verification unavailable');
   const purchase = await response.json();
+  if (![0, 1, 2].includes(purchase.purchaseState)) throw new Error('Invalid purchase state');
   if (purchase.purchaseState === 2) return { unlocked: false, status: 'pending' };
+  if (purchase.purchaseState === 0 && ![0, 1].includes(purchase.consumptionState)) throw new Error('Invalid consumption state');
   if (purchase.purchaseState !== 0 || purchase.consumptionState !== 0 || (purchase.productId && purchase.productId !== PRODUCT)) return { unlocked: false, status: 'not_owned' };
   // Non-consumable: acknowledge once, never consume. Retry safely after outages.
   if (purchase.acknowledgementState === 0) {
@@ -46,7 +48,7 @@ export async function verifyPurchase(input, { fetcher = fetch, getAccessToken, e
       const recheck = await fetcher(url, { headers, signal: AbortSignal.timeout(6000) });
       if (!recheck.ok) throw new Error('Acknowledgement unavailable');
       const latest = await recheck.json();
-      if (latest.purchaseState !== 0 || latest.consumptionState !== 0) return { unlocked: false, status: 'not_owned' };
+      if (latest.purchaseState !== 0 || latest.consumptionState !== 0 || (latest.productId && latest.productId !== PRODUCT)) return { unlocked: false, status: 'not_owned' };
       if (latest.acknowledgementState !== 1) throw new Error('Acknowledgement unavailable');
     }
   } else if (purchase.acknowledgementState !== 1) throw new Error('Invalid acknowledgement state');
@@ -78,6 +80,7 @@ export async function handlePlayBilling(request, env, dependencies = {}) {
   if (!input || !PACKAGES.has(input.packageName) || input.productId !== PRODUCT || typeof input.purchaseToken !== 'string' || !/^[A-Za-z0-9._~-]{10,2048}$/.test(input.purchaseToken)) return json({ error: 'invalid_request' }, 400);
   if (!env.PLAY_SERVICE_ACCOUNT_EMAIL || !env.PLAY_SERVICE_ACCOUNT_PRIVATE_KEY) return json({ error: 'billing_not_configured' }, 503);
   try {
-    return json(await verifyPurchase(input, { env, fetcher: dependencies.fetcher || fetch, getAccessToken: dependencies.getAccessToken || accessToken }));
+    const result = await verifyPurchase(input, { env, fetcher: dependencies.fetcher || fetch, getAccessToken: dependencies.getAccessToken || accessToken });
+    return json({...result, productId: PRODUCT});
   } catch { return json({ error: 'verification_unavailable' }, 503); }
 }

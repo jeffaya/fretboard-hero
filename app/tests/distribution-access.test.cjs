@@ -10,7 +10,7 @@ const root = path.resolve(__dirname, '../..');
 const pwsh = process.env.PWSH || 'pwsh';
 const instruments = ['guitar', 'bass-4', 'ukulele'];
 function run(script, args) {
-  const result = spawnSync(pwsh, ['-NoLogo', '-NoProfile', '-NonInteractive', '-File', path.join(root, 'scripts', script), ...args], {encoding: 'utf8'});
+  const result = spawnSync(pwsh, ['-NoLogo', '-NoProfile', '-NonInteractive', '-File', path.join(root, 'scripts', script), ...args], {encoding: 'utf8', env: {...process.env, POWERSHELL_TELEMETRY_OPTOUT: 'true', DOTNET_CLI_TELEMETRY_OPTOUT: 'true'}});
   if (result.error) throw result.error;
   return {status: result.status, output: result.stdout + result.stderr};
 }
@@ -44,60 +44,56 @@ function zip(entries) {
   return Buffer.concat([...local, directory, end]);
 }
 
-test('Real web sync fully unlocks every Android variant, preserves web demo and keeps iOS billing separate', t => {
+test('Real sync separates Store and Preview on both platforms and preserves the web demo', t => {
   const dir = temporary(t);
   const original = fs.readFileSync(path.join(root, 'web/site.config.json'));
   write(dir, 'web/site.config.json', original);
+  write(dir, 'app/distribution.json', fs.readFileSync(path.join(root, 'app/distribution.json')));
   write(dir, 'web/index.html', fs.readFileSync(path.join(root, 'web/index.html')));
-  const sharedAssets = ['bootstrap.js', 'theme.css', 'locales.css', ...fs.readdirSync(path.join(root, 'web/assets/fonts')).filter(name => name.startsWith('noto-')).map(name => 'assets/fonts/' + name), 'routine.css', 'core/routine-encouragement.js', 'core/i18n.js', ...fs.readdirSync(path.join(root, 'web/locales')).filter(name => name.endsWith('.json')).map(name => 'locales/' + name), 'core/microphone.js', 'core/routine-echo.js', 'core/routine-rhythm-audio.js', 'core/routine-session.js', 'core/routine-melody.js', 'core/routine-exercises.js', 'core/routine-renderer.js'];
+  const sharedAssets = ['bootstrap.js', 'home.js', 'core/access.js', 'core/native-billing.js', 'theme.css', 'locales.css', ...fs.readdirSync(path.join(root, 'web/assets/fonts')).filter(name => name.startsWith('noto-')).map(name => 'assets/fonts/' + name), 'routine.css', 'core/routine-encouragement.js', 'core/i18n.js', ...fs.readdirSync(path.join(root, 'web/locales')).filter(name => name.endsWith('.json')).map(name => 'locales/' + name), 'core/microphone.js', 'core/routine-echo.js', 'core/routine-rhythm-audio.js', 'core/routine-session.js', 'core/routine-melody.js', 'core/routine-exercises.js', 'core/routine-renderer.js'];
   for (const file of sharedAssets) write(dir, `web/${file}`, fs.readFileSync(path.join(root, 'web', file)));
   write(dir, 'app/native-assets/capacitor-bridge.js', fs.readFileSync(path.join(root, 'app/native-assets/capacitor-bridge.js')));
   fs.mkdirSync(path.join(dir, 'app/resources'), {recursive: true});
   fs.mkdirSync(path.join(dir, 'app/ios/App/App/Assets.xcassets/AppIcon.appiconset'), {recursive: true});
   for (const icon of ['guitar', 'bass', 'ukulele']) write(dir, `web/assets/instruments/${icon}/icon-1024.png`, Buffer.from(icon));
   // Reuse the same directory: an iOS/demo build must not contaminate Android.
-  for (const platform of ['iOS', 'Android']) for (const instrument of instruments) {
-    const result = run('sync-web.ps1', ['-Instrument', instrument, '-RepoPath', dir, '-Platform', platform]);
+  for (const profile of ['Preview', 'Store']) for (const platform of ['iOS', 'Android']) for (const instrument of instruments) {
+    const result = run('sync-web.ps1', ['-Instrument', instrument, '-RepoPath', dir, '-Platform', platform, '-Profile', profile]);
     assert.equal(result.status, 0, result.output);
     const config = JSON.parse(fs.readFileSync(path.join(dir, 'app/www/site.config.json'), 'utf8'));
     assert.equal(config.instrument, instrument);
     for (const file of sharedAssets) assert.deepEqual(fs.readFileSync(path.join(dir, 'app/www', file)), fs.readFileSync(path.join(root, 'web', file)), `${platform} ${instrument}: ${file} must match the website`);
-    assert.equal(config.unlocked, platform === 'Android');
-    assert.equal(config.nativeBilling, platform !== 'Android');
+    assert.equal(config.accessProfile, profile);
+    assert.equal(config.unlocked, profile === 'Preview');
+    assert.equal(config.nativeBilling, profile === 'Store');
     assert.equal(Object.hasOwn(config, 'testKeyHash'), false);
     assert.deepEqual(config.stores, JSON.parse(original).stores);
     assert.deepEqual(fs.readFileSync(path.join(dir, 'web/site.config.json')), original);
   }
 });
 
-for (const format of ['apk', 'aab']) test(`Final ${format.toUpperCase()} gate rejects demo/billing regressions and accepts all paid instruments`, t => {
+for (const format of ['apk', 'aab']) for (const profile of ['Store','Preview']) test(`Final ${format.toUpperCase()} gate rejects mixed profiles (${profile})`, t => {
   const dir = temporary(t), file = path.join(dir, `app.${format}`);
   const entry = `${format === 'aab' ? 'base/' : ''}assets/public/site.config.json`;
-  const full = {instrument: 'guitar', unlocked: true, nativeBilling: false};
+  const config = {instrument: 'guitar', accessProfile: profile, unlocked: profile === 'Preview', nativeBilling: profile === 'Store'};
+  const validate = (instrument='guitar', expectedProfile=profile) => run('validate-android-access.ps1', ['-Path', file, '-Instrument', instrument, '-Profile', expectedProfile]);
   for (const instrument of instruments) {
-    fs.writeFileSync(file, zip([[entry, JSON.stringify({...full, instrument})]]));
-    const result = run('validate-android-access.ps1', ['-Path', file, '-Instrument', instrument]);
-    assert.equal(result.status, 0, result.output);
+    fs.writeFileSync(file, zip([[entry, JSON.stringify({...config, instrument})]]));
+    const result = validate(instrument); assert.equal(result.status, 0, result.output);
+    assert.notEqual(validate(instrument, profile === 'Store' ? 'Preview' : 'Store').status, 0);
   }
   const invalid = [
-    {...full, unlocked: false, nativeBilling: true},
-    {...full, nativeBilling: true},
-    {...full, unlocked: false},
-    {...full, unlocked: 'true'},
-    {...full, nativeBilling: 'false'},
-    {...full, unlocked: undefined},
-    {...full, nativeBilling: undefined},
-    {...full, instrument: 'ukulele'},
-    {...full, testKeyHash: null},
+    {...config, unlocked: !config.unlocked}, {...config, nativeBilling: !config.nativeBilling},
+    {...config, unlocked: 'true'}, {...config, nativeBilling: 'false'},
+    {...config, unlocked: undefined}, {...config, nativeBilling: undefined},
+    {...config, accessProfile: undefined}, {...config, instrument: 'ukulele'}, {...config, testKeyHash: null},
   ];
-  for (const config of invalid) {
-    fs.writeFileSync(file, zip([[entry, JSON.stringify(config)]]));
-    const result = run('validate-android-access.ps1', ['-Path', file, '-Instrument', 'guitar']);
-    assert.notEqual(result.status, 0, JSON.stringify(config));
-    assert.match(result.output, /Refusing to distribute a locked app/);
+  for (const value of invalid) {
+    fs.writeFileSync(file, zip([[entry, JSON.stringify(value)]]));
+    const result = validate();assert.notEqual(result.status, 0, JSON.stringify(value));
+    assert.match(result.output, /Refusing to distribute the wrong access profile/);
   }
-  for (const entries of [[], [[entry, '{broken']], [[entry, JSON.stringify(full)], [entry, JSON.stringify(full)]]]) {
-    fs.writeFileSync(file, zip(entries));
-    assert.notEqual(run('validate-android-access.ps1', ['-Path', file, '-Instrument', 'guitar']).status, 0);
+  for (const entries of [[], [[entry, '{broken']], [[entry, JSON.stringify(config)], [entry, JSON.stringify(config)]]]) {
+    fs.writeFileSync(file, zip(entries));assert.notEqual(validate().status, 0);
   }
 });

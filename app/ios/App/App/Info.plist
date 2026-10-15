@@ -23,7 +23,7 @@
 		<string>id</string>
 	</array>
 	<key>CFBundleDisplayName</key>
-        <string>Guitar Fretboard Hero</string>
+        <string>Fretboard Hero</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

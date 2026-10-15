@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "DÉBLOQUEZ VOTRE",
   "FRETBOARD SKILLS": "MAÎTRISE DU MANCHE",
   "Stop switching tools. Start playing solos worth sharing.": "Tous vos outils au même endroit. Jouez des solos que vous aurez envie de partager.",
-  "One purchase. Every skill unlocked.": "Un achat. Toutes les fonctionnalités débloquées.",
   "One purchase. Three instruments. Every skill unlocked.": "Un achat. Trois instruments. Tout est débloqué.",
   "← Continue exploring": "← Continuer à explorer",
   "Get it on": "Disponible sur",
@@ -178,7 +177,6 @@
   "Could not restore purchases. Check your App Store account and connection, then try again.": "Restauration impossible. Vérifiez votre compte App Store et votre connexion, puis réessayez.",
   "Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry.": "Vérification temporairement indisponible. Connectez-vous puis appuyez sur Restaurer les achats.",
   "Payment could not be completed. Please try again or restore purchases.": "Le paiement n’a pas abouti. Réessayez ou restaurez les achats.",
-  "Allow session storage to change instruments on this device.": "Autorisez le stockage de session pour changer d’instrument sur cet appareil.",
   "Virtuoso": "Virtuose",
   "{instrument} virtuoso": "Virtuose {instrument}",
   "{instrument} legend": "Légende {instrument}",
@@ -407,5 +405,8 @@
   "Even a short session counts.": "Même une courte séance compte.",
   "The basics can take you far.": "Les bases peuvent te porter loin.",
   "Practice to play better.": "Travailler pour mieux jouer.",
-  "Repetition can become discovery.": "Une répétition peut devenir une découverte."
+  "Repetition can become discovery.": "Une répétition peut devenir une découverte.",
+  "Get the app": "Télécharger l’application",
+  "Free download. One purchase unlocks all three instruments.": "Téléchargement gratuit. Un achat débloque les trois instruments.",
+  "Could not read purchase status. Please restore purchases.": "Impossible de lire le statut de l’achat. Veuillez restaurer vos achats."
 }

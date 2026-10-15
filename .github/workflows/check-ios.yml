@@ -11,6 +11,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+env:
+  POWERSHELL_TELEMETRY_OPTOUT: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 jobs:
   simulator:
     runs-on: macos-15
@@ -26,7 +29,7 @@ jobs:
         working-directory: app
       - name: Prepare iOS demo and billing bundle
         shell: pwsh
-        run: ./scripts/prepare-ios.ps1 -Instrument guitar
+        run: ./scripts/prepare-ios.ps1 -Instrument guitar -Profile Store
       - name: Compile iPhone and iPad target without signing
         run: >-
           xcodebuild -project app/ios/App/App.xcodeproj -scheme App

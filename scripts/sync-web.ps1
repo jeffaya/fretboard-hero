@@ -10,6 +10,9 @@
     Root of the fretoboard-hero repo. Default: the repo root (two levels up from this script).
 #>
 param(
+    [ValidateSet("Store", "Preview")]
+    [string]$Profile = "Store",
+
     [Parameter(Mandatory = $true)]
     [ValidateSet("guitar", "bass-4", "ukulele")]
     [string]$Instrument,
@@ -41,21 +44,18 @@ Copy-Item -Path (Join-Path $webSource "*") -Destination $wwwPath -Recurse -Force
 $siteConfigPath = Join-Path $wwwPath "site.config.json"
 $siteConfig = Get-Content $siteConfigPath -Raw | ConvertFrom-Json
 $siteConfig.instrument = $Instrument
-# Android APKs/AABs are already paid for. Never ask their owners to buy again.
-# iOS keeps its separate StoreKit purchase flow.
-$paidAndroid = $Platform -eq "Android"
-$siteConfig | Add-Member -NotePropertyName unlocked -NotePropertyValue $paidAndroid -Force
-$siteConfig | Add-Member -NotePropertyName nativeBilling -NotePropertyValue (-not $paidAndroid) -Force
+# Store builds start in demo; only the explicit Preview profile bypasses billing.
+$preview = $Profile -eq "Preview"
+$siteConfig | Add-Member -NotePropertyName accessProfile -NotePropertyValue $Profile -Force
+$siteConfig | Add-Member -NotePropertyName unlocked -NotePropertyValue $preview -Force
+$siteConfig | Add-Member -NotePropertyName nativeBilling -NotePropertyValue (-not $preview) -Force
 $siteConfig.PSObject.Properties.Remove("testKeyHash")
 $utf8Config = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllText($siteConfigPath, ($siteConfig | ConvertTo-Json -Depth 8), $utf8Config)
-if ($paidAndroid) {
-    & (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $siteConfigPath -Instrument $Instrument
-}
-
+& (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $siteConfigPath -Instrument $Instrument -Profile $Profile
 
 # Keep the universal iOS App Store icon and Capacitor source aligned with this build.
-$iconKey = if ($Instrument -eq "bass-4") { "bass" } else { $Instrument }
+$iconKey = (Get-Content (Join-Path $appRoot "distribution.json") -Raw | ConvertFrom-Json).iconKey
 $iconSource = Join-Path $webSource "assets\instruments\$iconKey\icon-1024.png"
 Copy-Item $iconSource (Join-Path $appRoot "resources\icon.png") -Force
 Copy-Item $iconSource (Join-Path $appRoot "ios\App\App\Assets.xcassets\AppIcon.appiconset\AppIcon-512@2x.png") -Force
@@ -78,4 +78,4 @@ $bridgeTag = "  <script src=`"./core/capacitor-bridge.js`" defer></script>`r`n"
 $indexContent = $indexContent -replace '(?=</body>)', $bridgeTag
 [System.IO.File]::WriteAllText($indexPath, $indexContent, $utf8NoBom)
 
-Write-Host "app/www synced for instrument '$Instrument'." -ForegroundColor Green
+Write-Host "app/www synced for instrument '$Instrument' ($Profile, $Platform)." -ForegroundColor Green

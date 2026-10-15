@@ -50,3 +50,7 @@ test('Melodic instructions, directions, box blocks and degree labels localize in
  for(const locale of locales){const i=await create({languages:[locale]});for(const phrase of phrases){const localized=i.text(phrase);if(locale!=='en'&&!['Block 3','Slide 7 → 9'].includes(phrase))assert.notEqual(localized,phrase,locale+' '+phrase);assert.equal(i.text(localized),localized)}}
  const fr=await create({languages:['fr']});assert.equal(fr.text(phrases[0]),'Partez de La : montez à l’octave, puis revenez à la fondamentale.');assert.equal(fr.text('Degree ♭3'),'Degré ♭3');assert.ok(fr.text(phrases[2]).includes('La Mineur'));
 });
+
+test('Download and billing explanations translate in every supported language',async()=>{
+ for(const locale of locales){const t=(await create({languages:[locale]})).text;for(const key of ['Get the app','Free download. One purchase unlocks all three instruments.','Could not read purchase status. Please restore purchases.'])assert.equal(t(key),catalogs[locale][key]);}
+});

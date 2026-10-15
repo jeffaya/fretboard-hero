@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "解锁你的",
   "FRETBOARD SKILLS": "指板技能",
   "Stop switching tools. Start playing solos worth sharing.": "不必来回切换工具，开始弹奏值得分享的独奏。",
-  "One purchase. Every skill unlocked.": "一次购买，解锁所有功能。",
   "One purchase. Three instruments. Every skill unlocked.": "一次购买，三种乐器，全部解锁。",
   "← Continue exploring": "← 继续探索",
   "Get it on": "下载平台",
@@ -178,7 +177,6 @@
   "Could not restore purchases. Check your App Store account and connection, then try again.": "无法恢复购买，请检查App Store账户和网络后重试。",
   "Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry.": "购买验证暂不可用，请联网并点击“恢复购买”重试。",
   "Payment could not be completed. Please try again or restore purchases.": "付款未能完成，请重试或恢复购买。",
-  "Allow session storage to change instruments on this device.": "请允许会话存储以在此设备上切换乐器。",
   "Virtuoso": "大师",
   "{instrument} virtuoso": "{instrument}大师",
   "{instrument} legend": "{instrument}传奇",
@@ -407,5 +405,8 @@
   "Even a short session counts.": "短短一次练习，也有意义。",
   "The basics can take you far.": "扎实的基础能带你走得更远。",
   "Practice to play better.": "练习，是为了演奏得更好。",
-  "Repetition can become discovery.": "重复练习，也能带来新发现。"
+  "Repetition can become discovery.": "重复练习，也能带来新发现。",
+  "Get the app": "下载应用",
+  "Free download. One purchase unlocks all three instruments.": "免费下载。购买一次即可解锁全部三种乐器。",
+  "Could not read purchase status. Please restore purchases.": "无法读取购买状态。请恢复购买。"
 }

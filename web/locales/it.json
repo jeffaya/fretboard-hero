@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "SBLOCCA LE TUE",
   "FRETBOARD SKILLS": "ABILITÀ SULLA TASTIERA",
   "Stop switching tools. Start playing solos worth sharing.": "Smetti di cambiare strumenti. Inizia a suonare assoli da condividere.",
-  "One purchase. Every skill unlocked.": "Un acquisto. Tutte le abilità sbloccate.",
   "One purchase. Three instruments. Every skill unlocked.": "Un acquisto. Tre strumenti. Tutte le abilità sbloccate.",
   "← Continue exploring": "← Continua a esplorare",
   "Get it on": "Disponibile su",
@@ -178,7 +177,6 @@
   "Could not restore purchases. Check your App Store account and connection, then try again.": "Impossibile ripristinare gli acquisti. Controlla l’account App Store e la connessione, poi riprova.",
   "Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry.": "La verifica degli acquisti non è al momento disponibile. Connettiti e tocca Ripristina acquisti per riprovare.",
   "Payment could not be completed. Please try again or restore purchases.": "Impossibile completare il pagamento. Riprova o ripristina gli acquisti.",
-  "Allow session storage to change instruments on this device.": "Consenti l’archiviazione di sessione per cambiare strumento su questo dispositivo.",
   "Virtuoso": "Virtuoso",
   "{instrument} virtuoso": "Virtuoso di {instrument}",
   "{instrument} legend": "Leggenda di {instrument}",
@@ -407,5 +405,8 @@
   "Even a short session counts.": "Anche una breve sessione conta.",
   "The basics can take you far.": "Le basi possono portarti lontano.",
   "Practice to play better.": "Esercitarsi per suonare meglio.",
-  "Repetition can become discovery.": "La ripetizione può diventare scoperta."
+  "Repetition can become discovery.": "La ripetizione può diventare scoperta.",
+  "Get the app": "Scarica l’app",
+  "Free download. One purchase unlocks all three instruments.": "Download gratuito. Un acquisto sblocca tutti e tre gli strumenti.",
+  "Could not read purchase status. Please restore purchases.": "Impossibile leggere lo stato dell’acquisto. Ripristina gli acquisti."
 }

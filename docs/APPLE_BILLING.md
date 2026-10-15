@@ -5,26 +5,19 @@ purchase a non-consumable `full_access` product, display Apple's localized price
 and restore purchases. One purchase unlocks all notes, keys, modes and all three
 instruments **inside that installed app**, without a subscription.
 
-Three separate store apps can use the existing bundle IDs:
-
-| App | Bundle ID | Product ID (in that app) |
-| --- | --- | --- |
-| Guitar Fretboard Hero | `com.guitar.fretboardhero` | `full_access` |
-| Bass Fretboard Hero | `com.bass.fretboardhero` | `full_access` |
-| Ukulele Fretboard Hero | `com.ukulele.fretboardhero` | `full_access` |
-
-Purchases do not transfer automatically between these separate apps or from
-Google Play. A buyer can use the instrument selector within the purchased app.
-The same app supports both iPhone and iPad and restores with the purchasing
-Apple Account. Store submission and approval are separate from this integration.
+Publish one **Fretboard Hero** app with bundle ID `com.guitar.fretboardhero`,
+shared with the identity in `app/distribution.json`. Guitar, bass and ukulele are
+universes inside that app. All share the same `full_access` purchase. There is no
+cross-store purchase sharing with Android. The same app supports iPhone and iPad
+and restores with the purchasing Apple Account.
 
 ## App Store Connect setup
 
-1. Register the explicit bundle IDs in your Apple Developer account and create
-   the corresponding app records in App Store Connect.
+1. Register the explicit bundle ID in your Apple Developer account and create
+   the corresponding app record in App Store Connect.
 2. Complete the required paid-app agreement, tax and banking setup, then set the
    app itself to free download.
-3. For each app, create an In-App Purchase of type **Non-Consumable**, with the
+3. Create an In-App Purchase of type **Non-Consumable**, with the
    exact product ID `full_access`. Configure its price, availability,
    localization and review screenshot. Explain that it permanently unlocks
    all features and all instruments within that app.
@@ -45,14 +38,15 @@ On a Mac with Xcode, Node 22+ and PowerShell 7 (`pwsh`):
 cd app
 npm ci
 cd ..
-pwsh -File scripts/prepare-ios.ps1 -Instrument guitar
+pwsh -File scripts/prepare-ios.ps1 -Instrument guitar -Profile Store
 open app/ios/App/App.xcodeproj
 ```
 
-Use `bass-4` or `ukulele` for the other variants. The preparation script reuses
-the web sync, enables native billing, removes the web preview key and aligns
-Capacitor identity, Xcode bundle ID, display name and icon. Prepare/archive one
-variant at a time: these scripts mutate the shared native working tree.
+`-Instrument` selects the initial universe, not a different app identity. Store
+is the default profile: it starts in demo, enables native billing and removes the
+web preview key. Preview explicitly opts out of billing and appends `.preview`
+to the bundle ID. The scripts align Capacitor, Xcode, display name and icon;
+prepare one profile at a time because the native working tree is regenerated.
 
 In Xcode set the marketing version and a new build number, select your team,
 and archive for a generic iOS device. Distribute through Organizer to App Store
@@ -78,8 +72,7 @@ while a purchase is open are rechecked when it finishes. Pending/canceled result
 do not themselves grant access.
 
 Offline entitlement uses StoreKit's locally available verified transaction data.
-Android APKs/AABs are separately distributed with full access already included;
-see [Android paid access](GOOGLE_PLAY_BILLING.md). Refund and
+Android uses its own verified purchase cache; see [Google Play billing](GOOGLE_PLAY_BILLING.md). Refund and
 revocation detection depends on StoreKit receiving updated information. This
 integration does not provide server notifications or cross-store account linking.
 
@@ -88,7 +81,7 @@ integration does not provide server notifications or cross-store account linking
 - In Xcode, create a StoreKit configuration with non-consumable `full_access` and
   attach it to the local Run scheme for simulated purchases. Do not select this
   local configuration when validating the real App Store Connect catalog.
-- Test Sandbox/TestFlight for each bundle ID: localized price, completed purchase,
+- Test Sandbox/TestFlight for the production bundle ID: localized price, completed purchase,
   canceled purchase, Ask to Buy pending/approval, interrupted purchase and restore.
 - Check an unverified transaction never unlocks; refunds/revocations return to demo.
 - Reinstall and restore with the purchasing Apple Account; test a different account.
@@ -106,3 +99,14 @@ References:
 - https://developer.apple.com/documentation/storekit/appstore/sync()
 - https://developer.apple.com/help/app-store-connect/configure-in-app-purchase-settings/overview-for-configuring-in-app-purchases/
 - https://capacitorjs.com/docs/ios/custom-code
+
+## Instrument-specific store presentation
+
+Create guitar/bass/ukulele custom product pages in App Store Connect for the one
+app, reusing each instrument's screenshots and promotional copy. Configure the
+real URLs in `web/site.config.json` (`stores.*.ios`) after Apple provides them.
+Empty URLs deliberately disable the corresponding web store buttons; no invented
+App Store ID is shipped. Custom page deep links are not configured by this code;
+users select their instrument in the app, which remembers it across launches.
+
+https://developer.apple.com/app-store/custom-product-pages/

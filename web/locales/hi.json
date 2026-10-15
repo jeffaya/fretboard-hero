@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "अनलॉक करें अपनी",
   "FRETBOARD SKILLS": "फ्रेटबोर्ड कुशलता",
   "Stop switching tools. Start playing solos worth sharing.": "बार-बार टूल बदलना छोड़ें। ऐसे सोलो बजाएँ जिन्हें साझा करना चाहें।",
-  "One purchase. Every skill unlocked.": "एक खरीद। सभी सुविधाएँ अनलॉक।",
   "One purchase. Three instruments. Every skill unlocked.": "एक खरीद। तीन वाद्य। सभी सुविधाएँ अनलॉक।",
   "← Continue exploring": "← खोज जारी रखें",
   "Get it on": "यहाँ पाएँ",
@@ -178,7 +177,6 @@
   "Could not restore purchases. Check your App Store account and connection, then try again.": "खरीद बहाल नहीं हुई। App Store खाता और कनेक्शन जाँचकर फिर कोशिश करें।",
   "Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry.": "खरीद की जाँच अभी उपलब्ध नहीं। कनेक्ट होकर खरीद बहाल करें दबाएँ।",
   "Payment could not be completed. Please try again or restore purchases.": "भुगतान पूरा नहीं हुआ। फिर कोशिश करें या खरीद बहाल करें।",
-  "Allow session storage to change instruments on this device.": "इस उपकरण पर वाद्य बदलने के लिए सेशन स्टोरेज की अनुमति दें।",
   "Virtuoso": "महारथी",
   "{instrument} virtuoso": "{instrument} महारथी",
   "{instrument} legend": "{instrument} दिग्गज",
@@ -407,5 +405,8 @@
   "Even a short session counts.": "थोड़ी देर का अभ्यास भी मायने रखता है।",
   "The basics can take you far.": "मज़बूत बुनियाद तुम्हें दूर तक ले जा सकती है।",
   "Practice to play better.": "बेहतर बजाने के लिए अभ्यास करो।",
-  "Repetition can become discovery.": "दोहराने से नई खोज हो सकती है।"
+  "Repetition can become discovery.": "दोहराने से नई खोज हो सकती है।",
+  "Get the app": "ऐप डाउनलोड करें",
+  "Free download. One purchase unlocks all three instruments.": "मुफ़्त डाउनलोड। एक खरीद से तीनों वाद्ययंत्र अनलॉक हो जाते हैं।",
+  "Could not read purchase status. Please restore purchases.": "खरीद की स्थिति पढ़ी नहीं जा सकी। कृपया अपनी खरीद बहाल करें।"
 }

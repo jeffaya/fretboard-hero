@@ -1,14 +1,17 @@
 <# Prepares one iPhone/iPad variant for Xcode. Requires npm dependencies in app/. #>
 param(
-    [Parameter(Mandatory = $true)]
+    [ValidateSet("Store", "Preview")]
+    [string]$Profile = "Store",
+
     [ValidateSet("guitar", "bass-4", "ukulele")]
-    [string]$Instrument,
+    [string]$Instrument = "guitar",
     [string]$RepoPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 )
 $ErrorActionPreference = "Stop"
 $appRoot = Join-Path $RepoPath "app"
-$entry = (Get-Content (Join-Path $appRoot "instruments.json") -Raw | ConvertFrom-Json).$Instrument
-& (Join-Path $PSScriptRoot "sync-web.ps1") -Instrument $Instrument -RepoPath $RepoPath -Platform iOS
+$entry = Get-Content (Join-Path $appRoot "distribution.json") -Raw | ConvertFrom-Json
+if ($Profile -eq "Preview") { $entry.appId += ".preview"; $entry.name += " Preview" }
+& (Join-Path $PSScriptRoot "sync-web.ps1") -Instrument $Instrument -RepoPath $RepoPath -Platform iOS -Profile $Profile
 $utf8 = New-Object System.Text.UTF8Encoding $false
 $configPath = Join-Path $appRoot "capacitor.config.json"
 $config = Get-Content $configPath -Raw | ConvertFrom-Json
