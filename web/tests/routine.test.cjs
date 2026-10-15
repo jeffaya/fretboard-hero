@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const base=path.join(__dirname,'..');
-function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-melody','core/routine-patterns','core/routine-exercises','core/routine-guide','core/routine-rhythm','core/routine-echo','core/routine-rhythm-audio','core/routine-strumming','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
+function runtime(){const c={window:{}};vm.createContext(c);for(const name of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele','core/fretboard-engine','core/triad-engine','core/chord-engine','core/pentatonic-renderer','core/routine-melody','core/routine-patterns','core/routine-exercises','core/routine-guide','core/routine-rhythm','core/routine-echo','core/routine-rhythm-audio','core/routine-strumming','core/routine-encouragement','core/chord-detector','core/pitch-detector']){vm.runInContext(fs.readFileSync(path.join(base,name+'.js'),'utf8'),c);Object.assign(c,c.window)}return c}
 function rng(seed){return()=>((seed=(seed*1664525+1013904223)>>>0)/4294967296)}
 const flatten=e=>e.columns.flatMap(c=>c.notes);
 const playedStrings=e=>[...new Set(flatten(e).map(n=>n.string))].sort().join(',');
@@ -97,7 +97,7 @@ class Node{
  constructor(){this.children=[];this.events={};this.attrs={};this.dataset={};this.style={};this.classes=new Set();this.classList={contains:k=>this.classes.has(k),toggle:(k,on)=>on?this.classes.add(k):this.classes.delete(k)};this.textContent='';this.hidden=false;this.parentElement={clientWidth:390}}
  append(...nodes){this.children.push(...nodes)}replaceChildren(){this.children=[]}querySelectorAll(){return this.children}querySelector(){return null}getAttribute(k){return this.attrs[k]}setAttribute(k,v){this.attrs[k]=v}addEventListener(k,f){this.events[k]=f}click(){this.events.click?.()}focus(){}scrollIntoView(){}
 }
-function sessionRuntime(demo=false,enabled=true,storage=new Map(),playback=false){
+function sessionRuntime(demo=false,enabled=true,storage=new Map(),playback=false,encouragementRandom=Math.random){
  const c=runtime(),nodes=new Map(),root={querySelector:s=>{if(!nodes.has(s))nodes.set(s,new Node());return nodes.get(s)}};
  c.document={createElement:()=>new Node(),createElementNS:()=>new Node(),addEventListener(){}};c.opens=0;
  c.localStorage={getItem:key=>storage.get(key),setItem:(key,value)=>storage.set(key,value)};
@@ -113,7 +113,7 @@ function sessionRuntime(demo=false,enabled=true,storage=new Map(),playback=false
  if(playback)c.RoutineRhythmAudio={create:()=>({open:async()=>true,close(){},stop(){},schedule(){c.scheduled=(c.scheduled||0)+1}})};
  const createStrumming=c.RoutineStrumming.create;c.RoutineStrumming={create(options){const strumming=createStrumming(options),update=strumming.update;strumming.update=function(e,...rest){if(e?.strumming)c.lastExercise=e;return update.call(this,e,...rest)};return strumming}};
  vm.runInContext(fs.readFileSync(path.join(base,'core/routine-session.js'),'utf8'),c);
- const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),session=c.window.RoutineSession.create({root,engine,refreshControls(){},random:rng(321)});
+ const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),session=c.window.RoutineSession.create({root,engine,refreshControls(){},random:rng(321),encouragementRandom});
  const nextGroup=()=>{nodes.get('#routineNext').click();flush()};
  return {session,nodes,c,flush,nextGroup,next(){const id=c.lastExercise.id;nextGroup();while(c.lastExercise.id===id&&nodes.get('#routineFinish').hidden)nextGroup()}};
 }
@@ -236,6 +236,32 @@ test('Manual continuation shows one brief celebration and cannot skip twice',()=
  assert.equal(r.c.lastExercise.id,'root');assert.equal(r.nodes.get('#routineTransition').hidden,false);
  r.nodes.get('#routineNext').click();r.flush();
  assert.equal(r.c.lastExercise.id,'scale');assert.equal(r.nodes.get('#routineTransition').hidden,true);
+});
+test('A complete routine uses distinct localized inspirations, keeps each credit stable and resets on replay',()=>{
+ const r=sessionRuntime(true,false,new Map(),false,()=>.999);
+ const fr=JSON.parse(fs.readFileSync(path.join(base,'locales/fr.json'),'utf8'));
+ r.c.window.FretboardI18n={text:key=>fr[key]||key,note:key=>key};r.session.enter();
+ const seen=[];
+ for(let step=0;step<40&&r.nodes.get('#routineFinish').hidden;step++){
+  r.nodes.get('#routineNext').click();
+  if(r.nodes.get('#routineTransition').hidden)continue; // strumming has multiple patterns
+  const message=r.nodes.get('#routineEncouragementDetail').textContent;
+  const author=r.nodes.get('#routineEncouragementAuthor').textContent;
+  const expected=r.c.RoutineEncouragement.messages.find(entry=>fr[entry.text]===message);
+  assert.ok(expected);assert.equal(author,expected.author);
+  assert.equal(r.nodes.get('#routineEncouragement').textContent,'Continue comme ça !');
+  assert.equal(r.nodes.get('#routineEncouragementCredit').textContent,'Inspiré de');
+  assert.equal(r.nodes.get('#routineNext').disabled,true);
+  r.session.resize();r.nodes.get('#routineNext').click();
+  assert.equal(r.nodes.get('#routineEncouragementDetail').textContent,message);
+  assert.equal(r.nodes.get('#routineEncouragementAuthor').textContent,author);
+  seen.push(message);r.flush();assert.equal(r.nodes.get('#routineTransition').hidden,true);
+ }
+ assert.equal(r.nodes.get('#routineFinish').hidden,false);
+ assert.ok(seen.length>=5&&seen.length<=10);assert.equal(new Set(seen).size,seen.length);
+ r.nodes.get('#routineReplay').click();r.nodes.get('#routineNext').click();
+ assert.equal(r.nodes.get('#routineEncouragementDetail').textContent,seen[0]);
+ r.session.leave();r.flush();assert.equal(r.nodes.get('#routineTransition').hidden,true);
 });
 test('Leaving or choosing a step cancels a pending transition',()=>{
  const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineNext').click();r.session.leave();r.flush();assert.equal(r.c.lastExercise.id,'root');

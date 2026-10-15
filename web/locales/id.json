@@ -334,7 +334,6 @@
   "Practice": "Berlatih",
   "Explore": "Jelajahi",
   "Tune your instrument": "Setem instrumen Anda",
-  "Well played!": "Bagus sekali!",
   "Play each triad together.": "Mainkan semua nada dalam setiap triad bersamaan.",
   "Listening…": "Mendengarkan…",
   "Microphone": "Mikrofon",
@@ -396,5 +395,17 @@
   "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ Petikan ke bawah · ↑ Petikan ke atas · × Pukulan senar teredam · PM Redam dengan telapak tangan · > Aksen (mainkan lebih keras)",
   "Numbers = beats · & = halfway between beats · Beams = one beat": "Angka = ketukan · & = tengah ketukan · Garis penghubung = satu ketukan",
   "e / a = second / fourth sixteenth of the beat": "e / a = not seperenam belas kedua / keempat dalam ketukan",
-  "No arrow = keep moving without striking · Pink = current stroke": "Tanpa panah = gerakkan tangan tanpa memetik · Merah muda = petikan saat ini"
+  "No arrow = keep moving without striking · Pink = current stroke": "Tanpa panah = gerakkan tangan tanpa memetik · Merah muda = petikan saat ini",
+  "Keep it going!": "Teruskan!",
+  "Inspired by": "Terinspirasi dari",
+  "A breakthrough can come from enjoyment.": "Kesenangan bermain bisa membuka jalan untuk maju.",
+  "A little every day.": "Sedikit setiap hari.",
+  "Repetition, even at the top.": "Tetap mengulang, bahkan saat sudah mahir.",
+  "Prepare for your next breakthrough.": "Siapkan langkah besar berikutnya.",
+  "Practice becomes music.": "Latihan menjadi musik.",
+  "Consistency makes the difference.": "Konsistensi membuat perbedaan.",
+  "Even a short session counts.": "Sesi singkat pun berarti.",
+  "The basics can take you far.": "Dasar yang kuat bisa membawamu jauh.",
+  "Practice to play better.": "Berlatih agar bermain lebih baik.",
+  "Repetition can become discovery.": "Pengulangan bisa menjadi penemuan."
 }

@@ -334,7 +334,6 @@
   "Practice": "अभ्यास करें",
   "Explore": "खोजें",
   "Tune your instrument": "अपना वाद्य ट्यून करें",
-  "Well played!": "बहुत बढ़िया!",
   "Play each triad together.": "हर त्रिस्वर के सभी स्वर एक साथ बजाएँ।",
   "Listening…": "सुन रहा है…",
   "Microphone": "माइक्रोफ़ोन",
@@ -396,5 +395,17 @@
   "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ नीचे की ओर स्ट्रम · ↑ ऊपर की ओर स्ट्रम · × म्यूटेड प्रहार · PM हथेली से तार दबाएँ · > ज़ोर (अधिक तेज़ बजाएँ)",
   "Numbers = beats · & = halfway between beats · Beams = one beat": "अंक = बीट · & = बीट का मध्य · जोड़ने वाली रेखा = एक बीट",
   "e / a = second / fourth sixteenth of the beat": "e / a = बीट का दूसरा / चौथा सोलहवाँ नोट",
-  "No arrow = keep moving without striking · Pink = current stroke": "तीर नहीं = बिना बजाए हाथ चलाएँ · गुलाबी = मौजूदा स्ट्रम"
+  "No arrow = keep moving without striking · Pink = current stroke": "तीर नहीं = बिना बजाए हाथ चलाएँ · गुलाबी = मौजूदा स्ट्रम",
+  "Keep it going!": "ऐसे ही आगे बढ़ो!",
+  "Inspired by": "प्रेरणा:",
+  "A breakthrough can come from enjoyment.": "बजाने का आनंद नई प्रगति की राह खोल सकता है।",
+  "A little every day.": "हर दिन थोड़ा-सा।",
+  "Repetition, even at the top.": "शिखर पर भी दोहराना ज़रूरी है।",
+  "Prepare for your next breakthrough.": "अपनी अगली छलाँग की तैयारी करो।",
+  "Practice becomes music.": "अभ्यास संगीत बन जाता है।",
+  "Consistency makes the difference.": "नियमित अभ्यास से फ़र्क पड़ता है।",
+  "Even a short session counts.": "थोड़ी देर का अभ्यास भी मायने रखता है।",
+  "The basics can take you far.": "मज़बूत बुनियाद तुम्हें दूर तक ले जा सकती है।",
+  "Practice to play better.": "बेहतर बजाने के लिए अभ्यास करो।",
+  "Repetition can become discovery.": "दोहराने से नई खोज हो सकती है।"
 }
