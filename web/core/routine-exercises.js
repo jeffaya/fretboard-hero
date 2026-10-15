@@ -89,24 +89,30 @@
     const scaleExercise={...make('scale','Scale',`Play the ${key} scale`,`One octave · ${range(scale)}`,
       `Start on ${root}. Play up to the octave, then return to the root.`,[]),...RoutineMelody.scale(scale,engine,root,rootPC)};
 
+    const triadMaxFret=Math.min(12,engine.maxFret);
     let triadExercise;
     if(engine.profile.family==='guitar'){
-      const journey=guitarTriads(engine,root,rootPC,quality,maxFret);
-      triadExercise={...make('triads','Triads',`Connect the ${key} triads`,`${key} · Frets 0–${maxFret}`,
+      const journey=guitarTriads(engine,root,rootPC,quality,triadMaxFret);
+      triadExercise={...make('triads','Triads',`Connect the ${key} triads`,`${key} · Frets 0–${triadMaxFret}`,
         'Triad → third alone → next triad. Sliding is optional.',journey.columns),sections:journey.sections};
     }else{
       const sets=Object.keys(engine.profile.triadSets),set=pick(sets,random);
-      const shapes=TriadEngine.findShapes({engine,rootPC,quality,maxFret,set});
+      const shapes=TriadEngine.findShapes({engine,rootPC,quality,maxFret:triadMaxFret,set});
       // Choose one of each inversion, spread across the neck, on one string set.
       const combinations=[];
       for(const a of shapes)for(const b of shapes)for(const c of shapes){
         if(a.min>=b.min||b.min>=c.min||new Set([a.inversion,b.inversion,c.inversion]).size!==3)continue;
         combinations.push([a,b,c]);
       }
-      const spread=combinations.filter(s=>s[2].min-s[0].min>=6);
+      // Some keys only fit two complete inversions below fret 13. Keep those
+      // rather than extending the range or cutting a note out of a triad.
+      if(!combinations.length)for(const a of shapes)for(const b of shapes){
+        if(a.min<b.min&&a.inversion!==b.inversion)combinations.push([a,b]);
+      }
+      const spread=combinations.filter(s=>s.at(-1).min-s[0].min>=6);
       const triads=pick(spread.length?spread:combinations,random);
       if(!triads)throw new Error('No routine triad inversions for this tuning');
-      triadExercise=make('triads','Triads',`Connect the ${key} triads`,`${key} · Strings ${set} · Lower, middle & upper neck`,
+      triadExercise=make('triads','Triads',`Connect the ${key} triads`,`${key} · Strings ${set} · Frets 0–${triadMaxFret}`,
         'Play each triad together, then one note at a time.',
         triads.map(s=>({notes:s.notes,label:s.inversion})));
     }

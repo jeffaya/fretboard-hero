@@ -17,7 +17,8 @@ test('All keys, qualities and instruments have five playable and musically corre
   assert.equal(engine.noteAt(scale[0].string,scale[0].fret),rootPC);assert.equal((scale.length-1)%7,0);assert.ok(scale.length>=8);
   scale.slice(0,(scale.length+1)/2).forEach((n,i)=>assert.equal(engine.midiAt(n.string,n.fret)-first,Math.floor(i/7)*12+intervals[i%7],label));
   const tones=[rootPC,c.MusicTheory.mod(rootPC+(quality==='major'?4:3)),c.MusicTheory.mod(rootPC+7)];
-  assert.equal(new Set(exercises[2].columns.filter(col=>col.notes.length===3).map(c=>c.label)).size,3,label);
+  const inversions=new Set(exercises[2].columns.filter(col=>col.notes.length===3).map(c=>c.label)).size;
+  if(profile.family==='guitar')assert.equal(inversions,3,label);else assert.ok(inversions>=2,label);
   for(const col of exercises[2].columns){assert.equal(col.notes.length,col.kind==='third'?1:3);assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,col.notes.length);for(const n of col.notes)assert.ok(tones.includes(engine.noteAt(n.string,n.fret)),label)}
   for(const col of exercises[3].columns){const pcs=tones;for(const n of col.notes)assert.ok(pcs.includes(engine.noteAt(n.string,n.fret)),label)}
   if(profile.family==='bass'){assert.equal(exercises[3].step,'Arpeggios');const arp=flatten(exercises[3]);for(let i=1;i<(arp.length+1)/2;i++)assert.ok(arp[i].midi>arp[i-1].midi)}else if(profile.family!=='guitar'){assert.ok(exercises[3].columns.length>=3,label);for(const col of exercises[3].columns)assert.equal(new Set(col.notes.map(n=>engine.noteAt(n.string,n.fret))).size,3)}
@@ -285,7 +286,29 @@ for(const step of [0,2])test(`Routine step ${step+1} accepts quiet audio only af
  assert.ok(progress().startsWith('2 /'),progress());
 });
 
-test('All guitar keys traverse GBE, DGB and ADG from the nut to fret 15, with same-string third liaisons',()=>{
+test('Daily Routine triads and connecting thirds stay at or below fret 12 in every instrument and key',()=>{
+ const c=runtime();let boundaryNotes=0;
+ for(const profile of Object.values(c.FRETBOARD_INSTRUMENTS))for(const root of c.MusicTheory.NOTES)for(const quality of ['major','minor'])for(let seed=1;seed<=8;seed++){
+  const engine=c.FretboardEngine.createInstrumentEngine(profile),e=c.RoutineExercises.create({engine,root,quality,random:rng(seed)})[2],label=`${profile.id} ${root} ${quality} seed ${seed}`;
+  assert.ok(e.columns.length,label);
+  for(const col of e.columns)for(const note of [...col.notes,...(col.from?[col.from]:[])]){
+   assert.ok(note.fret>=0&&note.fret<=12,`${label}: fret ${note.fret}`);
+   if(note.fret===12)boundaryNotes++;
+  }
+ }
+ assert.ok(boundaryNotes>0,'Fret 12 itself remains playable');
+});
+test('Bass and ukulele keep three inversions when they fit, or two complete inversions within fret 12',()=>{
+ const c=runtime();
+ for(const [instrument,root,quality,count] of [['bass4','B','major',2],['bass4','A','minor',3],['ukulele','C#','minor',2],['ukulele','A','minor',3]]){
+  const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS[instrument]);
+  const e=c.RoutineExercises.create({engine,root,quality,random:()=>.999})[2];
+  assert.equal(e.columns.length,count,`${instrument} ${root} ${quality}`);
+  assert.equal(new Set(e.columns.map(col=>col.label)).size,count);
+  assert.ok(e.columns.every(col=>col.notes.length===3&&col.notes.every(note=>note.fret<=12)));
+ }
+});
+test('All guitar keys traverse complete shapes within frets 0–12 on GBE, DGB and ADG, with same-string third liaisons',()=>{
  const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
  for(const root of c.MusicTheory.NOTES)for(const quality of ['major','minor']){
   const e=c.RoutineExercises.create({engine,root,quality,random:rng(4)})[2];
@@ -293,13 +316,14 @@ test('All guitar keys traverse GBE, DGB and ADG from the nut to fret 15, with sa
   assert.equal(e.sections[0].start,0);assert.equal(e.sections.at(-1).end,e.columns.length);
   for(const section of e.sections){
    const cols=e.columns.slice(section.start,section.end),triads=cols.filter(c=>c.kind==='triad');
-   assert.equal(cols.length,triads.length*2-1);assert.ok(triads.length>=3);
+   assert.equal(cols.length,triads.length*2-1);assert.ok(triads.length>=2);
    assert.ok(Math.min(...triads[0].notes.map(n=>n.fret))<=4);
-   assert.ok(Math.max(...triads.at(-1).notes.map(n=>n.fret))>=11);
-   assert.equal(new Set(triads.map(c=>c.label)).size,3);
+   const expected=c.TriadEngine.findShapes({engine,rootPC:c.MusicTheory.PC[root],quality,maxFret:15,set:section.set}).filter(shape=>shape.notes.every(n=>n.fret<=12));
+   assert.deepEqual(triads.map(col=>col.notes),expected.map(shape=>shape.notes),'Keep every complete low shape without clipping chord notes');
+   assert.equal(new Set(triads.map(c=>c.label)).size,new Set(expected.map(shape=>shape.inversion)).size);
    cols.forEach((col,i)=>{
     assert.equal(col.kind,i%2?'third':'triad');
-    assert.ok(col.notes.every(n=>section.strings.includes(n.string)&&n.string!==0&&n.fret<=15));
+    assert.ok(col.notes.every(n=>section.strings.includes(n.string)&&n.string!==0&&n.fret<=12));
     if(i%2){
      const target=col.notes[0];assert.equal(target.degree,'third');
      assert.ok(cols[i+1].notes.some(n=>n.string===target.string&&n.fret===target.fret));
@@ -313,7 +337,7 @@ test('All guitar keys traverse GBE, DGB and ADG from the nut to fret 15, with sa
 test('A minor triads identify actual CAGED fragments, including shared C/D and A/G shapes',()=>{
  const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
  const e=c.RoutineExercises.create({engine,root:'A',quality:'minor'})[2];
- assert.equal(e.sections.map(s=>e.columns.slice(s.start,s.end).filter(c=>c.kind==='triad').map(c=>c.forms.join('/')).join(',')).join('|'),'A,E,C/D,A|A/G,E,C,A/G|G,E,C,G');
+ assert.equal(e.sections.map(s=>e.columns.slice(s.start,s.end).filter(c=>c.kind==='triad').map(c=>c.forms.join('/')).join(',')).join('|'),'A,E,C/D|A/G,E,C|G,E,C');
  assert.ok(e.columns.filter(c=>c.kind==='third').every(c=>c.label==='Minor third — C'));
  for(const [root,third] of [['C#','E#'],['G#','B#'],['A#','C##'],['D#','F##']]){
   const e=c.RoutineExercises.create({engine,root,quality:'major'})[2];
