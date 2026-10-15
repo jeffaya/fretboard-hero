@@ -417,10 +417,10 @@ test('Ambient microphone input never displays a rhythm grade or advances progres
  assert.equal(r.nodes.get('#routinePatternSteps').children[0].attrs['aria-current'],'step');
 });
 
-test('Microphone PCM strums validate repeats during Listen; other exercises restore raw input',async()=>{
+test('Microphone PCM strums validate repeats during Listen with raw instrument input in every exercise',async()=>{
  const r=sessionRuntime(true,true,new Map(),true);r.session.enter();
  assert.equal(r.c.echoCancellation,false);r.nodes.get('#routineSteps').children[3].children[0].click();
- await new Promise(setImmediate);assert.equal(r.c.echoCancellation,true);
+ await new Promise(setImmediate);assert.equal(r.c.echoCancellation,false);
  const rate=48000,samples=new Float32Array(16384);let sawGrade=false;
  // The first motif is quarter-note downstrokes. Start on its second beat,
  // leaving the normal microphone settling window intact.
