@@ -1,112 +1,100 @@
-# App Store: permanent unlock on iPhone and iPad
+# App Store: three apps, one permanent unlock per app
 
-The iOS app now starts in demo mode. Its shared paywall uses **StoreKit 2** to
-purchase a non-consumable `full_access` product, display Apple's localized price,
-and restore purchases. One purchase unlocks all notes, keys, modes and all three
-instruments **inside that installed app**, without a subscription.
+Publish separate Guitar, Bass and Ukulele Fretboard Hero apps. The identity and icon
+for each build come from `app/instruments.json`:
 
-Publish one **Fretboard Hero** app with bundle ID `com.guitar.fretboardhero`,
-shared with the identity in `app/distribution.json`. Guitar, bass and ukulele are
-universes inside that app. All share the same `full_access` purchase. There is no
-cross-store purchase sharing with Android. The same app supports iPhone and iPad
-and restores with the purchasing Apple Account.
+| Application | Bundle ID |
+| --- | --- |
+| Guitar Fretboard Hero | `com.guitar.fretboardhero` |
+| Bass Fretboard Hero | `com.bass.fretboardhero` |
+| Ukulele Fretboard Hero | `com.ukulele.fretboardhero` |
 
-## App Store Connect setup
+Each supports iPhone and iPad, starts in its instrument's universe and remembers the
+last selection. All three instruments share one verified entitlement **inside each
+app**. A non-consumable `full_access` purchase unlocks all notes, keys, modes and
+premium routines there, without a subscription. It does not transfer to the other
+apps or to Android. StoreKit scopes purchases to the installed application.
 
-1. Register the explicit bundle ID in your Apple Developer account and create
-   the corresponding app record in App Store Connect.
-2. Complete the required paid-app agreement, tax and banking setup, then set the
-   app itself to free download.
-3. Create an In-App Purchase of type **Non-Consumable**, with the
-   exact product ID `full_access`. Configure its price, availability,
-   localization and review screenshot. Explain that it permanently unlocks
-   all features and all instruments within that app.
-4. In Xcode select your development team and signing profile. The target includes
-   the In-App Purchase capability; confirm provisioning for the actual bundle ID.
-5. Submit the first purchase product with its app version in App Store Connect.
-   Configure Sandbox testers and use TestFlight before a production submission.
+The website and native apps use the same modal from `web/core/access.js`. Website
+buttons open the appropriate app's store listing; native buttons display Apple's
+localized price, open its purchase sheet, and offer Restore purchases.
 
-No Apple private key is embedded or required by this implementation. StoreKit
-performs Apple's signed-transaction verification on device. The Google-only
-Cloudflare route is not used for Apple purchases.
+## App Store Connect setup — repeat for each app
+
+1. Register the explicit bundle ID in the Apple Developer account and create its
+   matching app record in App Store Connect.
+2. Complete the required paid-app agreement, tax and banking setup. Make the download free.
+3. Create an In-App Purchase of type **Non-Consumable**, exact product ID `full_access`,
+   within this app. Set its price, availability, localization and review screenshot.
+   Describe the permanent access to all instruments within this app. The same product
+   name in another app does not share ownership.
+4. Select the development team and provisioning profile for the chosen bundle ID in
+   Xcode. The target includes In-App Purchase capability.
+5. Submit the first purchase product with its app version. Configure Sandbox testers
+   and validate through TestFlight before submitting a production release.
+6. Put each app's actual App Store URL in its instrument entry in
+   `web/site.config.json`. Unconfigured URLs leave that web button disabled.
+
+StoreKit 2 verifies Apple's signed transactions on device. No Apple private key is
+embedded or required by this implementation; the Google verification Worker is not used.
+Product identifiers are scoped to an app:
+https://developer.apple.com/documentation/appstoreserverapi/productid
 
 ## Prepare and build
 
-On a Mac with Xcode, Node 22+ and PowerShell 7 (`pwsh`):
+On a Mac with Xcode, Node 22+ and PowerShell 7:
 
 ```sh
 cd app
-npm ci
+npm ci --no-audit --no-fund
 cd ..
 pwsh -File scripts/prepare-ios.ps1 -Instrument guitar -Profile Store
 open app/ios/App/App.xcodeproj
 ```
 
-`-Instrument` selects the initial universe, not a different app identity. Store
-is the default profile: it starts in demo, enables native billing and removes the
-web preview key. Preview explicitly opts out of billing and appends `.preview`
-to the bundle ID. The scripts align Capacitor, Xcode, display name and icon;
-prepare one profile at a time because the native working tree is regenerated.
+Use `guitar`, `bass-4` or `ukulele` to select the application identity, initial
+instrument, name and icon. Store is the default: demo plus native billing, no web
+preview key. Preview explicitly unlocks everything without billing and appends
+`.preview` to this app's bundle ID. The scripts align Capacitor, Xcode, plist,
+AppIcon and bundled web configuration. Prepare one app/profile at a time because
+the native working tree is shared; never hand-edit generated `app/www`.
 
-In Xcode set the marketing version and a new build number, select your team,
-and archive for a generic iOS device. Distribute through Organizer to App Store
-Connect. iOS uses an Xcode archive/IPA, not Android APK/AAB files. No certificate,
-profile or App Store upload is supplied by this repository.
+Set a new marketing/build version, select the signing team, archive for a generic
+iOS device, then distribute to the matching App Store Connect record through Organizer.
+Repeat for each application. iOS uses an archive/IPA, not Android APK/AAB files.
+Certificates, provisioning and uploads are external configuration.
 
-The **Check iOS build** GitHub workflow compiles the shared iPhone/iPad target
-for the simulator without signing. It checks integration compilation, not real
-payments or provisioning. All three variants share the same Swift implementation.
+The iOS CI matrix compiles all three Store apps for the iPhone/iPad simulator without
+signing. It validates compilation and identity, not real provisioning or payments.
 
-## Verification and lifecycle
+## Purchase lifecycle
 
-`StoreBillingPlugin` accepts only verified StoreKit transactions for
-`full_access` of type non-consumable. Current entitlements must be unrevoked;
-unverified transactions never unlock. There is no writable JavaScript purchase
-flag. Finished transactions remain restorable because this is non-consumable.
+The shared `StoreBillingPlugin` accepts only verified StoreKit transactions for
+`full_access` of type non-consumable. Current entitlements must be unrevoked. There
+is no writable JavaScript purchase flag. Completed transactions remain restorable.
 
-Startup and resume read `Transaction.currentEntitlements` silently, as do periodic
-foreground checks. Only pressing **Restore purchases** calls `AppStore.sync()`,
-which may ask the customer to authenticate. A transaction update listener handles
-Ask to Buy, purchases completed outside the app and revocations. Updates received
-while a purchase is open are rechecked when it finishes. Pending/canceled results
-do not themselves grant access.
+Startup/resume and periodic foreground checks read `Transaction.currentEntitlements`
+silently. Only a user restore calls `AppStore.sync()`, which may require authentication.
+Transaction updates cover pending approval, purchases completed elsewhere and revocations.
+Pending/cancelled results do not grant a new entitlement. Offline access uses StoreKit's
+locally available verified transactions. Refund detection depends on updated store data.
+There is no cross-app/cross-store account linking or server-notification integration.
 
-Offline entitlement uses StoreKit's locally available verified transaction data.
-Android uses its own verified purchase cache; see [Google Play billing](GOOGLE_PLAY_BILLING.md). Refund and
-revocation detection depends on StoreKit receiving updated information. This
-integration does not provide server notifications or cross-store account linking.
+## Required device tests
 
-## Required device and payment tests before release
+For each application, configure a local StoreKit test product or use Sandbox/TestFlight.
+Do not attach a local StoreKit configuration when validating the real App Store catalog.
+Verify: localized price, successful payment, cancellation, Ask to Buy pending/approval,
+interrupted payment, restoration after reinstall with the same Apple Account, refunds,
+offline startup, unavailable catalog and disabled purchases. Unverified transactions
+must not unlock. After purchase, all three instruments must work inside that app while
+the other installed apps retain their own purchase state. Check iPhone/iPad layouts.
 
-- In Xcode, create a StoreKit configuration with non-consumable `full_access` and
-  attach it to the local Run scheme for simulated purchases. Do not select this
-  local configuration when validating the real App Store Connect catalog.
-- Test Sandbox/TestFlight for the production bundle ID: localized price, completed purchase,
-  canceled purchase, Ask to Buy pending/approval, interrupted purchase and restore.
-- Check an unverified transaction never unlocks; refunds/revocations return to demo.
-- Reinstall and restore with the purchasing Apple Account; test a different account.
-- Switch among all three instruments after purchase and ensure access is retained.
-- Test offline startup after purchase, unavailable catalog and disabled purchases.
-- Check iPhone/iPad in portrait and landscape; back navigation and shared menus.
-
-Automated JavaScript tests mock the native bridge, covering iOS routing, silent
-refresh versus explicit restore, pending approvals and updates during purchase.
-They do not validate Swift execution, signing or a real Apple transaction.
+JavaScript tests mock the native bridge and cover all application/instrument/platform
+combinations, silent refresh and explicit restore. They do not prove a real transaction.
 
 References:
-- https://developer.apple.com/documentation/storekit/transaction
 - https://developer.apple.com/documentation/storekit/transaction/currententitlements
 - https://developer.apple.com/documentation/storekit/appstore/sync()
 - https://developer.apple.com/help/app-store-connect/configure-in-app-purchase-settings/overview-for-configuring-in-app-purchases/
 - https://capacitorjs.com/docs/ios/custom-code
-
-## Instrument-specific store presentation
-
-Create guitar/bass/ukulele custom product pages in App Store Connect for the one
-app, reusing each instrument's screenshots and promotional copy. Configure the
-real URLs in `web/site.config.json` (`stores.*.ios`) after Apple provides them.
-Empty URLs deliberately disable the corresponding web store buttons; no invented
-App Store ID is shipped. Custom page deep links are not configured by this code;
-users select their instrument in the app, which remembers it across launches.
-
-https://developer.apple.com/app-store/custom-product-pages/

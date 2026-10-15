@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Builds the shared Fretboard Hero APK and/or AAB once (compatibility entry point).
+    Builds Guitar, Bass and Ukulele APKs and/or AABs sequentially.
 
 .PARAMETER RepoPath
     Root of the fretoboard-hero repo. Default: the repo root (two levels up from this script).
@@ -41,6 +41,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# Compatibility entry point: one application now contains all three instruments.
-& (Join-Path $RepoPath "scripts/build-instrument.ps1") -Instrument guitar -RepoPath $RepoPath -Profile $Profile -BuildType $BuildType -Format $Format -VersionCode $VersionCode -VersionName $VersionName
-Write-Host "Shared $Profile $Format packages built in $(Join-Path $RepoPath 'dist')." -ForegroundColor Green
+# Capacitor and Gradle reuse one native tree; never build these concurrently.
+$instruments = Get-Content (Join-Path $RepoPath "app/instruments.json") -Raw | ConvertFrom-Json
+foreach ($instrument in $instruments.PSObject.Properties.Name) {
+    & (Join-Path $RepoPath "scripts/build-instrument.ps1") -Instrument $instrument -RepoPath $RepoPath -Profile $Profile -BuildType $BuildType -Format $Format -VersionCode $VersionCode -VersionName $VersionName
+}
+Write-Host "All $Profile $Format packages built in $(Join-Path $RepoPath 'dist')." -ForegroundColor Green

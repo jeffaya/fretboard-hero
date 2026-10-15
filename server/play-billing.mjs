@@ -1,5 +1,5 @@
 // Purchase tokens are bearer credentials: never log them or return Google errors.
-export const PACKAGES = new Set(['com.guitar.fretboardhero']);
+export const PACKAGES = new Set(['com.guitar.fretboardhero', 'com.bass.fretboardhero', 'com.ukulele.fretboardhero']);
 export const PRODUCT = 'full_access';
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
 const encode = value => btoa(String.fromCharCode(...new Uint8Array(value))).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
@@ -84,6 +84,6 @@ export async function handlePlayBilling(request, env, dependencies = {}) {
   if (!env.PLAY_SERVICE_ACCOUNT_EMAIL || !env.PLAY_SERVICE_ACCOUNT_PRIVATE_KEY) return json({ error: 'billing_not_configured' }, 503);
   try {
     const result = await verifyPurchase(input, { env, fetcher: dependencies.fetcher || fetch, getAccessToken: dependencies.getAccessToken || accessToken });
-    return json({...result, productId: PRODUCT});
+    return json({...result, packageName: input.packageName, productId: PRODUCT});
   } catch { return json({ error: 'verification_unavailable' }, 503); }
 }

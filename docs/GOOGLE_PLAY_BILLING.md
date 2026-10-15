@@ -1,124 +1,124 @@
-# Google Play: free demo with one permanent unlock
+# Google Play: three free apps with a permanent unlock per app
 
-## Product and distribution
+## Distribution and purchase scope
 
-Publish one **Fretboard Hero** app. `app/distribution.json` owns its installation
-identity (`com.guitar.fretboardhero`, retained from the existing project), display
-name and launcher icon. `app/instruments.json` now contains presentation profiles,
-not separate application IDs. Guitar, bass and ukulele all run in this one app.
+`app/instruments.json` is the source of truth for the three application identities:
 
-The app is free to download. A single **non-consumable** product, `full_access`,
-unlocks all notes, keys, positions, modes and premium routines for all three
-instruments. Switching instrument never requires another purchase. The preferred
-instrument is saved locally. No Fretboard Hero account or license key is required.
-This replaces the pre-release rule “every APK/AAB is already paid”; the app has
-not been publicly released, so there is no legacy paid customer migration.
+| Application | Initial instrument | Android package / iOS bundle ID |
+| --- | --- | --- |
+| Guitar Fretboard Hero | guitar | `com.guitar.fretboardhero` |
+| Bass Fretboard Hero | bass-4 | `com.bass.fretboardhero` |
+| Ukulele Fretboard Hero | ukulele | `com.ukulele.fretboardhero` |
 
-## Configure Play Console and the verification service
+Each application has its own name, launcher icon, store listing, data and purchases.
+Each contains the same shared engine and all three instruments. The last selected
+instrument is remembered locally; switching it never changes the installed app ID.
 
-1. Use the existing app record for `com.guitar.fretboardhero`; set the download
-   price to free and the display name to Fretboard Hero. Do not publish the old
-   bass/ukulele package variants.
-2. Create a one-time product with the exact ID **`full_access`** and a permanent
-   **buy** purchase option whose ID is **`buy`**. Set the price, countries and
-   localized title/description, then activate the product and purchase option.
-   Describe all three instruments as included. Do not configure it as a rental,
-   preorder, consumable or subscription. Prices in the app come from Google;
-   no amount is hard-coded.
-3. Enable the Google Play Android Developer API and create a service account.
-   Invite its email in Play Console and grant the necessary access to this app
-   for viewing purchases and managing orders. Keep the private key off devices
-   and out of git.
-4. Add **`PLAY_SERVICE_ACCOUNT_EMAIL`** and **`PLAY_SERVICE_ACCOUNT_PRIVATE_KEY`**
-   as secrets on the Cloudflare Worker. The latter is the PEM private key (real
-   newlines or escaped `\n` are supported). The Worker exposes
-   `POST https://fretboard-hero.com/api/billing/google/verify` through `worker.js`.
-   Existing deployment to main publishes the implementation, not the secrets.
-5. Build a release-signed Store AAB and upload it to an internal test track.
-   Add license testers and install through the Play test link with the matching
-   account. Configure and test the catalog before a public release.
+All apps are free to download and start in demo mode. One permanent, non-consumable
+`full_access` purchase unlocks every instrument, note, key, position, mode and premium
+routine **inside the application where it was purchased**. It is not a subscription.
+For example, a Guitar buyer can play bass inside Guitar without installing Bass.
+The separate Bass and Ukulele apps do not inherit that purchase. Android purchases
+are not shared with Apple. No Fretboard Hero account or URL license key is required.
+The pre-release rule “every APK/AAB is already paid” is replaced by explicit profiles.
 
-These account settings are manual prerequisites; source code and CI cannot prove
-that the production product, permissions or secrets are configured.
+## User interface: one shared modal
 
-## Store and Preview profiles
+`web/core/access.js` mounts the same modal and design-system styles on web and native.
+On the website it displays the selected instrument's Google Play / App Store links,
+plus QR codes on desktop. Inside a Store app, `native-billing.js` supplies the localized
+price, native purchase action, restoration and purchase status in that same modal.
+Native purchase buttons do not redirect to an external payment page. Preview builds
+are already unlocked and do not call the billing plugins.
+
+## Configure Play Console and Cloudflare
+
+For **each** of the three package IDs above:
+
+1. Create/use the corresponding app record, set its download price to free, and use
+   its instrument-specific name, icon, screenshots and listing.
+2. Create a one-time, permanent non-consumable product with exact ID `full_access`.
+   Create a **buy** purchase option with exact ID `buy`. Set the price, countries,
+   localized title/description, then activate the product and option. The description
+   must explain that all instruments are included within this app. Do not use a rental,
+   preorder, consumable or subscription. The app reads the price from Google.
+3. Complete the account's required payments, tax and banking configuration.
+4. Enable Google Play Android Developer API and create a service account. Invite its
+   email in Play Console and grant purchase/order access to all three applications.
+   Never put its private key on a device or in git.
+5. Add `PLAY_SERVICE_ACCOUNT_EMAIL` and `PLAY_SERVICE_ACCOUNT_PRIVATE_KEY` as secrets
+   on the Cloudflare Worker. The latter accepts PEM with real or escaped newlines.
+6. Deploy the updated Worker before distributing these Store builds. It serves
+   `POST https://fretboard-hero.com/api/billing/google/verify` and returns the verified
+   `packageName`, `productId`, `unlocked` and `status`. The native app rejects a response
+   for a different app/product. Deployment through main does not create the secrets.
+7. Build signed Store AABs and upload each to its matching internal test track. Add
+   license testers, opt in and install using each Play test link with the test account.
+
+These external account settings are not configured or verified by source-code tests.
+The real iOS store URLs must also be supplied; empty URLs disable their web buttons.
+Android destinations in `web/site.config.json` point to the corresponding three apps.
+
+## Store and Preview builds
 
 ```powershell
-# One signed APK and AAB, containing all three instruments.
+# Three signed APKs + three AABs, built sequentially.
 .\scripts\build-all.ps1 -Profile Store -BuildType Release -Format Both -VersionCode 7 -VersionName 1.1.0
 
-# Fully unlocked developer preview; separate package ID, no billing calls.
-.\scripts\build-instrument.ps1 -Profile Preview -Instrument guitar -BuildType Debug -Format Apk -VersionCode 7 -VersionName 1.1.0
+# One fully unlocked preview, with a separate installation identity.
+.\scripts\build-instrument.ps1 -Instrument guitar -Profile Preview -BuildType Debug -Format Apk -VersionCode 7 -VersionName 1.1.0
 ```
 
-Version numbers are examples; use a code above the last uploaded version.
-`Store` is the default, including Debug builds. `Preview` must be explicit.
+Use a version code above the last uploaded code for each app. Store is the default,
+including Debug builds. Preview must be explicit and appends `.preview` to that app's
+ID and ` Preview` to its name. Preview never enables billing. Both profiles remove
+`testKeyHash`; the URL testing key remains website-only.
 
-| Profile | Package ID | Config | Output example |
-| --- | --- | --- | --- |
-| Store | `com.guitar.fretboardhero` | `accessProfile: Store`, `unlocked: false`, `nativeBilling: true` | `dist/fretboard-hero-store-release.aab` |
-| Preview | `com.guitar.fretboardhero.preview` | `accessProfile: Preview`, `unlocked: true`, `nativeBilling: false` | `dist/fretboard-hero-preview-debug.apk` |
-
-Both remove the web `testKeyHash`. The script checks the actual APK/AAB config,
-not just the source, before copying it to `dist/`. Wrong profiles, wrong default
-instrument, missing/duplicate entries, non-boolean flags or preview keys stop the
-build. A Preview archive cannot pass the Store gate. Build one profile at a time:
-the shared native working tree is regenerated by these scripts.
+Output: `dist/fretboard-hero-<instrument>-<store|preview>-<debug|release>.<apk|aab>`.
+For example: `dist/fretboard-hero-bass-4-store-release.aab`.
+Each build checks the final APK/AAB's web access configuration and native Capacitor
+identity before exporting it. The archive must contain exactly one of each config,
+with matching app ID, default instrument and profile. A stale or mixed package fails.
+The native manifest identity and signatures are also checked in CI for each APK.
+Build sequentially within one checkout: all variants reuse the same native tree.
 
 ## Verification, offline use and restoration
 
-- The native bridge requests `full_access`; the server allowlists the one app ID
-  and product, verifies Google's purchase state and acknowledges it. It never
-  consumes the purchase. Pending, canceled or unverifiable payments do not grant
-  new access. Tokens are not logged or returned to JavaScript.
-- After successful server verification, Android stores the token in an AES-GCM
-  authenticated file under `getNoBackupFilesDir()`. Its key remains in Android
-  Keystore; authenticated data binds it to the app ID and product. Writes are
-  atomic. The old unprotected seven-day cache is not trusted or imported.
-- A verified permanent purchase has **no offline time limit**. Launch, resume and
-  foreground checks refresh ownership. Network/server errors preserve the last
-  verified access and remain silent during automatic checks.
-- An empty Play query does not by itself revoke an existing purchase: the stored
-  token is checked with the server first. A confirmed refund/invalidated purchase
-  clears the proof and returns to demo. A pending response does not erase an
-  earlier verified purchase. Refund detection requires a successful online check.
-- **Restore purchases** is visible even when unlocked. Reinstallation/new-device
-  restore requires the same purchasing Google account and an online check. No
-  purchase is copied through Android backup. Clearing app data removes the local
-  proof but does not remove the store purchase.
-- Store purchases remain platform-specific: an Android purchase does not also
-  grant an Apple purchase. No cross-store account system is implemented.
+The native plugin gets the installed package ID from Android, never from the selected
+instrument. The backend allowlists the three apps and verifies the token against that
+exact package and `full_access` using Google's API. It acknowledges purchases and never
+consumes them. Tokens and raw Google errors are not logged or sent back to JavaScript.
 
-## Three audiences, one app
+After HTTPS verification, Android stores the token in an AES-GCM authenticated file
+under `getNoBackupFilesDir()`, with its key in Android Keystore. Authentication binds
+the proof to the package and product; copying it to another app does not unlock it.
+Atomic writes preserve existing purchases on write failure. The old plaintext cache
+is not imported. A verified permanent purchase has no offline expiry.
 
-Reuse the existing guitar/bass/ukulele marketing assets to create three custom
-store listings under this one app. Target them using appropriate keywords or
-unique listing URLs. Once the pages actually exist, put their real URLs in the
-matching instrument entries of `web/site.config.json` (`stores.*.android`).
-Until then all entries link to the same default app listing.
+Launch/resume checks refresh ownership. Empty Play queries trigger verification of
+the previous token before revocation. Network errors, pending payments and malformed
+responses preserve existing verified access. Confirmed refunds/revocations clear it;
+detection requires a successful online check. New pending/cancelled payments do not
+create access. Restore purchases is available even when unlocked.
 
-A custom listing changes the marketing presentation. This implementation does
-not add Install Referrer/deferred deep linking; users choose their instrument in
-the app and it is remembered on subsequent launches. The website continues to
-support `?instrument=guitar`, `bass-4` or `ukulele`. The test key stays web-only.
+Reinstallation, cleared app data or a new device requires an online restore with the
+purchasing Google account **in the same app**. No proof is transferred in Android backup.
 
-## Verification before publication
+## Validation before publication
 
-Run `node --test web/tests/*.test.cjs app/tests/*.test.cjs app/tests/*.test.js server/tests/*.test.mjs`
-with Node 22+ and PowerShell 7 (`PWSH` can select its executable). Android's
-`testDebugUnitTest` exercises the real encrypted-cache implementation. CI builds
-both profiles and validates final APK/AAB policies; iOS compiles separately.
+Automated checks run the real sync/preparation scripts for both profiles and all apps,
+verify final archive fixtures, exercise cross-app purchase boundaries and compile/test
+the native encrypted cache. CI builds Store APK/AAB and Preview APK for all three apps;
+iOS is compiled separately. Tests mock store responses: they do not prove live payments.
 
-Complete real Play internal-track checks: fresh demo, localized price, successful
-purchase, cancellation, pending payment then completion, interruption after
-payment, restore after reinstall, offline restart, server outage, refund/revoke
-and repurchase. After buying, switch across all instruments and inspect full
-Learn/Map/Circle/Routine access. Also verify microphone behavior on a device.
-Automated fixtures and debug APK builds do not prove a live Google transaction.
+On internal testing, verify each app: fresh demo, price, successful purchase, cancellation,
+pending completion, interruption after payment, reinstall/restore, offline restart,
+server outage, refund/revoke and repurchase. After purchase, switch through all three
+instruments and check full access. Install another app and confirm it stays in demo
+without its own purchase. Also check microphone behavior on a device.
 
 References:
 - https://developer.android.com/google/play/billing/integrate
 - https://developer.android.com/google/play/billing/security
 - https://developer.android.com/google/play/billing/test
 - https://developer.android.com/privacy-and-security/keystore
-- https://support.google.com/googleplay/android-developer/answer/9867158

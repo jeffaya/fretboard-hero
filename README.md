@@ -253,11 +253,13 @@ unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-br
 - `stores`: Android and iOS HTTPS store URLs for each instrument. Empty URLs
   show disabled store buttons in the shared unlock dialog.
 
-One **Fretboard Hero** app contains all three instruments. Its installation
-identity comes from `app/distribution.json`. `app/instruments.json` holds only
-presentation profiles. One non-consumable `full_access` purchase unlocks all
-notes, keys, positions, learning modes and premium routines for all instruments.
-The chosen instrument is remembered in local storage (`fretboard-instrument`).
+Three separate apps — **Guitar**, **Bass** and **Ukulele Fretboard Hero** — share
+one engine. `app/instruments.json` owns each app's ID, name and launcher icon.
+Each app includes all instruments. One non-consumable `full_access` purchase unlocks
+all notes, keys, positions, modes and premium routines within the purchased app.
+Purchases are not transferred between the three apps or between Google and Apple.
+The chosen instrument is remembered locally (`fretboard-instrument`). Switching
+instrument does not change the installed app identity or its purchase state.
 
 Native sync removes `testKeyHash` and selects an explicit access profile:
 
@@ -266,13 +268,13 @@ Native sync removes `testKeyHash` and selects an explicit access profile:
 | Store (Android/iOS, default) | `false` | `true` | Free demo, verified purchase/restore |
 | Preview (explicit) | `true` | `false` | Fully unlocked, separate `.preview` installation |
 
-The Android build validates the actual APK/AAB against the expected profile
+The Android build validates the actual APK/AAB against the expected app identity, instrument and profile
 before copying it to `dist/`. Both platforms keep verified paid access offline;
 a temporary store outage must not revoke access. Never edit `app/www` by hand.
 
 See [Google Play billing and release setup](docs/GOOGLE_PLAY_BILLING.md) and
 [App Store billing setup](docs/APPLE_BILLING.md). These documents include the
-three targeted store pages, real purchase tests and external configuration.
+three separate store listings, real purchase tests and external configuration.
 
 A temporary web testing override accepts `?key=<test-key>` when its SHA-256
 hex digest matches `testKeyHash`. Without a matching key the site stays in demo

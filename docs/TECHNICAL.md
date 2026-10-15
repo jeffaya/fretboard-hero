@@ -100,10 +100,11 @@ Known product identities (see `web/README.md` for full changelog):
 - Viewport meta already sets `user-scalable=no` in `web/index.html` — this
   is what disables pinch-zoom in both the web and native builds; no
   additional native-side configuration is needed for that.
-- `app/distribution.json` owns one installation identity (`com.guitar.fretboardhero`),
-  the Fretboard Hero display name and shared launcher icon. `app/instruments.json`
-  contains the guitar/bass/ukulele presentation profiles. Instrument selection
-  never changes the app ID or the global `full_access` entitlement.
+- `app/instruments.json` owns the three app identities, names and launcher icons.
+  Guitar (`com.guitar.fretboardhero`), Bass (`com.bass.fretboardhero`) and Ukulele
+  (`com.ukulele.fretboardhero`) each include all three playable instruments.
+  Selection never changes the installed app ID. The `full_access` entitlement
+  unlocks everything inside that app; purchases are not shared between apps.
 
 ## 4. Build pipeline — exact mechanics
 
@@ -112,8 +113,8 @@ Known product identities (see `web/README.md` for full changelog):
 Regenerates `app/www/` from scratch for one instrument:
 
 1. Deletes `app/www/` entirely and copies `web/` into it verbatim.
-2. Sets the initial instrument, writes the Store/Preview access flags and removes
-   the web preview key. All three instruments remain available in the shared app.
+2. Sets the app ID and initial instrument, writes Store/Preview access flags and
+   removes the web preview key. All three instruments remain available in each app.
 3. Copies `app/native-assets/capacitor-bridge.js` into
    `app/www/core/capacitor-bridge.js`, then injects
    `<script src="./core/capacitor-bridge.js" defer></script>` right before
@@ -136,10 +137,10 @@ Full orchestration for one instrument:
 
 1. Calls `sync-web.ps1` (§4.1).
 2. Writes `app/capacitor.config.json` with `appId`/`appName` from
-   `distribution.json`, `webDir: "www"`, and the splash/status-bar plugin
+   `instruments.json`, `webDir: "www"`, and the splash/status-bar plugin
    config (`#05070b` background).
 3. Patches `app/android/app/build.gradle`: regex-replaces
-   `applicationId "..."` with the shared app ID (plus `.preview` for Preview).
+   `applicationId "..."` with the selected app ID (plus `.preview` for Preview).
    **Critical gotcha — BOM**: this file must be written via
    `[System.IO.File]::WriteAllText(path, content, New-Object System.Text.UTF8Encoding $false)`.
    `Set-Content -Encoding UTF8` injects a UTF-8 BOM, and Gradle's Groovy
@@ -159,7 +160,7 @@ Full orchestration for one instrument:
    intermittently fail on successful builds.
 5. Copies the built
    `app/android/app/build/outputs/apk/debug/app-debug.apk` to
-   `dist/fretboard-hero-<profile>-debug.apk`.
+   `dist/fretboard-hero-<instrument>-<profile>-debug.apk`.
 
 Note: `sdkmanager`/`avdmanager`/`sdkmanager --licenses` commands frequently
 return a non-zero exit code even when they succeeded (e.g. license
@@ -215,14 +216,14 @@ Used to provision a build+test machine without the Android Studio GUI:
 
 ## 6. Manual / scripted verification workflow
 
-### 6.1 Installing the shared app and preview
+### 6.1 Installing the three apps and their previews
 
 Store and Preview use separate IDs and may coexist. All three instruments are
 inside each package. Updating an installed APK requires a compatible signing key.
 
 ```sh
-adb install -r dist/fretboard-hero-store-debug.apk
-adb install -r dist/fretboard-hero-preview-debug.apk
+adb install -r dist/fretboard-hero-guitar-store-debug.apk
+adb install -r dist/fretboard-hero-guitar-preview-debug.apk
 ```
 
 Launch with `adb shell monkey -p com.guitar.fretboardhero -c android.intent.category.LAUNCHER 1`
@@ -293,8 +294,8 @@ during the run.
    `web/products/` (branding, SEO/OG metadata, quiz ranks, tuning/fret
    range as needed) — follow the existing `bass-4`/`ukulele` profiles as a
    template. **Never** add instrument-conditional code to `web/core/`.
-2. Add the new presentation profile to `app/instruments.json`. Keep the shared
-   app ID in `app/distribution.json`; do not create another app for it.
+2. Add the new app identity and icon to `app/instruments.json`, configure its
+   store links/product, and extend the server package allowlist and CI matrices.
 3. Add the new key to the `ValidateSet` list in both
    `scripts/sync-web.ps1`, `scripts/build-instrument.ps1`, the access validator
    and iOS preparation script, then extend the sync/startup tests.
@@ -381,20 +382,22 @@ validates the final config against the requested profile. See
 [Google Play billing](GOOGLE_PLAY_BILLING.md) for the full access contract.
 
 ```powershell
-# One shared app, signed APK + AAB for all instruments.
+# Three applications, each containing all instruments: signed APKs + AABs.
 .\scripts\build-all.ps1 -Profile Store -BuildType Release -Format Both -VersionCode 7 -VersionName 1.1.0
 
-# Fully unlocked preview, initially showing bass.
+# Fully unlocked Bass app preview, with its own installation identity.
 .\scripts\build-instrument.ps1 -Instrument bass-4 -Profile Preview -BuildType Debug -Format Apk -VersionCode 7 -VersionName 1.1.0
 ```
 
-Choose a VersionCode above the last uploaded code. `app/distribution.json` owns
-one stable app ID, name and icon; `-Instrument` changes only the initial universe.
-`build-all.ps1` is a compatibility entry point and builds the shared app once.
+Choose a VersionCode above the last uploaded code for each app. `app/instruments.json`
+owns the three stable IDs, names and icons. `-Instrument` selects the app identity and
+initial universe; the app can then switch instruments without changing identity.
+`build-all.ps1` builds all three sequentially in the shared native working tree.
 
-Outputs: `dist/fretboard-hero-store-release.apk`,
-`dist/fretboard-hero-store-release.aab`, or
-`dist/fretboard-hero-preview-debug.apk` for the example Preview command.
+Outputs follow `dist/fretboard-hero-<instrument>-<profile>-<buildType>.<apk|aab>`;
+for example, `dist/fretboard-hero-bass-4-store-release.aab` and
+`dist/fretboard-hero-bass-4-preview-debug.apk`.
+The final archive gate checks its web access flags and native Capacitor app ID.
 Upload the signed Store AAB to Play Console. Builds do not create store products,
 listings, purchase credentials or publish a Play release.
 

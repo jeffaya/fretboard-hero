@@ -1,7 +1,7 @@
 ﻿{
     "appId":  "com.guitar.fretboardhero",
     "webDir":  "www",
-    "appName":  "Fretboard Hero",
+    "appName":  "Guitar Fretboard Hero",
     "plugins":  {
                     "SplashScreen":  {
                                          "launchAutoHide":  true,

@@ -14,7 +14,7 @@ test('Web demo exposes download action; native and unlocked preview do not dupli
 test('Switching universe persists the choice, retains the language and still works with blocked storage',()=>{
  for(const blocked of [false,true]){const s=setup({native:true,unlocked:true,blocked});s.buttons[1].events.click();const url=new URL(s.destination);assert.equal(url.searchParams.get('instrument'),'bass-4');assert.equal(url.searchParams.get('lang'),'fr');if(!blocked)assert.equal(s.stored['fretboard-instrument'],'bass-4')}
 });
-test('All website instrument destinations refer to the same Android app, never a separate purchase',()=>{
- const config=JSON.parse(fs.readFileSync('web/site.config.json','utf8')),distribution=JSON.parse(fs.readFileSync('app/distribution.json','utf8'));
- for(const instrument of ['guitar','bass-4','ukulele'])assert.equal(new URL(config.stores[instrument].android).searchParams.get('id'),distribution.appId);
+test('Website instrument destinations use the corresponding distinct Android application',()=>{
+ const config=JSON.parse(fs.readFileSync('web/site.config.json','utf8')),catalog=JSON.parse(fs.readFileSync('app/instruments.json','utf8'));
+ for(const instrument of ['guitar','bass-4','ukulele'])assert.equal(new URL(config.stores[instrument].android).searchParams.get('id'),catalog[instrument].appId);
 });

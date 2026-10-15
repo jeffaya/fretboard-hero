@@ -16,11 +16,12 @@ final class VerifiedPurchaseCache {
     interface Keys { SecretKey get() throws Exception; }
     private final Storage storage;
     private final Keys keys;
+    private final String packageName;
     private final String product;
     private final byte[] scope;
 
     VerifiedPurchaseCache(String packageName, String product, Storage storage, Keys keys) {
-        this.storage = storage; this.keys = keys; this.product = product;
+        this.storage = storage; this.keys = keys; this.product = product; this.packageName = packageName;
         scope = (packageName + ":" + product + ":v1").getBytes(StandardCharsets.UTF_8);
     }
 
@@ -39,8 +40,8 @@ final class VerifiedPurchaseCache {
 
     // Called only after HTTPS verification. Pending, outages and malformed replies
     // must never clear an earlier verified purchase or create a new entitlement.
-    void accept(String token, String responseProduct, boolean unlocked, String status) throws Exception {
-        if (!product.equals(responseProduct) || !validToken(token)) throw new IllegalArgumentException("Invalid purchase proof");
+    void accept(String token, String responsePackage, String responseProduct, boolean unlocked, String status) throws Exception {
+        if (!packageName.equals(responsePackage) || !product.equals(responseProduct) || !validToken(token)) throw new IllegalArgumentException("Invalid purchase proof");
         if (!unlocked && "pending".equals(status)) return;
         if (!unlocked && "not_owned".equals(status)) { storage.clear(); return; }
         if (!unlocked || !"purchased".equals(status)) throw new IllegalArgumentException("Invalid verification status");

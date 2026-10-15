@@ -6,7 +6,7 @@ const {webcrypto,createHash} = require('node:crypto');
 
 // Execute the real bootstrap, billing and access modules together. This guards
 // their wiring, including home purchase controls, not just isolated flag values.
-async function startup(config, cachedState, {saved=null,search='',session=null}={}) {
+async function startup(config, cachedState, {saved=null,search='',session=null,platform='android'}={}) {
   let storeCalls = 0, reloads = 0, appStarted = false;
   const failures = [], rows = [];
   class Node {
@@ -39,13 +39,13 @@ async function startup(config, cachedState, {saved=null,search='',session=null}=
     }); }},
   };
   const unavailable = () => { storeCalls++; throw Error('Google Play is unavailable. Please try again.'); };
-  const plugin = {cachedState: () => { storeCalls++; return Promise.resolve(cachedState); }, restore: unavailable, purchase: unavailable, price: unavailable, addListener: () => ({remove(){}})};
+  const plugin = {cachedState: () => { storeCalls++; return Promise.resolve(cachedState); }, restore: unavailable, refresh: unavailable, purchase: unavailable, price: unavailable, addListener: () => ({remove(){}})};
   const ctx = vm.createContext({document, URL, URLSearchParams, TextEncoder, crypto:webcrypto, queueMicrotask, setTimeout, clearTimeout,
     matchMedia:()=>({matches:false,addEventListener(){}}), FretboardModal:{bindDismiss(){}},
     setInterval(){}, location: {search, reload() { reloads++; }},
     localStorage:{getItem:()=>saved,setItem(){},removeItem(){}}, sessionStorage: {getItem: () => session,removeItem(){}}, fetch: async () => ({ok: true, json: async () => ({...config})}),
     console: {error: error => failures.push(error)},
-    Capacitor: {getPlatform: () => 'android', Plugins: {PlayBilling: plugin}, registerPlugin: unavailable},
+    Capacitor: {getPlatform: () => platform, Plugins: {PlayBilling: plugin,StoreBilling:plugin}, registerPlugin: unavailable},
     FretboardI18n: {initialize: async () => {}, mount() {}},
     ProductShell: {apply() {}},
     FRETBOARD_INSTRUMENTS: {guitar: {}, bass4: {}, ukulele: {}},
@@ -80,11 +80,13 @@ for (const instrument of ['guitar', 'bass-4', 'ukulele']) {
   }
 }
 
-for(const instrument of ['guitar','bass-4','ukulele']) for(const owned of [false,true]) {
- test(`Store ${instrument} starts from verified ownership (${owned}) despite static flags and URL key`,async()=>{
+const catalog=JSON.parse(fs.readFileSync('app/instruments.json','utf8'));
+for(const application of Object.keys(catalog)) for(const platform of ['android','ios']) for(const instrument of Object.keys(catalog)) for(const owned of [false,true]) {
+ test(`${platform} ${application} app: ${instrument} access follows verified ownership (${owned}), never static flags or URL key`,async()=>{
   const key='valid-test-key';
-  const {ctx,rows}=await startup({instrument:'guitar',nativeBilling:true,unlocked:true,testKeyHash:createHash('sha256').update(key).digest('hex')},{unlocked:owned},{search:`?instrument=${instrument}&key=${key}`});
+  const {ctx,rows}=await startup({instrument:application,appId:catalog[application].appId,nativeBilling:true,unlocked:true,testKeyHash:createHash('sha256').update(key).digest('hex')},{unlocked:owned},{platform,search:`?instrument=${instrument}&key=${key}`});
   assert.equal(ctx.FRETBOARD_ACCESS.unlocked,owned);assert.equal(ctx.FRETBOARD_SITE_CONFIG.instrument,instrument);
+  assert.equal(ctx.FRETBOARD_SITE_CONFIG.appId,catalog[application].appId);assert.equal(ctx.FRETBOARD_SITE_CONFIG.defaultInstrument,application);
   assert.equal(ctx.FRETBOARD_ACCESS.allows('root','C'),owned);assert.equal(ctx.FRETBOARD_ACCESS.allows('mode','triads'),owned);
   assert.equal(rows.length,1);assert.equal(rows[0].children[0].hidden,owned);
  });

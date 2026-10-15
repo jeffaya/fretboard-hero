@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Builds the shared Fretboard Hero APK and/or AAB with an initial instrument.
+    Builds one instrument's application, including all three playable instruments.
 
 .PARAMETER Instrument
     One of: guitar, bass-4, ukulele
@@ -58,12 +58,12 @@ $profileLower = $Profile.ToLower()
 $extensions = if ($Format -eq "Both") { @("apk", "aab") } else { @($Format.ToLower()) }
 # Do not leave a stale package that could be mistaken for this build's output.
 foreach ($extension in $extensions) {
-    Remove-Item (Join-Path $distDir "fretboard-hero-$profileLower-$buildTypeLower.$extension") -Force -ErrorAction SilentlyContinue
+    Remove-Item (Join-Path $distDir "fretboard-hero-$Instrument-$profileLower-$buildTypeLower.$extension") -Force -ErrorAction SilentlyContinue
 }
 $instrumentsPath = Join-Path $appRoot "instruments.json"
 $instruments = Get-Content $instrumentsPath -Raw | ConvertFrom-Json
 if (-not $instruments.$Instrument) { throw "Unknown instrument '$Instrument'." }
-$entry = Get-Content (Join-Path $appRoot "distribution.json") -Raw | ConvertFrom-Json
+$entry = $instruments.$Instrument
 if ($Profile -eq "Preview") {
     $entry.appId += ".preview"
     $entry.name += " Preview"
@@ -130,7 +130,7 @@ try {
     }
     $stringsXml.Save($stringsPath)
 
-    # 3b. Generate the Android shared launcher icon from distribution.json
+    # 3b. Generate this application's launcher icon from instruments.json
     # @capacitor/assets joins projectRoot + assetPath with path.join, which breaks
     # if assetPath is absolute. Use a path relative to $appRoot (we're Push-Location'd there).
     $assetsTemp = Join-Path $appRoot "assets"
@@ -188,8 +188,8 @@ try {
         }
         # Inspect the actual archive, not only the source config: stale native
         # assets must never mix Store and Preview access.
-        & (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $built -Instrument $Instrument -Profile $Profile
-        $output = Join-Path $distDir "fretboard-hero-$profileLower-$buildTypeLower.$extension"
+        & (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $built -Instrument $Instrument -Profile $Profile -RepoPath $RepoPath
+        $output = Join-Path $distDir "fretboard-hero-$Instrument-$profileLower-$buildTypeLower.$extension"
         Copy-Item -Path $built -Destination $output -Force
         Write-Host "Built $output (version $VersionName, code $VersionCode)" -ForegroundColor Green
     }

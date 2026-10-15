@@ -158,7 +158,7 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
                 JSONObject verified; try (InputStream input = connection.getInputStream()) { verified = new JSONObject(read(input)); }
                 if (!(verified.get("unlocked") instanceof Boolean)) throw new IOException("Invalid verification");
                 String status = verified.getString("status");
-                cache.accept(token, verified.getString("productId"), verified.getBoolean("unlocked"), status);
+                cache.accept(token, verified.getString("packageName"), verified.getString("productId"), verified.getBoolean("unlocked"), status);
                 call.resolve(state(cache.token() != null, status));
             } catch (Exception ignored) { call.reject("Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry."); }
             finally { if (connection != null) connection.disconnect(); }

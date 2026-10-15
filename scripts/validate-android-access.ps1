@@ -12,10 +12,16 @@ param(
 
     [Parameter(Mandatory = $true)]
     [ValidateSet("guitar", "bass-4", "ukulele")]
-    [string]$Instrument
+    [string]$Instrument,
+
+    [string]$RepoPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 )
 
 $ErrorActionPreference = "Stop"
+$instruments = Get-Content (Join-Path $RepoPath "app/instruments.json") -Raw | ConvertFrom-Json
+$appId = $instruments.$Instrument.appId
+if (-not $appId) { throw "Android access: missing application ID for $Instrument" }
+if ($Profile -eq "Preview") { $appId += ".preview" }
 $extension = [IO.Path]::GetExtension($Path).ToLowerInvariant()
 if ($extension -in @(".apk", ".aab")) {
     Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -26,6 +32,12 @@ if ($extension -in @(".apk", ".aab")) {
         if ($entries.Count -ne 1) { throw "Android access: expected exactly one $entryPath in $Path" }
         $reader = [IO.StreamReader]::new($entries[0].Open(), [Text.Encoding]::UTF8)
         try { $json = $reader.ReadToEnd() } finally { $reader.Dispose() }
+        $nativePath = if ($extension -eq ".aab") { "base/assets/capacitor.config.json" } else { "assets/capacitor.config.json" }
+        $nativeEntries = @($archive.Entries | Where-Object { $_.FullName -eq $nativePath })
+        if ($nativeEntries.Count -ne 1) { throw "Android access: expected exactly one $nativePath in $Path" }
+        $reader = [IO.StreamReader]::new($nativeEntries[0].Open(), [Text.Encoding]::UTF8)
+        try { $native = $reader.ReadToEnd() | ConvertFrom-Json } finally { $reader.Dispose() }
+        if ($native.appId -cne $appId) { throw "Android access: wrong native application ID in $Path. Expected $appId." }
     } finally { $archive.Dispose() }
 } elseif ($extension -eq ".json") {
     $json = [IO.File]::ReadAllText($Path, [Text.Encoding]::UTF8)
@@ -37,6 +49,7 @@ $config = $json | ConvertFrom-Json
 $preview = $Profile -eq "Preview"
 if ($null -eq $config -or
     $config.instrument -cne $Instrument -or
+    $config.appId -cne $appId -or
     $config.accessProfile -cne $Profile -or
     $config.unlocked -isnot [bool] -or $config.unlocked -ne $preview -or
     $config.nativeBilling -isnot [bool] -or $config.nativeBilling -ne (-not $preview) -or

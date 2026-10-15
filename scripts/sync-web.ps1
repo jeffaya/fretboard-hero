@@ -28,6 +28,11 @@ $ErrorActionPreference = "Stop"
 $webSource = Join-Path $RepoPath "web"
 $appRoot   = Join-Path $RepoPath "app"
 $wwwPath   = Join-Path $appRoot "www"
+$instruments = Get-Content (Join-Path $appRoot "instruments.json") -Raw | ConvertFrom-Json
+$entry = $instruments.$Instrument
+if (-not $entry) { throw "Unknown application '$Instrument'." }
+$appId = $entry.appId
+if ($Profile -eq "Preview") { $appId += ".preview" }
 
 if (-not (Test-Path $webSource)) {
     throw "Web source folder not found: $webSource"
@@ -44,6 +49,7 @@ Copy-Item -Path (Join-Path $webSource "*") -Destination $wwwPath -Recurse -Force
 $siteConfigPath = Join-Path $wwwPath "site.config.json"
 $siteConfig = Get-Content $siteConfigPath -Raw | ConvertFrom-Json
 $siteConfig.instrument = $Instrument
+$siteConfig | Add-Member -NotePropertyName appId -NotePropertyValue $appId -Force
 # Store builds start in demo; only the explicit Preview profile bypasses billing.
 $preview = $Profile -eq "Preview"
 $siteConfig | Add-Member -NotePropertyName accessProfile -NotePropertyValue $Profile -Force
@@ -52,10 +58,10 @@ $siteConfig | Add-Member -NotePropertyName nativeBilling -NotePropertyValue (-no
 $siteConfig.PSObject.Properties.Remove("testKeyHash")
 $utf8Config = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllText($siteConfigPath, ($siteConfig | ConvertTo-Json -Depth 8), $utf8Config)
-& (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $siteConfigPath -Instrument $Instrument -Profile $Profile
+& (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $siteConfigPath -Instrument $Instrument -Profile $Profile -RepoPath $RepoPath
 
 # Keep the universal iOS App Store icon and Capacitor source aligned with this build.
-$iconKey = (Get-Content (Join-Path $appRoot "distribution.json") -Raw | ConvertFrom-Json).iconKey
+$iconKey = $entry.iconKey
 $iconSource = Join-Path $webSource "assets\instruments\$iconKey\icon-1024.png"
 Copy-Item $iconSource (Join-Path $appRoot "resources\icon.png") -Force
 Copy-Item $iconSource (Join-Path $appRoot "ios\App\App\Assets.xcassets\AppIcon.appiconset\AppIcon-512@2x.png") -Force

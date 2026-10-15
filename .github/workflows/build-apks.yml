@@ -106,7 +106,7 @@ jobs:
           )
           [IO.File]::WriteAllLines("app/android/keystore.properties", $lines, [Text.UTF8Encoding]::new($false))
 
-      - name: Build shared application (release, signed)
+      - name: Build all three applications (release, signed)
         shell: pwsh
         env:
           VERSION_CODE: ${{ inputs.version_code }}
@@ -146,7 +146,7 @@ jobs:
             Signed Android packages built from commit ${{ github.sha }}.
             Version ${{ inputs.version_name }} (code ${{ inputs.version_code }}).
             Formats included in this run: ${{ inputs.format }}. Other formats on this rolling release may come from an earlier run; use this run's artifacts for a consistent set.
-            Fretboard Hero: Guitar, Bass and Ukulele; free demo with one full-access purchase.
+            Three applications: Guitar, Bass and Ukulele. Each starts in demo; one purchase unlocks all instruments within the purchased application.
             APK: direct installation. AAB: Google Play Console upload.
           prerelease: false
           files: |

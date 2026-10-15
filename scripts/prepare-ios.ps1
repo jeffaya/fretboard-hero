@@ -9,7 +9,9 @@ param(
 )
 $ErrorActionPreference = "Stop"
 $appRoot = Join-Path $RepoPath "app"
-$entry = Get-Content (Join-Path $appRoot "distribution.json") -Raw | ConvertFrom-Json
+$instruments = Get-Content (Join-Path $appRoot "instruments.json") -Raw | ConvertFrom-Json
+$entry = $instruments.$Instrument
+if (-not $entry) { throw "Unknown application '$Instrument'." }
 if ($Profile -eq "Preview") { $entry.appId += ".preview"; $entry.name += " Preview" }
 & (Join-Path $PSScriptRoot "sync-web.ps1") -Instrument $Instrument -RepoPath $RepoPath -Platform iOS -Profile $Profile
 $utf8 = New-Object System.Text.UTF8Encoding $false
