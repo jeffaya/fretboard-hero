@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "DESBLOQUEIE SEU",
   "FRETBOARD SKILLS": "DOMÍNIO DO BRAÇO",
   "Stop switching tools. Start playing solos worth sharing.": "Pare de trocar de ferramentas. Toque solos que valham a pena compartilhar.",
-  "One purchase. Every skill unlocked.": "Uma compra. Todos os recursos liberados.",
   "One purchase. Three instruments. Every skill unlocked.": "Uma compra. Três instrumentos. Tudo liberado.",
   "← Continue exploring": "← Continuar explorando",
   "Get it on": "Disponível no",
@@ -178,7 +177,6 @@
   "Could not restore purchases. Check your App Store account and connection, then try again.": "Não foi possível restaurar. Confira a conta da App Store e a conexão e tente novamente.",
   "Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry.": "Verificação temporariamente indisponível. Conecte-se e toque em Restaurar compras.",
   "Payment could not be completed. Please try again or restore purchases.": "Não foi possível concluir o pagamento. Tente novamente ou restaure as compras.",
-  "Allow session storage to change instruments on this device.": "Permita o armazenamento de sessão para trocar de instrumento neste dispositivo.",
   "Virtuoso": "Virtuose",
   "{instrument} virtuoso": "Virtuose de {instrument}",
   "{instrument} legend": "Lenda de {instrument}",
@@ -407,5 +405,8 @@
   "Even a short session counts.": "Até uma sessão curta conta.",
   "The basics can take you far.": "As bases podem levar você longe.",
   "Practice to play better.": "Praticar para tocar melhor.",
-  "Repetition can become discovery.": "A repetição pode virar descoberta."
+  "Repetition can become discovery.": "A repetição pode virar descoberta.",
+  "Get the app": "Baixar o aplicativo",
+  "Free download. One purchase unlocks all three instruments.": "Download gratuito. Uma compra desbloqueia os três instrumentos.",
+  "Could not read purchase status. Please restore purchases.": "Não foi possível ler o status da compra. Restaure suas compras."
 }

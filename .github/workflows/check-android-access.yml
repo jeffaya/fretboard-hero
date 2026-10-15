@@ -1,4 +1,4 @@
-name: Check paid Android access
+name: Check store and preview access
 on:
   pull_request:
     paths:
@@ -11,6 +11,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+env:
+  POWERSHELL_TELEMETRY_OPTOUT: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 jobs:
   regression:
     runs-on: windows-latest

@@ -280,8 +280,8 @@ keys and preserves only the selected instrument.
 icons, lightweight loader WebP and 1024×500 OG PNG. Rebuild icons with
 `python tools/generate-instrument-icons.py` from the repository root (Pillow).
 An optional instrument argument also refreshes checked-in native icons.
-Android builds use each instrument's 1024 px source; `sync-web.ps1` copies the
-selected source to the universal iOS AppIcon and Capacitor resource.
+Native builds use the application icon selected by `app/instruments.json`;
+`sync-web.ps1` aligns the iOS AppIcon and Capacitor resource with it.
 
 The 10.35.0 OG refresh uses the built-in image generator to preserve the approved
 concert setting, neon palette and instrument branding across all three images.
@@ -311,3 +311,12 @@ The current OG bitmap artwork also uses Learn. The generic practice wording
 inside Play and Circle of Fifths is independent of the renamed section.
 
 Shared OG/store graphics use `og.png` in each instrument asset directory. Rebuild all three and their exact store copies with `node stores/tools/export-og.cjs`. Native preparation copies these assets with the rest of `web/`. See [the export guide](../tools/assets/og/README.md).
+
+
+## V10.48.0 — Three apps, a full-access purchase per app
+
+- Free Store builds use the native Google Play / StoreKit payment sheet and localized price. One non-consumable purchase unlocks all three instruments and premium features within the purchased app, without cross-app or cross-store sharing.
+- The website links to the matching Guitar, Bass or Ukulele app. The chosen universe is remembered across launches.
+- Explicit Store and Preview build profiles use separate identities and final-archive validation. The build-all entry point produces all three applications sequentially.
+- Android keeps an authenticated, encrypted, device-bound purchase proof with no seven-day expiry; proofs are bound to the app ID and product. Empty store queries and temporary outages do not revoke paid access; confirmed refunds do.
+- Added native cache tests and purchase, restore, startup, instrument preference and packaging regressions. Configuration and real-store test instructions are in docs/GOOGLE_PLAY_BILLING.md and docs/APPLE_BILLING.md.

@@ -11,3 +11,12 @@ test('Unlock dialog keeps two direct store buttons and no QR for missing destina
 test('Desktop builds distinct QR codes lazily on opening, mobile keeps them ungenerated',async()=>{for(const desktop of [false,true]){const {Access,app}=runtime(desktop);const modal=Access.mount({instrument:'guitar',stores:{guitar:{android:'https://example.com/android',ios:'https://example.com/ios'}}},Access.create(false));const cols=app.children[0].querySelector('.premium-stores').children;assert.equal(cols[0].children[0].href,'https://example.com/android');assert.equal(cols[1].children[0].href,'https://example.com/ios');for(const col of cols)assert.equal(col.children[1].querySelector('div').innerHTML,'');modal.open();await Promise.resolve();const qr=cols.map(col=>col.children[1].querySelector('div').innerHTML);if(desktop){assert.match(qr[0],/<svg/);assert.notEqual(qr[0],qr[1])}else assert.deepEqual(qr,['',''])}});
 
 test('Unlock menus follow home labels, artwork and order including future menus',()=>{const {Access,app,menus}=runtime();const extra=menus[0].cloneNode();extra.querySelector('.home-card-copy strong').textContent='New menu';extra.querySelector('.hero-icon img').src='new.svg';menus.push(extra);Access.mount({instrument:'guitar'},Access.create(false));const items=app.children[0].querySelector('.premium-skills').children;assert.equal(items.length,6);for(let i=0;i<menus.length;i++){assert.equal(items[i].children[1].textContent,menus[i].querySelector('.home-card-copy strong').textContent);assert.equal(items[i].children[0].src,menus[i].querySelector('.hero-icon img').src);assert.notEqual(items[i].children[0],menus[i].querySelector('.hero-icon img'))}});
+
+test('Native paywall offers the global purchase instead of external store links',()=>{
+ const r=runtime(true);let mounted=0,prices=0;
+ r.c.window.FretboardBilling={native:true,mountPaywall(){mounted++},refreshPrice(){prices++}};
+ const modal=r.Access.mount({instrument:'guitar',stores:{guitar:{android:'https://play.google.com/store/apps/details?id=example'}}},r.Access.create(false));
+ assert.equal(mounted,1);assert.equal(r.app.children[0].querySelector('.premium-stores').children.length,0);
+ assert.equal(r.app.children[0].querySelector('.premium-promise').textContent,'One purchase. Three instruments. Every skill unlocked.');
+ modal.open();assert.equal(prices,1);
+});

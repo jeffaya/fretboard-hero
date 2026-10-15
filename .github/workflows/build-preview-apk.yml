@@ -1,10 +1,15 @@
-name: Build guitar preview APK
+name: Build three Android apps (Store and Preview)
 
 on:
   workflow_dispatch:
   pull_request:
     paths:
       - '.github/workflows/build-preview-apk.yml'
+      - 'app/**'
+      - 'scripts/**'
+      - 'web/core/native-billing.js'
+      - 'web/core/access.js'
+      - 'server/**'
 
 permissions:
   contents: read
@@ -15,7 +20,13 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 
 jobs:
-  guitar-preview:
+  application:
+    strategy:
+      fail-fast: false
+      matrix:
+        instrument: [guitar, bass-4, ukulele]
+    env:
+      INSTRUMENT: ${{ matrix.instrument }}
     runs-on: windows-latest
     timeout-minutes: 25
     steps:
@@ -65,62 +76,85 @@ jobs:
         run: node node_modules/@capacitor/cli/bin/capacitor telemetry off
 
       - name: Run regression tests before packaging
+        if: matrix.instrument == 'guitar'
         shell: pwsh
         run: |
           $tests = Get-ChildItem web/tests/*.test.cjs, app/tests/*.test.cjs, app/tests/*.test.js, server/tests/*.test.mjs
           node --test $tests.FullName
           if ($LASTEXITCODE -ne 0) { throw 'Regression tests failed; refusing to package the app' }
 
-      - name: Give the preview its own installation identity
+      - name: Build an unlocked, debug-signed Preview APK
         shell: pwsh
         run: |
-          # This temporary checkout change protects the installed store app and
-          # its data. The production application ID and signing remain separate.
-          $instruments = Get-Content app/instruments.json -Raw | ConvertFrom-Json
-          $instruments.guitar.appId = 'com.guitar.fretboardhero.preview'
-          $instruments.guitar.name = 'Guitar Fretboard Hero Preview'
-          $instruments | ConvertTo-Json -Depth 8 | Set-Content app/instruments.json -Encoding utf8NoBOM
-
-      - name: Build an unlocked, debug-signed guitar APK
-        shell: pwsh
-        run: |
-          ./scripts/build-instrument.ps1 -Instrument guitar -BuildType Debug -Format Apk -VersionCode 4 -VersionName '1.0.3'
+          ./scripts/build-instrument.ps1 -Instrument $env:INSTRUMENT -Profile Preview -BuildType Debug -Format Apk -VersionCode 7 -VersionName '1.1.0'
           if ($LASTEXITCODE -ne 0) { throw 'APK build failed' }
-          Move-Item dist/fretboard-hero-guitar-debug.apk dist/guitar-fretboard-hero-1.0.3-preview.apk
 
-      - name: Verify signature, identity and paid access
+      - name: Verify signature, identity and preview access
         shell: pwsh
         run: |
-          $apk = 'dist/guitar-fretboard-hero-1.0.3-preview.apk'
+          $apk = "dist/fretboard-hero-$env:INSTRUMENT-preview-debug.apk"
+          $entry = (Get-Content app/instruments.json -Raw | ConvertFrom-Json).($env:INSTRUMENT)
+          $appId = "$($entry.appId).preview"
           $buildTools = Join-Path $env:ANDROID_HOME 'build-tools/35.0.0'
           & (Join-Path $buildTools 'apksigner.bat') verify --verbose $apk
           if ($LASTEXITCODE -ne 0) { throw 'APK signature verification failed' }
           $badging = & (Join-Path $buildTools 'aapt.exe') dump badging $apk
           if ($LASTEXITCODE -ne 0) { throw 'Cannot inspect APK metadata' }
-          if (-not ($badging | Select-String -SimpleMatch "package: name='com.guitar.fretboardhero.preview'")) { throw 'Wrong APK application ID' }
+          if (-not ($badging | Select-String -SimpleMatch "package: name='$appId'")) { throw 'Wrong APK application ID' }
           $permissions = & (Join-Path $buildTools 'aapt.exe') dump permissions $apk
           if ($LASTEXITCODE -ne 0) { throw 'Cannot inspect APK permissions' }
           foreach ($permission in @('android.permission.RECORD_AUDIO', 'android.permission.MODIFY_AUDIO_SETTINGS')) {
             if (-not ($permissions | Select-String -SimpleMatch $permission)) { throw "Missing APK permission: $permission" }
           }
-          ./scripts/validate-android-access.ps1 -Path $apk -Instrument guitar
+          ./scripts/validate-android-access.ps1 -Path $apk -Instrument $env:INSTRUMENT -Profile Preview
           $info = @{
             sourceCommit = (git rev-parse HEAD)
-            appId = 'com.guitar.fretboardhero.preview'
-            versionName = '1.0.3'
-            versionCode = 4
+            appId = $appId
+            instrument = $env:INSTRUMENT
+            versionName = '1.1.0'
+            versionCode = 7
             signing = 'debug'
             fullyUnlocked = $true
             sha256 = (Get-FileHash $apk -Algorithm SHA256).Hash.ToLowerInvariant()
           }
-          $info | ConvertTo-Json | Set-Content dist/guitar-preview-build-info.json -Encoding utf8NoBOM
+          $info | ConvertTo-Json | Set-Content "dist/$env:INSTRUMENT-preview-build-info.json" -Encoding utf8NoBOM
+
+      - name: Build Store APK and AAB with demo access
+        shell: pwsh
+        run: |
+          ./scripts/build-instrument.ps1 -Instrument $env:INSTRUMENT -Profile Store -BuildType Debug -Format Both -VersionCode 7 -VersionName '1.1.0'
+          if ($LASTEXITCODE -ne 0) { throw 'Store build failed' }
+          $buildTools = Join-Path $env:ANDROID_HOME 'build-tools/35.0.0'
+          $apk = "dist/fretboard-hero-$env:INSTRUMENT-store-debug.apk"
+          $appId = (Get-Content app/instruments.json -Raw | ConvertFrom-Json).($env:INSTRUMENT).appId
+          $badging = & (Join-Path $buildTools 'aapt.exe') dump badging $apk
+          if ($LASTEXITCODE -ne 0 -or -not ($badging | Select-String -SimpleMatch "package: name='$appId'")) { throw 'Wrong Store application ID' }
+          & (Join-Path $buildTools 'apksigner.bat') verify --verbose $apk
+          if ($LASTEXITCODE -ne 0) { throw 'Store test APK signature verification failed' }
+
+      - name: Native purchase-cache regression tests
+        working-directory: app/android
+        shell: pwsh
+        run: |
+          ./gradlew.bat --no-scan testDebugUnitTest
+          if ($LASTEXITCODE -ne 0) { throw 'Native billing tests failed' }
+
+      - name: Upload Store test packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.instrument }}-store-test-packages
+          path: |
+            dist/fretboard-hero-${{ matrix.instrument }}-store-debug.apk
+            dist/fretboard-hero-${{ matrix.instrument }}-store-debug.aab
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Upload the APK and build identity
         uses: actions/upload-artifact@v7
         with:
-          name: guitar-preview-apk
+          name: ${{ matrix.instrument }}-preview-apk
           path: |
-            dist/guitar-fretboard-hero-1.0.3-preview.apk
-            dist/guitar-preview-build-info.json
+            dist/fretboard-hero-${{ matrix.instrument }}-preview-debug.apk
+            dist/${{ matrix.instrument }}-preview-build-info.json
           if-no-files-found: error
           retention-days: 14

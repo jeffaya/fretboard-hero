@@ -5,6 +5,19 @@ the website changelog ([`web/README.md`](../web/README.md#release-notes)).
 For every new app version, add an `## App vX` entry below describing what
 changed.
 
+## App v1.1.0 — pending store configuration and device payment tests
+
+- Keep three distinct Guitar/Bass/Ukulele apps with their own IDs, names and icons.
+- Store builds are free demos. A permanent `full_access` purchase unlocks every
+  instrument and feature within the app where it was bought; no cross-app sharing.
+- Reuse the website's modal with native price, purchase and restoration actions.
+- Separate explicit, fully unlocked Preview builds from Store packages.
+- Preserve verified Android purchases offline without an arbitrary deadline,
+  using encrypted proof bound to the app and product; handle refunds and outages.
+- Build and validate each app's Android packages and iOS simulator target in CI.
+- See the Google Play and Apple billing guides for external configuration and
+  real purchase tests required before publication.
+
 ## App v1
 
 First installable version of the Android app, shipped as 3 separate debug

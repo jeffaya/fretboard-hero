@@ -1,5 +1,17 @@
 {
-  "guitar":  { "appId": "com.guitar.fretboardhero",  "name": "Guitar Fretboard Hero",  "iconKey": "guitar" },
-  "bass-4":  { "appId": "com.bass.fretboardhero",    "name": "Bass Fretboard Hero",    "iconKey": "bass" },
-  "ukulele": { "appId": "com.ukulele.fretboardhero", "name": "Ukulele Fretboard Hero", "iconKey": "ukulele" }
+  "guitar": {
+    "appId": "com.guitar.fretboardhero",
+    "name": "Guitar Fretboard Hero",
+    "iconKey": "guitar"
+  },
+  "bass-4": {
+    "appId": "com.bass.fretboardhero",
+    "name": "Bass Fretboard Hero",
+    "iconKey": "bass"
+  },
+  "ukulele": {
+    "appId": "com.ukulele.fretboardhero",
+    "name": "Ukulele Fretboard Hero",
+    "iconKey": "ukulele"
+  }
 }
