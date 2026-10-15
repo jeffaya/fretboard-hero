@@ -102,7 +102,6 @@ body #app .routine-pattern-steps .ui-step { min-height: 48px; padding: 8px 10px;
 
 #routineContext { margin: 0 0 8px; color: #ffe38a; font-size: 18px; }
 
-.routine-melody-block { fill: #738bb00a; stroke: #8aa5cd55; stroke-width: 1; }
 .routine-block-label { fill: #e5efff; font-size: 13px; }
 .routine-melody-name { font-size: 13px; }
 .routine-melody-degree { fill: #ffe38a; font-size: 12px; }

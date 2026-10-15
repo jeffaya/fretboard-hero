@@ -49,7 +49,7 @@ test('Real web sync fully unlocks every Android variant, preserves web demo and 
   const original = fs.readFileSync(path.join(root, 'web/site.config.json'));
   write(dir, 'web/site.config.json', original);
   write(dir, 'web/index.html', fs.readFileSync(path.join(root, 'web/index.html')));
-  const sharedAudio = ['bootstrap.js', 'core/microphone.js', 'core/routine-echo.js', 'core/routine-rhythm-audio.js', 'core/routine-session.js', 'core/routine-melody.js', 'core/routine-exercises.js'];
+  const sharedAudio = ['bootstrap.js', 'routine.css', 'core/microphone.js', 'core/routine-echo.js', 'core/routine-rhythm-audio.js', 'core/routine-session.js', 'core/routine-melody.js', 'core/routine-exercises.js', 'core/routine-renderer.js'];
   for (const file of sharedAudio) write(dir, `web/${file}`, fs.readFileSync(path.join(root, 'web', file)));
   write(dir, 'app/native-assets/capacitor-bridge.js', fs.readFileSync(path.join(root, 'app/native-assets/capacitor-bridge.js')));
   fs.mkdirSync(path.join(dir, 'app/resources'), {recursive: true});

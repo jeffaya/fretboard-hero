@@ -66,9 +66,7 @@
       if(exercises[state.index]?.strumming)return;
       const target=$('#routineTab').querySelector('.is-target');
       if(target){
-        const block=target.getAttribute('data-block');
-        const frame=block&&$('#routineTab').querySelector(`.routine-melody-block[data-block="${block}"]`);
-        (frame||target).scrollIntoView({block:'nearest',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+        target.scrollIntoView({block:'nearest',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
       }
     }
     function audioState(value,error){
