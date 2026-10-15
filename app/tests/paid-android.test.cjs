@@ -49,8 +49,8 @@ test('Real web sync fully unlocks every Android variant, preserves web demo and 
   const original = fs.readFileSync(path.join(root, 'web/site.config.json'));
   write(dir, 'web/site.config.json', original);
   write(dir, 'web/index.html', fs.readFileSync(path.join(root, 'web/index.html')));
-  const sharedAudio = ['bootstrap.js', 'routine.css', 'core/microphone.js', 'core/routine-echo.js', 'core/routine-rhythm-audio.js', 'core/routine-session.js', 'core/routine-melody.js', 'core/routine-exercises.js', 'core/routine-renderer.js'];
-  for (const file of sharedAudio) write(dir, `web/${file}`, fs.readFileSync(path.join(root, 'web', file)));
+  const sharedAssets = ['bootstrap.js', 'theme.css', 'locales.css', ...fs.readdirSync(path.join(root, 'web/assets/fonts')).filter(name => name.startsWith('noto-')).map(name => 'assets/fonts/' + name), 'routine.css', 'core/routine-encouragement.js', 'core/i18n.js', ...fs.readdirSync(path.join(root, 'web/locales')).filter(name => name.endsWith('.json')).map(name => 'locales/' + name), 'core/microphone.js', 'core/routine-echo.js', 'core/routine-rhythm-audio.js', 'core/routine-session.js', 'core/routine-melody.js', 'core/routine-exercises.js', 'core/routine-renderer.js'];
+  for (const file of sharedAssets) write(dir, `web/${file}`, fs.readFileSync(path.join(root, 'web', file)));
   write(dir, 'app/native-assets/capacitor-bridge.js', fs.readFileSync(path.join(root, 'app/native-assets/capacitor-bridge.js')));
   fs.mkdirSync(path.join(dir, 'app/resources'), {recursive: true});
   fs.mkdirSync(path.join(dir, 'app/ios/App/App/Assets.xcassets/AppIcon.appiconset'), {recursive: true});
@@ -61,7 +61,7 @@ test('Real web sync fully unlocks every Android variant, preserves web demo and 
     assert.equal(result.status, 0, result.output);
     const config = JSON.parse(fs.readFileSync(path.join(dir, 'app/www/site.config.json'), 'utf8'));
     assert.equal(config.instrument, instrument);
-    for (const file of sharedAudio) assert.deepEqual(fs.readFileSync(path.join(dir, 'app/www', file)), fs.readFileSync(path.join(root, 'web', file)), `${platform} ${instrument}: ${file} must match the website`);
+    for (const file of sharedAssets) assert.deepEqual(fs.readFileSync(path.join(dir, 'app/www', file)), fs.readFileSync(path.join(root, 'web', file)), `${platform} ${instrument}: ${file} must match the website`);
     assert.equal(config.unlocked, platform === 'Android');
     assert.equal(config.nativeBilling, platform !== 'Android');
     assert.equal(Object.hasOwn(config, 'testKeyHash'), false);

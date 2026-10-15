@@ -334,7 +334,6 @@
   "Practice": "练习",
   "Explore": "探索",
   "Tune your instrument": "为乐器调音",
-  "Well played!": "弹得好！",
   "Play each triad together.": "请同时弹奏每个三和弦的所有音。",
   "Listening…": "正在聆听…",
   "Microphone": "麦克风",
@@ -396,5 +395,17 @@
   "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ 向下扫弦 · ↑ 向上扫弦 · × 闷音敲击 · PM 掌根制音 · > 重音（弹得更响）",
   "Numbers = beats · & = halfway between beats · Beams = one beat": "数字 = 拍数 · & = 半拍位置 · 连线 = 一拍",
   "e / a = second / fourth sixteenth of the beat": "e / a = 每拍的第二 / 第四个十六分音符",
-  "No arrow = keep moving without striking · Pink = current stroke": "无箭头 = 保持动作但不触弦 · 粉色 = 当前扫弦"
+  "No arrow = keep moving without striking · Pink = current stroke": "无箭头 = 保持动作但不触弦 · 粉色 = 当前扫弦",
+  "Keep it going!": "继续加油！",
+  "Inspired by": "灵感来自",
+  "A breakthrough can come from enjoyment.": "乐趣也能带来突破。",
+  "A little every day.": "每天进步一点点。",
+  "Repetition, even at the top.": "即使登上巅峰，也要反复练习。",
+  "Prepare for your next breakthrough.": "为下一次突破做好准备。",
+  "Practice becomes music.": "练习也能成为音乐。",
+  "Consistency makes the difference.": "坚持让进步发生。",
+  "Even a short session counts.": "短短一次练习，也有意义。",
+  "The basics can take you far.": "扎实的基础能带你走得更远。",
+  "Practice to play better.": "练习，是为了演奏得更好。",
+  "Repetition can become discovery.": "重复练习，也能带来新发现。"
 }

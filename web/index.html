@@ -50,9 +50,9 @@
   <link rel="stylesheet" href="./circle.css?v=10.31.0">
   <link rel="stylesheet" href="./home.css?v=10.44.0">
   <link rel="stylesheet" href="./theme.css?v=10.33.0">
-  <link rel="stylesheet" href="./routine.css?v=10.46.3">
+  <link rel="stylesheet" href="./routine.css?v=10.47.0">
   <link rel="stylesheet" href="./premium.css?v=10.31.0">
-  <link rel="stylesheet" href="./locales.css?v=10.46.0">
+  <link rel="stylesheet" href="./locales.css?v=10.47.0">
   <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
   <link rel="stylesheet" href="./tuner.css?v=10.34.1">
 </head>
@@ -142,7 +142,15 @@
             </div>
             <span id="routineNoteProgress" data-no-i18n></span>
           </div>
-          <div id="routineTransition" class="routine-transition" role="status" aria-live="polite" hidden><span aria-hidden="true">✓</span><strong>Well played!</strong></div>
+          <div id="routineTransition" class="routine-transition ui-modal" role="status" aria-live="polite" aria-atomic="true" data-no-i18n hidden>
+            <div class="routine-transition-burst" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="routine-transition-badge" aria-hidden="true"><span>✓</span></div>
+            <strong id="routineEncouragement"></strong>
+            <div class="routine-transition-inspiration">
+              <p id="routineEncouragementDetail"></p>
+              <span class="routine-transition-author"><span id="routineEncouragementCredit"></span> <b id="routineEncouragementAuthor"></b></span>
+            </div>
+          </div>
           <div class="routine-practice">
           <div id="routineTabScroll" class="routine-tab-scroll ui-panel"><svg id="routineTab" role="img"></svg></div>
           <div id="routineStrumming" class="routine-strumming ui-panel" hidden data-no-i18n>
@@ -293,7 +301,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.46.3" defer></script>
+  <script src="./bootstrap.js?v=10.47.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

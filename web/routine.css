@@ -149,6 +149,17 @@ body #app .routine-pattern-steps .ui-step { min-height: 48px; padding: 8px 10px;
 .rhythm-feedback strong { display: block; color: #fff; font-size: clamp(14px,2vw,22px); line-height: 1.2; }
 .rhythm-feedback-pop strong { animation: rhythm-feedback-rise .7s ease-out both; }
 @keyframes rhythm-feedback-rise { from { opacity: 0; transform: translateY(8px); } 30% { opacity: 1; } to { opacity: 1; transform: translateY(-6px); } }
+@media (max-width:380px) {
+  .routine-transition strong { font-size: 29px; }
+}
+@media (max-height:430px) {
+  .routine-transition { padding: 14px 20px; gap: 8px; }
+  .routine-transition-badge { width: 46px; height: 46px; border-radius: 16px; margin-bottom: 0; }
+  .routine-transition-badge span { font-size: 30px; }
+  .routine-transition strong { font-size: 27px; }
+  .routine-transition-inspiration { min-height: 0; }
+  .routine-transition p { font-size: 18px; }
+}
 @media (prefers-reduced-motion:reduce) { .rhythm-feedback-pop strong { animation: none; } }
 .routine-rhythm-controls { display: flex; justify-content: flex-end; align-items: center; flex-wrap: nowrap; gap: 8px; margin-left: auto; }
 body #app .routine-rhythm-controls button { min-height: 44px; padding: 8px 12px; font-size: 14px; background: #0a1527; border: 1px solid #647c9d; border-radius: 9px; box-shadow: none; }
@@ -338,6 +349,17 @@ body #app .routine-rhythm-controls button { min-height: 44px; padding: 8px 12px;
 
 @keyframes routine-confetti-fall{0%{opacity:0;transform:translateY(0) rotate(0)}10%{opacity:1}80%{opacity:.9}100%{opacity:0;transform:translate(var(--drift),520px) rotate(var(--turn))}}
 
+@media (max-width:380px) {
+  .routine-transition strong { font-size: 29px; }
+}
+@media (max-height:430px) {
+  .routine-transition { padding: 14px 20px; gap: 8px; }
+  .routine-transition-badge { width: 46px; height: 46px; border-radius: 16px; margin-bottom: 0; }
+  .routine-transition-badge span { font-size: 30px; }
+  .routine-transition strong { font-size: 27px; }
+  .routine-transition-inspiration { min-height: 0; }
+  .routine-transition p { font-size: 18px; }
+}
 @media (prefers-reduced-motion:reduce) {
   .routine-confetti { display: none; }
 
@@ -432,17 +454,54 @@ body #app #routineMic {
 .routine-tab-column.is-played .routine-chord-link { stroke: #4de7b680; }
 .routine-path { fill: none; stroke: #4de7b6; stroke-width: 2.5; opacity: .8; filter: drop-shadow(0 0 3px #4de7b680); }
 .routine-path.is-arriving { stroke: var(--ui-purple); filter: drop-shadow(0 0 3px var(--ui-purple)); stroke-dasharray: 1; stroke-dashoffset: 0; animation: routine-trace .42s ease-out both; }
-.routine-transition { position: fixed; z-index: 25; left: 50%; top: 50%; transform: translate(-50%,-50%); display: flex; align-items: center; gap: 14px; padding: 22px 30px; width: max-content; max-width: calc(100vw - 32px); box-sizing: border-box; border: 1px solid #4de7b6; border-radius: 22px; color: #b4ffe5; background: #07281ff5; box-shadow: 0 0 55px #4de7b644,0 12px 60px #000b; pointer-events: none; animation: routine-well-played .2s ease-out both; }
-.routine-transition span { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 50%; background: #4de7b6; color: #08261f; font-size: 30px; }
-.routine-transition strong { font: 800 28px/1.1 var(--ui-font); }
+.routine-transition {
+  position: fixed; z-index: 25; left: 50%; top: 50%; transform: translate(-50%,-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  width: 360px; max-width: calc(100vw - 32px); box-sizing: border-box; padding: 28px 20px 30px;
+  border-radius: 24px; text-align: center; color: var(--ui-text);
+  /* Surface, border and glow come from the shared .ui-modal in theme.css. */
+  pointer-events: none; animation: routine-cheer-in .36s cubic-bezier(.16,1,.3,1) both;
+}
+.routine-transition-badge {
+  position: relative; display: grid; place-items: center; width: 64px; height: 64px; margin-bottom: 5px;
+  border: 1px solid #8bfff3; border-radius: 22px; color: #061b2b;
+  background: linear-gradient(135deg,#bbfff0,#70f7ff 55%,#53c7ef); box-shadow: 0 0 30px #70f7ff44,inset 0 1px 0 #fff8;
+  transform: rotate(-9deg); animation: routine-cheer-badge .5s cubic-bezier(.16,1,.3,1) both;
+}
+.routine-transition-badge span { font: 800 38px/1 system-ui,sans-serif; transform: rotate(9deg); }
+.routine-transition strong { position: relative; max-width: 100%; font: 800 34px/1.12 var(--ui-font); overflow-wrap: anywhere; }
+.routine-transition p { position: relative; max-width: 100%; margin: 0; color: #e0e7f3; font: 500 20px/1.4 var(--ui-font); overflow-wrap: anywhere; }
+.routine-transition-inspiration { position: relative; display: grid; align-content: center; justify-items: center; gap: 8px; min-height: 85px; width: 100%; }
+.routine-transition-author { color: var(--ui-muted); font: 500 14px/1.4 var(--ui-font); }
+.routine-transition-author b { color: #70f7ff; font-weight: 500; }
+.routine-transition-burst { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
+.routine-transition-burst i { position: absolute; left: 50%; top: 58px; width: 5px; height: 10px; border-radius: 2px; background: #70f7ff; opacity: 0; --dx: -95px; --dy: -20px; --turn: -35deg; animation: routine-cheer-spark .85s .08s ease-out both; }
+.routine-transition-burst i:nth-child(2) { --dx: 94px; --dy: -12px; --turn: 40deg; background: #ff73e1; }
+.routine-transition-burst i:nth-child(3) { --dx: -68px; --dy: 31px; --turn: -75deg; background: #ffe38a; width: 6px; height: 6px; }
+.routine-transition-burst i:nth-child(4) { --dx: 70px; --dy: 39px; --turn: 80deg; }
+.routine-transition-burst i:nth-child(5) { --dx: -46px; --dy: -38px; --turn: -120deg; background: #ff73e1; width: 4px; height: 4px; }
+.routine-transition-burst i:nth-child(6) { --dx: 52px; --dy: -36px; --turn: 110deg; background: #ffe38a; width: 4px; height: 4px; }
 .is-transitioning #routineTabScroll { opacity: .55; transition: opacity .2s; }
 @keyframes routine-trace { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-@keyframes routine-well-played { from { opacity: 0; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+@keyframes routine-cheer-in { from { opacity: 0; translate: 0 14px; scale: .92; } to { opacity: 1; translate: 0 0; scale: 1; } }
+@keyframes routine-cheer-badge { from { opacity: 0; transform: rotate(-24deg) scale(.6); } to { opacity: 1; transform: rotate(-9deg) scale(1); } }
+@keyframes routine-cheer-spark { 0% { opacity: 0; transform: translate(0,0) scale(.4); } 25% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx),var(--dy)) rotate(var(--turn)); } }
 @media (max-width:767px),(orientation:landscape) and (max-width:1000px) and (max-height:599px) {
   body #app #routineDrawer>.control-panel { display: flex; flex-direction: column; align-items: stretch; }
   .routine-listening { font-size: 14px; gap: 8px; }
 }
+@media (max-width:380px) {
+  .routine-transition strong { font-size: 29px; }
+}
+@media (max-height:430px) {
+  .routine-transition { padding: 14px 20px; gap: 8px; }
+  .routine-transition-badge { width: 46px; height: 46px; border-radius: 16px; margin-bottom: 0; }
+  .routine-transition-badge span { font-size: 30px; }
+  .routine-transition strong { font-size: 27px; }
+  .routine-transition-inspiration { min-height: 0; }
+  .routine-transition p { font-size: 18px; }
+}
 @media (prefers-reduced-motion:reduce) {
-  .routine-path.is-arriving,.routine-transition { animation: none; }
+  .routine-path.is-arriving,.routine-transition,.routine-transition-badge,.routine-transition-burst i { animation: none; }
   .is-transitioning #routineTabScroll { transition: none; }
 }

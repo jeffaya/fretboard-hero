@@ -334,7 +334,6 @@
   "Practice": "연습",
   "Explore": "둘러보기",
   "Tune your instrument": "악기를 조율하세요",
-  "Well played!": "잘했어요!",
   "Play each triad together.": "각 3화음의 음들을 동시에 연주하세요.",
   "Listening…": "듣는 중…",
   "Microphone": "마이크",
@@ -396,5 +395,17 @@
   "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ 다운 스트로크 · ↑ 업 스트로크 · × 뮤트 타격 · PM 손바닥으로 뮤트 · > 강세 (더 세게 연주)",
   "Numbers = beats · & = halfway between beats · Beams = one beat": "숫자 = 박 · & = 박의 중간 · 연결선 = 한 박",
   "e / a = second / fourth sixteenth of the beat": "e / a = 박의 두 번째 / 네 번째 16분음표",
-  "No arrow = keep moving without striking · Pink = current stroke": "화살표 없음 = 줄을 치지 않고 움직이기 · 분홍색 = 현재 스트로크"
+  "No arrow = keep moving without striking · Pink = current stroke": "화살표 없음 = 줄을 치지 않고 움직이기 · 분홍색 = 현재 스트로크",
+  "Keep it going!": "계속 해봐요!",
+  "Inspired by": "영감을 준 음악가:",
+  "A breakthrough can come from enjoyment.": "즐거움이 도약의 계기가 될 수 있어요.",
+  "A little every day.": "매일 조금씩.",
+  "Repetition, even at the top.": "정상에서도 반복은 계속돼요.",
+  "Prepare for your next breakthrough.": "다음 도약을 준비해요.",
+  "Practice becomes music.": "연습이 음악이 돼요.",
+  "Consistency makes the difference.": "꾸준함이 차이를 만들어요.",
+  "Even a short session counts.": "짧은 연습도 의미가 있어요.",
+  "The basics can take you far.": "기초가 더 멀리 데려다줘요.",
+  "Practice to play better.": "더 잘 연주하기 위한 연습.",
+  "Repetition can become discovery.": "반복이 발견으로 이어질 수 있어요."
 }

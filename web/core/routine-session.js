@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  function create({root=document,engine,refreshControls,random=Math.random}){
+  function create({root=document,engine,refreshControls,random=Math.random,encouragementRandom=Math.random}){
     const $=s=>root.querySelector(s),access=window.FRETBOARD_ACCESS||{unlocked:true},premium=window.FRETBOARD_PREMIUM;
     const t=value=>window.FretboardI18n?.text(value)||value;
     const state={root:'A',quality:'minor',index:0,diagonal:0},completed=new Set(),gate=RoutineGuide.createGate(),strumGate=RoutineGuide.createStrumGate();
@@ -14,6 +14,7 @@
       if(engine.profile.family==='guitar')try{localStorage.setItem(diagonalKey,String(nextDiagonal))}catch{}
     }
     const detector=FretboardChordDetector.create({minMidi:Math.min(...engine.courses.map(c=>c.midi)),maxMidi:Math.max(...engine.courses.map(c=>c.midi))+15});
+    const encouragements=RoutineEncouragement.createDeck(encouragementRandom);
     let exercises=[],guides=[],active=false,transition=0,settleUntil=0,lastPitches=[];
     const micPreference=FretboardMicrophone.preference('routine');
     const microphone=FretboardMicrophone.create({fftSize:16384,interval:80,onFrame:listen,onState:audioState});
@@ -178,6 +179,12 @@
       if(state.index>=5||transition||!active)return;
       strumming.stop();
       $('#routineTransition').hidden=false;$('#routineNext').disabled=true;
+      // Encourage practice, including manual continuation, without claiming a score.
+      const encouragement=encouragements.next();
+      $('#routineEncouragement').textContent=t('Keep it going!');
+      $('#routineEncouragementDetail').textContent=t(encouragement.text);
+      $('#routineEncouragementCredit').textContent=t('Inspired by');
+      $('#routineEncouragementAuthor').textContent=encouragement.author;
       $('#routineExercise').classList.toggle('is-transitioning',true);
       transition=setTimeout(()=>{
         cancelTransition();if(!active)return;
@@ -191,10 +198,10 @@
         else {resetGates(soundKey(targetPitches())===soundKey(lastPitches));settleUntil=performance.now()+400}
         render();$('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
         if(hasNextSection||exercises[state.index]?.melody)showTarget();
-      },750);
+      },2600);
     }
     function reset(){
-      strumming.stop();cancelTransition();completed.clear();state.index=0;lastPitches=[];
+      strumming.stop();cancelTransition();completed.clear();state.index=0;encouragements.reset();lastPitches=[];
       exercises=RoutineExercises.create({engine,root:state.root,quality:state.quality,random,diagonal:state.diagonal,patterns});
       guides=exercises.map(()=>({index:0,section:0}));
       resetGates();settleUntil=performance.now()+400;render();

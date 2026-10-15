@@ -334,7 +334,6 @@
   "Practice": "練習する",
   "Explore": "探索する",
   "Tune your instrument": "楽器をチューニング",
-  "Well played!": "よくできました！",
   "Play each triad together.": "各トライアドの音を同時に弾いてください。",
   "Listening…": "聴き取り中…",
   "Microphone": "マイク",
@@ -396,5 +395,17 @@
   "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ ダウンストローク · ↑ アップストローク · × ミュート打音 · PM 手のひらでミュート · > アクセント（強く弾く）",
   "Numbers = beats · & = halfway between beats · Beams = one beat": "数字＝拍 · &＝拍の中間 · 連桁＝1拍",
   "e / a = second / fourth sixteenth of the beat": "e / a＝拍の2番目 / 4番目の16分音符",
-  "No arrow = keep moving without striking · Pink = current stroke": "矢印なし＝弦に触れず手を動かす · ピンク＝現在のストローク"
+  "No arrow = keep moving without striking · Pink = current stroke": "矢印なし＝弦に触れず手を動かす · ピンク＝現在のストローク",
+  "Keep it going!": "その調子！",
+  "Inspired by": "着想のもと：",
+  "A breakthrough can come from enjoyment.": "楽しむことが上達のきっかけになる。",
+  "A little every day.": "毎日、少しずつ。",
+  "Repetition, even at the top.": "一流になっても、繰り返し。",
+  "Prepare for your next breakthrough.": "次の飛躍に向けて準備しよう。",
+  "Practice becomes music.": "練習が音楽になる。",
+  "Consistency makes the difference.": "続けることが違いを生む。",
+  "Even a short session counts.": "短い練習にも意味がある。",
+  "The basics can take you far.": "基礎が遠くまで連れていってくれる。",
+  "Practice to play better.": "よりよい演奏のために練習する。",
+  "Repetition can become discovery.": "繰り返しが発見につながる。"
 }

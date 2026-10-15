@@ -334,7 +334,6 @@
   "Practice": "Üben",
   "Explore": "Entdecken",
   "Tune your instrument": "Stimme dein Instrument",
-  "Well played!": "Gut gespielt!",
   "Play each triad together.": "Spiele die Töne jedes Dreiklangs gleichzeitig.",
   "Listening…": "Hört zu…",
   "Microphone": "Mikrofon",
@@ -396,5 +395,17 @@
   "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ Abschlag · ↑ Aufschlag · × Gedämpfter Schlag · PM Mit dem Handballen dämpfen · > Akzent (lauter spielen)",
   "Numbers = beats · & = halfway between beats · Beams = one beat": "Zahlen = Zählzeiten · & = halbe Zählzeit · Balken = eine Zählzeit",
   "e / a = second / fourth sixteenth of the beat": "e / a = zweite / vierte Sechzehntel der Zählzeit",
-  "No arrow = keep moving without striking · Pink = current stroke": "Ohne Pfeil = Bewegung ohne Anschlag · Pink = aktueller Schlag"
+  "No arrow = keep moving without striking · Pink = current stroke": "Ohne Pfeil = Bewegung ohne Anschlag · Pink = aktueller Schlag",
+  "Keep it going!": "Weiter so!",
+  "Inspired by": "Inspiriert von",
+  "A breakthrough can come from enjoyment.": "Freude am Spielen kann zum Durchbruch führen.",
+  "A little every day.": "Jeden Tag ein bisschen.",
+  "Repetition, even at the top.": "Wiederholung, selbst an der Spitze.",
+  "Prepare for your next breakthrough.": "Bereite deinen nächsten Durchbruch vor.",
+  "Practice becomes music.": "Aus Übung wird Musik.",
+  "Consistency makes the difference.": "Regelmäßigkeit macht den Unterschied.",
+  "Even a short session counts.": "Auch eine kurze Übungseinheit zählt.",
+  "The basics can take you far.": "Die Grundlagen können dich weit bringen.",
+  "Practice to play better.": "Üben, um besser zu spielen.",
+  "Repetition can become discovery.": "Wiederholung kann zur Entdeckung werden."
 }

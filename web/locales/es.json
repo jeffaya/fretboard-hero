@@ -334,7 +334,6 @@
   "Practice": "Practicar",
   "Explore": "Explorar",
   "Tune your instrument": "Afina tu instrumento",
-  "Well played!": "¡Bien hecho!",
   "Play each triad together.": "Toca todas las notas de cada tríada a la vez.",
   "Listening…": "Escuchando…",
   "Microphone": "Micrófono",
@@ -396,5 +395,17 @@
   "↓ Downstroke · ↑ Upstroke · × Muted hit · PM Palm-muted stroke · > Accent (play louder)": "↓ Golpe hacia abajo · ↑ Golpe hacia arriba · × Golpe apagado · PM Cuerdas apagadas con la palma · > Acento (tocar más fuerte)",
   "Numbers = beats · & = halfway between beats · Beams = one beat": "Números = pulsos · & = mitad del pulso · Barras = un pulso",
   "e / a = second / fourth sixteenth of the beat": "e / a = segunda / cuarta semicorchea del pulso",
-  "No arrow = keep moving without striking · Pink = current stroke": "Sin flecha = mover sin tocar · Rosa = golpe actual"
+  "No arrow = keep moving without striking · Pink = current stroke": "Sin flecha = mover sin tocar · Rosa = golpe actual",
+  "Keep it going!": "¡Sigue así!",
+  "Inspired by": "Inspirado en",
+  "A breakthrough can come from enjoyment.": "Disfrutar puede llevarte a un gran avance.",
+  "A little every day.": "Un poco cada día.",
+  "Repetition, even at the top.": "Repetir, incluso en la cima.",
+  "Prepare for your next breakthrough.": "Prepárate para tu próximo gran avance.",
+  "Practice becomes music.": "La práctica se convierte en música.",
+  "Consistency makes the difference.": "La constancia marca la diferencia.",
+  "Even a short session counts.": "Incluso una sesión corta cuenta.",
+  "The basics can take you far.": "Las bases pueden llevarte lejos.",
+  "Practice to play better.": "Practicar para tocar mejor.",
+  "Repetition can become discovery.": "La repetición puede convertirse en descubrimiento."
 }

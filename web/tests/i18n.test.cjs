@@ -11,6 +11,18 @@ test('Browser negotiation supports regions, ordered preferences and English fall
 test('Every catalog has the complete key set and preserves template placeholders',()=>{
  const keys=Object.keys(catalogs.en).sort();for(const locale of locales){assert.deepEqual(Object.keys(catalogs[locale]).sort(),keys);for(const key of keys){const placeholders=s=>[...new Set(s.match(/\{\w+\}/g)||[])].sort();assert.deepEqual(placeholders(catalogs[locale][key]),placeholders(key),`${locale}: ${key}`);assert.ok(catalogs[locale][key].trim())}}
 });
+test('All ten routine inspirations, the encouragement and its credit localize in every supported language',async()=>{
+ const c={window:{}};vm.runInNewContext(fs.readFileSync('web/core/routine-encouragement.js','utf8'),c);
+ const keys=['Keep it going!','Inspired by',...c.window.RoutineEncouragement.messages.map(message=>message.text)];
+ for(const locale of locales){
+  const i18n=await create({languages:[locale]});
+  for(const key of keys){
+   assert.ok(catalogs[locale][key],`${locale}: ${key}`);
+   assert.equal(i18n.text(key),catalogs[locale][key]);
+   if(locale!=='en')assert.notEqual(i18n.text(key),key,`${locale}: untranslated inspiration`);
+  }
+ }
+});
 test('Dynamic exercises, store prices and repeated note placeholders localize notes without changing canonical identifiers',async()=>{
  const fr=await create({languages:['fr']});assert.equal(fr.text('A#'),'A#');assert.equal(fr.text('CAGED'),'CAGED');assert.equal(fr.text('Guitar Fretboard Hero'),'Guitar Fretboard Hero');assert.equal(fr.text('MAJOR'),'MAJEUR');assert.equal(fr.text('Play the C# minor scale'),'Jouez la gamme de Do# Mineur');assert.equal(fr.text('EXERCISE 3 OF 5'),'EXERCICE 3 SUR 5');assert.equal(fr.text('Unlock full access — 9,99 €'),'Débloquer — 9,99 €');assert.match(fr.text('Play every A shown, one string at a time. Say “A” aloud as you play to connect the sound, name and position.'),/^Jouez chaque La/);
 });
