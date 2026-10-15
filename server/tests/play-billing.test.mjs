@@ -44,3 +44,15 @@ test('A conflicting acknowledgement cannot grant a different product',async()=>{
  const r=await handlePlayBilling(request(),env,deps(async()=>++n===1?response({...purchased,acknowledgementState:0}):n===2?response({},409):response({...purchased,productId:'other_product'})));
  assert.equal((await r.json()).unlocked,false);
 });
+test('Malformed acknowledgement rechecks are outages, not revocations',async()=>{
+ for(const latest of [{}, {...purchased,purchaseState:'0'}, {...purchased,consumptionState:undefined}, {...purchased,acknowledgementState:'1'}]){
+  let n=0;
+  const r=await handlePlayBilling(request(),env,deps(async()=>++n===1?response({...purchased,acknowledgementState:0}):n===2?response({},409):response(latest)));
+  assert.equal(r.status,503);assert.deepEqual(await r.json(),{error:'verification_unavailable'});
+ }
+});
+test('A pending acknowledgement recheck preserves the pending status',async()=>{
+ let n=0;
+ const r=await handlePlayBilling(request(),env,deps(async()=>++n===1?response({...purchased,acknowledgementState:0}):n===2?response({},409):response({purchaseState:2})));
+ assert.equal(r.status,200);assert.deepEqual(await r.json(),{unlocked:false,status:'pending',productId:'full_access'});
+});

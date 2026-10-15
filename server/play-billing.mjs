@@ -48,6 +48,9 @@ export async function verifyPurchase(input, { fetcher = fetch, getAccessToken, e
       const recheck = await fetcher(url, { headers, signal: AbortSignal.timeout(6000) });
       if (!recheck.ok) throw new Error('Acknowledgement unavailable');
       const latest = await recheck.json();
+      if (![0, 1, 2].includes(latest.purchaseState)) throw new Error('Invalid purchase state');
+      if (latest.purchaseState === 2) return { unlocked: false, status: 'pending' };
+      if (latest.purchaseState === 0 && ![0, 1].includes(latest.consumptionState)) throw new Error('Invalid consumption state');
       if (latest.purchaseState !== 0 || latest.consumptionState !== 0 || (latest.productId && latest.productId !== PRODUCT)) return { unlocked: false, status: 'not_owned' };
       if (latest.acknowledgementState !== 1) throw new Error('Acknowledgement unavailable');
     }
