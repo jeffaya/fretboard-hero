@@ -1,0 +1,126 @@
+name: Build guitar preview APK
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/build-preview-apk.yml'
+
+permissions:
+  contents: read
+
+env:
+  CI: 'true'
+  POWERSHELL_TELEMETRY_OPTOUT: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+
+jobs:
+  guitar-preview:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Disable Android tool analytics before setup
+        shell: pwsh
+        run: |
+          $androidHome = Join-Path $env:USERPROFILE '.android'
+          New-Item -ItemType Directory -Path $androidHome -Force | Out-Null
+          $settings = @{
+            userId = [guid]::NewGuid().ToString()
+            optedIn = $false
+            saltValue = [guid]::NewGuid().ToString()
+            saltSkew = 0
+            debugDisablePublishing = $true
+          }
+          $settings | ConvertTo-Json | Set-Content (Join-Path $androidHome 'analytics.settings') -Encoding utf8NoBOM
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: android-actions/setup-android@v4
+
+      - name: Install Android SDK packages
+        shell: pwsh
+        run: |
+          sdkmanager --install 'platform-tools' 'platforms;android-36' 'build-tools;35.0.0'
+          if ($LASTEXITCODE -ne 0) { throw 'Android SDK installation failed' }
+
+      - name: Install app dependencies without audit uploads
+        working-directory: app
+        run: npm ci --no-audit --no-fund
+
+      - name: Disable Capacitor telemetry
+        working-directory: app
+        run: node node_modules/@capacitor/cli/bin/capacitor telemetry off
+
+      - name: Run regression tests before packaging
+        shell: pwsh
+        run: |
+          $tests = Get-ChildItem web/tests/*.test.cjs, app/tests/*.test.cjs, app/tests/*.test.js, server/tests/*.test.mjs
+          node --test $tests.FullName
+          if ($LASTEXITCODE -ne 0) { throw 'Regression tests failed; refusing to package the app' }
+
+      - name: Give the preview its own installation identity
+        shell: pwsh
+        run: |
+          # This temporary checkout change protects the installed store app and
+          # its data. The production application ID and signing remain separate.
+          $instruments = Get-Content app/instruments.json -Raw | ConvertFrom-Json
+          $instruments.guitar.appId = 'com.guitar.fretboardhero.preview'
+          $instruments.guitar.name = 'Guitar Fretboard Hero Preview'
+          $instruments | ConvertTo-Json -Depth 8 | Set-Content app/instruments.json -Encoding utf8NoBOM
+
+      - name: Build an unlocked, debug-signed guitar APK
+        shell: pwsh
+        run: |
+          ./scripts/build-instrument.ps1 -Instrument guitar -BuildType Debug -Format Apk -VersionCode 4 -VersionName '1.0.3'
+          if ($LASTEXITCODE -ne 0) { throw 'APK build failed' }
+          Move-Item dist/fretboard-hero-guitar-debug.apk dist/guitar-fretboard-hero-1.0.3-preview.apk
+
+      - name: Verify signature, identity and paid access
+        shell: pwsh
+        run: |
+          $apk = 'dist/guitar-fretboard-hero-1.0.3-preview.apk'
+          $buildTools = Join-Path $env:ANDROID_HOME 'build-tools/35.0.0'
+          & (Join-Path $buildTools 'apksigner.bat') verify --verbose $apk
+          if ($LASTEXITCODE -ne 0) { throw 'APK signature verification failed' }
+          $badging = & (Join-Path $buildTools 'aapt.exe') dump badging $apk
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot inspect APK metadata' }
+          if (-not ($badging | Select-String -SimpleMatch "package: name='com.guitar.fretboardhero.preview'")) { throw 'Wrong APK application ID' }
+          $permissions = & (Join-Path $buildTools 'aapt.exe') dump permissions $apk
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot inspect APK permissions' }
+          foreach ($permission in @('android.permission.RECORD_AUDIO', 'android.permission.MODIFY_AUDIO_SETTINGS')) {
+            if (-not ($permissions | Select-String -SimpleMatch $permission)) { throw "Missing APK permission: $permission" }
+          }
+          ./scripts/validate-android-access.ps1 -Path $apk -Instrument guitar
+          $info = @{
+            sourceCommit = (git rev-parse HEAD)
+            appId = 'com.guitar.fretboardhero.preview'
+            versionName = '1.0.3'
+            versionCode = 4
+            signing = 'debug'
+            fullyUnlocked = $true
+            sha256 = (Get-FileHash $apk -Algorithm SHA256).Hash.ToLowerInvariant()
+          }
+          $info | ConvertTo-Json | Set-Content dist/guitar-preview-build-info.json -Encoding utf8NoBOM
+
+      - name: Upload the APK and build identity
+        uses: actions/upload-artifact@v7
+        with:
+          name: guitar-preview-apk
+          path: |
+            dist/guitar-fretboard-hero-1.0.3-preview.apk
+            dist/guitar-preview-build-info.json
+          if-no-files-found: error
+          retention-days: 14

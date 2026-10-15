@@ -162,7 +162,7 @@ try {
     if ($extensions -contains "aab") { $gradleTasks += "bundle$BuildType" }
     Push-Location (Join-Path $appRoot "android")
     try {
-        & .\gradlew.bat @gradleTasks "-PappVersionCode=$VersionCode" "-PappVersionName=$VersionName"
+        & .\gradlew.bat --no-scan @gradleTasks "-PappVersionCode=$VersionCode" "-PappVersionName=$VersionName"
         if ($LASTEXITCODE -ne 0) {
             throw "Gradle build failed with exit code $LASTEXITCODE"
         }
