@@ -151,8 +151,8 @@
   "Stop switching tools. Start playing solos worth sharing.": "不必来回切换工具，开始弹奏值得分享的独奏。",
   "One purchase. Three instruments. Every skill unlocked.": "一次购买，三种乐器，全部解锁。",
   "← Continue exploring": "← 继续探索",
-  "Get it on": "下载平台",
-  "Download on the": "下载平台",
+  "Get it free on": "免费下载",
+  "Download for free on the": "免费下载",
   "Scan for {platform}": "扫码前往{platform}",
   "Restore purchases": "恢复购买",
   "Unlock full access": "解锁完整访问",
@@ -407,6 +407,5 @@
   "Practice to play better.": "练习，是为了演奏得更好。",
   "Repetition can become discovery.": "重复练习，也能带来新发现。",
   "Get the app": "下载应用",
-  "Free download": "免费下载",
   "Could not read purchase status. Please restore purchases.": "无法读取购买状态。请恢复购买。"
 }

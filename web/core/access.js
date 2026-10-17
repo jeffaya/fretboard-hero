@@ -34,7 +34,7 @@
     const overlay=document.createElement('div');overlay.className='premium-overlay';overlay.hidden=true;
     overlay.innerHTML=`<section class="premium-dialog ui-panel ui-modal" role="dialog" aria-modal="true" aria-labelledby="premiumTitle" aria-describedby="premiumPitch" tabindex="-1">
       <h2 id="premiumTitle"><span>UNLOCK YOUR</span><em>FRETBOARD SKILLS</em></h2>
-      <p id="premiumPitch" class="premium-pitch${billing?'':' premium-download'}">${billing?'Stop switching tools. Start playing solos worth sharing.':'Free download'}</p>
+      <p id="premiumPitch" class="premium-pitch">Stop switching tools. Start playing solos worth sharing.</p>
       <img class="premium-neck" src="./assets/premium-neck.svg" alt="" width="800" height="130">
       <ul class="premium-skills" aria-label="Skills included"></ul>
       <div class="premium-stores"></div>
@@ -58,7 +58,7 @@
     for(const platform of (billing?[]:['android','ios'])){
       const url=storeUrl(config,platform),column=document.createElement('div');column.className='premium-store-column';
       const el=document.createElement(url?'a':'button');el.className='ui-primary premium-store';
-      el.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true">${icons[platform]}</svg><span><small>${platform==='android'?'Get it on':'Download on the'}</small><b>${platform==='android'?'Google Play':'App Store'}</b></span>`;
+      el.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true">${icons[platform]}</svg><span><small>${platform==='android'?'Get it free on':'Download for free on the'}</small><b>${platform==='android'?'Google Play':'App Store'}</b></span>`;
       if(url){el.href=url;el.target='_blank';el.rel='noopener noreferrer'}else{el.type='button';el.disabled=true;el.setAttribute('aria-label',`${platform==='android'?'Google Play':'App Store'} — store link not configured`)}
       column.append(el);
       if(url){const qr=document.createElement('figure');qr.className='premium-qr';qr.innerHTML=`<div></div><figcaption>Scan for ${platform==='android'?'Android':'iOS'}</figcaption>`;column.append(qr);qrTargets.push({url,host:qr.querySelector('div'),figure:qr})}
