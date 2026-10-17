@@ -1,0 +1,12 @@
+{
+  "app-icon": "Plettro al neon con una chitarra elettrica a sei corde, contornato in magenta e ciano.",
+  "feature-graphic": "Guitar Fretboard Hero: accordatore, routine con microfono, apprendimento, mappa della tastiera, circolo delle quinte e quiz.",
+  "01-routine": "Esercizio sulla scala di La minore con nomi delle note, gradi e tablatura nella Routine quotidiana.",
+  "02-triads": "Triadi di La minore collegate da terze su una tablatura per chitarra a sei corde.",
+  "03-pentatonic": "Posizioni pentatoniche di La minore collegate con note colorate sulla tastiera.",
+  "04-feedback": "La Routine quotidiana evidenzia il prossimo La mentre il microfono segue le note suonate.",
+  "05-quiz": "Quiz a tempo sulla tastiera con nota da trovare, punteggio e serie di risposte corrette.",
+  "06-tuner": "Accordatore automatico che rileva la corda di La a 110 Hz e indica che è accordata.",
+  "07-map": "Mappa della tastiera con i nomi delle note sulle sei corde della chitarra.",
+  "08-circle": "Circolo delle quinte con Sol maggiore selezionato, il relativo Mi minore e informazioni sull’armonia."
+}

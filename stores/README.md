@@ -6,16 +6,16 @@ Dedicated distribution-listing assets. These files are separate from the shipped
 
 | Path | Purpose |
 | --- | --- |
-| `google-play/guitar/en-US/` | First draft: Guitar Fretboard Hero, English (United States) |
+| `google-play/guitar/` | Guitar Fretboard Hero listing copy and alt text in all 11 app languages; existing visuals in `en-US/` |
 | `google-play/bass/` | Shared feature graphic; remaining listing assets pending |
 | `google-play/ukulele/` | Shared feature graphic; remaining listing assets pending |
 | `tools/` | Capture, render and validation scripts |
 
 Future Apple listings belong in `apple-app-store/<instrument>/<locale>/`. That directory is intentionally not populated in this first Google Play draft.
 
-Each locale has `README.md`, plain-text listing fields, `icon/`, `phone/`, `tablet-7/`, `tablet-10/`, `desktop/`, and `android-xr/`. Upload files from the device folders in numeric order. `source/` contains editable artwork and capture evidence; it is not an upload folder.
+Each guitar locale has `README.md` with copyable listing fields and `alt-text.json`. The `en-US/` reference additionally contains `icon/`, `phone/`, `tablet-7/`, `tablet-10/`, `desktop/`, and `android-xr/`. Other languages currently contain text only; their localized images are pending. Upload files from the device folders in numeric order. `source/` contains editable artwork and capture evidence; it is not an upload folder.
 
-Start with [the Android format reference](google-play/README.md), then [the English guitar upload guide](google-play/guitar/en-US/README.md). Its Android XR section is explicitly a draft because it has not been captured in an XR runtime.
+Start with [the Android format reference](google-play/README.md), then [the guitar language index](google-play/guitar/README.md) or [the English guitar upload guide](google-play/guitar/en-US/README.md). Its Android XR section is explicitly a draft because it has not been captured in an XR runtime.
 
 ## Rebuild
 
