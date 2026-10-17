@@ -151,8 +151,8 @@
   "Stop switching tools. Start playing solos worth sharing.": "Tak perlu berganti alat. Mulai mainkan solo yang layak dibagikan.",
   "One purchase. Three instruments. Every skill unlocked.": "Sekali beli. Tiga instrumen. Semua fitur terbuka.",
   "← Continue exploring": "← Lanjutkan menjelajah",
-  "Get it on": "Dapatkan di",
-  "Download on the": "Unduh di",
+  "Get it free on": "Dapatkan gratis di",
+  "Download for free on the": "Unduh gratis di",
   "Scan for {platform}": "Pindai untuk {platform}",
   "Restore purchases": "Pulihkan pembelian",
   "Unlock full access": "Buka akses penuh",
@@ -407,6 +407,5 @@
   "Practice to play better.": "Berlatih agar bermain lebih baik.",
   "Repetition can become discovery.": "Pengulangan bisa menjadi penemuan.",
   "Get the app": "Unduh aplikasi",
-  "Free download": "Unduh gratis",
   "Could not read purchase status. Please restore purchases.": "Status pembelian tidak dapat dibaca. Silakan pulihkan pembelian."
 }

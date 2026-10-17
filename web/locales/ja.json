@@ -151,8 +151,8 @@
   "Stop switching tools. Start playing solos worth sharing.": "ツールを切り替える手間を減らして、聴かせたくなるソロを弾こう。",
   "One purchase. Three instruments. Every skill unlocked.": "1回の購入、3つの楽器、すべての機能。",
   "← Continue exploring": "← 探索を続ける",
-  "Get it on": "入手先",
-  "Download on the": "ダウンロード",
+  "Get it free on": "無料で入手",
+  "Download for free on the": "無料でダウンロード",
   "Scan for {platform}": "{platform}用にスキャン",
   "Restore purchases": "購入を復元",
   "Unlock full access": "フルアクセスを解除",
@@ -407,6 +407,5 @@
   "Practice to play better.": "よりよい演奏のために練習する。",
   "Repetition can become discovery.": "繰り返しが発見につながる。",
   "Get the app": "アプリをダウンロード",
-  "Free download": "無料ダウンロード",
   "Could not read purchase status. Please restore purchases.": "購入状況を読み取れませんでした。購入を復元してください。"
 }

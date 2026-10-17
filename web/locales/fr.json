@@ -151,8 +151,8 @@
   "Stop switching tools. Start playing solos worth sharing.": "Tous vos outils au même endroit. Jouez des solos que vous aurez envie de partager.",
   "One purchase. Three instruments. Every skill unlocked.": "Un achat. Trois instruments. Tout est débloqué.",
   "← Continue exploring": "← Continuer à explorer",
-  "Get it on": "Disponible sur",
-  "Download on the": "Télécharger sur",
+  "Get it free on": "Disponible gratuitement sur",
+  "Download for free on the": "Télécharger gratuitement sur",
   "Scan for {platform}": "Scannez pour {platform}",
   "Restore purchases": "Restaurer les achats",
   "Unlock full access": "Débloquer l’accès complet",
@@ -407,6 +407,5 @@
   "Practice to play better.": "Travailler pour mieux jouer.",
   "Repetition can become discovery.": "Une répétition peut devenir une découverte.",
   "Get the app": "Télécharger l’application",
-  "Free download": "Téléchargement gratuit",
   "Could not read purchase status. Please restore purchases.": "Impossible de lire le statut de l’achat. Veuillez restaurer vos achats."
 }

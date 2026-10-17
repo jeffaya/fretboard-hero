@@ -151,8 +151,8 @@
   "Stop switching tools. Start playing solos worth sharing.": "बार-बार टूल बदलना छोड़ें। ऐसे सोलो बजाएँ जिन्हें साझा करना चाहें।",
   "One purchase. Three instruments. Every skill unlocked.": "एक खरीद। तीन वाद्य। सभी सुविधाएँ अनलॉक।",
   "← Continue exploring": "← खोज जारी रखें",
-  "Get it on": "यहाँ पाएँ",
-  "Download on the": "यहाँ डाउनलोड करें",
+  "Get it free on": "मुफ़्त में पाएँ",
+  "Download for free on the": "मुफ़्त डाउनलोड करें",
   "Scan for {platform}": "{platform} के लिए स्कैन करें",
   "Restore purchases": "खरीद बहाल करें",
   "Unlock full access": "पूरा एक्सेस अनलॉक करें",
@@ -407,6 +407,5 @@
   "Practice to play better.": "बेहतर बजाने के लिए अभ्यास करो।",
   "Repetition can become discovery.": "दोहराने से नई खोज हो सकती है।",
   "Get the app": "ऐप डाउनलोड करें",
-  "Free download": "मुफ़्त डाउनलोड",
   "Could not read purchase status. Please restore purchases.": "खरीद की स्थिति पढ़ी नहीं जा सकी। कृपया अपनी खरीद बहाल करें।"
 }

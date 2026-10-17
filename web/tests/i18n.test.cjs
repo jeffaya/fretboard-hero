@@ -52,5 +52,5 @@ test('Melodic instructions, directions, box blocks and degree labels localize in
 });
 
 test('Download and billing explanations translate in every supported language',async()=>{
- for(const locale of locales){const t=(await create({languages:[locale]})).text;for(const key of ['Get the app','Free download','One purchase. Three instruments. Every skill unlocked.','Could not read purchase status. Please restore purchases.'])assert.equal(t(key),catalogs[locale][key]);}
+ for(const locale of locales){const t=(await create({languages:[locale]})).text;for(const key of ['Get the app','Get it free on','Download for free on the','One purchase. Three instruments. Every skill unlocked.','Could not read purchase status. Please restore purchases.'])assert.equal(t(key),catalogs[locale][key]);}
 });
