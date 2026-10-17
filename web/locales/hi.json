@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "अनलॉक करें अपनी",
   "FRETBOARD SKILLS": "फ्रेटबोर्ड कुशलता",
   "Stop switching tools. Start playing solos worth sharing.": "बार-बार टूल बदलना छोड़ें। ऐसे सोलो बजाएँ जिन्हें साझा करना चाहें।",
-  "One purchase. Three instruments. Every skill unlocked.": "एक खरीद। तीन वाद्य। सभी सुविधाएँ अनलॉक।",
   "← Continue exploring": "← खोज जारी रखें",
   "Get it free on": "मुफ़्त में पाएँ",
   "Download for free on the": "मुफ़्त डाउनलोड करें",
@@ -158,7 +157,6 @@
   "Unlock full access": "पूरा एक्सेस अनलॉक करें",
   "Unlock full access — {price}": "अनलॉक करें — {price}",
   "Check price": "कीमत देखें",
-  "Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.": "गिटार, बास और यूकेलेले के सभी स्वर, टोनैलिटी और मोड। एक भुगतान, कोई सदस्यता नहीं। इसी ऐप में मान्य।",
   "Checking purchases…": "खरीद जाँची जा रही है…",
   "Opening {store}…": "{store} खुल रहा है…",
   "Payment pending. Full access will unlock after {store} confirms it.": "भुगतान लंबित है। {store} की पुष्टि के बाद एक्सेस खुलेगा।",
@@ -408,5 +406,13 @@
   "Repetition can become discovery.": "दोहराने से नई खोज हो सकती है।",
   "Get the app": "ऐप डाउनलोड करें",
   "Contact us": "संपर्क करें",
-  "Could not read purchase status. Please restore purchases.": "खरीद की स्थिति पढ़ी नहीं जा सकी। कृपया अपनी खरीद बहाल करें।"
+  "Could not read purchase status. Please restore purchases.": "खरीद की स्थिति पढ़ी नहीं जा सकी। कृपया अपनी खरीद बहाल करें।",
+  "One payment.": "सिर्फ़ एक बार भुगतान।",
+  "Lifetime access.": "आजीवन एक्सेस।",
+  "No subscription.": "कोई सदस्यता नहीं।",
+  "Guitar, bass & ukulele.": "गिटार, बास और यूकुलेले।",
+  "All notes, keys and modes.": "सभी नोट, की और मोड।",
+  "Unlock for life": "आजीवन अनलॉक करें",
+  "Restore your access": "अपना एक्सेस वापस पाएँ",
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "क्या आपने दूसरे फ़ोन पर पहले ही खरीद लिया है? उसी खाते से अपना एक्सेस वापस पाएँ, दोबारा भुगतान किए बिना।"
 }

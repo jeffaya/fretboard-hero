@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 function setup(initial=false,platform='android'){
- const elements=[];const el=()=>({children:[],classList:{add(){}},get textContent(){return this.label??this.children.map(child=>child.textContent).join('')},set textContent(value){this.label=value;this.children=[];this.innerHTML=''},setAttribute(){},append(...children){this.children.push(...children)},addEventListener(event,fn){this[event]=fn}});
+ const elements=[];const el=()=>({children:[],attrs:{},classList:{add(){}},get textContent(){return this.label??this.children.map(child=>child.textContent).join('')},set textContent(value){this.label=value;this.children=[];this.innerHTML=''},setAttribute(key,value){this.attrs[key]=value},append(...children){this.children.push(...children)},addEventListener(event,fn){this[event]=fn}});
  const home=el();let reloads=0,owned=initial,result={unlocked:initial,status:initial?'purchased':'not_owned'},calls=0;
  const plugin={cachedState:async()=>({unlocked:owned}),restore:async()=>result,price:async()=>({price:'€9.99'}),purchase:async()=>{calls++;return result},addListener:()=>({remove(){}})};
  const window={Capacitor:{getPlatform:()=> platform,Plugins:{[platform==='ios'?'StoreBilling':'PlayBilling']:plugin}}};
@@ -15,12 +15,23 @@ test('Web never initializes native billing; native cache controls startup',async
 });
 test('Localized purchase and restore controls grant access only on verified ownership',async()=>{
  const s=setup();await s.api.initialize({nativeBilling:true});const host=s.el();s.api.mountPaywall(host);await s.api.refreshPrice();
- const [buy,restore,,status]=host.children;assert.match(buy.textContent,/€9.99/);assert.match(host.children[2].textContent,/Guitar, bass & ukulele/);
+ const [buy,restore,help,status]=host.children;assert.equal(buy.textContent,'Unlock for life');assert.doesNotMatch(host.textContent,/€9.99/);
+ assert.equal(help.textContent,'Already purchased on another phone? Restore your access with the same account, without paying again.');assert.equal(restore.attrs['aria-describedby'],help.id);
  assert.equal(buy.className,'ui-primary modal-action');assert.equal(restore.className,'ui-secondary modal-action');
  const icons=[buy.innerHTML,restore.innerHTML];for(const icon of icons)assert.match(icon,/<svg.*aria-hidden="true"/);
  for(const state of ['pending','cancelled']){s.setResult({unlocked:false,status:state});buy.click();await flush();assert.equal(s.reloads,0);assert.match(status.textContent,state==='pending'?/pending/:/cancelled/)}
  s.setResult({unlocked:true,status:'purchased'});restore.click();await flush();assert.equal(s.reloads,1);
- assert.deepEqual([buy.innerHTML,restore.innerHTML],icons);assert.equal(restore.textContent,'Restore purchases');
+ assert.deepEqual([buy.innerHTML,restore.innerHTML],icons);assert.equal(restore.textContent,'Restore your access');
+});
+test('Android and Apple catalog refreshes preserve translated lifetime and recovery labels',async()=>{
+ for(const platform of ['android','ios']){
+  const s=setup(false,platform);await s.api.initialize({nativeBilling:true});const host=s.el();s.api.mountPaywall(host);
+  const [buy,restore]=host.children;assert.equal(buy.textContent,'Unlock for life');assert.equal(restore.textContent,'Restore your access');
+  buy.children[0].textContent='Débloquer à vie';restore.children[0].textContent='Récupérer votre accès';
+  await s.api.refreshPrice();s.plugin.price=async()=>({price:'4,79 €'});await s.api.refreshPrice();
+  s.setResult({unlocked:false,status:'cancelled'});buy.click();await flush();
+  assert.equal(s.calls,1);assert.equal(s.reloads,0);assert.equal(buy.textContent,'Débloquer à vie');assert.equal(restore.textContent,'Récupérer votre accès');assert.doesNotMatch(host.textContent,/€|9\.99|4,79/);
+ }
 });
 test('Only a confirmed revocation clears access; outages never expire paid ownership',async()=>{
  const s=setup(true);await s.api.initialize({nativeBilling:true});const host=s.el();s.api.mountPaywall(host);

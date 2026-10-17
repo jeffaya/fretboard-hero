@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "BUKA POTENSI",
   "FRETBOARD SKILLS": "FRETBOARD-MU",
   "Stop switching tools. Start playing solos worth sharing.": "Tak perlu berganti alat. Mulai mainkan solo yang layak dibagikan.",
-  "One purchase. Three instruments. Every skill unlocked.": "Sekali beli. Tiga instrumen. Semua fitur terbuka.",
   "← Continue exploring": "← Lanjutkan menjelajah",
   "Get it free on": "Dapatkan gratis di",
   "Download for free on the": "Unduh gratis di",
@@ -158,7 +157,6 @@
   "Unlock full access": "Buka akses penuh",
   "Unlock full access — {price}": "Buka akses — {price}",
   "Check price": "Lihat harga",
-  "Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.": "Gitar, bas, dan ukulele. Semua nada, nada dasar, dan mode. Sekali bayar, tanpa langganan. Berlaku dalam aplikasi ini.",
   "Checking purchases…": "Memeriksa pembelian…",
   "Opening {store}…": "Membuka {store}…",
   "Payment pending. Full access will unlock after {store} confirms it.": "Pembayaran tertunda. Akses dibuka setelah dikonfirmasi oleh {store}.",
@@ -408,5 +406,13 @@
   "Repetition can become discovery.": "Pengulangan bisa menjadi penemuan.",
   "Get the app": "Unduh aplikasi",
   "Contact us": "Hubungi kami",
-  "Could not read purchase status. Please restore purchases.": "Status pembelian tidak dapat dibaca. Silakan pulihkan pembelian."
+  "Could not read purchase status. Please restore purchases.": "Status pembelian tidak dapat dibaca. Silakan pulihkan pembelian.",
+  "One payment.": "Sekali bayar.",
+  "Lifetime access.": "Akses seumur hidup.",
+  "No subscription.": "Tanpa langganan.",
+  "Guitar, bass & ukulele.": "Gitar, bas, dan ukulele.",
+  "All notes, keys and modes.": "Semua nada, tonalitas, dan mode.",
+  "Unlock for life": "Buka akses seumur hidup",
+  "Restore your access": "Pulihkan akses Anda",
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "Sudah membeli di ponsel lain? Pulihkan akses Anda dengan akun yang sama, tanpa membayar lagi."
 }

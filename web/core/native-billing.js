@@ -47,14 +47,16 @@
   }
   function mountPaywall(host){
     host.classList.add('premium-billing');
-    const buy=document.createElement('button'),restore=document.createElement('button'),status=document.createElement('p'),scope=document.createElement('p');
+    const buy=document.createElement('button'),restore=document.createElement('button'),status=document.createElement('p'),help=document.createElement('p');
     buy.type=restore.type='button';buy.className='ui-primary modal-action';restore.className='ui-secondary modal-action';
     buy.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="14" height="11" rx="2"/><path d="M9 10V6a4 4 0 0 1 8 0M10 15v2"/></g></svg>';
     restore.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6M7 18a5 5 0 0 1 10 0"/><circle cx="12" cy="10" r="3"/></g></svg>';
-    const buyLabel=document.createElement('span'),restoreLabel=document.createElement('span');restoreLabel.textContent='Restore purchases';buy.append(buyLabel);restore.append(restoreLabel);
-    status.className='billing-status';status.setAttribute('role','status');scope.className='billing-scope';scope.textContent='Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.';
-    host.append(buy,restore,scope,status);
-    listeners.push(state=>{buyLabel.textContent=state.price?`Unlock full access — ${state.price}`:'Check price';buy.disabled=restore.disabled=state.busy||!plugin;status.textContent=state.message});
+    const buyLabel=document.createElement('span'),restoreLabel=document.createElement('span');buyLabel.textContent='Unlock for life';restoreLabel.textContent='Restore your access';buy.append(buyLabel);restore.append(restoreLabel);
+    status.className='billing-status';status.setAttribute('role','status');help.className='billing-restore-help';help.id='premiumRestoreHelp';help.textContent='Already purchased on another phone? Restore your access with the same account, without paying again.';
+    restore.setAttribute('aria-describedby',help.id);
+    host.append(buy,restore,help,status);
+    // Keep the catalog check before payment; the store sheet displays the final price.
+    listeners.push(state=>{buy.disabled=restore.disabled=state.busy||!plugin;status.textContent=state.message});
     buy.addEventListener('click',()=>price?run('purchase'):refreshPrice());restore.addEventListener('click',()=>run('restore'));notify();
   }
   function attach(){
@@ -69,3 +71,4 @@
   }
   window.FretboardBilling={initialize,attach,mountPaywall,refreshPrice,get native(){return native}};
 })();
+

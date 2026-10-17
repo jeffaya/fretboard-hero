@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "DESBLOQUEA TU",
   "FRETBOARD SKILLS": "DOMINIO DEL DIAPASÓN",
   "Stop switching tools. Start playing solos worth sharing.": "Deja de cambiar de herramientas. Toca solos que merezca la pena compartir.",
-  "One purchase. Three instruments. Every skill unlocked.": "Una compra. Tres instrumentos. Todo desbloqueado.",
   "← Continue exploring": "← Seguir explorando",
   "Get it free on": "Disponible gratis en",
   "Download for free on the": "Descárgala gratis en",
@@ -158,7 +157,6 @@
   "Unlock full access": "Desbloquear acceso completo",
   "Unlock full access — {price}": "Desbloquear — {price}",
   "Check price": "Consultar precio",
-  "Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.": "Guitarra, bajo y ukelele. Todas las notas, tonalidades y modos. Un pago, sin suscripción. Válido en esta app.",
   "Checking purchases…": "Comprobando compras…",
   "Opening {store}…": "Abriendo {store}…",
   "Payment pending. Full access will unlock after {store} confirms it.": "Pago pendiente. El acceso se desbloqueará cuando {store} lo confirme.",
@@ -408,5 +406,13 @@
   "Repetition can become discovery.": "La repetición puede convertirse en descubrimiento.",
   "Get the app": "Descargar la aplicación",
   "Contact us": "Contáctanos",
-  "Could not read purchase status. Please restore purchases.": "No se pudo leer el estado de la compra. Restaura tus compras."
+  "Could not read purchase status. Please restore purchases.": "No se pudo leer el estado de la compra. Restaura tus compras.",
+  "One payment.": "Un solo pago.",
+  "Lifetime access.": "Acceso de por vida.",
+  "No subscription.": "Sin suscripción.",
+  "Guitar, bass & ukulele.": "Guitarra, bajo y ukelele.",
+  "All notes, keys and modes.": "Todas las notas, tonalidades y modos.",
+  "Unlock for life": "Desbloquear de por vida",
+  "Restore your access": "Recuperar tu acceso",
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "¿Ya lo compraste en otro teléfono? Recupera tu acceso con la misma cuenta, sin volver a pagar."
 }

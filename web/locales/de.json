@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "ENTFALTE DEIN",
   "FRETBOARD SKILLS": "GRIFFBRETT-KÖNNEN",
   "Stop switching tools. Start playing solos worth sharing.": "Alle Werkzeuge an einem Ort. Spiele Solos, die du gerne teilst.",
-  "One purchase. Three instruments. Every skill unlocked.": "Ein Kauf. Drei Instrumente. Alles freigeschaltet.",
   "← Continue exploring": "← Weiter erkunden",
   "Get it free on": "Kostenlos bei",
   "Download for free on the": "Kostenlos laden im",
@@ -158,7 +157,6 @@
   "Unlock full access": "Vollzugriff freischalten",
   "Unlock full access — {price}": "Freischalten — {price}",
   "Check price": "Preis ansehen",
-  "Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.": "Gitarre, Bass und Ukulele. Alle Noten, Tonarten und Modi. Einmal zahlen, kein Abo. Gültig in dieser App.",
   "Checking purchases…": "Käufe werden geprüft…",
   "Opening {store}…": "{store} wird geöffnet…",
   "Payment pending. Full access will unlock after {store} confirms it.": "Zahlung ausstehend. Nach Bestätigung durch {store} wird der Zugriff freigeschaltet.",
@@ -408,5 +406,13 @@
   "Repetition can become discovery.": "Wiederholung kann zur Entdeckung werden.",
   "Get the app": "App herunterladen",
   "Contact us": "Kontakt",
-  "Could not read purchase status. Please restore purchases.": "Der Kaufstatus konnte nicht gelesen werden. Bitte stelle deine Käufe wieder her."
+  "Could not read purchase status. Please restore purchases.": "Der Kaufstatus konnte nicht gelesen werden. Bitte stelle deine Käufe wieder her.",
+  "One payment.": "Einmal zahlen.",
+  "Lifetime access.": "Lebenslanger Zugriff.",
+  "No subscription.": "Kein Abo.",
+  "Guitar, bass & ukulele.": "Gitarre, Bass und Ukulele.",
+  "All notes, keys and modes.": "Alle Noten, Tonarten und Modi.",
+  "Unlock for life": "Dauerhaft freischalten",
+  "Restore your access": "Zugriff wiederherstellen",
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "Bereits auf einem anderen Smartphone gekauft? Stelle deinen Zugriff mit demselben Konto wieder her, ohne erneut zu bezahlen."
 }
