@@ -77,8 +77,14 @@
         const harmonic=Math.round(2**((note.midi-midi)/12));
         return harmonic>=2&&harmonic<=8&&Math.abs(note.midi-midi-12*Math.log2(harmonic))<.43;
       };
-      const outside=result.notes.reduce((sum,n)=>sum+(n.midi===midi||overtone(n)?0:n.strength),0);
-      return outside<target.strength*.08;
+      // The pitch detector has already confirmed the exact note. Quiet tails
+      // from the preceding triad must not veto it: fitted voices first appear
+      // at 17% of the strongest voice, so the old 8% amplitude limit rejected
+      // every non-harmonic residual as soon as it appeared in result.notes.
+      // Require the target to carry >87% of the non-overtone fitted energy.
+      // Comparable chord voices still fail; this does not relax chord matching.
+      const outside=result.notes.reduce((sum,n)=>sum+(n.midi===midi||overtone(n)?0:n.strength**2),0);
+      return outside<target.strength**2*.15;
     }
     return {analyze,matches,matchesSingle};
   }

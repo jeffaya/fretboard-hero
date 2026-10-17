@@ -424,6 +424,31 @@ for(const quality of ['minor','major'])test(`Audio completes all three ${quality
  assert.equal(r.c.lastExercise.id,'chords');
 });
 
+for(const rate of [44100,48000])test(`D# minor ADG journey accepts the F# at fret 9 over residual ringing at ${rate} Hz`,()=>{
+ const {samples,spectrumOf,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(false);r.session.enter();
+ r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value==='D#').click();
+ r.nodes.get('#routineSteps').children[2].children[0].click();
+ r.nextGroup();r.nextGroup();
+ const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);
+ const columns=r.c.lastExercise.columns,midi=col=>Array.from(col.notes,n=>engine.midiAt(n.string,n.fret));
+ assert.deepEqual(midi(columns[0]),[51,54,58]);
+ assert.deepEqual(midi(columns[1]),[54]);
+ assert.equal(columns[1].notes[0].string,1);assert.equal(columns[1].notes[0].fret,9);
+ let now=1500;
+ const progress=()=>r.nodes.get('#routineNoteProgress').textContent;
+ const play=(notes,levels)=>{
+  const data=samples(notes,{rate,levels,gain:.08,pluck:.22,slope:.8}),bins=spectrumOf(data);
+  for(let i=0;i<10;i++,now+=80)r.c.audio.onFrame({samples:data,spectrum:bins,sampleRate:rate,fftSize:N,now});
+ };
+ play(midi(columns[0]));assert.equal(progress(),'2 / 3');
+ play(midi(columns[0]));assert.equal(progress(),'2 / 3','ringing whole previous triad must not skip the liaison');
+ play(midi(columns[2]));assert.equal(progress(),'2 / 3','next whole triad must not replace its third');
+ play([55,51,58],[1,.2,.2]);assert.equal(progress(),'2 / 3','wrong liaison must still be rejected');
+ play([54,51,58],[1,.2,.2]);assert.equal(progress(),'3 / 3');
+ assert.equal(r.nodes.get('#routineTransition').hidden,true,'the liaison must not also count as the next triad');
+ play(midi(columns[2]));assert.equal(r.nodes.get('#routineTransition').hidden,false);
+});
+
 test('Rhythm replaces only guitar chords and remains independent of key',()=>{
  const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
  for(const root of c.MusicTheory.NOTES)for(const quality of ['major','minor']){
