@@ -51,6 +51,9 @@ test('Melodic instructions, directions, box blocks and degree labels localize in
  const fr=await create({languages:['fr']});assert.equal(fr.text(phrases[0]),'Partez de La : montez à l’octave, puis revenez à la fondamentale.');assert.equal(fr.text('Degree ♭3'),'Degré ♭3');assert.ok(fr.text(phrases[2]).includes('La Mineur'));
 });
 
-test('Download and billing explanations translate in every supported language',async()=>{
- for(const locale of locales){const t=(await create({languages:[locale]})).text;for(const key of ['Get the app','Get it free on','Download for free on the','One purchase. Three instruments. Every skill unlocked.','Could not read purchase status. Please restore purchases.'])assert.equal(t(key),catalogs[locale][key]);}
+test('Download and lifetime access explanations translate in every supported language',async()=>{
+ const keys=['Contact us','Get the app','Get it free on','Download for free on the','One payment.','Lifetime access.','No subscription.','Guitar, bass & ukulele.','All notes, keys and modes.','Unlock for life','Restore your access','Already purchased on another phone? Restore your access with the same account, without paying again.','Could not read purchase status. Please restore purchases.'];
+ for(const locale of locales){const t=(await create({languages:[locale]})).text;for(const key of keys){assert.equal(t(key),catalogs[locale][key]);if(locale!=='en')assert.notEqual(t(key),key,`${locale}: ${key}`)}}
+ const fr=await create({languages:['fr']});assert.equal(fr.text('Restore your access'),'Récupérer votre accès');assert.equal(fr.text(keys.at(-2)),'Déjà acheté sur un autre téléphone ? Récupérez votre accès avec le même compte, sans repayer.');
 });
+

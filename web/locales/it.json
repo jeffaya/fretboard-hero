@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "SBLOCCA LE TUE",
   "FRETBOARD SKILLS": "ABILITÀ SULLA TASTIERA",
   "Stop switching tools. Start playing solos worth sharing.": "Smetti di cambiare strumenti. Inizia a suonare assoli da condividere.",
-  "One purchase. Three instruments. Every skill unlocked.": "Un acquisto. Tre strumenti. Tutte le abilità sbloccate.",
   "← Continue exploring": "← Continua a esplorare",
   "Get it free on": "Disponibile gratis su",
   "Download for free on the": "Scarica gratis su",
@@ -158,7 +157,6 @@
   "Unlock full access": "Sblocca l’accesso completo",
   "Unlock full access — {price}": "Sblocca l’accesso completo — {price}",
   "Check price": "Controlla il prezzo",
-  "Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.": "Chitarra, basso e ukulele. Tutte le note, tonalità e modalità. Un solo pagamento, nessun abbonamento. Valido in questa app.",
   "Checking purchases…": "Verifica degli acquisti…",
   "Opening {store}…": "Apertura di {store}…",
   "Payment pending. Full access will unlock after {store} confirms it.": "Pagamento in sospeso. L’accesso completo sarà sbloccato dopo la conferma di {store}.",
@@ -407,5 +405,14 @@
   "Practice to play better.": "Esercitarsi per suonare meglio.",
   "Repetition can become discovery.": "La ripetizione può diventare scoperta.",
   "Get the app": "Scarica l’app",
-  "Could not read purchase status. Please restore purchases.": "Impossibile leggere lo stato dell’acquisto. Ripristina gli acquisti."
+  "Contact us": "Contattaci",
+  "Could not read purchase status. Please restore purchases.": "Impossibile leggere lo stato dell’acquisto. Ripristina gli acquisti.",
+  "One payment.": "Un solo pagamento.",
+  "Lifetime access.": "Accesso a vita.",
+  "No subscription.": "Nessun abbonamento.",
+  "Guitar, bass & ukulele.": "Chitarra, basso e ukulele.",
+  "All notes, keys and modes.": "Tutte le note, tonalità e modi.",
+  "Unlock for life": "Sblocca a vita",
+  "Restore your access": "Recupera il tuo accesso",
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "Hai già acquistato su un altro telefono? Recupera il tuo accesso con lo stesso account, senza pagare di nuovo."
 }

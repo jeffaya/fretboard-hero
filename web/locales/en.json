@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "UNLOCK YOUR",
   "FRETBOARD SKILLS": "FRETBOARD SKILLS",
   "Stop switching tools. Start playing solos worth sharing.": "Stop switching tools. Start playing solos worth sharing.",
-  "One purchase. Three instruments. Every skill unlocked.": "One purchase. Three instruments. Every skill unlocked.",
   "← Continue exploring": "← Continue exploring",
   "Get it free on": "Get it free on",
   "Download for free on the": "Download for free on the",
@@ -158,7 +157,6 @@
   "Unlock full access": "Unlock full access",
   "Unlock full access — {price}": "Unlock full access — {price}",
   "Check price": "Check price",
-  "Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.": "Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.",
   "Checking purchases…": "Checking purchases…",
   "Opening {store}…": "Opening {store}…",
   "Payment pending. Full access will unlock after {store} confirms it.": "Payment pending. Full access will unlock after {store} confirms it.",
@@ -407,5 +405,14 @@
   "Practice to play better.": "Practice to play better.",
   "Repetition can become discovery.": "Repetition can become discovery.",
   "Get the app": "Get the app",
-  "Could not read purchase status. Please restore purchases.": "Could not read purchase status. Please restore purchases."
+  "Contact us": "Contact us",
+  "Could not read purchase status. Please restore purchases.": "Could not read purchase status. Please restore purchases.",
+  "One payment.": "One payment.",
+  "Lifetime access.": "Lifetime access.",
+  "No subscription.": "No subscription.",
+  "Guitar, bass & ukulele.": "Guitar, bass & ukulele.",
+  "All notes, keys and modes.": "All notes, keys and modes.",
+  "Unlock for life": "Unlock for life",
+  "Restore your access": "Restore your access",
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "Already purchased on another phone? Restore your access with the same account, without paying again."
 }

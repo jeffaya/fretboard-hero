@@ -32,14 +32,21 @@
 
 #home .home-footer {
   grid-column: 1 / -1;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, max-content);
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: clamp(8px, 3vw, 16px);
+  gap: 4px clamp(8px, 3vw, 16px);
   min-width: 0;
   padding-bottom: 8px;
+}
+
+#home .home-footer-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 3vw, 16px);
+  min-width: 0;
+  max-width: 100%;
 }
 
 body #app .home-footer-link {
@@ -62,7 +69,7 @@ body #app .home-footer-link:focus-visible { outline: 2px solid #7ce5fa; outline-
 
 body #app button.home-footer-link:not(.language-trigger) { text-decoration: underline; }
 
-#home .home-footer-separator { width: 1px; height: 14px; background: #b8c7df40; }
+#home .home-footer-separator { flex: 0 0 1px; width: 1px; height: 14px; background: #b8c7df40; }
 
 #home .hero-logo {
   display: block;
@@ -350,3 +357,4 @@ body #app #home .home-instruments button[aria-pressed="true"]::after {
 
   #home .home-instruments button { flex-direction: column; padding-block: 5px; }
 }
+

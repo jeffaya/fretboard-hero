@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "解き放とう",
   "FRETBOARD SKILLS": "指板のスキル",
   "Stop switching tools. Start playing solos worth sharing.": "ツールを切り替える手間を減らして、聴かせたくなるソロを弾こう。",
-  "One purchase. Three instruments. Every skill unlocked.": "1回の購入、3つの楽器、すべての機能。",
   "← Continue exploring": "← 探索を続ける",
   "Get it free on": "無料で入手",
   "Download for free on the": "無料でダウンロード",
@@ -158,7 +157,6 @@
   "Unlock full access": "フルアクセスを解除",
   "Unlock full access — {price}": "解除する — {price}",
   "Check price": "価格を確認",
-  "Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.": "ギター・ベース・ウクレレの全音・キー・モード。買い切りで定期課金なし。このアプリ内で有効です。",
   "Checking purchases…": "購入を確認中…",
   "Opening {store}…": "{store}を開いています…",
   "Payment pending. Full access will unlock after {store} confirms it.": "支払い待ちです。{store}の確認後に解除されます。",
@@ -407,5 +405,14 @@
   "Practice to play better.": "よりよい演奏のために練習する。",
   "Repetition can become discovery.": "繰り返しが発見につながる。",
   "Get the app": "アプリをダウンロード",
-  "Could not read purchase status. Please restore purchases.": "購入状況を読み取れませんでした。購入を復元してください。"
+  "Contact us": "お問い合わせ",
+  "Could not read purchase status. Please restore purchases.": "購入状況を読み取れませんでした。購入を復元してください。",
+  "One payment.": "お支払いは一度だけ。",
+  "Lifetime access.": "ずっと使える。",
+  "No subscription.": "定期購入なし。",
+  "Guitar, bass & ukulele.": "ギター、ベース、ウクレレ。",
+  "All notes, keys and modes.": "すべての音、キー、モード。",
+  "Unlock for life": "永久にアンロック",
+  "Restore your access": "アクセスを復元",
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "別のスマートフォンで購入済みですか？同じアカウントでアクセスを復元できます。追加のお支払いは不要です。"
 }

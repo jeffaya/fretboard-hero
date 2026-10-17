@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "解锁你的",
   "FRETBOARD SKILLS": "指板技能",
   "Stop switching tools. Start playing solos worth sharing.": "不必来回切换工具，开始弹奏值得分享的独奏。",
-  "One purchase. Three instruments. Every skill unlocked.": "一次购买，三种乐器，全部解锁。",
   "← Continue exploring": "← 继续探索",
   "Get it free on": "免费下载",
   "Download for free on the": "免费下载",
@@ -158,7 +157,6 @@
   "Unlock full access": "解锁完整访问",
   "Unlock full access — {price}": "解锁 — {price}",
   "Check price": "查看价格",
-  "Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.": "吉他、贝斯和尤克里里的所有音符、调性和模式。一次付款，无需订阅，仅限本应用内使用。",
   "Checking purchases…": "正在检查购买…",
   "Opening {store}…": "正在打开{store}…",
   "Payment pending. Full access will unlock after {store} confirms it.": "付款待处理，{store}确认后即可解锁。",
@@ -407,5 +405,14 @@
   "Practice to play better.": "练习，是为了演奏得更好。",
   "Repetition can become discovery.": "重复练习，也能带来新发现。",
   "Get the app": "下载应用",
-  "Could not read purchase status. Please restore purchases.": "无法读取购买状态。请恢复购买。"
+  "Contact us": "联系我们",
+  "Could not read purchase status. Please restore purchases.": "无法读取购买状态。请恢复购买。",
+  "One payment.": "一次付款。",
+  "Lifetime access.": "终身使用。",
+  "No subscription.": "无需订阅。",
+  "Guitar, bass & ukulele.": "吉他、贝斯和尤克里里。",
+  "All notes, keys and modes.": "全部音符、调性和模式。",
+  "Unlock for life": "解锁终身使用",
+  "Restore your access": "恢复使用权限",
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "已在其他手机上购买？使用同一账号即可恢复使用权限，无需再次付费。"
 }

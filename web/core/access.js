@@ -37,8 +37,8 @@
       <p id="premiumPitch" class="premium-pitch">Stop switching tools. Start playing solos worth sharing.</p>
       <img class="premium-neck" src="./assets/premium-neck.svg" alt="" width="800" height="130">
       <ul class="premium-skills" aria-label="Skills included"></ul>
+      ${billing?'<div class="premium-offer"><p class="premium-offer-title">One payment.<strong>Lifetime access.</strong></p><p class="premium-no-subscription">No subscription.</p><p class="premium-scope">Guitar, bass &amp; ukulele.<br>All notes, keys and modes.</p></div>':''}
       <div class="premium-stores"></div>
-      ${billing?'<p class="premium-promise"></p>':''}
       <button type="button" class="ui-back premium-close">← Continue exploring</button>
     </section>`;
     document.querySelector('#app').append(overlay);
@@ -53,7 +53,7 @@
       overlay.querySelector('.premium-skills').append(item);
     }
     const icons={android:'<path fill="#32d477" d="M3 2v20l12-10Z"/><path fill="#46c5ff" d="m3 2 15 8-3 2Z"/><path fill="#ffce45" d="m15 12 3-2 4 2-4 2Z"/><path fill="#fa5b75" d="m3 22 15-8-3-2Z"/>',ios:'<path fill="currentColor" d="M15 3c-2 0-3 2-3 4 2 0 3-2 3-4ZM12 9c-3-3-8-1-8 3 0 4 3 9 5 9l3-1 3 1c2 0 4-3 5-5-4-2-4-5-1-7-2-2-4-2-7 0Z"/>'};
-    if(billing){billing.mountPaywall(stores);overlay.querySelector('.premium-promise').textContent='One purchase. Three instruments. Every skill unlocked.'}
+    if(billing)billing.mountPaywall(stores);
     const qrTargets=[];
     for(const platform of (billing?[]:['android','ios'])){
       const url=storeUrl(config,platform),column=document.createElement('div');column.className='premium-store-column';

@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  // The home only handles instrument selection; motion is automatic in CSS.
+  // Instrument selection and the shared footer entry; motion is automatic in CSS.
   const dock=document.querySelector('.home-instruments');
   const buttons=[...document.querySelectorAll('[data-home-instrument]')];
   const preferred=buttons.find(button=>button.dataset.homeInstrument===window.FRETBOARD_SITE_CONFIG.defaultInstrument);
@@ -19,12 +19,15 @@
       location.assign(destination.href);
     });
   });
-  if(!window.FRETBOARD_SITE_CONFIG.nativeBilling&&!window.FRETBOARD_ACCESS.unlocked){
-    const separator=document.createElement('span'),download=document.createElement('button');
+  if(!window.FRETBOARD_ACCESS.unlocked){
+    const entry=document.createElement('span'),separator=document.createElement('span'),download=document.createElement('button');
+    entry.className='home-footer-entry';
     separator.className='home-footer-separator';separator.setAttribute('aria-hidden','true');
-    download.className='home-footer-link';download.type='button';download.textContent='Get the app';
+    download.className='home-footer-link';download.type='button';
+    download.textContent=window.FRETBOARD_SITE_CONFIG.nativeBilling?'Unlock full access':'Get the app';
     download.setAttribute('aria-haspopup','dialog');
     download.addEventListener('click',()=>window.FRETBOARD_PREMIUM.open());
-    document.querySelector('.home-footer').append(separator,download);
+    entry.append(separator,download);document.querySelector('.home-footer').append(entry);
   }
 })();
+

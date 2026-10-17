@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "잠금 해제하고",
   "FRETBOARD SKILLS": "지판 실력을 키우세요",
   "Stop switching tools. Start playing solos worth sharing.": "도구를 바꾸는 대신 자랑하고 싶은 솔로를 연주하세요.",
-  "One purchase. Three instruments. Every skill unlocked.": "한 번 구매로 세 악기의 모든 기능을 이용하세요.",
   "← Continue exploring": "← 계속 둘러보기",
   "Get it free on": "무료 다운로드",
   "Download for free on the": "무료 다운로드",
@@ -158,7 +157,6 @@
   "Unlock full access": "전체 이용권 구매",
   "Unlock full access — {price}": "잠금 해제 — {price}",
   "Check price": "가격 확인",
-  "Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.": "기타, 베이스, 우쿨렐레의 모든 음과 조성, 모드. 구독 없이 한 번 결제하며 이 앱에서 유효합니다.",
   "Checking purchases…": "구매 확인 중…",
   "Opening {store}…": "{store} 여는 중…",
   "Payment pending. Full access will unlock after {store} confirms it.": "결제 대기 중입니다. {store} 확인 후 잠금이 해제됩니다.",
@@ -407,5 +405,14 @@
   "Practice to play better.": "더 잘 연주하기 위한 연습.",
   "Repetition can become discovery.": "반복이 발견으로 이어질 수 있어요.",
   "Get the app": "앱 다운로드",
-  "Could not read purchase status. Please restore purchases.": "구매 상태를 읽을 수 없습니다. 구매를 복원해 주세요."
+  "Contact us": "문의하기",
+  "Could not read purchase status. Please restore purchases.": "구매 상태를 읽을 수 없습니다. 구매를 복원해 주세요.",
+  "One payment.": "한 번만 결제.",
+  "Lifetime access.": "평생 이용.",
+  "No subscription.": "구독 없이.",
+  "Guitar, bass & ukulele.": "기타, 베이스, 우쿨렐레.",
+  "All notes, keys and modes.": "모든 음, 조성, 모드.",
+  "Unlock for life": "평생 이용 잠금 해제",
+  "Restore your access": "이용 권한 복원",
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "다른 휴대폰에서 이미 구매하셨나요? 같은 계정으로 이용 권한을 복원하세요. 다시 결제할 필요가 없습니다."
 }

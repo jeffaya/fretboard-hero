@@ -118,9 +118,9 @@ body #app .premium-store {
   line-height: 1.1;
 }
 
-.premium-store small { font-family: system-ui,sans-serif; font-size: 13px; }
+.premium-store small { font-size: 13px; }
 
-.premium-store b { font-family: system-ui,sans-serif; font-size: 25px; font-weight: 600; }
+.premium-store b { font-size: 25px; font-weight: 800; }
 
 .premium-qr { display: none; margin: 16px 0 0; }
 
@@ -134,12 +134,21 @@ body #app .premium-store {
 
 .premium-qr figcaption { margin-top: 8px; color: var(--ui-muted); font-size: 16px; }
 
-.premium-promise {
-  margin: 0 0 8px;
-  font-size: 19px;
-  line-height: 1.3;
+.premium-offer { margin: 18px 0 0; text-align: center; }
+
+.premium-offer-title {
+  margin: 0;
   color: #fff;
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 800;
 }
+
+.premium-offer-title strong { display: block; margin-top: 3px; color: #ffe38a; font-size: 36px; line-height: 1.08; font-weight: 800; }
+
+.premium-no-subscription { margin: 7px 0 12px; color: #fff; font-size: 20px; line-height: 1.2; font-weight: 800; }
+
+.premium-scope { margin: 0; color: #d4dced; font-size: 16px; line-height: 1.35; }
 
 .premium-close { margin: auto; padding: 8px; font-size: 18px; }
 
@@ -169,8 +178,6 @@ body #app .premium-store {
   .premium-stores { margin: 16px 0 12px; gap: 10px; }
 
   .premium-store b { font-size: 23px; }
-
-  .premium-promise { font-size: 17px; }
 }
 
 body[data-access="demo"] .circle-wheel-svg { touch-action: pan-y; cursor: default; }
@@ -186,7 +193,16 @@ body[data-access="demo"] .circle-wheel-svg { touch-action: pan-y; cursor: defaul
 
 .premium-stores.premium-billing { display: flex; flex-direction: column; gap: 10px; }
 
-.premium-billing .premium-store { width: 100%; justify-content: center; }
+.premium-billing .modal-action {
+  box-sizing: border-box;
+  min-height: 74px;
+  padding: 14px 20px;
+  font: 800 clamp(20px,3vw,26px)/1.2 var(--ui-font);
+}
+
+.premium-billing .modal-action svg { width: 28px; height: 28px; flex-basis: 28px; }
+
+.premium-billing .modal-action span { min-width: 0; overflow-wrap: anywhere; }
 
 .billing-status {
   font-size: 14px;
@@ -196,35 +212,12 @@ body[data-access="demo"] .circle-wheel-svg { touch-action: pan-y; cursor: defaul
   margin: 0;
 }
 
-.billing-scope {
+.billing-restore-help {
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.35;
   text-align: center;
-  margin: 0;
+  margin: 0 4px;
+  color: #b8c7df;
 }
 
 .billing-status:empty { display: none; }
-
-.billing-scope { color: #ffe38a; }
-
-.home-billing {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.home-billing button { font-size: 14px; padding: 8px 12px; min-height: 40px; }
-
-.home-billing button[hidden] { display: none !important; }
-
-.home-billing p {
-  flex-basis: 100%;
-  text-align: center;
-  color: #c6d3e6;
-  font-size: 13px;
-  margin: 0;
-}
-
-.home-billing p:empty { display: none; }

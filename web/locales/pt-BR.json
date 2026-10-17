@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "DESBLOQUEIE SEU",
   "FRETBOARD SKILLS": "DOMÍNIO DO BRAÇO",
   "Stop switching tools. Start playing solos worth sharing.": "Pare de trocar de ferramentas. Toque solos que valham a pena compartilhar.",
-  "One purchase. Three instruments. Every skill unlocked.": "Uma compra. Três instrumentos. Tudo liberado.",
   "← Continue exploring": "← Continuar explorando",
   "Get it free on": "Disponível grátis no",
   "Download for free on the": "Baixe grátis na",
@@ -158,7 +157,6 @@
   "Unlock full access": "Desbloquear acesso completo",
   "Unlock full access — {price}": "Desbloquear — {price}",
   "Check price": "Ver preço",
-  "Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.": "Guitarra, baixo e ukulele. Todas as notas, tonalidades e modos. Pagamento único, sem assinatura. Válido neste app.",
   "Checking purchases…": "Verificando compras…",
   "Opening {store}…": "Abrindo {store}…",
   "Payment pending. Full access will unlock after {store} confirms it.": "Pagamento pendente. O acesso será liberado após confirmação de {store}.",
@@ -407,5 +405,14 @@
   "Practice to play better.": "Praticar para tocar melhor.",
   "Repetition can become discovery.": "A repetição pode virar descoberta.",
   "Get the app": "Baixar o aplicativo",
-  "Could not read purchase status. Please restore purchases.": "Não foi possível ler o status da compra. Restaure suas compras."
+  "Contact us": "Fale conosco",
+  "Could not read purchase status. Please restore purchases.": "Não foi possível ler o status da compra. Restaure suas compras.",
+  "One payment.": "Um único pagamento.",
+  "Lifetime access.": "Acesso vitalício.",
+  "No subscription.": "Sem assinatura.",
+  "Guitar, bass & ukulele.": "Guitarra, baixo e ukulele.",
+  "All notes, keys and modes.": "Todas as notas, tonalidades e modos.",
+  "Unlock for life": "Desbloquear para sempre",
+  "Restore your access": "Recuperar seu acesso",
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "Já comprou em outro celular? Recupere seu acesso com a mesma conta, sem pagar novamente."
 }

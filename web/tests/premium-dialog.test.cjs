@@ -17,7 +17,11 @@ test('Native paywall offers the global purchase instead of external store links'
  r.c.window.FretboardBilling={native:true,mountPaywall(){mounted++},refreshPrice(){prices++}};
  const modal=r.Access.mount({instrument:'guitar',stores:{guitar:{android:'https://play.google.com/store/apps/details?id=example'}}},r.Access.create(false));
  assert.equal(mounted,1);assert.equal(r.app.children[0].querySelector('.premium-stores').children.length,0);
- assert.equal(r.app.children[0].querySelector('.premium-promise').textContent,'One purchase. Three instruments. Every skill unlocked.');
- assert.doesNotMatch(r.app.children[0].innerHTML,/Free download|premium-download/);
+ const html=r.app.children[0].innerHTML;
+ assert.match(html,/One payment\.<strong>Lifetime access\.<\/strong>/);assert.match(html,/No subscription\./);
+ assert.match(html,/Guitar, bass &amp; ukulele\.<br>All notes, keys and modes\./);
+ assert.ok(html.indexOf('premium-offer')<html.indexOf('premium-stores'),'the lifetime offer comes before the purchase controls');
+ assert.doesNotMatch(html,/Free download|premium-download|premium-promise|Valid in this app/);
  modal.open();assert.equal(prices,1);
 });
+
