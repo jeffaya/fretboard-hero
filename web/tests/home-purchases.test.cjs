@@ -9,9 +9,9 @@ function setup({native=false,unlocked=false,blocked=false}={}){
 }
 test('Web and native demos open their dialog from the same footer link without adding a menu row',()=>{
  for(const native of [false,true]){
-  const s=setup({native});assert.equal(s.rows.length,0);assert.equal(s.footer.length,2);
-  assert.equal(s.footer[0].className,'home-footer-separator');
-  const link=s.footer[1];assert.equal(link.className,'home-footer-link');assert.equal(link.textContent,native?'Unlock full access':'Get the app');link.events.click();assert.equal(s.opens,1);
+  const s=setup({native});assert.equal(s.rows.length,0);assert.equal(s.footer.length,1);
+  const entry=s.footer[0];assert.equal(entry.className,'home-footer-entry');assert.equal(entry.children[0].className,'home-footer-separator');
+  const link=entry.children[1];assert.equal(link.className,'home-footer-link');assert.equal(link.textContent,native?'Unlock full access':'Get the app');link.events.click();assert.equal(s.opens,1);
   const paid=setup({native,unlocked:true});assert.equal(paid.rows.length,0);assert.equal(paid.footer.length,0);
  }
 });
@@ -22,3 +22,4 @@ test('Website instrument destinations use the corresponding distinct Android app
  const config=JSON.parse(fs.readFileSync('web/site.config.json','utf8')),catalog=JSON.parse(fs.readFileSync('app/instruments.json','utf8'));
  for(const instrument of ['guitar','bass-4','ukulele'])assert.equal(new URL(config.stores[instrument].android).searchParams.get('id'),catalog[instrument].appId);
 });
+

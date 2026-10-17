@@ -18,7 +18,7 @@
   const fail=err=>{document.body.setAttribute('aria-busy','false');console.error(err);document.body.innerHTML=`<main style="min-height:100vh;display:grid;place-items:center;background:#05080b;color:#f8fbff;font-family:system-ui;padding:24px"><div><h1 style="color:#ff3ec9">CONFIGURATION ERROR</h1><p>${String(err.message||err)}</p><p>Check <code>site.config.json</code> and README.md.</p></div></main>`;};
   (async()=>{
     try{
-      await load('./core/i18n.js?v=10.49.3');
+      await load('./core/i18n.js?v=10.49.5');
       await FretboardI18n.initialize();
       const response=await fetch('./site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
@@ -46,7 +46,7 @@
       window.FRETBOARD_ACTIVE_PRODUCT={...product,instrument:entry.instrumentKey};window.FRETBOARD_ACTIVE_INSTRUMENT=instrument;
       document.documentElement.dataset.instrument=config.instrument;
       window.ProductShell.apply(product,instrument);
-      await load('./home.js?v=10.49.4');
+      await load('./home.js?v=10.49.5');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
       await load('./app.js?v=10.43.1');
       FretboardBilling.attach();

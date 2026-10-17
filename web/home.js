@@ -20,12 +20,14 @@
     });
   });
   if(!window.FRETBOARD_ACCESS.unlocked){
-    const separator=document.createElement('span'),download=document.createElement('button');
+    const entry=document.createElement('span'),separator=document.createElement('span'),download=document.createElement('button');
+    entry.className='home-footer-entry';
     separator.className='home-footer-separator';separator.setAttribute('aria-hidden','true');
     download.className='home-footer-link';download.type='button';
     download.textContent=window.FRETBOARD_SITE_CONFIG.nativeBilling?'Unlock full access':'Get the app';
     download.setAttribute('aria-haspopup','dialog');
     download.addEventListener('click',()=>window.FRETBOARD_PREMIUM.open());
-    document.querySelector('.home-footer').append(separator,download);
+    entry.append(separator,download);document.querySelector('.home-footer').append(entry);
   }
 })();
+

@@ -14,13 +14,13 @@ async function startup(config, cachedState, {saved=null,search='',session=null,p
     append(...nodes){for(const n of nodes){this.children.push(n);n.parentElement=this}} querySelector(s){return this.selected[s]??=new Node()}
     querySelectorAll(){return []} setAttribute(){} addEventListener(name,fn){this.events[name]=fn} focus(){}
   }
-  const app=new Node();
+  const app=new Node(),footer=new Node();
   let artworkLoaded;
   const artwork = {addEventListener(name, fn) { if (name === 'load') artworkLoaded = fn; }, setAttribute() { artworkLoaded(); }};
   const logo = {querySelector: () => artwork};
   const loader = {hidden: false};
   const document = {
-    querySelector(selector) { return selector === '#home .hero-logo svg' ? logo : selector === '#startupLoader' ? loader : selector === '#app' ? app : {append: row => rows.push(row)}; },
+    querySelector(selector) { return selector === '#home .hero-logo svg' ? logo : selector === '#startupLoader' ? loader : selector === '#app' ? app : selector === '.home-footer' ? footer : {append: row => rows.push(row)}; },
     querySelectorAll: () => [], addEventListener(){},
     createElement: () => new Node(),
     body: {dataset:{},setAttribute() {}, removeAttribute() {}},
@@ -29,7 +29,7 @@ async function startup(config, cachedState, {saved=null,search='',session=null,p
     head: {appendChild(script) { queueMicrotask(() => {
       try {
         const name = script.src.split('?')[0];
-        if (['./core/access.js', './core/native-billing.js'].includes(name)) vm.runInContext(fs.readFileSync(`web/${name.slice(2)}`, 'utf8'), ctx);
+        if (['./core/access.js', './core/native-billing.js', './home.js'].includes(name)) vm.runInContext(fs.readFileSync(`web/${name.slice(2)}`, 'utf8'), ctx);
         if (name === './app.js') {
           appStarted = true;
           ctx.FRETBOARD_PREMIUM = ctx.FretboardAccess.mount(ctx.FRETBOARD_SITE_CONFIG, ctx.FRETBOARD_ACCESS);
@@ -57,7 +57,7 @@ async function startup(config, cachedState, {saved=null,search='',session=null,p
   assert.deepEqual(failures, []);
   assert.equal(loader.hidden, true, 'bootstrap must complete');
   assert.equal(appStarted, true);
-  return {ctx, storeCalls, reloads, rows};
+  return {ctx, storeCalls, reloads, rows, footer, app};
 }
 
 for (const instrument of ['guitar', 'bass-4', 'ukulele']) {
@@ -84,11 +84,12 @@ const catalog=JSON.parse(fs.readFileSync('app/instruments.json','utf8'));
 for(const application of Object.keys(catalog)) for(const platform of ['android','ios']) for(const instrument of Object.keys(catalog)) for(const owned of [false,true]) {
  test(`${platform} ${application} app: ${instrument} access follows verified ownership (${owned}), never static flags or URL key`,async()=>{
   const key='valid-test-key';
-  const {ctx,rows}=await startup({instrument:application,appId:catalog[application].appId,nativeBilling:true,unlocked:true,testKeyHash:createHash('sha256').update(key).digest('hex')},{unlocked:owned},{platform,search:`?instrument=${instrument}&key=${key}`});
+  const {ctx,rows,footer,app}=await startup({instrument:application,appId:catalog[application].appId,nativeBilling:true,unlocked:true,testKeyHash:createHash('sha256').update(key).digest('hex')},{unlocked:owned},{platform,search:`?instrument=${instrument}&key=${key}`});
   assert.equal(ctx.FRETBOARD_ACCESS.unlocked,owned);assert.equal(ctx.FRETBOARD_SITE_CONFIG.instrument,instrument);
   assert.equal(ctx.FRETBOARD_SITE_CONFIG.appId,catalog[application].appId);assert.equal(ctx.FRETBOARD_SITE_CONFIG.defaultInstrument,application);
   assert.equal(ctx.FRETBOARD_ACCESS.allows('root','C'),owned);assert.equal(ctx.FRETBOARD_ACCESS.allows('mode','triads'),owned);
-  assert.equal(rows.length,1);assert.equal(rows[0].children[0].hidden,owned);
+  assert.equal(rows.length,0,'purchase controls belong in the dialog');assert.equal(footer.children.length,owned?0:1);
+  if(!owned){const link=footer.children[0].children[1];assert.equal(link.textContent,'Unlock full access');link.events.click();assert.equal(app.children[0].hidden,false,'the footer link opens the purchase dialog')}
  });
 }
 test('Remembered instrument survives restart and campaign URL overrides it without changing purchase',async()=>{
