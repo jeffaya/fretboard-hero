@@ -101,6 +101,23 @@ responses preserve existing verified access. Confirmed refunds/revocations clear
 detection requires a successful online check. New pending/cancelled payments do not
 create access. Restore purchases is available even when unlocked.
 
+After payment, ownership reconciliation runs independently of the outstanding
+purchase callback. Returning from the store, a purchase-change event or restored
+connectivity triggers a silent check, even if `purchase()` has not settled. A failed
+verification or pending result also starts recovery automatically: one immediate
+check, then up to five retries after 1, 2, 5, 10 and 20 seconds (plus request time).
+Retries pause in the background, coalesce overlapping events and stop on verified
+ownership or cancellation. Pending/cancelled payments never grant access, and silent
+checks preserve the visible payment feedback. iOS uses its silent `refresh` method,
+not the account-synchronizing Restore action.
+
+Once native verification changes ownership, the WebView reloads automatically once
+to rebuild the immutable access model from the verified native cache. The user does
+not need to close the application. This is an internal page refresh, not an in-place
+update of an ongoing exercise. Late callbacks cannot trigger a second reload.
+Deploying the Worker alone does not update this bundled JavaScript: rebuild the
+Store AAB with a higher version code and install that update through Play testing.
+
 Reinstallation, cleared app data or a new device requires an online restore with the
 purchasing Google account **in the same app**. No proof is transferred in Android backup.
 
@@ -116,6 +133,13 @@ pending completion, interruption after payment, reinstall/restore, offline resta
 server outage, refund/revoke and repurchase. After purchase, switch through all three
 instruments and check full access. Install another app and confirm it stays in demo
 without its own purchase. Also check microphone behavior on a device.
+
+For post-payment recovery specifically, keep the app open after a new test purchase
+and confirm that the paywall clears automatically. Repeat with delayed payment
+completion and a temporary verification outage, then restore connectivity without
+force-closing the app. Check that cancellation and still-pending payments stay locked.
+Use a fresh test purchase/account or refund/revoke the existing test entitlement;
+an already-owned item only exercises restoration, not a new payment callback.
 
 References:
 - https://developer.android.com/google/play/billing/integrate
