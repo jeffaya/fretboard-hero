@@ -1,0 +1,12 @@
+{
+  "app-icon": "Médiator néon avec une guitare électrique à six cordes, entouré de magenta et de cyan.",
+  "feature-graphic": "Guitar Fretboard Hero : accordeur, routine avec retour micro, apprentissage, carte du manche, cycle des quintes et quiz.",
+  "01-routine": "Exercice de gamme de La mineur avec noms de notes, degrés et tablature dans la Routine quotidienne.",
+  "02-triads": "Triades de La mineur reliées par des tierces sur une tablature de guitare à six cordes.",
+  "03-pentatonic": "Positions pentatoniques de La mineur reliées par des notes colorées sur le manche.",
+  "04-feedback": "La Routine quotidienne surligne le prochain La tandis que le microphone suit les notes jouées.",
+  "05-quiz": "Quiz chronométré sur le manche avec une note cible, un score et une série de bonnes réponses.",
+  "06-tuner": "Accordeur automatique détectant la corde de La à 110 Hz et indiquant qu’elle est bien accordée.",
+  "07-map": "Carte du manche affichant les noms des notes sur les six cordes de la guitare.",
+  "08-circle": "Cycle des quintes avec Sol majeur sélectionné, son relatif Mi mineur et des informations sur l’harmonie."
+}

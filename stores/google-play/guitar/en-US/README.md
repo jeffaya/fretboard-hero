@@ -1,6 +1,6 @@
 # Guitar Fretboard Hero — Google Play — en-US
 
-Premier jet : **guitare, anglais (États-Unis)**. Les dossiers basse et ukulélé sont réservés pour la suite. Les textes ci-dessous sont aussi disponibles en `.txt` pour les copier sans mise en forme.
+Fiche **guitare, anglais (États-Unis)**, langue de référence. Copier les textes directement depuis les trois blocs ci-dessous. Les [11 langues de l'application](../README.md) disposent chacune d'un README et d'un fichier de textes alternatifs.
 
 ## Textes à copier-coller
 
@@ -63,7 +63,7 @@ Voir le [guide commun Android et ses dimensions](../../README.md). Le rapport `v
 | Captures d'écran pour tablette 7 pouces | `tablet-7/` | 8 PNG RGB, 1 080 × 1 920, portrait |
 | Captures d'écran pour tablette 10 pouces | `tablet-10/` | 8 PNG RGB, 2 560 × 1 440, paysage |
 | Desktop assets : captures d'écran sur ordinateur | `desktop/` | 8 PNG RGB, 1 920 × 1 080, paysage |
-| Éléments pour Android XR | `android-xr/` | 8 brouillons 2D en 2 560 × 1 440 : lire son README avant utilisation |
+| Éléments pour Android XR | `android-xr/` | 8 brouillons 2D en 2 560 × 1 440 : lire la section Android XR ci-dessous avant utilisation |
 
 Importer les images de chaque dossier dans l'ordre **01 à 08**. Les noms indiquent le thème et la résolution. `alt-text.json` contient les textes alternatifs anglais, si la console les demande. `validation.json` indique les dimensions, poids et contrôles techniques de chaque export.
 
@@ -80,7 +80,7 @@ Importer les images de chaque dossier dans l'ordre **01 à 08**. Les noms indiqu
 | 07 | Carte du manche | Know your fretboard. |
 | 08 | Cercle des quintes | Make harmony make sense. |
 
-`preview.html` permet de parcourir toutes les séries. `overview-phone.png` réunit les huit visuels téléphone. Ces deux fichiers servent à la relecture, pas à l'import dans Google Play.
+`overview-phone.png` réunit les huit visuels téléphone. Ce fichier sert à la relecture, pas à l'import dans Google Play.
 
 ## Contenu et provenance
 

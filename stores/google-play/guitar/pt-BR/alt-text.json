@@ -1,0 +1,12 @@
+{
+  "app-icon": "Palheta neon com uma guitarra elétrica de seis cordas, contornada em magenta e ciano.",
+  "feature-graphic": "Guitar Fretboard Hero: afinador, rotina com microfone, aprendizagem, mapa do braço, círculo das quintas e quiz.",
+  "01-routine": "Exercício de escala de Lá menor com nomes de notas, graus e tablatura na Rotina diária.",
+  "02-triads": "Tríades de Lá menor conectadas por terças em uma tablatura de guitarra de seis cordas.",
+  "03-pentatonic": "Posições pentatônicas de Lá menor conectadas com notas coloridas no braço da guitarra.",
+  "04-feedback": "A Rotina diária destaca a próxima nota Lá enquanto o microfone acompanha as notas tocadas.",
+  "05-quiz": "Quiz cronometrado sobre o braço da guitarra com nota alvo, pontuação e sequência de acertos.",
+  "06-tuner": "Afinador automático detectando a corda Lá a 110 Hz e indicando a afinação correta.",
+  "07-map": "Mapa do braço mostrando os nomes das notas nas seis cordas da guitarra.",
+  "08-circle": "Círculo das quintas com Sol maior selecionado, sua relativa Mi menor e informações sobre harmonia."
+}

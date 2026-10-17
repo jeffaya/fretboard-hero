@@ -1,0 +1,12 @@
+{
+  "app-icon": "Neon-Plektrum mit einer sechssaitigen E-Gitarre und Konturen in Magenta und Cyan.",
+  "feature-graphic": "Guitar Fretboard Hero: Stimmgerät, Routine mit Mikrofon-Feedback, Lernen, Griffbrettkarte, Quintenzirkel und Quiz.",
+  "01-routine": "Übung zur a-Moll-Tonleiter mit Notennamen, Tonstufen und Gitarrentabulatur in der Täglichen Routine.",
+  "02-triads": "a-Moll-Dreiklänge und verbindende Terzen als Tabulatur für eine sechssaitige Gitarre.",
+  "03-pentatonic": "Verbundene a-Moll-Pentatonik-Positionen mit farbigen Noten auf dem Gitarrengriffbrett.",
+  "04-feedback": "Die Tägliche Routine hebt das nächste A hervor, während das Mikrofon die gespielten Noten erfasst.",
+  "05-quiz": "Griffbrett-Quiz mit Zeitlimit, Zielnote, Punktestand und richtigen Antworten in Folge.",
+  "06-tuner": "Automatisches Stimmgerät erkennt die A-Saite bei 110 Hz und zeigt an, dass sie richtig gestimmt ist.",
+  "07-map": "Griffbrettkarte mit Notennamen auf allen sechs Gitarrensaiten.",
+  "08-circle": "Quintenzirkel mit ausgewähltem G-Dur, parallelem e-Moll und Informationen zur Harmonie."
+}
