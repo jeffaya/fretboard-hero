@@ -29,15 +29,16 @@
   }
   function mount(config,access){
     if(access.unlocked)return {open(){},mark(){}};
+    const billing=window.FretboardBilling?.native?window.FretboardBilling:null;
     const lock='<svg class="premium-lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>';
     const overlay=document.createElement('div');overlay.className='premium-overlay';overlay.hidden=true;
     overlay.innerHTML=`<section class="premium-dialog ui-panel ui-modal" role="dialog" aria-modal="true" aria-labelledby="premiumTitle" aria-describedby="premiumPitch" tabindex="-1">
       <h2 id="premiumTitle"><span>UNLOCK YOUR</span><em>FRETBOARD SKILLS</em></h2>
-      <p id="premiumPitch" class="premium-pitch">Stop switching tools. Start playing solos worth sharing.</p>
+      <p id="premiumPitch" class="premium-pitch${billing?'':' premium-download'}">${billing?'Stop switching tools. Start playing solos worth sharing.':'Free download'}</p>
       <img class="premium-neck" src="./assets/premium-neck.svg" alt="" width="800" height="130">
       <ul class="premium-skills" aria-label="Skills included"></ul>
       <div class="premium-stores"></div>
-      <p class="premium-promise">Free download. One purchase unlocks all three instruments.</p>
+      ${billing?'<p class="premium-promise"></p>':''}
       <button type="button" class="ui-back premium-close">← Continue exploring</button>
     </section>`;
     document.querySelector('#app').append(overlay);
@@ -52,7 +53,6 @@
       overlay.querySelector('.premium-skills').append(item);
     }
     const icons={android:'<path fill="#32d477" d="M3 2v20l12-10Z"/><path fill="#46c5ff" d="m3 2 15 8-3 2Z"/><path fill="#ffce45" d="m15 12 3-2 4 2-4 2Z"/><path fill="#fa5b75" d="m3 22 15-8-3-2Z"/>',ios:'<path fill="currentColor" d="M15 3c-2 0-3 2-3 4 2 0 3-2 3-4ZM12 9c-3-3-8-1-8 3 0 4 3 9 5 9l3-1 3 1c2 0 4-3 5-5-4-2-4-5-1-7-2-2-4-2-7 0Z"/>'};
-    const billing=window.FretboardBilling?.native?window.FretboardBilling:null;
     if(billing){billing.mountPaywall(stores);overlay.querySelector('.premium-promise').textContent='One purchase. Three instruments. Every skill unlocked.'}
     const qrTargets=[];
     for(const platform of (billing?[]:['android','ios'])){

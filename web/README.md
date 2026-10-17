@@ -17,6 +17,8 @@ Home keeps branding on the left and activities on the right in landscape, with t
 
 Edit the owning component and its responsive rule instead of appending a new versioned override to the global stylesheet. Keep intentional state selectors (active, locked, hidden, focus, reduced motion) explicit. The remaining `!important` declarations protect typography, hidden content and reduced-motion preferences; avoid adding them to layout rules.
 
+The shared access modal adapts to its platform: the website highlights Free download below the heading and offers store links, without purchase copy. The native app shows the price, purchase/restore actions and the full-access purchase scope. The download badge uses the existing cyan palette and all eleven interface languages; it describes the download, not full access.
+
 The compact drawer and inline toolbar breakpoints are shared with `core/controls.js` and `app.js`. Preserve their behavior when changing CSS. Fixed safe-area padding is intentional for native WebViews. `scripts/sync-web.ps1` copies every stylesheet into native builds; generated `app/www` must not be edited.
 
 For CSS changes, compare Home, Learn/Map controls, Daily Routine completion/replay, Circle, Quiz/results, Premium, language menu and Tuner on portrait and landscape viewports. Include all three instruments and a non-Latin locale. Refresh changed CSS URLs in `index.html`; refresh the bootstrap/app URL when JavaScript changes.
