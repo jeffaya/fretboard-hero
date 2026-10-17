@@ -45,7 +45,7 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
     private void resolveCached(PluginCall call, String status) {
         worker.execute(() -> {
             try { call.resolve(state(cache.token() != null, status)); }
-            catch (Exception ignored) { call.reject("Could not read purchase status. Please restore purchases."); }
+            catch (Exception ignored) { call.reject("Could not read purchase status. Please restore your access."); }
         });
     }
     private static String read(InputStream input) throws IOException {
@@ -128,7 +128,7 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
         } else if (call != null) {
             if (result.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) resolveCached(call, "cancelled");
             else if (result.getResponseCode() == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) restore(call);
-            else call.reject("Payment could not be completed. You can restore purchases to check again.");
+            else call.reject("Payment could not be completed. You can restore your access to check again.");
         }
     }
     private void process(List<Purchase> purchases, PluginCall call) {
@@ -146,7 +146,7 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
                 // encrypted previous token before revoking an existing purchase.
                 token = purchaseToken != null ? purchaseToken : cache.token();
                 if (token == null) { call.resolve(state(false, isPending ? "pending" : "not_owned")); return; }
-            } catch (Exception ignored) { call.reject("Could not read purchase status. Please restore purchases."); return; }
+            } catch (Exception ignored) { call.reject("Could not read purchase status. Please restore your access."); return; }
             HttpURLConnection connection = null;
             try {
                 connection = (HttpURLConnection) new URL(VERIFY_URL).openConnection();
@@ -160,7 +160,7 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
                 String status = verified.getString("status");
                 cache.accept(token, verified.getString("packageName"), verified.getString("productId"), verified.getBoolean("unlocked"), status);
                 call.resolve(state(cache.token() != null, status));
-            } catch (Exception ignored) { call.reject("Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry."); }
+            } catch (Exception ignored) { call.reject("Purchase verification is temporarily unavailable. Connect and tap Restore your access to retry."); }
             finally { if (connection != null) connection.disconnect(); }
         });
     }
@@ -168,3 +168,4 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
         if (billing != null) billing.endConnection(); worker.shutdownNow(); super.handleOnDestroy();
     }
 }
+

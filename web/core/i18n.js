@@ -46,7 +46,6 @@
     if(result===undefined){
       const key=/^([A-G][#♯♭]?)\s+(major|minor)$/i.exec(core);
       if(key)result=note(key[1])+' '+text(key[2],depth+1);
-      else if(/[·•]/.test(core))result=core.split(/([·•])/).map(part=>text(part,depth+1)).join('');
       else if(/^[A-Za-z ]+: /.test(core)){const split=core.indexOf(': ');result=text(core.slice(0,split),depth+1)+': '+text(core.slice(split+2),depth+1)}
       else if(core.includes('\n'))result=core.split('\n').map(part=>text(part,depth+1)).join('\n');
       else if(/\. /.test(core))result=core.split(/(?<=\.) /).map(part=>text(part,depth+1)).join(' ');
@@ -139,7 +138,7 @@
     const requested=new URL(location.href).searchParams.get('lang');
     locale=supported.has(requested)?requested:supported.has(saved)?saved:detect(navigator.languages?.length?navigator.languages:[navigator.language]);
     if(locale!=='en'){
-      try{const response=await fetch('./locales/'+locale+'.json?v=10.49.6');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
+      try{const response=await fetch('./locales/'+locale+'.json?v=10.49.7');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
     }
     document.documentElement.lang=locale;document.documentElement.dir='ltr';
     return locale;
