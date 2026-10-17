@@ -134,6 +134,7 @@ jobs:
           path: |
             dist/*.apk
             dist/*.aab
+            dist/*-mapping.txt
           if-no-files-found: error
 
       - name: Publish rolling GitHub Release
@@ -148,7 +149,9 @@ jobs:
             Formats included in this run: ${{ inputs.format }}. Other formats on this rolling release may come from an earlier run; use this run's artifacts for a consistent set.
             Three applications: Guitar, Bass and Ukulele. Each starts in demo; one purchase unlocks all instruments within the purchased application.
             APK: direct installation. AAB: Google Play Console upload.
+            Release AABs embed their R8 mapping. Keep each matching *-mapping.txt with its APK/AAB for crash diagnosis.
           prerelease: false
           files: |
             dist/*.apk
             dist/*.aab
+            dist/*-mapping.txt
