@@ -46,7 +46,7 @@
       window.FRETBOARD_ACTIVE_PRODUCT={...product,instrument:entry.instrumentKey};window.FRETBOARD_ACTIVE_INSTRUMENT=instrument;
       document.documentElement.dataset.instrument=config.instrument;
       window.ProductShell.apply(product,instrument);
-      await load('./home.js?v=10.48.0');
+      await load('./home.js?v=10.49.1');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
       await load('./app.js?v=10.43.1');
       FretboardBilling.attach();
