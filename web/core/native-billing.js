@@ -48,20 +48,18 @@
   function mountPaywall(host){
     host.classList.add('premium-billing');
     const buy=document.createElement('button'),restore=document.createElement('button'),status=document.createElement('p'),scope=document.createElement('p');
-    buy.type=restore.type='button';buy.className='ui-primary premium-store';restore.className='ui-secondary premium-store';restore.textContent='Restore purchases';
+    buy.type=restore.type='button';buy.className='ui-primary modal-action';restore.className='ui-secondary modal-action';
+    buy.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="14" height="11" rx="2"/><path d="M9 10V6a4 4 0 0 1 8 0M10 15v2"/></g></svg>';
+    restore.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6M7 18a5 5 0 0 1 10 0"/><circle cx="12" cy="10" r="3"/></g></svg>';
+    const buyLabel=document.createElement('span'),restoreLabel=document.createElement('span');restoreLabel.textContent='Restore purchases';buy.append(buyLabel);restore.append(restoreLabel);
     status.className='billing-status';status.setAttribute('role','status');scope.className='billing-scope';scope.textContent='Guitar, bass & ukulele. All notes, keys and modes. One payment, no subscription. Valid in this app.';
     host.append(buy,restore,scope,status);
-    listeners.push(state=>{buy.textContent=state.price?`Unlock full access — ${state.price}`:'Check price';buy.disabled=restore.disabled=state.busy||!plugin;status.textContent=state.message});
+    listeners.push(state=>{buyLabel.textContent=state.price?`Unlock full access — ${state.price}`:'Check price';buy.disabled=restore.disabled=state.busy||!plugin;status.textContent=state.message});
     buy.addEventListener('click',()=>price?run('purchase'):refreshPrice());restore.addEventListener('click',()=>run('restore'));notify();
   }
   function attach(){
     if(!native)return;
-    const row=document.createElement('div');row.className='home-billing';
-    const buy=document.createElement('button'),restore=document.createElement('button');buy.type=restore.type='button';buy.className=restore.className='ui-back';buy.textContent='Unlock full access';restore.textContent='Restore purchases';buy.hidden=unlocked;
-    const status=document.createElement('p');status.setAttribute('role','status');
-    row.append(buy,restore,status);document.querySelector('.home-menu').append(row);
-    buy.addEventListener('click',()=>window.FRETBOARD_PREMIUM.open());restore.addEventListener('click',()=>run('restore'));
-    listeners.push(state=>{buy.hidden=state.unlocked;buy.textContent=state.price?`Unlock full access — ${state.price}`:'Unlock full access';restore.disabled=state.busy||!plugin;status.textContent=state.message});notify();
+    // Home owns the footer link; purchase controls and feedback stay in the dialog.
     if(!plugin)return;
     try{Promise.resolve(plugin.addListener('purchasesChanged',()=>run('restore',true))).catch(()=>{})}catch{}
     window.Capacitor.Plugins?.App?.addListener('appStateChange',state=>{if(state.isActive)run('restore',true)});

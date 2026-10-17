@@ -7,11 +7,13 @@ function setup({native=false,unlocked=false,blocked=false}={}){
  vm.runInNewContext(fs.readFileSync('web/home.js','utf8'),c);
  return {buttons,stored,rows,footer,get destination(){return destination},get opens(){return opens}};
 }
-test('Web demo opens the download dialog from the footer without adding a menu row',()=>{
- const web=setup();assert.equal(web.rows.length,0);assert.equal(web.footer.length,2);
- assert.equal(web.footer[0].className,'home-footer-separator');
- const download=web.footer[1];assert.equal(download.className,'home-footer-link');assert.equal(download.textContent,'Get the app');download.events.click();assert.equal(web.opens,1);
- for(const options of [{native:true},{unlocked:true}]){const app=setup(options);assert.equal(app.rows.length,0);assert.equal(app.footer.length,0)}
+test('Web and native demos open their dialog from the same footer link without adding a menu row',()=>{
+ for(const native of [false,true]){
+  const s=setup({native});assert.equal(s.rows.length,0);assert.equal(s.footer.length,2);
+  assert.equal(s.footer[0].className,'home-footer-separator');
+  const link=s.footer[1];assert.equal(link.className,'home-footer-link');assert.equal(link.textContent,native?'Unlock full access':'Get the app');link.events.click();assert.equal(s.opens,1);
+  const paid=setup({native,unlocked:true});assert.equal(paid.rows.length,0);assert.equal(paid.footer.length,0);
+ }
 });
 test('Switching universe persists the choice, retains the language and still works with blocked storage',()=>{
  for(const blocked of [false,true]){const s=setup({native:true,unlocked:true,blocked});s.buttons[1].events.click();const url=new URL(s.destination);assert.equal(url.searchParams.get('instrument'),'bass-4');assert.equal(url.searchParams.get('lang'),'fr');if(!blocked)assert.equal(s.stored['fretboard-instrument'],'bass-4')}

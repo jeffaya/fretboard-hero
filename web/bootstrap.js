@@ -22,7 +22,7 @@
       await FretboardI18n.initialize();
       const response=await fetch('./site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
-      await load('./core/native-billing.js?v=10.48.0');
+      await load('./core/native-billing.js?v=10.49.4');
       const nativeUnlocked=await FretboardBilling.initialize(config);
       await load('./core/modal.js?v=10.27.4');
       await load('./core/access.js?v=10.49.3');
@@ -46,7 +46,7 @@
       window.FRETBOARD_ACTIVE_PRODUCT={...product,instrument:entry.instrumentKey};window.FRETBOARD_ACTIVE_INSTRUMENT=instrument;
       document.documentElement.dataset.instrument=config.instrument;
       window.ProductShell.apply(product,instrument);
-      await load('./home.js?v=10.49.1');
+      await load('./home.js?v=10.49.4');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
       await load('./app.js?v=10.43.1');
       FretboardBilling.attach();

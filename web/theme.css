@@ -3,14 +3,14 @@
 
 @font-face {
   font-family: "Hero Condensed";
-  src: url("./assets/theme/barlow-condensed-500.woff2") format("woff2");
+  src: url("./assets/theme/barlow-condensed-500.woff2?v=10.49.4") format("woff2");
   font-weight: 500;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Hero Condensed";
-  src: url("./assets/theme/barlow-condensed-800.woff2") format("woff2");
+  src: url("./assets/theme/barlow-condensed-800.woff2?v=10.49.4") format("woff2");
   font-weight: 800;
   font-display: swap;
 }
@@ -297,6 +297,29 @@ body #resultModal .quiz-intro-rules > div {
   border-color: transparent;
   box-shadow: none;
   color: #d4dced;
+}
+
+/* Shared action layout for quiz and premium dialogs. Colors come from ui-primary/ui-secondary. */
+.ui-modal .modal-action,
+.result-modal .modal-action {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 12px;
+  font-weight: 900;
+  text-decoration: none;
+  letter-spacing: .035em;
+}
+
+.ui-modal .modal-action svg,
+.result-modal .modal-action svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  flex: 0 0 20px;
 }
 
 .quiz-secondary-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
