@@ -401,6 +401,42 @@ The final archive gate checks its web access flags and native Capacitor app ID.
 Upload the signed Store AAB to Play Console. Builds do not create store products,
 listings, purchase credentials or publish a Play release.
 
+### R8 mapping and the Google Play deobfuscation warning
+
+Release builds enable R8 with `proguard-android-optimize.txt`. Debug builds
+remain unminified. Resource shrinking is not part of this change. Capacitor's
+consumer rules retain its plugins, including `PlayBillingPlugin`, and the app
+rules retain WebView JavaScript entry points and crash source locations.
+
+AGP generates `app/android/app/build/outputs/mapping/release/mapping.txt` and
+embeds it in each release AAB at
+`BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map`. Google Play
+can extract this mapping automatically; no separate upload is normally needed.
+`build-instrument.ps1` also saves a copy as
+`dist/fretboard-hero-<instrument>-<profile>-release-mapping.txt`, before the next
+instrument overwrites the shared Gradle output. Keep that sidecar with its
+APK/AAB and version code. Never use a mapping from another build.
+
+`scripts/validate-android-mapping.ps1` rejects missing/empty mappings, removed
+or renamed billing entry points, and AABs with missing, duplicate or mismatched
+embedded mappings. All requested formats must pass validation before any package
+is copied to `dist`. APK-only releases retain the sidecar separately.
+
+The old `minifyEnabled false` builds had no R8 mapping to upload; their warning
+alone did not block publishing. To replace one, rebuild from this change using
+the existing signing key and a higher VersionCode, then upload the new AAB.
+Do not attach an empty file or a new build's mapping to the old version.
+
+The PR workflow **Check Android release mapping** builds and validates all three
+Store release APKs/AABs with an ephemeral CI-only key. It neither uses production
+signing secrets nor publishes those packages. It verifies packaging and preserved
+billing method names, not a live purchase. Before production, test the minified
+Store release through Play's test track: startup, tuner/microphone, purchase,
+restore, and offline access after a verified purchase.
+
+References: [R8 configuration](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization),
+[Play deobfuscation files](https://support.google.com/googleplay/android-developer/answer/9848633).
+
 ### Signing locally
 
 Reuse the existing release/upload key. Place it at
@@ -432,7 +468,8 @@ repository secrets are reused:
 - `ANDROID_KEY_ALIAS`
 - `ANDROID_KEY_PASSWORD`
 
-Each run builds instruments sequentially, uploads the requested packages as
+Each run builds instruments sequentially, uploads the requested packages and
+their matching `*-mapping.txt` sidecars as
 `fretboard-hero-android-<version_code>`, and removes temporary signing files.
 Runs on `main` also update the existing `android` GitHub release; branch runs
 only upload artifacts. When requesting only one format, other attachments

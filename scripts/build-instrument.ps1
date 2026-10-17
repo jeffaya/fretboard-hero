@@ -56,6 +56,8 @@ $BuildType = if ($BuildType -eq "Release") { "Release" } else { "Debug" }
 $buildTypeLower = $BuildType.ToLower()
 $profileLower = $Profile.ToLower()
 $extensions = if ($Format -eq "Both") { @("apk", "aab") } else { @($Format.ToLower()) }
+$mappingOutput = Join-Path $distDir "fretboard-hero-$Instrument-$profileLower-$buildTypeLower-mapping.txt"
+Remove-Item $mappingOutput -Force -ErrorAction SilentlyContinue
 # Do not leave a stale package that could be mistaken for this build's output.
 foreach ($extension in $extensions) {
     Remove-Item (Join-Path $distDir "fretboard-hero-$Instrument-$profileLower-$buildTypeLower.$extension") -Force -ErrorAction SilentlyContinue
@@ -179,7 +181,9 @@ try {
         $ErrorActionPreference = $previousEap
     }
 
-    # 6. Copy packages with explicit Store/Preview names.
+    # 6. Validate every requested package before publishing any of them to dist.
+    # AGP embeds this same R8 mapping in an AAB; APK-only builds need the sidecar.
+    $mappingPath = Join-Path $appRoot "android/app/build/outputs/mapping/release/mapping.txt"
     foreach ($extension in $extensions) {
         $outputKind = if ($extension -eq "apk") { "apk" } else { "bundle" }
         $built = Join-Path $appRoot "android/app/build/outputs/$outputKind/$buildTypeLower/app-$buildTypeLower.$extension"
@@ -189,6 +193,16 @@ try {
         # Inspect the actual archive, not only the source config: stale native
         # assets must never mix Store and Preview access.
         & (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $built -Instrument $Instrument -Profile $Profile -RepoPath $RepoPath
+        if ($BuildType -eq "Release") {
+            & (Join-Path $PSScriptRoot "validate-android-mapping.ps1") -Path $built -MappingPath $mappingPath
+        }
+    }
+    if ($BuildType -eq "Release") {
+        Copy-Item -Path $mappingPath -Destination $mappingOutput -Force
+    }
+    foreach ($extension in $extensions) {
+        $outputKind = if ($extension -eq "apk") { "apk" } else { "bundle" }
+        $built = Join-Path $appRoot "android/app/build/outputs/$outputKind/$buildTypeLower/app-$buildTypeLower.$extension"
         $output = Join-Path $distDir "fretboard-hero-$Instrument-$profileLower-$buildTypeLower.$extension"
         Copy-Item -Path $built -Destination $output -Force
         Write-Host "Built $output (version $VersionName, code $VersionCode)" -ForegroundColor Green
