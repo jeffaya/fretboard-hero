@@ -4,26 +4,67 @@
     const timer=setTimeout(()=>reject(new Error('The store is not responding. Please try again.')),ms);
     promise.then(value=>{clearTimeout(timer);resolve(value)},error=>{clearTimeout(timer);reject(error)});
   });
-  let native=false,plugin,platform,storeName='the store',unlocked=false,busy=false,price='',message='',listeners=[],refreshQueued=false;
+  const RETRY_DELAYS=[1000,2000,5000,10000,20000];
+  let native=false,plugin,platform,storeName='the store',unlocked=false,busy=false,price='',message='',listeners=[];
+  let activeMethod='',refreshing=false,refreshQueued=false,reloading=false,attached=false,appActive=true;
+  let recovering=false,retryIndex=0,retryTimer;
+  const visible=()=>appActive&&document.visibilityState!=='hidden';
+  function stopRecovery(){clearTimeout(retryTimer);retryTimer=undefined;recovering=false;retryIndex=0}
   const notify=()=>listeners.forEach(fn=>fn({unlocked,busy,price,message}));
-  const update=result=>{
+  const update=(result,quiet=false)=>{
+    if(reloading)return;
     if(typeof result?.unlocked!=='boolean')throw new Error('Could not check your purchase.');
-    if(result.unlocked!==unlocked){unlocked=result.unlocked;location.reload();return}
+    // Refresh the existing immutable access model once, after native verification.
+    // Late purchase/restore callbacks must not undo a newly verified unlock.
+    if(result.unlocked!==unlocked){unlocked=result.unlocked;reloading=true;stopRecovery();location.reload();return}
+    if(quiet)return;
     message=result.status==='pending'?`Payment pending. Full access will unlock after ${storeName} confirms it.`:result.status==='cancelled'?'Purchase cancelled. You can keep exploring.':result.unlocked?'Your full access is restored.':`No completed purchase found for this app and ${storeName} account.`;
   };
-  async function run(method,quiet=false){
-    if(!plugin)return;
-    if(busy){if(quiet)refreshQueued=true;return}
-    busy=true;message=method==='purchase'?`Opening ${storeName}…`:'Checking purchases…';notify();
+  function scheduleRecovery(){
+    if(!recovering||reloading||!visible()||retryTimer!==undefined)return;
+    if(retryIndex===RETRY_DELAYS.length){stopRecovery();return}
+    retryTimer=setTimeout(()=>{retryTimer=undefined;refreshOwnership()},RETRY_DELAYS[retryIndex++]);
+  }
+  async function refreshOwnership(){
+    if(!plugin||reloading||!visible())return;
+    // The store may return to the app before purchase() settles (or lose that
+    // callback entirely). Reconciliation must never wait behind that promise.
+    if(refreshing||(busy&&activeMethod!=='purchase')){refreshQueued=true;return}
+    refreshing=true;
+    try{update(await timeout(plugin[platform==='ios'?'refresh':'restore'](),45000),true)}
+    catch{ /* An outage is not a revocation. Retry without erasing payment feedback. */ }
+    finally{
+      refreshing=false;
+      if(refreshQueued){refreshQueued=false;refreshOwnership()}
+      else scheduleRecovery();
+    }
+  }
+  function requestRefresh(recover=false){
+    if(recover&&!unlocked&&!recovering){recovering=true;retryIndex=0}
+    clearTimeout(retryTimer);retryTimer=undefined;
+    refreshOwnership();
+  }
+  async function run(method){
+    if(!plugin||busy||reloading)return;
+    busy=true;activeMethod=method;let cancelled=false;
+    message=method==='purchase'?`Opening ${storeName}…`:'Checking purchases…';notify();
     try{
       // A user may spend several minutes inside the store's purchase or account sheet.
-      const request=plugin[quiet&&platform==='ios'?'refresh':method]();
-      update(await (method==='purchase'||(method==='restore'&&!quiet&&platform==='ios')?request:timeout(request,45000)));
+      const request=plugin[method]();
+      const result=await (method==='purchase'||(method==='restore'&&platform==='ios')?request:timeout(request,45000));
+      cancelled=result?.status==='cancelled';update(result);
     }catch(error){
       message=error?.message||`${storeName} is unavailable. Please try again.`;
       // An outage is not a revocation. Keep the last verified ownership;
       // only a successful native check may change access.
-    }finally{busy=false;if(quiet)message='';notify();if(refreshQueued){refreshQueued=false;run('restore',true)}}
+    }finally{
+      busy=false;activeMethod='';notify();
+      if(cancelled)stopRecovery();
+      // Recover transient verification failures and pending payments promptly,
+      // instead of waiting for a restart or the fifteen-minute periodic check.
+      if(method==='purchase'&&!cancelled&&!unlocked)requestRefresh(true);
+      else if(refreshQueued){refreshQueued=false;refreshOwnership()}
+    }
   }
   async function refreshPrice(quiet=false){
     if(!plugin)return;
@@ -60,14 +101,22 @@
     buy.addEventListener('click',()=>price?run('purchase'):refreshPrice());restore.addEventListener('click',()=>run('restore'));notify();
   }
   function attach(){
-    if(!native)return;
+    if(!native||attached)return;
     // Home owns the footer link; purchase controls and feedback stay in the dialog.
     if(!plugin)return;
-    try{Promise.resolve(plugin.addListener('purchasesChanged',()=>run('restore',true))).catch(()=>{})}catch{}
-    window.Capacitor.Plugins?.App?.addListener('appStateChange',state=>{if(state.isActive)run('restore',true)});
-    run('restore',true);
+    attached=true;
+    const listen=(target,event,callback)=>{try{Promise.resolve(target?.addListener(event,callback)).catch(()=>{})}catch{}};
+    listen(plugin,'purchasesChanged',()=>requestRefresh(true));
+    try{
+      const capacitor=window.Capacitor,app=capacitor.Plugins?.App||capacitor.registerPlugin?.('App');
+      listen(app,'appStateChange',state=>{appActive=state.isActive;if(appActive)requestRefresh(true)});
+    }catch{}
+    // WebView visibility/online events also cover a missing lifecycle bridge.
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')requestRefresh(true)});
+    window.addEventListener?.('online',()=>requestRefresh(true));
+    requestRefresh();
     if(!unlocked)refreshPrice(true);
-    setInterval(()=>{if(document.visibilityState==='visible')run('restore',true)},15*60*1000);
+    setInterval(()=>requestRefresh(),15*60*1000);
   }
   window.FretboardBilling={initialize,attach,mountPaywall,refreshPrice,get native(){return native}};
 })();

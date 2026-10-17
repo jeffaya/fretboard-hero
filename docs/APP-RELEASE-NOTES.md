@@ -5,6 +5,17 @@ the website changelog ([`web/README.md`](../web/README.md#release-notes)).
 For every new app version, add an `## App vX` entry below describing what
 changed.
 
+## App v1.1.1 — automatic post-payment recovery (pending device validation)
+
+- Reconcile verified ownership on return from the store even while its purchase
+  callback is still outstanding, with WebView visibility and online fallbacks.
+- Retry transient post-payment verification failures and pending payments with
+  bounded delays; keep payment feedback and existing offline entitlements intact.
+- Automatically refresh the WebView once after verified ownership changes;
+  users no longer need to force-close the app in these recovery scenarios.
+- Requires a newly built Store AAB/APK with a higher version code. Validate real
+  Google Play purchases on the internal test track before publication.
+
 ## App v1.1.0 — pending store configuration and device payment tests
 
 - Keep three distinct Guitar/Bass/Ukulele apps with their own IDs, names and icons.

@@ -139,6 +139,14 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Release notes
 
+### V10.49.8 — Recover store purchases without closing the app
+- Check verified native ownership independently of an outstanding purchase callback
+  when returning from the store or receiving transaction updates.
+- Retry transient verification failures and pending purchases with bounded backoff;
+  retain payment feedback, never unlock from an unverified payment, and coalesce events.
+- Refresh the WebView once when verified access changes. Native apps need a new
+  Store build; publishing the website/Worker does not update bundled JavaScript.
+
 ### V10.45.0 — Play along with the rhythm example
 - Listen now keeps microphone grading and successful-repeat progression active, using the same clock as the audio and highlighted arrows.
 - Pause silences the example; restarting Listen joins the current phase without losing played hits or successful repeats. Audio that is unavailable or waiting for a gesture no longer blocks playing.

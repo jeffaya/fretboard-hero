@@ -22,7 +22,7 @@
       await FretboardI18n.initialize();
       const response=await fetch('./site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
-      await load('./core/native-billing.js?v=10.49.6');
+      await load('./core/native-billing.js?v=10.49.8');
       const nativeUnlocked=await FretboardBilling.initialize(config);
       await load('./core/modal.js?v=10.27.4');
       await load('./core/access.js?v=10.49.6');
