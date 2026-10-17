@@ -66,7 +66,7 @@ public class StoreBillingPlugin: CAPPlugin, CAPBridgedPlugin {
                 try await AppStore.sync()
                 await resolveState(call)
             } catch {
-                call.reject("Could not restore purchases. Check your App Store account and connection, then try again.")
+                call.reject("Could not restore your access. Check your App Store account and connection, then try again.")
             }
         }
     }
@@ -101,7 +101,7 @@ public class StoreBillingPlugin: CAPPlugin, CAPBridgedPlugin {
                     guard case .verified(let transaction) = result,
                           transaction.productID == productID,
                           transaction.productType == .nonConsumable else {
-                        call.reject("Apple could not verify this purchase. Please restore purchases to retry."); return
+                        call.reject("Apple could not verify this purchase. Please restore your access to retry."); return
                     }
                     await transaction.finish()
                     await resolveState(call)
@@ -110,13 +110,14 @@ public class StoreBillingPlugin: CAPPlugin, CAPBridgedPlugin {
                 case .userCancelled:
                     await resolveState(call, status: "cancelled")
                 @unknown default:
-                    call.reject("Purchase status is unavailable. Please restore purchases to check again.")
+                    call.reject("Purchase status is unavailable. Please restore your access to check again.")
                 }
             } catch {
-                call.reject("Payment could not be completed. Please try again or restore purchases.")
+                call.reject("Payment could not be completed. Please try again or restore your access.")
             }
         }
     }
 
     private enum BillingError: Error { case unavailable }
 }
+

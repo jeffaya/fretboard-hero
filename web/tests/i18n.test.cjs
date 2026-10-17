@@ -23,8 +23,8 @@ test('All ten routine inspirations, the encouragement and its credit localize in
   }
  }
 });
-test('Dynamic exercises, store prices and repeated note placeholders localize notes without changing canonical identifiers',async()=>{
- const fr=await create({languages:['fr']});assert.equal(fr.text('A#'),'A#');assert.equal(fr.text('CAGED'),'CAGED');assert.equal(fr.text('Guitar Fretboard Hero'),'Guitar Fretboard Hero');assert.equal(fr.text('MAJOR'),'MAJEUR');assert.equal(fr.text('Play the C# minor scale'),'Jouez la gamme de Do# Mineur');assert.equal(fr.text('EXERCISE 3 OF 5'),'EXERCICE 3 SUR 5');assert.equal(fr.text('Unlock full access — 9,99 €'),'Débloquer — 9,99 €');assert.match(fr.text('Play every A shown, one string at a time. Say “A” aloud as you play to connect the sound, name and position.'),/^Jouez chaque La/);
+test('Dynamic exercises, store messages and repeated note placeholders localize notes without changing canonical identifiers',async()=>{
+ const fr=await create({languages:['fr']});assert.equal(fr.text('A#'),'A#');assert.equal(fr.text('CAGED'),'CAGED');assert.equal(fr.text('Guitar Fretboard Hero'),'Guitar Fretboard Hero');assert.equal(fr.text('MAJOR'),'MAJEUR');assert.equal(fr.text('Play the C# minor scale'),'Jouez la gamme de Do# Mineur');assert.equal(fr.text('EXERCISE 3 OF 5'),'EXERCICE 3 SUR 5');assert.equal(fr.text('Opening Google Play…'),'Ouverture de Google Play…');assert.equal(fr.text('Learn · Quiz • Daily Routine'),'Apprendre · Quiz • Routine quotidienne');assert.match(fr.text('Play every A shown, one string at a time. Say “A” aloud as you play to connect the sound, name and position.'),/^Jouez chaque La/);
 });
 test('Translations are stable under repeated DOM passes in every language',async()=>{
  for(const locale of locales){const t=(await create({languages:[locale]})).text;for(const key of Object.keys(catalogs.en)){if(key.includes('{'))continue;const translated=t(key);assert.equal(t(translated),translated,`${locale}: ${key}`)}}
@@ -52,8 +52,26 @@ test('Melodic instructions, directions, box blocks and degree labels localize in
 });
 
 test('Download and lifetime access explanations translate in every supported language',async()=>{
- const keys=['Contact us','Get the app','Get it free on','Download for free on the','One payment.','Lifetime access.','No subscription.','Guitar, bass & ukulele.','All notes, keys and modes.','Unlock for life','Restore your access','Already purchased on another phone? Restore your access with the same account, without paying again.','Could not read purchase status. Please restore purchases.'];
+ const keys=['Contact us','Get the app','Get it free on','Download for free on the','One payment.','Lifetime access.','No subscription.','Guitar, bass & ukulele.','All notes, keys and modes.','Unlock for life','Restore your access','Already purchased on another phone? Restore your access with the same account, without paying again.','Could not read purchase status. Please restore your access.'];
  for(const locale of locales){const t=(await create({languages:[locale]})).text;for(const key of keys){assert.equal(t(key),catalogs[locale][key]);if(locale!=='en')assert.notEqual(t(key),key,`${locale}: ${key}`)}}
  const fr=await create({languages:['fr']});assert.equal(fr.text('Restore your access'),'Récupérer votre accès');assert.equal(fr.text(keys.at(-2)),'Déjà acheté sur un autre téléphone ? Récupérez votre accès avec le même compte, sans repayer.');
+});
+
+test('Native recovery errors use the current action and localize in every language',async()=>{
+ const files=['app/android/app/src/main/java/com/guitar/fretboardhero/PlayBillingPlugin.java','app/ios/App/App/StoreBillingPlugin.swift'];
+ const errors=new Set();
+ for(const file of files){
+  const source=fs.readFileSync(file,'utf8');
+  const messages=[...source.matchAll(/call\.reject\("([^"\n]*restore your access[^"\n]*)"/gi)].map(match=>match[1]);
+  assert.ok(messages.length,`${file}: recovery guidance must be present`);
+  assert.doesNotMatch(source,/restore purchases/i);
+  messages.forEach(message=>errors.add(message));
+ }
+ for(const locale of locales){
+  const i18n=await create({languages:[locale]});
+  for(const message of errors){assert.ok(catalogs[locale][message],`${locale}: ${message}`);assert.equal(i18n.text(message),catalogs[locale][message]);if(locale!=='en')assert.notEqual(i18n.text(message),message)}
+ }
+ const fr=await create({languages:['fr']});
+ assert.ok(fr.text('Purchase verification is temporarily unavailable. Connect and tap Restore your access to retry.').includes(fr.text('Restore your access')));
 });
 
