@@ -23,6 +23,19 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - name: Disable Android tool analytics before setup
+        shell: pwsh
+        run: |
+          $androidHome = Join-Path $env:USERPROFILE '.android'
+          New-Item -ItemType Directory -Path $androidHome -Force | Out-Null
+          $settings = @{
+            userId = [guid]::NewGuid().ToString()
+            optedIn = $false
+            saltValue = [guid]::NewGuid().ToString()
+            saltSkew = 0
+            debugDisablePublishing = $true
+          }
+          $settings | ConvertTo-Json | Set-Content (Join-Path $androidHome 'analytics.settings') -Encoding utf8NoBOM
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -40,6 +53,9 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Android SDK installation failed' }
       - run: npm ci --no-audit --no-fund
         working-directory: app
+      - name: Disable Capacitor telemetry
+        working-directory: app
+        run: node node_modules/@capacitor/cli/bin/capacitor telemetry off
       - name: Mapping regression tests
         run: node --test app/tests/android-mapping.test.cjs
       - name: Temporary signing for CI validation only
