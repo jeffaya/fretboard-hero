@@ -64,6 +64,19 @@
   margin: 0 auto 12px;
 }
 
+.premium-pitch.premium-download {
+  display: inline-block;
+  max-width: 100%;
+  padding: 8px 22px;
+  border: 1px solid #7ce5fa80;
+  border-radius: 999px;
+  background: #063842b3;
+  color: #a5f7ff;
+  font-size: clamp(24px,3.5vw,34px);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
 .premium-skills {
   display: grid;
   grid-template-columns: repeat(5,minmax(0,1fr));

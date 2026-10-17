@@ -20,9 +20,11 @@
     });
   });
   if(!window.FRETBOARD_SITE_CONFIG.nativeBilling&&!window.FRETBOARD_ACCESS.unlocked){
-    const row=document.createElement('div'),download=document.createElement('button');
-    row.className='home-billing';download.className='ui-back';download.type='button';download.textContent='Get the app';
+    const separator=document.createElement('span'),download=document.createElement('button');
+    separator.className='home-footer-separator';separator.setAttribute('aria-hidden','true');
+    download.className='home-footer-link';download.type='button';download.textContent='Get the app';
+    download.setAttribute('aria-haspopup','dialog');
     download.addEventListener('click',()=>window.FRETBOARD_PREMIUM.open());
-    row.append(download);document.querySelector('.home-menu').append(row);
+    document.querySelector('.home-footer').append(separator,download);
   }
 })();
