@@ -314,9 +314,11 @@ version number, it does not duplicate the changelog.
 
 ## 9. Things intentionally NOT automated / open items
 
-- CI runs regression tests, Android Store/Preview builds and an unsigned iOS
-  simulator build. Real store payments, device microphone behavior and production
-  provisioning still require the documented device/store tests.
+- Pull requests run regression tests automatically. Android Store/Preview,
+  Android Release mapping and iOS simulator compilations run only on manual
+  request, to preserve the GitHub Actions minute allowance. Real store payments,
+  device microphone behavior and production provisioning still require the
+  documented device/store tests.
 - `tools/verify-webview-navigation.py` is a manual diagnostic tool, not
   wired into any automated test suite — running it is a manual step during
   verification, not part of `build-instrument.ps1`.
@@ -427,7 +429,7 @@ alone did not block publishing. To replace one, rebuild from this change using
 the existing signing key and a higher VersionCode, then upload the new AAB.
 Do not attach an empty file or a new build's mapping to the old version.
 
-The PR workflow **Check Android release mapping** builds and validates all three
+The manual workflow **Check Android release mapping** builds and validates all three
 Store release APKs/AABs with an ephemeral CI-only key. It neither uses production
 signing secrets nor publishes those packages. It verifies packaging and preserved
 billing method names, not a live purchase. Before production, test the minified
@@ -458,6 +460,27 @@ must match its registered upload key; do not replace it with a new key merely
 to run this script.
 
 ### GitHub Actions
+
+Native compilations are **manual only**: no PR, push or scheduled trigger.
+The automatic PR check retains all web/app/server regression tests, including
+the mapping fixtures, without installing an Android SDK or compiling packages.
+Its concurrency group is scoped to the workflow and PR (or branch for a manual
+run), so a newer commit cancels only that PR's superseded regression run.
+
+| Workflow | Trigger | Purpose |
+| --- | --- | --- |
+| Check store and preview access | Relevant PR changes; manual also available | Regression tests without native compilation |
+| Build three Android apps (Store and Preview) | Manual | Debug-signed Preview APKs and Store test APKs/AABs |
+| Check Android release mapping | Manual | Compile minified release packages with a temporary key and verify mappings |
+| Build Android APKs and AABs | Manual | Generate signed distribution packages with the existing release key |
+| Check iOS build | Manual | Compile and verify the three unsigned simulator applications |
+| Deploy to Cloudflare Workers | Push to main | Deploy the website/Worker |
+
+Use **Actions → workflow name → Run workflow** and select the branch to check.
+Before publishing Android, the signed distribution workflow already runs the
+regression tests, mapping/archive validation and native purchase-cache tests.
+There is no need to run the separate mapping compilation as well unless it is
+specifically needed for diagnostics without production signing credentials.
 
 Open **Actions → Build Android APKs and AABs → Run workflow** on `main`.
 Enter `version_code`, `version_name` and choose **Both**. The existing four

@@ -1,14 +1,6 @@
 name: Check Android release mapping
 
 on:
-  pull_request:
-    paths:
-      - 'app/android/**'
-      - 'app/package*.json'
-      - 'app/tests/android-mapping.test.cjs'
-      - 'scripts/**'
-      - '.github/workflows/check-android-release.yml'
-      - '.github/workflows/build-apks.yml'
   workflow_dispatch:
 
 permissions:
@@ -19,6 +11,8 @@ env:
 
 jobs:
   release-mapping:
+    # Native compilation is opt-in to preserve the Actions minute allowance.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: windows-latest
     timeout-minutes: 30
     steps:

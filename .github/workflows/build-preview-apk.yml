@@ -2,14 +2,6 @@ name: Build three Android apps (Store and Preview)
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - '.github/workflows/build-preview-apk.yml'
-      - 'app/**'
-      - 'scripts/**'
-      - 'web/core/native-billing.js'
-      - 'web/core/access.js'
-      - 'server/**'
 
 permissions:
   contents: read
@@ -21,6 +13,8 @@ env:
 
 jobs:
   application:
+    # Native compilation is opt-in to preserve the Actions minute allowance.
+    if: github.event_name == 'workflow_dispatch'
     strategy:
       fail-fast: false
       matrix:
@@ -31,8 +25,6 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Disable Android tool analytics before setup
         shell: pwsh
