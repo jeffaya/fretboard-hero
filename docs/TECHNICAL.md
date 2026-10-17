@@ -314,9 +314,12 @@ version number, it does not duplicate the changelog.
 
 ## 9. Things intentionally NOT automated / open items
 
-- CI runs regression tests, Android Store/Preview builds and an unsigned iOS
-  simulator build. Real store payments, device microphone behavior and production
-  provisioning still require the documented device/store tests.
+- Pull requests run regression tests automatically. Android distribution builds
+  run only on manual request, for the selected instruments and package formats,
+  to preserve the GitHub Actions minute allowance. Preview and iOS builds remain
+  available through the local scripts, without dedicated Actions workflows.
+  Real store payments, device microphone behavior and production provisioning
+  still require the documented device/store tests.
 - `tools/verify-webview-navigation.py` is a manual diagnostic tool, not
   wired into any automated test suite — running it is a manual step during
   verification, not part of `build-instrument.ps1`.
@@ -427,9 +430,9 @@ alone did not block publishing. To replace one, rebuild from this change using
 the existing signing key and a higher VersionCode, then upload the new AAB.
 Do not attach an empty file or a new build's mapping to the old version.
 
-The PR workflow **Check Android release mapping** builds and validates all three
-Store release APKs/AABs with an ephemeral CI-only key. It neither uses production
-signing secrets nor publishes those packages. It verifies packaging and preserved
+The manual workflow **Build Android APK / AAB** includes these mapping and archive
+checks in the signed release build for each selected instrument. A separate
+mapping compilation is not needed. These checks verify packaging and preserved
 billing method names, not a live purchase. Before production, test the minified
 Store release through Play's test track: startup, tuner/microphone, purchase,
 restore, and offline access after a verified purchase.
@@ -459,21 +462,45 @@ to run this script.
 
 ### GitHub Actions
 
-Open **Actions → Build Android APKs and AABs → Run workflow** on `main`.
-Enter `version_code`, `version_name` and choose **Both**. The existing four
-repository secrets are reused:
+Native compilations are **manual only**: no PR, push or scheduled trigger.
+The automatic PR check retains all web/app/server regression tests, including
+the mapping fixtures, without installing an Android SDK or compiling packages.
+Its concurrency group is scoped to the workflow and PR (or branch for a manual
+run), so a newer commit cancels only that PR's superseded regression run.
+
+| Workflow | Trigger | Purpose |
+| --- | --- | --- |
+| Tests | Relevant PR changes; manual also available | Regression tests without native compilation |
+| Build Android APK / AAB | Manual | Generate the selected signed Store packages with the existing release key; validate archives, mappings and native purchase cache |
+| Deploy to Cloudflare Workers | Push to main | Deploy the website/Worker |
+
+The old Store/Preview, Release mapping and iOS simulator workflows have been
+removed. Preview and iOS scripts remain available locally. The single Android
+workflow runs the regression tests, mapping/archive validation and native
+purchase-cache tests before uploading any packages.
+
+Open **Actions → Build Android APK / AAB → Run workflow** on `main`:
+
+- `instrument`: **guitar** (default), **bass-4** (bass), **ukulele** or **all**.
+- `format`: **Apk**, **Aab** or **Both** (default).
+- `version_code`: an integer higher than the last Play upload for every selected app.
+- `version_name`: the public version, for example **1.1.0**.
+
+Choosing one instrument compiles only that application. Choosing **all** builds
+the three applications sequentially in the same job. There is no extra Preview
+build or separate mapping build. The existing four repository secrets are reused:
 
 - `ANDROID_KEYSTORE_BASE64`
 - `ANDROID_KEYSTORE_PASSWORD`
 - `ANDROID_KEY_ALIAS`
 - `ANDROID_KEY_PASSWORD`
 
-Each run builds instruments sequentially, uploads the requested packages and
-their matching `*-mapping.txt` sidecars as
-`fretboard-hero-android-<version_code>`, and removes temporary signing files.
+Each run uploads the requested packages and their matching `*-mapping.txt`
+sidecars as `fretboard-hero-android-<instrument>-<format>-<version_code>`, and
+removes temporary signing files.
 Runs on `main` also update the existing `android` GitHub release; branch runs
-only upload artifacts. When requesting only one format, other attachments
-on the rolling release may be older: use that run's artifact for an exact set.
+only upload artifacts. When requesting one instrument or one format, other
+attachments on the rolling release may be older: use that run's artifact for an exact set.
 No upload to Google Play is performed automatically.
 
 References: [Android command-line builds](https://developer.android.com/build/building-cmdline),
