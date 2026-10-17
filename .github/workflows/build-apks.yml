@@ -1,8 +1,20 @@
-name: Build Android APKs and AABs
+name: Build Android APK / AAB
 
 on:
   workflow_dispatch:
     inputs:
+      instrument:
+        description: "Instrument (bass-4 = bass; all = all three applications)"
+        required: true
+        default: guitar
+        type: choice
+        options: [guitar, bass-4, ukulele, all]
+      format:
+        description: "Packages to generate (Both = APK and AAB)"
+        required: true
+        default: Both
+        type: choice
+        options: [Both, Apk, Aab]
       version_code:
         description: "Android versionCode (integer, higher than the last Play upload)"
         required: true
@@ -12,12 +24,6 @@ on:
         required: true
         default: "1.0.0"
         type: string
-      format:
-        description: "Packages to generate"
-        required: true
-        default: Both
-        type: choice
-        options: [Both, Apk, Aab]
 
 # Avoid overlapping updates to the rolling Android release.
 concurrency:
@@ -29,6 +35,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 jobs:
   build-apks:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: windows-latest
     permissions:
       contents: write
@@ -36,12 +43,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Validate version
+      - name: Validate build inputs
         shell: pwsh
         env:
           VERSION_CODE: ${{ inputs.version_code }}
           VERSION_NAME: ${{ inputs.version_name }}
+          BUILD_INSTRUMENT: ${{ inputs.instrument }}
+          PACKAGE_FORMAT: ${{ inputs.format }}
         run: |
+          if ($env:BUILD_INSTRUMENT -notin @('guitar', 'bass-4', 'ukulele', 'all')) {
+            throw "instrument must be guitar, bass-4, ukulele or all"
+          }
+          if ($env:PACKAGE_FORMAT -notin @('Apk', 'Aab', 'Both')) {
+            throw "format must be Apk, Aab or Both"
+          }
           if ($env:VERSION_CODE -notmatch '^[1-9][0-9]{0,9}$' -or [long]$env:VERSION_CODE -gt 2100000000) {
             throw "version_code must be an integer between 1 and 2100000000"
           }
@@ -60,6 +75,20 @@ jobs:
           distribution: temurin
           java-version: "21"
 
+      - name: Disable Android tool analytics before setup
+        shell: pwsh
+        run: |
+          $androidHome = Join-Path $env:USERPROFILE '.android'
+          New-Item -ItemType Directory -Path $androidHome -Force | Out-Null
+          $settings = @{
+            userId = [guid]::NewGuid().ToString()
+            optedIn = $false
+            saltValue = [guid]::NewGuid().ToString()
+            saltSkew = 0
+            debugDisablePublishing = $true
+          }
+          $settings | ConvertTo-Json | Set-Content (Join-Path $androidHome 'analytics.settings') -Encoding utf8NoBOM
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v4
 
@@ -72,6 +101,10 @@ jobs:
       - name: Install app dependencies
         working-directory: app
         run: npm ci --no-audit --no-fund
+
+      - name: Disable Capacitor telemetry
+        working-directory: app
+        run: node node_modules/@capacitor/cli/bin/capacitor telemetry off
 
       - name: Verify store access before building
         shell: pwsh
@@ -106,13 +139,26 @@ jobs:
           )
           [IO.File]::WriteAllLines("app/android/keystore.properties", $lines, [Text.UTF8Encoding]::new($false))
 
-      - name: Build all three applications (release, signed)
+      - name: Build selected applications (release, signed)
         shell: pwsh
         env:
           VERSION_CODE: ${{ inputs.version_code }}
           VERSION_NAME: ${{ inputs.version_name }}
           PACKAGE_FORMAT: ${{ inputs.format }}
-        run: .\scripts\build-all.ps1 -Profile Store -BuildType Release -Format $env:PACKAGE_FORMAT -VersionCode $env:VERSION_CODE -VersionName $env:VERSION_NAME
+          BUILD_INSTRUMENT: ${{ inputs.instrument }}
+        run: |
+          $buildOptions = @{
+            Profile = 'Store'
+            BuildType = 'Release'
+            Format = $env:PACKAGE_FORMAT
+            VersionCode = $env:VERSION_CODE
+            VersionName = $env:VERSION_NAME
+          }
+          if ($env:BUILD_INSTRUMENT -eq 'all') {
+            .\scripts\build-all.ps1 @buildOptions
+          } else {
+            .\scripts\build-instrument.ps1 -Instrument $env:BUILD_INSTRUMENT @buildOptions
+          }
 
       - name: Native purchase-cache regression tests
         working-directory: app/android
@@ -130,7 +176,7 @@ jobs:
       - name: Upload packages as build artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: fretboard-hero-android-${{ inputs.version_code }}
+          name: fretboard-hero-android-${{ inputs.instrument }}-${{ inputs.format }}-${{ inputs.version_code }}
           path: |
             dist/*.apk
             dist/*.aab
@@ -146,8 +192,9 @@ jobs:
           body: |
             Signed Android packages built from commit ${{ github.sha }}.
             Version ${{ inputs.version_name }} (code ${{ inputs.version_code }}).
-            Formats included in this run: ${{ inputs.format }}. Other formats on this rolling release may come from an earlier run; use this run's artifacts for a consistent set.
-            Three applications: Guitar, Bass and Ukulele. Each starts in demo; one purchase unlocks all instruments within the purchased application.
+            Instrument selection: ${{ inputs.instrument }} (all = Guitar, Bass and Ukulele). Formats: ${{ inputs.format }}.
+            Other instruments or formats on this rolling release may come from an earlier run; use this run's artifacts for a consistent set.
+            Each application starts in demo; one purchase unlocks all instruments within the purchased application.
             APK: direct installation. AAB: Google Play Console upload.
             Release AABs embed their R8 mapping. Keep each matching *-mapping.txt with its APK/AAB for crash diagnosis.
           prerelease: false
@@ -155,3 +202,4 @@ jobs:
             dist/*.apk
             dist/*.aab
             dist/*-mapping.txt
+

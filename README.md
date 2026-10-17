@@ -304,8 +304,10 @@ copy and omit QR codes; fill `stores` before releasing.
 
 This produces one APK and one AAB per instrument in `dist/`. Set the version
 code above your last Play upload (the command uses an example). The existing
-APK-only debug command still works. Signing setup and the manual **Build
-Android APKs and AABs** GitHub workflow are documented in
+APK-only debug command still works. The manual **Build Android APK / AAB**
+GitHub workflow lets you choose guitar, bass, ukulele or all applications,
+then APK, AAB or both. Only the selected packages are compiled. Signing setup
+and workflow instructions are documented in
 [Android distribution](docs/TECHNICAL.md#android-distribution-apk--aab).
 
 ### Interface languages
@@ -325,3 +327,4 @@ languages. The publisher is Jean-François Seignemorte, acting personally, and t
 public privacy contact is `hello@fretboard-hero.com`. See the
 [data inventory and release notes](docs/PRIVACY.md) when deploying or updating
 Google Play Data safety.
+
