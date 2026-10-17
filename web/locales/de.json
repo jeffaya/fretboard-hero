@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "ENTFALTE DEIN",
   "FRETBOARD SKILLS": "GRIFFBRETT-KÖNNEN",
   "Stop switching tools. Start playing solos worth sharing.": "Alle Werkzeuge an einem Ort. Spiele Solos, die du gerne teilst.",
-  "One purchase. Every skill unlocked.": "Ein Kauf. Alle Funktionen freigeschaltet.",
   "One purchase. Three instruments. Every skill unlocked.": "Ein Kauf. Drei Instrumente. Alles freigeschaltet.",
   "← Continue exploring": "← Weiter erkunden",
   "Get it on": "Jetzt bei",
@@ -178,7 +177,6 @@
   "Could not restore purchases. Check your App Store account and connection, then try again.": "Käufe konnten nicht wiederhergestellt werden. Prüfe App-Store-Konto und Verbindung und versuche es erneut.",
   "Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry.": "Kaufprüfung vorübergehend nicht verfügbar. Verbinde dich und tippe auf Käufe wiederherstellen.",
   "Payment could not be completed. Please try again or restore purchases.": "Die Zahlung konnte nicht abgeschlossen werden. Versuche es erneut oder stelle Käufe wieder her.",
-  "Allow session storage to change instruments on this device.": "Erlaube Sitzungsspeicher, um auf diesem Gerät das Instrument zu wechseln.",
   "Virtuoso": "Virtuose",
   "{instrument} virtuoso": "{instrument}-Virtuose",
   "{instrument} legend": "{instrument}-Legende",
@@ -407,5 +405,8 @@
   "Even a short session counts.": "Auch eine kurze Übungseinheit zählt.",
   "The basics can take you far.": "Die Grundlagen können dich weit bringen.",
   "Practice to play better.": "Üben, um besser zu spielen.",
-  "Repetition can become discovery.": "Wiederholung kann zur Entdeckung werden."
+  "Repetition can become discovery.": "Wiederholung kann zur Entdeckung werden.",
+  "Get the app": "App herunterladen",
+  "Free download. One purchase unlocks all three instruments.": "Kostenloser Download. Ein Kauf schaltet alle drei Instrumente frei.",
+  "Could not read purchase status. Please restore purchases.": "Der Kaufstatus konnte nicht gelesen werden. Bitte stelle deine Käufe wieder her."
 }

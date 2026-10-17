@@ -99,3 +99,27 @@ test('Chord and triad recognition requires the written bass',()=>{
  assert.equal(detector.matches(upper,[45,52,57,60,64]),false);
  assert.equal(detector.matches(upper,[57,60,64]),true);
 });
+
+for(const rate of [44100,48000])test(`F#3 liaison remains recognizable over quiet ringing strings at ${rate} Hz`,()=>{
+ const {samples,spectrumOf}=require('./audio-fixtures.cjs'),pitch=require('../core/pitch-detector.js');
+ // D# minor on ADG: D#3/F#3/A#3, followed by F#3 on A string, fret 9.
+ // The other two strings still resonate, 14 dB below the newly plucked third.
+ for(const pluck of [.12,.22,.35])for(const detune of [-20,0,20]){
+  const data=samples([54,51,58],{rate,pluck,detune,slope:.8,levels:[1,.2,.2],gain:.08,noise:.00003});
+  const hz=pitch.detect(data.subarray(N-8192),rate,{maxFrequency:1500});
+  assert.ok(hz&&Math.abs(pitch.cents(hz,54))<=38,'pitch must already be correct before the spectral veto');
+  const result=detector.analyze(spectrumOf(data),rate,N);
+  assert.ok(detector.matchesSingle(result,54),JSON.stringify({pluck,detune,result}));
+ }
+});
+
+test('Liaison tolerance still rejects substantial competing tones, the wrong octave and incomplete evidence',()=>{
+ for(const target of [48,54,60,66,72]){
+  for(const notes of [[target-3,target,target+4],[target,target+4],[target-3,target],[target+1],[target-12],[target+12]]){
+   const result=detector.analyze(spectrum(notes,{levels:[1,.55,.65],pluck:.22,slope:.8}),48000,N);
+   assert.equal(detector.matchesSingle(result,target),false,JSON.stringify({target,notes,result}));
+  }
+ }
+ assert.equal(detector.matchesSingle({fit:.5,notes:[{midi:54,strength:1}]},54),false);
+ assert.equal(detector.matchesSingle({fit:.99,notes:[]},54),false);
+});

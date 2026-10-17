@@ -5,15 +5,15 @@
   "stores": {
     "guitar": {
       "android": "https://play.google.com/store/apps/details?id=com.guitar.fretboardhero",
-      "ios": "https://apps.apple.com/fr/app/guitar-fretboard-hero/id000000000"
+      "ios": ""
     },
     "bass-4": {
       "android": "https://play.google.com/store/apps/details?id=com.bass.fretboardhero",
-      "ios": "https://apps.apple.com/fr/app/bass-fretboard-hero/id000000000"
+      "ios": ""
     },
     "ukulele": {
       "android": "https://play.google.com/store/apps/details?id=com.ukulele.fretboardhero",
-      "ios": "https://apps.apple.com/fr/app/ukulele-fretboard-hero/id000000000"
+      "ios": ""
     }
   },
   "publicUrl": "https://fretboard-hero.com/"

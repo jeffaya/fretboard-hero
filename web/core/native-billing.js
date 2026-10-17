@@ -21,13 +21,13 @@
       update(await (method==='purchase'||(method==='restore'&&!quiet&&platform==='ios')?request:timeout(request,45000)));
     }catch(error){
       message=error?.message||`${storeName} is unavailable. Please try again.`;
-      // Do not extend offline access when verification fails.
-      try{const cached=await timeout(plugin.cachedState(),2000);if(unlocked&&!cached.unlocked){unlocked=false;location.reload()}}catch{}
-    }finally{busy=false;if(quiet&&(unlocked||message.startsWith('No completed purchase')))message='';notify();if(refreshQueued){refreshQueued=false;run('restore',true)}}
+      // An outage is not a revocation. Keep the last verified ownership;
+      // only a successful native check may change access.
+    }finally{busy=false;if(quiet)message='';notify();if(refreshQueued){refreshQueued=false;run('restore',true)}}
   }
-  async function refreshPrice(){
+  async function refreshPrice(quiet=false){
     if(!plugin)return;
-    try{const result=await timeout(plugin.price(),15000);price=result.price||'';if(!price)throw new Error('Price unavailable');if(!busy)message=''}catch(error){price='';if(!busy)message=error?.message||`Connect to ${storeName} to see the price.`}
+    try{const result=await timeout(plugin.price(),15000);price=result.price||'';if(!price)throw new Error('Price unavailable');if(!busy)message=''}catch(error){price='';if(!busy&&!quiet)message=error?.message||`Connect to ${storeName} to see the price.`}
     notify();
   }
   async function initialize(config){
@@ -41,7 +41,7 @@
       const name=platform==='ios'?'StoreBilling':'PlayBilling';
       plugin=capacitor.Plugins?.[name]||capacitor.registerPlugin?.(name);
       if(!plugin)throw new Error('Billing plugin missing');
-      const cached=await timeout(plugin.cachedState(),2000);unlocked=cached.unlocked===true;
+      const cached=await timeout(plugin.cachedState(),10000);unlocked=cached.unlocked===true;
     }catch{message=`${storeName} billing is unavailable. Please update the app.`}
     return unlocked;
   }
@@ -61,11 +61,12 @@
     const status=document.createElement('p');status.setAttribute('role','status');
     row.append(buy,restore,status);document.querySelector('.home-menu').append(row);
     buy.addEventListener('click',()=>window.FRETBOARD_PREMIUM.open());restore.addEventListener('click',()=>run('restore'));
-    listeners.push(state=>{restore.disabled=state.busy||!plugin;status.textContent=state.message});notify();
+    listeners.push(state=>{buy.hidden=state.unlocked;buy.textContent=state.price?`Unlock full access — ${state.price}`:'Unlock full access';restore.disabled=state.busy||!plugin;status.textContent=state.message});notify();
     if(!plugin)return;
-    Promise.resolve(plugin.addListener('purchasesChanged',()=>run('restore',true))).catch(()=>{});
+    try{Promise.resolve(plugin.addListener('purchasesChanged',()=>run('restore',true))).catch(()=>{})}catch{}
     window.Capacitor.Plugins?.App?.addListener('appStateChange',state=>{if(state.isActive)run('restore',true)});
     run('restore',true);
+    if(!unlocked)refreshPrice(true);
     setInterval(()=>{if(document.visibilityState==='visible')run('restore',true)},15*60*1000);
   }
   window.FretboardBilling={initialize,attach,mountPaywall,refreshPrice,get native(){return native}};

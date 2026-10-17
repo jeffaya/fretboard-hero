@@ -1,12 +1,15 @@
 <#
 .SYNOPSIS
-    Builds APK and/or AAB packages for one Fretboard Hero instrument variant (guitar, bass-4, ukulele).
+    Builds one instrument's application, including all three playable instruments.
 
 .PARAMETER Instrument
     One of: guitar, bass-4, ukulele
 
 .PARAMETER RepoPath
     Root of the fretoboard-hero repo. Default: the repo root (two levels up from this script).
+
+.PARAMETER Profile
+    Store (default): demo + native purchases. Preview: fully unlocked, separate identity.
 
 .PARAMETER BuildType
     "Debug" (default, debug-signed, for local testing) or "Release" (signed, requires
@@ -21,9 +24,11 @@
     Public version name, such as 1.1.0.
 #>
 param(
-    [Parameter(Mandatory = $true)]
+    [ValidateSet("Store", "Preview")]
+    [string]$Profile = "Store",
+
     [ValidateSet("guitar", "bass-4", "ukulele")]
-    [string]$Instrument,
+    [string]$Instrument = "guitar",
 
     [string]$RepoPath = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
 
@@ -49,16 +54,19 @@ if ($BuildType -eq "Release" -and -not (Test-Path (Join-Path $appRoot "android/k
 }
 $BuildType = if ($BuildType -eq "Release") { "Release" } else { "Debug" }
 $buildTypeLower = $BuildType.ToLower()
+$profileLower = $Profile.ToLower()
 $extensions = if ($Format -eq "Both") { @("apk", "aab") } else { @($Format.ToLower()) }
 # Do not leave a stale package that could be mistaken for this build's output.
 foreach ($extension in $extensions) {
-    Remove-Item (Join-Path $distDir "fretboard-hero-$Instrument-$buildTypeLower.$extension") -Force -ErrorAction SilentlyContinue
+    Remove-Item (Join-Path $distDir "fretboard-hero-$Instrument-$profileLower-$buildTypeLower.$extension") -Force -ErrorAction SilentlyContinue
 }
 $instrumentsPath = Join-Path $appRoot "instruments.json"
 $instruments = Get-Content $instrumentsPath -Raw | ConvertFrom-Json
+if (-not $instruments.$Instrument) { throw "Unknown instrument '$Instrument'." }
 $entry = $instruments.$Instrument
-if (-not $entry) {
-    throw "Unknown instrument '$Instrument'. Check instruments.json."
+if ($Profile -eq "Preview") {
+    $entry.appId += ".preview"
+    $entry.name += " Preview"
 }
 
 # Fail before generating a package whose WebView would immediately reject audio.
@@ -79,7 +87,7 @@ if (-not (Test-Path $distDir)) {
 }
 
 # 1. Sync the web engine for this instrument
-& (Join-Path $RepoPath "scripts\sync-web.ps1") -Instrument $Instrument -RepoPath $RepoPath -Platform Android
+& (Join-Path $RepoPath "scripts\sync-web.ps1") -Instrument $Instrument -RepoPath $RepoPath -Platform Android -Profile $Profile
 
 # 2. Write capacitor.config.json for this instrument
 $capacitorConfig = @{
@@ -102,14 +110,14 @@ Set-Content -Path (Join-Path $appRoot "capacitor.config.json") -Value $capacitor
 
 Push-Location $appRoot
 try {
-    # 3. Update the Android applicationId to match this instrument
+    # 3. Update the Android applicationId to match the distribution profile
     $gradlePath = Join-Path $appRoot "android\app\build.gradle"
     $gradleContent = Get-Content $gradlePath -Raw
     $gradleContent = $gradleContent -replace 'applicationId "[^"]*"', "applicationId `"$($entry.appId)`""
     # Write without a BOM: Gradle's Groovy parser rejects a leading UTF-8 BOM.
     [System.IO.File]::WriteAllText($gradlePath, $gradleContent, (New-Object System.Text.UTF8Encoding $false))
 
-    # 3c. Update the Android app display name and custom URL scheme to match this instrument
+    # 3c. Update the Android app display name and custom URL scheme to match the distribution profile
     $stringsPath = Join-Path $appRoot "android\app\src\main\res\values\strings.xml"
     $stringsXml = [xml](Get-Content $stringsPath -Raw)
     foreach ($node in $stringsXml.resources.string) {
@@ -122,7 +130,7 @@ try {
     }
     $stringsXml.Save($stringsPath)
 
-    # 3b. Generate the Android launcher icon for this instrument from its web icon
+    # 3b. Generate this application's launcher icon from instruments.json
     # @capacitor/assets joins projectRoot + assetPath with path.join, which breaks
     # if assetPath is absolute. Use a path relative to $appRoot (we're Push-Location'd there).
     $assetsTemp = Join-Path $appRoot "assets"
@@ -171,7 +179,7 @@ try {
         $ErrorActionPreference = $previousEap
     }
 
-    # 6. Copy packages with stable instrument-specific names.
+    # 6. Copy packages with explicit Store/Preview names.
     foreach ($extension in $extensions) {
         $outputKind = if ($extension -eq "apk") { "apk" } else { "bundle" }
         $built = Join-Path $appRoot "android/app/build/outputs/$outputKind/$buildTypeLower/app-$buildTypeLower.$extension"
@@ -179,9 +187,9 @@ try {
             throw "Build did not produce the expected $extension at $built"
         }
         # Inspect the actual archive, not only the source config: stale native
-        # assets must never turn an already-paid APK/AAB back into a demo.
-        & (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $built -Instrument $Instrument
-        $output = Join-Path $distDir "fretboard-hero-$Instrument-$buildTypeLower.$extension"
+        # assets must never mix Store and Preview access.
+        & (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $built -Instrument $Instrument -Profile $Profile -RepoPath $RepoPath
+        $output = Join-Path $distDir "fretboard-hero-$Instrument-$profileLower-$buildTypeLower.$extension"
         Copy-Item -Path $built -Destination $output -Force
         Write-Host "Built $output (version $VersionName, code $VersionCode)" -ForegroundColor Green
     }

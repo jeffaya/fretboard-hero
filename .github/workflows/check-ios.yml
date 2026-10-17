@@ -4,6 +4,7 @@ on:
     paths:
       - 'app/ios/**'
       - 'app/package*.json'
+      - 'app/instruments.json'
       - 'scripts/*ios*'
       - 'scripts/sync-web.ps1'
       - 'web/core/native-billing.js'
@@ -11,22 +12,36 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+env:
+  POWERSHELL_TELEMETRY_OPTOUT: 'true'
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 jobs:
   simulator:
+    strategy:
+      fail-fast: false
+      matrix:
+        instrument: [guitar, bass-4, ukulele]
+    env:
+      INSTRUMENT: ${{ matrix.instrument }}
     runs-on: macos-15
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: app/package-lock.json
-      - run: npm ci
+      - run: npm ci --no-audit --no-fund
         working-directory: app
+      - name: Disable Capacitor telemetry
+        working-directory: app
+        run: node node_modules/@capacitor/cli/bin/capacitor telemetry off
       - name: Prepare iOS demo and billing bundle
         shell: pwsh
-        run: ./scripts/prepare-ios.ps1 -Instrument guitar
+        run: ./scripts/prepare-ios.ps1 -Instrument $env:INSTRUMENT -Profile Store
       - name: Compile iPhone and iPad target without signing
         run: >-
           xcodebuild -project app/ios/App/App.xcodeproj -scheme App
@@ -34,3 +49,20 @@ jobs:
           -destination 'generic/platform=iOS Simulator'
           -derivedDataPath /tmp/fretboard-ios-build
           CODE_SIGNING_ALLOWED=NO build
+      - name: Verify compiled app identity and Store access
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib, plistlib
+          instrument = os.environ['INSTRUMENT']
+          expected = json.loads(pathlib.Path('app/instruments.json').read_text())[instrument]
+          app = pathlib.Path('/tmp/fretboard-ios-build/Build/Products/Debug-iphonesimulator/App.app')
+          with (app / 'Info.plist').open('rb') as source:
+              info = plistlib.load(source)
+          config = json.loads((app / 'public/site.config.json').read_text())
+          assert info['CFBundleIdentifier'] == expected['appId']
+          assert info['CFBundleDisplayName'] == expected['name']
+          assert config['appId'] == expected['appId'] and config['instrument'] == instrument
+          assert config['accessProfile'] == 'Store' and config['unlocked'] is False and config['nativeBilling'] is True
+          assert 'testKeyHash' not in config
+          print('Compiled identity and Store access verified:', expected['appId'])
+          PY

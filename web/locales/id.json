@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "BUKA POTENSI",
   "FRETBOARD SKILLS": "FRETBOARD-MU",
   "Stop switching tools. Start playing solos worth sharing.": "Tak perlu berganti alat. Mulai mainkan solo yang layak dibagikan.",
-  "One purchase. Every skill unlocked.": "Sekali beli. Semua fitur terbuka.",
   "One purchase. Three instruments. Every skill unlocked.": "Sekali beli. Tiga instrumen. Semua fitur terbuka.",
   "← Continue exploring": "← Lanjutkan menjelajah",
   "Get it on": "Dapatkan di",
@@ -178,7 +177,6 @@
   "Could not restore purchases. Check your App Store account and connection, then try again.": "Pembelian tidak dapat dipulihkan. Periksa akun App Store dan koneksi, lalu coba lagi.",
   "Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry.": "Verifikasi sementara tidak tersedia. Hubungkan internet dan ketuk Pulihkan pembelian.",
   "Payment could not be completed. Please try again or restore purchases.": "Pembayaran tidak selesai. Coba lagi atau pulihkan pembelian.",
-  "Allow session storage to change instruments on this device.": "Izinkan penyimpanan sesi untuk mengganti instrumen di perangkat ini.",
   "Virtuoso": "Virtuoso",
   "{instrument} virtuoso": "Virtuoso {instrument}",
   "{instrument} legend": "Legenda {instrument}",
@@ -407,5 +405,8 @@
   "Even a short session counts.": "Sesi singkat pun berarti.",
   "The basics can take you far.": "Dasar yang kuat bisa membawamu jauh.",
   "Practice to play better.": "Berlatih agar bermain lebih baik.",
-  "Repetition can become discovery.": "Pengulangan bisa menjadi penemuan."
+  "Repetition can become discovery.": "Pengulangan bisa menjadi penemuan.",
+  "Get the app": "Unduh aplikasi",
+  "Free download. One purchase unlocks all three instruments.": "Unduhan gratis. Satu pembelian membuka ketiga instrumen.",
+  "Could not read purchase status. Please restore purchases.": "Status pembelian tidak dapat dibaca. Silakan pulihkan pembelian."
 }

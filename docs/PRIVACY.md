@@ -49,12 +49,12 @@ SDKs or hosting settings change.
 | Detected notes/chords/timing | Pitch/chord/routine engines | Local processing; no remote audio service |
 | Language | `web/core/i18n.js`, `fretboard-language` | Local storage until replaced/cleared |
 | Microphone choice | `fretboard-tuner-microphone`, `fretboard-routine-microphone` | Local storage until replaced/cleared |
-| Instrument selection | `fretboard-home-instrument` | Web session storage |
+| Instrument selection | `fretboard-instrument` (legacy session fallback) | Local storage until replaced/cleared |
 | Exercise alternation | `fretboard-routine-diagonal-*` | Local storage |
 | Rhythm progression | `web/core/routine-patterns.js`, `fretboard-rhythm-practice-v1` | Local attempt/success/round counters; not uploaded |
 | Google purchase proof | Android `PlayBillingPlugin`, `server/play-billing.mjs` | Package ID, product ID, token sent over HTTPS to Cloudflare Worker and verified with Google |
 | Purchase response | Google Android Publisher API | Worker inspects purchase/acknowledgement/consumption state; no purchase database or token logging in source |
-| Android offline entitlement | Native no-backup file | Package identity and verification time (file presence represents access); valid at most 7 days; expiry is not file deletion |
+| Android offline entitlement | Native no-backup file | Server-verified purchase token encrypted/authenticated with Android Keystore, bound to package/product; no offline expiry; cleared on confirmed revocation or app data removal |
 | iOS purchase entitlement | `StoreBillingPlugin.swift` | Verified StoreKit transactions; no forwarding to Android backend |
 | IP address / request metadata | Cloudflare network and `PLAY_BILLING_LIMITER` | IP used for rate limiting (30 requests per 60 seconds); infrastructure retention must be checked separately |
 | System backup | Android `allowBackup=true`; OS settings | Some local data may be backed up or transferred; no-backup Android entitlement excluded |

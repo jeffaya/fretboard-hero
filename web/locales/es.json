@@ -149,7 +149,6 @@
   "UNLOCK YOUR": "DESBLOQUEA TU",
   "FRETBOARD SKILLS": "DOMINIO DEL DIAPASÓN",
   "Stop switching tools. Start playing solos worth sharing.": "Deja de cambiar de herramientas. Toca solos que merezca la pena compartir.",
-  "One purchase. Every skill unlocked.": "Una compra. Todas las funciones desbloqueadas.",
   "One purchase. Three instruments. Every skill unlocked.": "Una compra. Tres instrumentos. Todo desbloqueado.",
   "← Continue exploring": "← Seguir explorando",
   "Get it on": "Disponible en",
@@ -178,7 +177,6 @@
   "Could not restore purchases. Check your App Store account and connection, then try again.": "No se pudieron restaurar las compras. Revisa tu cuenta de App Store y la conexión.",
   "Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry.": "Verificación temporalmente no disponible. Conéctate y pulsa Restaurar compras.",
   "Payment could not be completed. Please try again or restore purchases.": "No se pudo completar el pago. Reintenta o restaura las compras.",
-  "Allow session storage to change instruments on this device.": "Permite el almacenamiento de sesión para cambiar de instrumento en este dispositivo.",
   "Virtuoso": "Virtuoso",
   "{instrument} virtuoso": "Virtuoso de {instrument}",
   "{instrument} legend": "Leyenda de {instrument}",
@@ -407,5 +405,8 @@
   "Even a short session counts.": "Incluso una sesión corta cuenta.",
   "The basics can take you far.": "Las bases pueden llevarte lejos.",
   "Practice to play better.": "Practicar para tocar mejor.",
-  "Repetition can become discovery.": "La repetición puede convertirse en descubrimiento."
+  "Repetition can become discovery.": "La repetición puede convertirse en descubrimiento.",
+  "Get the app": "Descargar la aplicación",
+  "Free download. One purchase unlocks all three instruments.": "Descarga gratuita. Una compra desbloquea los tres instrumentos.",
+  "Could not read purchase status. Please restore purchases.": "No se pudo leer el estado de la compra. Restaura tus compras."
 }

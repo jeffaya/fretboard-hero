@@ -19,10 +19,10 @@ test('Localized purchase and restore controls grant access only on verified owne
  for(const state of ['pending','cancelled']){s.setResult({unlocked:false,status:state});buy.click();await flush();assert.equal(s.reloads,0);assert.match(status.textContent,state==='pending'?/pending/:/cancelled/)}
  s.setResult({unlocked:true,status:'purchased'});restore.click();await flush();assert.equal(s.reloads,1);
 });
-test('Refund clears access; outage preserves valid cache but expires stale access',async()=>{
+test('Only a confirmed revocation clears access; outages never expire paid ownership',async()=>{
  const s=setup(true);await s.api.initialize({nativeBilling:true});const host=s.el();s.api.mountPaywall(host);
  s.plugin.restore=async()=>{throw Error('Offline')};host.children[1].click();await flush();assert.equal(s.reloads,0);
- s.setOwned(false);host.children[1].click();await flush();assert.equal(s.reloads,1);
+ s.setOwned(false);host.children[1].click();await flush();assert.equal(s.reloads,0);
  const r=setup(true);await r.api.initialize({nativeBilling:true});const h=r.el();r.api.mountPaywall(h);r.setResult({unlocked:false,status:'not_owned'});h.children[1].click();await flush();assert.equal(r.reloads,1);
 });
 test('Native static bridge listener handles work and quiet demo restore stays unobtrusive',async()=>{
@@ -45,4 +45,25 @@ test('Apple transaction update during a purchase is replayed after pending compl
 });
 test('Missing Apple bridge never unlocks from config flags or calls Android billing',async()=>{
  const s=setup(false,'web');assert.equal(await s.api.initialize({nativeBilling:true,unlocked:true}),false);assert.equal(s.calls,0);
+});
+
+test('Fresh offline installs remain demo and silent checks do not show alarming errors',async()=>{
+ const s=setup(false);s.plugin.restore=async()=>{throw Error('Offline')};s.plugin.price=async()=>{throw Error('Offline')};
+ assert.equal(await s.api.initialize({nativeBilling:true,unlocked:true}),false);s.api.attach();await flush();
+ assert.equal(s.reloads,0);assert.equal(s.home.children[0].children[2].textContent,'');
+});
+test('Missing price never starts payment; repeated clicks during purchase are ignored',async()=>{
+ const s=setup();await s.api.initialize({nativeBilling:true});const host=s.el();s.api.mountPaywall(host);
+ s.plugin.price=async()=>{throw Error('No catalog')};host.children[0].click();await flush();assert.equal(s.calls,0);
+ s.plugin.price=async()=>({price:'2,99 €'});await s.api.refreshPrice();let finish,count=0;
+ s.plugin.purchase=()=>{count++;return new Promise(resolve=>finish=resolve)};
+ host.children[0].click();host.children[0].click();assert.equal(count,1);assert.equal(host.children[0].disabled,true);
+ finish({unlocked:false,status:'cancelled'});await flush();assert.equal(s.reloads,0);assert.equal(host.children[0].disabled,false);
+});
+test('All paid instruments share one entitlement and no native paywall links to a website payment',async()=>{
+ for(const instrument of ['guitar','bass-4','ukulele']){
+  const s=setup(true);assert.equal(await s.api.initialize({instrument,nativeBilling:true,unlocked:false}),true);
+  s.api.attach();await flush();assert.equal(s.home.children[0].children[0].hidden,true);
+  assert.equal(s.home.children[0].children[1].textContent,'Restore purchases');
+ }
 });

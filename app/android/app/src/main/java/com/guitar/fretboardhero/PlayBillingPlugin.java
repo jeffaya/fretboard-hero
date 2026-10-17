@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListener {
     private static final String PRODUCT = "full_access";
     private static final String VERIFY_URL = "https://fretboard-hero.com/api/billing/google/verify";
-    private static final long OFFLINE_GRACE_MS = 7L * 24 * 60 * 60 * 1000;
+    private VerifiedPurchaseCache cache;
     private BillingClient billing;
     private final ExecutorService worker = Executors.newSingleThreadExecutor();
     private PluginCall purchaseCall;
@@ -33,6 +33,7 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
     private final List<PluginCall> waiting = new ArrayList<>();
 
     @Override public void load() {
+        cache = AndroidPurchaseCache.create(getContext(), PRODUCT);
         billing = BillingClient.newBuilder(getContext()).setListener(this)
             .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
             .enableAutoServiceReconnection().build();
@@ -41,26 +42,18 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
     private JSObject state(boolean unlocked, String status) {
         JSObject result = new JSObject(); result.put("unlocked", unlocked); result.put("status", status); return result;
     }
-    // No-backup storage: an Android device restore must query the current Play account.
-    private File cacheFile() { return new File(getContext().getNoBackupFilesDir(), "play-entitlement.json"); }
-    private boolean cached() {
-        try (FileInputStream in = new FileInputStream(cacheFile())) {
-            JSONObject value = new JSONObject(read(in));
-            long age = System.currentTimeMillis() - value.getLong("verifiedAt");
-            return getContext().getPackageName().equals(value.getString("packageName")) && age >= 0 && age < OFFLINE_GRACE_MS;
-        } catch (Exception ignored) { return false; }
-    }
-    private void save(boolean unlocked) throws Exception {
-        if (!unlocked) { if (cacheFile().exists() && !cacheFile().delete()) throw new IOException("Cache removal failed"); return; }
-        JSONObject value = new JSONObject().put("packageName", getContext().getPackageName()).put("verifiedAt", System.currentTimeMillis());
-        try (FileOutputStream out = new FileOutputStream(cacheFile())) { out.write(value.toString().getBytes(StandardCharsets.UTF_8)); }
+    private void resolveCached(PluginCall call, String status) {
+        worker.execute(() -> {
+            try { call.resolve(state(cache.token() != null, status)); }
+            catch (Exception ignored) { call.reject("Could not read purchase status. Please restore purchases."); }
+        });
     }
     private static String read(InputStream input) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream(); byte[] buffer = new byte[2048]; int count;
         while ((count = input.read(buffer)) != -1) { if (out.size() + count > 16384) throw new IOException("Response too large"); out.write(buffer, 0, count); }
         return out.toString("UTF-8");
     }
-    @PluginMethod public void cachedState(PluginCall call) { call.resolve(state(cached(), "cached")); }
+    @PluginMethod public void cachedState(PluginCall call) { resolveCached(call, "cached"); }
 
     private void ready(PluginCall call, Runnable action) {
         getActivity().runOnUiThread(() -> {
@@ -116,7 +109,7 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
             if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) {
                 purchaseCall = null;
                 if (result.getResponseCode() == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) restore(call);
-                else if (result.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) call.resolve(state(cached(), "cancelled"));
+                else if (result.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) resolveCached(call, "cancelled");
                 else call.reject("Google Play could not open the purchase. Please try again.");
             }
         })));
@@ -133,7 +126,7 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
             if (call != null) process(purchases, call);
             else notifyListeners("purchasesChanged", new JSObject());
         } else if (call != null) {
-            if (result.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) call.resolve(state(cached(), "cancelled"));
+            if (result.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) resolveCached(call, "cancelled");
             else if (result.getResponseCode() == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) restore(call);
             else call.reject("Payment could not be completed. You can restore purchases to check again.");
         }
@@ -144,13 +137,16 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
             if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) owned = purchase;
             else if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) pending = true;
         }
-        if (owned == null) {
-            try { save(false); call.resolve(state(false, pending ? "pending" : "not_owned")); }
-            catch (Exception ignored) { call.reject("Could not update purchase status."); }
-            return;
-        }
-        final String token = owned.getPurchaseToken();
+        final String purchaseToken = owned == null ? null : owned.getPurchaseToken();
+        final boolean isPending = pending;
         worker.execute(() -> {
+            final String token;
+            try {
+                // Empty Play queries are not proof of a refund. Revalidate the
+                // encrypted previous token before revoking an existing purchase.
+                token = purchaseToken != null ? purchaseToken : cache.token();
+                if (token == null) { call.resolve(state(false, isPending ? "pending" : "not_owned")); return; }
+            } catch (Exception ignored) { call.reject("Could not read purchase status. Please restore purchases."); return; }
             HttpURLConnection connection = null;
             try {
                 connection = (HttpURLConnection) new URL(VERIFY_URL).openConnection();
@@ -160,8 +156,10 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
                 try (OutputStream out = connection.getOutputStream()) { out.write(body.toString().getBytes(StandardCharsets.UTF_8)); }
                 if (connection.getResponseCode() != 200) throw new IOException("Verification unavailable");
                 JSONObject verified; try (InputStream input = connection.getInputStream()) { verified = new JSONObject(read(input)); }
-                boolean unlocked = verified.getBoolean("unlocked");
-                save(unlocked); call.resolve(state(unlocked, verified.getString("status")));
+                if (!(verified.get("unlocked") instanceof Boolean)) throw new IOException("Invalid verification");
+                String status = verified.getString("status");
+                cache.accept(token, verified.getString("packageName"), verified.getString("productId"), verified.getBoolean("unlocked"), status);
+                call.resolve(state(cache.token() != null, status));
             } catch (Exception ignored) { call.reject("Purchase verification is temporarily unavailable. Connect and tap Restore purchases to retry."); }
             finally { if (connection != null) connection.disconnect(); }
         });
