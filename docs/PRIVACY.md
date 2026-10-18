@@ -17,12 +17,20 @@ document language/title/description, return links and accessible labels. The nat
 click dismissal. Without JavaScript, its links navigate to the full static articles.
 Printing includes the selected article and omits the navigation.
 
-The header reuses the existing Guitar Fretboard Hero wordmark from
-`assets/home/product-wordmarks.webp`; no new logo, remote font or tracking script
-is introduced. Layout and print rules belong to `web/privacy.css`.
+The header reuses the active Guitar, Bass or Ukulele wordmark from the existing
+`assets/home/product-wordmarks.webp` sprite. It reads the same product profile's
+`assets.heroLogoViewport` as the home; no new logo or image is introduced.
+`core/instrument-selection.js` shares the catalogue and selection with the app
+bootstrap: valid `?instrument=` first, then `fretboard-instrument` (legacy
+`fretboard-home-instrument` session fallback), then `site.config.json`'s instrument.
+The favicon, accessible brand name and document title follow the selected product.
+Layout and print rules belong to `web/privacy.css`.
 
-The home link carries the current app language to `/privacy?lang=…`, including when
-a native app opens an external browser with different language/storage settings.
+The home link carries the current app language and active instrument to
+`/privacy?lang=…&instrument=…`, including when a native app opens an external browser
+with different language/storage settings. Language changes and return-to-home
+links preserve the instrument. If the configuration cannot be fetched, explicit
+and remembered instruments still work, with guitar as the last fallback.
 The public page updates on website deployment. A rebuilt native app is needed for
 the updated home-link logic and bundled copy; older links still open `/privacy`.
 
@@ -94,12 +102,14 @@ deletion instructions, provider links and date in every language. Update content
 and privacy asset query versions together. App-language changes should also update
 the policy menu and its language coverage test.
 
-Run `node --test web/tests/privacy.test.cjs web/tests/i18n.test.cjs` to check static
-coverage, translated paragraphs, old anchors, URL/storage/browser preference order,
-all language switches, history, blocked storage, accessible labels and menu dismissal.
+Run `node --test web/tests/privacy.test.cjs web/tests/i18n.test.cjs web/tests/home-purchases.test.cjs web/tests/distribution-startup.test.cjs`
+to check static coverage, translated paragraphs, old anchors, preference order,
+all language switches, history, blocked storage, accessible labels and menu dismissal,
+plus shared instrument selection, existing product wordmarks and external-browser
+links across the three app defaults and active instruments.
 Verify the deployed page on desktop and a narrow mobile screen, including a long
 language name, an Asian script, the expanded menu, keyboard focus and print view.
-The 2026-10-18 update passed 18 targeted tests; a local browser visual check was
+The 2026-10-18 instrument-branding update passed 70 targeted tests; a local browser visual check was
 unavailable because the browser policy rejected local-file navigation.
 
 ## Play Console: avoid a blanket “no data collected” answer

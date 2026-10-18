@@ -139,6 +139,16 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Release notes
 
+### V10.49.12 — Instrument-aware privacy branding
+
+- Privacy uses the existing Guitar, Bass or Ukulele wordmark and the same product
+  profile viewport as the home. No new image assets.
+- The bootstrap and Privacy share instrument selection in
+  `core/instrument-selection.js`: URL, saved preference, then build default.
+- The home passes both language and active instrument to the external privacy
+  page. Language changes and return links preserve the instrument; the favicon,
+  accessible brand name and document title follow it too.
+
 ### V10.49.11 — Localized privacy policy
 
 - Replace the plain-text privacy header with the existing neon wordmark and a

@@ -1,9 +1,9 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 function setup({native=false,unlocked=false,blocked=false}={}){
- const stored={},rows=[],footer=[];let destination,opens=0;
+ const stored={},rows=[],footer=[],privacy={href:'https://fretboard-hero.com/privacy?lang=fr'};let destination,opens=0;
  const node=()=>({dataset:{},events:{},children:[],setAttribute(){},addEventListener(name,fn){this.events[name]=fn},append(...items){this.children.push(...items)}});
  const buttons=['guitar','bass-4','ukulele'].map(instrument=>{const b=node();b.dataset.homeInstrument=instrument;return b});
- const c={URL,location:{href:'https://fretboard-hero.com/?lang=fr',assign(url){destination=url}},localStorage:{setItem(key,value){if(blocked)throw Error('Unavailable');stored[key]=value}},document:{querySelector:s=>s==='.home-instruments'?{prepend(){}}:s==='.home-footer'?{append:(...items)=>footer.push(...items)}:{append:row=>rows.push(row)},querySelectorAll:()=>buttons,createElement:node},window:{FRETBOARD_SITE_CONFIG:{nativeBilling:native,instrument:'guitar',defaultInstrument:'guitar'},FRETBOARD_ACCESS:{unlocked},FRETBOARD_PREMIUM:{open(){opens++}}}};
+ const c={URL,location:{href:'https://fretboard-hero.com/?lang=fr',assign(url){destination=url}},localStorage:{setItem(key,value){if(blocked)throw Error('Unavailable');stored[key]=value}},document:{querySelector:s=>s==='a[href^="https://fretboard-hero.com/privacy"]'?privacy:s==='.home-instruments'?{prepend(){}}:s==='.home-footer'?{append:(...items)=>footer.push(...items)}:{append:row=>rows.push(row)},querySelectorAll:()=>buttons,createElement:node},window:{FRETBOARD_SITE_CONFIG:{nativeBilling:native,instrument:'guitar',defaultInstrument:'guitar'},FRETBOARD_ACCESS:{unlocked},FRETBOARD_PREMIUM:{open(){opens++}}}};
  vm.runInNewContext(fs.readFileSync('web/home.js','utf8'),c);
  return {buttons,stored,rows,footer,get destination(){return destination},get opens(){return opens}};
 }

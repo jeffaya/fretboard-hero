@@ -1,5 +1,12 @@
 (() => {
   'use strict';
+  // Native apps open Privacy in a separate browser, so carry the active universe.
+  const privacy=document.querySelector('a[href^="https://fretboard-hero.com/privacy"]');
+  if(privacy){
+    const url=new URL(privacy.href);
+    url.searchParams.set('instrument',window.FRETBOARD_SITE_CONFIG.instrument);
+    privacy.href=url.href;
+  }
   // Instrument selection and the shared footer entry; motion is automatic in CSS.
   const dock=document.querySelector('.home-instruments');
   const buttons=[...document.querySelectorAll('[data-home-instrument]')];

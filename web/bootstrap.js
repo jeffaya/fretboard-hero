@@ -7,11 +7,6 @@
     artwork.addEventListener('error',()=>resolve(false),{once:true});
     artwork.setAttribute('href','./assets/home/product-wordmarks.webp');
   });
-  const CATALOG={
-    'guitar':{instrumentKey:'guitar',instrument:'./instruments/guitar.js?v=10.26.4',productKey:'guitar',product:'./products/guitar-fretboard-hero.js?v=10.35.0'},
-    'bass-4':{instrumentKey:'bass4',instrument:'./instruments/bass-4.js?v=10.26.4',productKey:'bass',product:'./products/bass-fretboard-hero.js?v=10.35.0'},
-    'ukulele':{instrumentKey:'ukulele',instrument:'./instruments/ukulele.js?v=10.26.4',productKey:'ukulele',product:'./products/ukulele-fretboard-hero.js?v=10.35.0'},
-  };
   const CORE=['music-theory','circle-of-fifths','circle-renderer','microphone','pitch-detector','chord-detector','routine-guide','routine-melody','routine-patterns','routine-exercises','routine-renderer','routine-rhythm','routine-echo','routine-rhythm-audio','routine-strumming','routine-encouragement','routine-session','tuning','fretboard-engine','fretboard-layout','fretboard-appearance','fretboard-map','pentatonic-renderer','triad-engine','arpeggio-engine','chord-engine','quiz-engine','controls','mode-registry','product-shell'].map(n=>`./core/${n}.js?v=10.49.0`);
   const MODES=['pentatonic','triads','chords','arpeggios'].map(n=>`./modes/${n}.js?v=10.26.4`);
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.async=false;s.src=src;s.onload=resolve;s.onerror=()=>reject(new Error(`Unable to load ${src}`));document.head.appendChild(s);});
@@ -22,21 +17,15 @@
       await FretboardI18n.initialize();
       const response=await fetch('./site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
+      await load('./core/instrument-selection.js?v=10.49.12');
+      const CATALOG=FretboardInstrumentSelection.catalog;
       await load('./core/native-billing.js?v=10.49.10');
       const nativeUnlocked=await FretboardBilling.initialize(config);
       await load('./core/modal.js?v=10.27.4');
       await load('./core/access.js?v=10.49.6');
       window.FRETBOARD_ACCESS=FretboardAccess.create(config.nativeBilling===true?nativeUnlocked:await FretboardAccess.resolve(config,location.search));
       const defaultInstrument=config.instrument;
-      if(!CATALOG[defaultInstrument])throw new Error(`Unknown instrument "${defaultInstrument}". Supported: ${Object.keys(CATALOG).join(', ')}`);
-      // Remember the chosen universe across launches; URL campaigns may override it.
-      let selected;try{
-        selected=localStorage.getItem('fretboard-instrument')||sessionStorage.getItem('fretboard-home-instrument');
-        if(selected&&!CATALOG[selected]){localStorage.removeItem('fretboard-instrument');sessionStorage.removeItem('fretboard-home-instrument')}
-      }catch{}
-      const requested=new URLSearchParams(location.search).get('instrument');
-      if(Object.hasOwn(CATALOG,requested)){config.instrument=requested;try{localStorage.setItem('fretboard-instrument',requested)}catch{}}
-      else if(CATALOG[selected])config.instrument=selected;
+      config.instrument=FretboardInstrumentSelection.resolve(defaultInstrument);
       const entry=CATALOG[config.instrument];if(!entry)throw new Error(`Unknown instrument "${config.instrument}". Supported: ${Object.keys(CATALOG).join(', ')}`);
       window.FRETBOARD_SITE_CONFIG=Object.freeze({...config,defaultInstrument});
       // Fetch scripts concurrently while classic-script async=false preserves execution order.
@@ -46,7 +35,7 @@
       window.FRETBOARD_ACTIVE_PRODUCT={...product,instrument:entry.instrumentKey};window.FRETBOARD_ACTIVE_INSTRUMENT=instrument;
       document.documentElement.dataset.instrument=config.instrument;
       window.ProductShell.apply(product,instrument);
-      await load('./home.js?v=10.49.5');
+      await load('./home.js?v=10.49.12');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
       await load('./app.js?v=10.43.1');
       FretboardBilling.attach();
