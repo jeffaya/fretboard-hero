@@ -139,6 +139,16 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Release notes
 
+### V10.49.11 — Localized privacy policy
+
+- Replace the plain-text privacy header with the existing neon wordmark and a
+  compact, keyboard-accessible language selector matching the approved preview.
+- Publish the complete policy in all eleven app languages, with a readable static
+  fallback and one selected language at a time when JavaScript is available.
+- Clarify Lifetime Access, verification/restoration, local purchase proof and error
+  diagnostics alongside microphone processing, retention, deletion and user rights.
+- Carry the app language into its public privacy link and preserve legacy anchors.
+
 ### V10.49.10 — Visible billing errors
 
 - Group explicit catalog, purchase, verification and restoration failures in a red

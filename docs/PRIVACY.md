@@ -4,13 +4,27 @@
 
 The page is implemented at `web/privacy.html`. Cloudflare Workers static assets
 serve this file at **https://fretboard-hero.com/privacy** with the existing default
-HTML handling. No Worker route, authentication, PDF viewer, client-side router,
-JavaScript, third-party font or external script is needed to read it.
+HTML handling. No new Worker route, authentication, PDF viewer, third-party font
+or external script is needed. All eleven complete translations are in the initial
+HTML: `en`, `es`, `fr`, `de`, `it`, `ja`, `ko`, `zh-CN`, `pt-BR`, `hi`, `id`.
 
-French and English are both present in the initial HTML (`#fr` / `#en`). The home
-screen links to the public URL; its label is translated in all 11 app languages.
-The native build copies `web/`, so rebuilding each app includes the home link.
-Already-installed APKs/AABs do not acquire this link from a website deployment.
+`web/privacy.js` progressively enhances this static document to show one language
+at a time. It uses an explicit `?lang=fr`, a legacy article/section anchor, the
+shared `fretboard-language` preference, then browser languages (English fallback).
+Legacy anchors take precedence when present. Changing language updates the URL,
+document language/title/description, return links and accessible labels. The native
+`details` language disclosure supports keyboard navigation, Escape and outside
+click dismissal. Without JavaScript, its links navigate to the full static articles.
+Printing includes the selected article and omits the navigation.
+
+The header reuses the existing Guitar Fretboard Hero wordmark from
+`assets/home/product-wordmarks.webp`; no new logo, remote font or tracking script
+is introduced. Layout and print rules belong to `web/privacy.css`.
+
+The home link carries the current app language to `/privacy?lang=…`, including when
+a native app opens an external browser with different language/storage settings.
+The public page updates on website deployment. A rebuilt native app is needed for
+the updated home-link logic and bundled copy; older links still open `/privacy`.
 
 The user confirmed the publisher/data controller as **Jean-François Seignemorte**,
 acting personally in France, and selected **hello@fretboard-hero.com** as the
@@ -40,7 +54,7 @@ Release notes:
 
 ## Data inventory checked against main
 
-Baseline: `adaac07` (2026-10-14). Audit the current release again when behaviour,
+Baseline: `5179386` (2026-10-18). Audit the current release again when behaviour,
 SDKs or hosting settings change.
 
 | Data | Actual implementation | Recipient / retention |
@@ -56,6 +70,7 @@ SDKs or hosting settings change.
 | Purchase response | Google Android Publisher API | Worker inspects purchase/acknowledgement/consumption state; no purchase database or token logging in source |
 | Android offline entitlement | Native no-backup file | Server-verified purchase token encrypted/authenticated with Android Keystore, bound to package/product; no offline expiry; cleared on confirmed revocation or app data removal |
 | iOS purchase entitlement | `StoreBillingPlugin.swift` | Verified StoreKit transactions; no forwarding to Android backend |
+| Purchase error diagnostics | `web/core/native-billing.js`, Android plugin | Play code and bounded SDK message shown locally; no automatic support upload, token or backend response exposure. User-supplied screenshots are handled as support correspondence. |
 | IP address / request metadata | Cloudflare network and `PLAY_BILLING_LIMITER` | IP used for rate limiting (30 requests per 60 seconds); infrastructure retention must be checked separately |
 | System backup | Android `allowBackup=true`; OS settings | Some local data may be backed up or transferred; no-backup Android entitlement excluded |
 | Support email | External to app; `hello@fretboard-hero.com` selected by publisher | Address, content, optional attachments; verify actual mail provider and operational deletion practices |
@@ -64,6 +79,28 @@ The source has no Fretboard Hero account registration, remote progression sync,
 advertising SDK, advertising identifier, Firebase Analytics or crash-reporting
 SDK. Fonts and QR-code generation are bundled locally. These findings concern
 the repository, not uninspected production dashboard integrations.
+
+The 2026-10-18 policy describes the optional one-time Lifetime Access purchase
+(`lifetime_access` on Google Play), no subscription, verified restoration, retry
+checks and offline proof. An entitlement covers the instruments within the app
+where it was bought; separate app packages and the Apple/Google stores do not
+automatically share purchases. No fixed price is embedded in the policy.
+
+## Editing and verification
+
+`web/privacy.html` is the canonical policy source; there is no translation service
+or build step at runtime. Keep the same nine sections, complete paragraphs,
+deletion instructions, provider links and date in every language. Update content
+and privacy asset query versions together. App-language changes should also update
+the policy menu and its language coverage test.
+
+Run `node --test web/tests/privacy.test.cjs web/tests/i18n.test.cjs` to check static
+coverage, translated paragraphs, old anchors, URL/storage/browser preference order,
+all language switches, history, blocked storage, accessible labels and menu dismissal.
+Verify the deployed page on desktop and a narrow mobile screen, including a long
+language name, an Asian script, the expanded menu, keyboard focus and print view.
+The 2026-10-18 update passed 18 targeted tests; a local browser visual check was
+unavailable because the browser policy rejected local-file navigation.
 
 ## Play Console: avoid a blanket “no data collected” answer
 
