@@ -412,5 +412,14 @@
   "Unlock for life": "Unlock for life",
   "Restore your access": "Restore your access",
   "Already purchased on another phone? Restore your access with the same account, without paying again.": "Already purchased on another phone? Restore your access with the same account, without paying again.",
-  "Error details": "Error details"
+  "Error details": "Error details",
+  "Could not complete the purchase": "Could not complete the purchase",
+  "Purchases are unavailable": "Purchases are unavailable",
+  "{store} is unavailable": "{store} is unavailable",
+  "Unable to connect to the payment service. Check your connection, then try again.": "Unable to connect to the payment service. Check your connection, then try again.",
+  "Lifetime access is unavailable": "Lifetime access is unavailable",
+  "{store} could not load this purchase. Please try again later.": "{store} could not load this purchase. Please try again later.",
+  "Could not restore your access": "Could not restore your access",
+  "Could not verify your purchase": "Could not verify your purchase",
+  "Could not open payment": "Could not open payment"
 }

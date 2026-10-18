@@ -412,5 +412,14 @@
   "Unlock for life": "आजीवन अनलॉक करें",
   "Restore your access": "अपना एक्सेस वापस पाएँ",
   "Already purchased on another phone? Restore your access with the same account, without paying again.": "क्या आपने दूसरे फ़ोन पर पहले ही खरीद लिया है? उसी खाते से अपना एक्सेस वापस पाएँ, दोबारा भुगतान किए बिना।",
-  "Error details": "त्रुटि का विवरण"
+  "Error details": "त्रुटि का विवरण",
+  "Could not complete the purchase": "खरीद पूरी नहीं हो सकी",
+  "Purchases are unavailable": "खरीदारी उपलब्ध नहीं है",
+  "{store} is unavailable": "{store} उपलब्ध नहीं है",
+  "Unable to connect to the payment service. Check your connection, then try again.": "भुगतान सेवा से कनेक्ट नहीं हो सका। अपना कनेक्शन जाँचें और फिर से कोशिश करें।",
+  "Lifetime access is unavailable": "आजीवन एक्सेस उपलब्ध नहीं है",
+  "{store} could not load this purchase. Please try again later.": "{store} इस खरीद की जानकारी लोड नहीं कर सका। कृपया बाद में फिर से कोशिश करें।",
+  "Could not restore your access": "आपका एक्सेस बहाल नहीं हो सका",
+  "Could not verify your purchase": "आपकी खरीद सत्यापित नहीं हो सकी",
+  "Could not open payment": "भुगतान स्क्रीन नहीं खुल सकी"
 }

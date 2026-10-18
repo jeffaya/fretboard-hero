@@ -412,5 +412,14 @@
   "Unlock for life": "Dauerhaft freischalten",
   "Restore your access": "Zugriff wiederherstellen",
   "Already purchased on another phone? Restore your access with the same account, without paying again.": "Bereits auf einem anderen Smartphone gekauft? Stelle deinen Zugriff mit demselben Konto wieder her, ohne erneut zu bezahlen.",
-  "Error details": "Fehlerdetails"
+  "Error details": "Fehlerdetails",
+  "Could not complete the purchase": "Der Kauf konnte nicht abgeschlossen werden",
+  "Purchases are unavailable": "Käufe sind nicht verfügbar",
+  "{store} is unavailable": "{store} ist nicht verfügbar",
+  "Unable to connect to the payment service. Check your connection, then try again.": "Die Verbindung zum Zahlungsdienst ist fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.",
+  "Lifetime access is unavailable": "Der dauerhafte Zugriff ist nicht verfügbar",
+  "{store} could not load this purchase. Please try again later.": "{store} konnte diesen Kauf nicht laden. Versuche es später erneut.",
+  "Could not restore your access": "Dein Zugriff konnte nicht wiederhergestellt werden",
+  "Could not verify your purchase": "Dein Kauf konnte nicht überprüft werden",
+  "Could not open payment": "Die Zahlung konnte nicht geöffnet werden"
 }

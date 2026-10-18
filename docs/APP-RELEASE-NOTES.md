@@ -7,6 +7,10 @@ changed.
 
 ## App v1.1.3 — Google Play connection diagnosis (pending device validation)
 
+- Show all explicit billing, catalog, purchase verification and restoration failures
+  in a red alert panel with an icon, a clear title and actionable explanation.
+  Technical details stay collapsed by default; pending/cancelled payments remain
+  ordinary status messages. The panel and guidance support all eleven languages.
 - Preserve the Google Play response code, operation and SDK diagnostic behind an
   optional, localized Error details control; never expose purchase tokens or backend errors.
 - Retry only known transient setup/catalog failures, twice at one- and two-second

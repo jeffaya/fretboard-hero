@@ -412,5 +412,14 @@
   "Unlock for life": "解锁终身使用",
   "Restore your access": "恢复使用权限",
   "Already purchased on another phone? Restore your access with the same account, without paying again.": "已在其他手机上购买？使用同一账号即可恢复使用权限，无需再次付费。",
-  "Error details": "错误详情"
+  "Error details": "错误详情",
+  "Could not complete the purchase": "无法完成购买",
+  "Purchases are unavailable": "购买功能不可用",
+  "{store} is unavailable": "{store}暂时不可用",
+  "Unable to connect to the payment service. Check your connection, then try again.": "无法连接到支付服务。请检查网络连接后重试。",
+  "Lifetime access is unavailable": "终身访问权限暂时不可用",
+  "{store} could not load this purchase. Please try again later.": "{store}无法加载此购买信息。请稍后重试。",
+  "Could not restore your access": "无法恢复访问权限",
+  "Could not verify your purchase": "无法验证您的购买",
+  "Could not open payment": "无法打开支付页面"
 }

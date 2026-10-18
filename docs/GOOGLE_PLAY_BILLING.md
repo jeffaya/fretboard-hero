@@ -157,6 +157,14 @@ errors are not replayed. Failed pre-payment checks do not start payment recovery
 A missing cached price is fetched within the same click before opening the purchase.
 Quiet background catalog responses must not erase the visible failure or its details.
 
+The paywall groups all explicit billing failures in a red alert panel below the
+restore explanation. Store connection, catalog, payment, verification and restoration
+errors get a clear localized title and explanation. SDK details appear inside the
+panel only when provided, are collapsed for each new failure, and remain plain text.
+Starting a new action or completing an explicit check clears the old error. Quiet
+background checks preserve it until verified ownership changes. Pending payments,
+cancellations and a completed check finding no purchase use the ordinary status text.
+
 This diagnostic UI and the native codes require a newly built and installed AAB/APK;
 a Worker-only deployment cannot add them to an existing installation. Automated tests
 do not establish which Google error occurred on the reported version-code-5 device.

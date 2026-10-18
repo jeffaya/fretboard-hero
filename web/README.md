@@ -139,6 +139,15 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Release notes
 
+### V10.49.10 — Visible billing errors
+
+- Group explicit catalog, purchase, verification and restoration failures in a red
+  panel with an alert icon, an operation-specific title and guidance in all eleven
+  languages. SDK details are nested inside and collapsed for every new error.
+- Keep pending/cancelled payments and successful checks as normal status messages.
+  Retrying clears stale feedback; background checks preserve the visible error and
+  an expanded disclosure until ownership is verified or another explicit action runs.
+
 ### V10.49.9 — Diagnose Google Play connection failures
 
 - Keep the SDK error code and message in an optional Error details section,
