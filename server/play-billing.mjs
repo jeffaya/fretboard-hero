@@ -1,6 +1,6 @@
 // Purchase tokens are bearer credentials: never log them or return Google errors.
 export const PACKAGES = new Set(['com.guitar.fretboardhero', 'com.bass.fretboardhero', 'com.ukulele.fretboardhero']);
-export const PRODUCT = 'full_access';
+export const PRODUCT = 'lifetime_access';
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
 const encode = value => btoa(String.fromCharCode(...new Uint8Array(value))).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 const text64 = value => encode(new TextEncoder().encode(JSON.stringify(value)));

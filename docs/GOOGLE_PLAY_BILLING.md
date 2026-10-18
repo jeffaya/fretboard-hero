@@ -15,7 +15,7 @@ Each contains the same shared engine and all three instruments. The last selecte
 instrument is remembered locally; switching it never changes the installed app ID.
 
 All apps are free to download and start in demo mode. One permanent, non-consumable
-`full_access` purchase unlocks every instrument, note, key, position, mode and premium
+`lifetime_access` purchase unlocks every instrument, note, key, position, mode and premium
 routine **inside the application where it was purchased**. It is not a subscription.
 For example, a Guitar buyer can play bass inside Guitar without installing Bass.
 The separate Bass and Ukulele apps do not inherit that purchase. Android purchases
@@ -33,11 +33,20 @@ are already unlocked and do not call the billing plugins.
 
 ## Configure Play Console and Cloudflare
 
+The deleted Google Play ID `full_access` is replaced by `lifetime_access` before
+launch; there are no existing customers to migrate. Android and the Worker accept
+only the replacement ID. Keep the purchase option ID `buy`. Configure this product
+in each Android application you release. App Store products remain `full_access`.
+
+Deploy the updated Worker and distribute a rebuilt Store AAB/APK together. Existing
+Android builds still request the deleted ID and cannot use the replacement product.
+The Cloudflare service-account secrets do not need to change for this rename.
+
 For **each** of the three package IDs above:
 
 1. Create/use the corresponding app record, set its download price to free, and use
    its instrument-specific name, icon, screenshots and listing.
-2. Create a one-time, permanent non-consumable product with exact ID `full_access`.
+2. Create a one-time, permanent non-consumable product with exact ID `lifetime_access`.
    Create a **buy** purchase option with exact ID `buy`. Set the price, countries,
    localized title/description, then activate the product and option. The description
    must explain that all instruments are included within this app. Do not use a rental,
@@ -86,7 +95,7 @@ Build sequentially within one checkout: all variants reuse the same native tree.
 
 The native plugin gets the installed package ID from Android, never from the selected
 instrument. The backend allowlists the three apps and verifies the token against that
-exact package and `full_access` using Google's API. It acknowledges purchases and never
+exact package and `lifetime_access` using Google's API. It acknowledges purchases and never
 consumes them. Tokens and raw Google errors are not logged or sent back to JavaScript.
 
 After HTTPS verification, Android stores the token in an AES-GCM authenticated file

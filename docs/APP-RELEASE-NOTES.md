@@ -5,6 +5,15 @@ the website changelog ([`web/README.md`](../web/README.md#release-notes)).
 For every new app version, add an `## App vX` entry below describing what
 changed.
 
+## App v1.1.2 — replacement Google Play product (pending device validation)
+
+- Use `lifetime_access` for Google Play catalog lookup, purchase, restoration and
+  server verification. The permanent purchase option remains `buy`.
+- Replace the deleted `full_access` product before launch, without legacy purchase
+  compatibility: there are no existing customers to migrate.
+- Deploy the updated Worker and rebuild Store AAB/APK with a higher version code.
+  Configure the new product in each Android application before distributing it.
+
 ## App v1.1.1 — automatic post-payment recovery (pending device validation)
 
 - Reconcile verified ownership on return from the store even while its purchase
