@@ -5,6 +5,18 @@ the website changelog ([`web/README.md`](../web/README.md#release-notes)).
 For every new app version, add an `## App vX` entry below describing what
 changed.
 
+## App v1.1.3 — Google Play connection diagnosis (pending device validation)
+
+- Preserve the Google Play response code, operation and SDK diagnostic behind an
+  optional, localized Error details control; never expose purchase tokens or backend errors.
+- Retry only known transient setup/catalog failures, twice at one- and two-second
+  intervals before a payment sheet opens. Billing refusals and payment errors do not
+  trigger a second purchase flow.
+- A successful catalog retry continues the original purchase click. An unavailable
+  catalog still blocks payment, and repeated taps cannot open duplicate flows.
+- Requires a rebuilt Store app with a higher version code. The cause of the reported
+  version-code-5 connection failure remains unconfirmed until device diagnostics are read.
+
 ## App v1.1.2 — replacement Google Play product (pending device validation)
 
 - Use `lifetime_access` for Google Play catalog lookup, purchase, restoration and

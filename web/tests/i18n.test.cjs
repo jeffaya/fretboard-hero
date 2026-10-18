@@ -11,6 +11,9 @@ test('Browser negotiation supports regions, ordered preferences and English fall
 test('Every catalog has the complete key set and preserves template placeholders',()=>{
  const keys=Object.keys(catalogs.en).sort();for(const locale of locales){assert.deepEqual(Object.keys(catalogs[locale]).sort(),keys);for(const key of keys){const placeholders=s=>[...new Set(s.match(/\{\w+\}/g)||[])].sort();assert.deepEqual(placeholders(catalogs[locale][key]),placeholders(key),`${locale}: ${key}`);assert.ok(catalogs[locale][key].trim())}}
 });
+test('Billing support details are localized in every supported language',async()=>{
+ for(const locale of locales){const i=await create({languages:[locale]});assert.equal(i.text('Error details'),catalogs[locale]['Error details']);if(locale!=='en')assert.notEqual(i.text('Error details'),'Error details')}
+});
 test('All ten routine inspirations, the encouragement and its credit localize in every supported language',async()=>{
  const c={window:{}};vm.runInNewContext(fs.readFileSync('web/core/routine-encouragement.js','utf8'),c);
  const keys=['Keep it going!','Inspired by',...c.window.RoutineEncouragement.messages.map(message=>message.text)];

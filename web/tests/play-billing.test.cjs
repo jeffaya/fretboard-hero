@@ -159,3 +159,73 @@ test('All paid instruments share one entitlement and no native paywall links to 
   s.api.attach();await flush();assert.equal(s.home.children.length,0);
  }
 });
+
+const playError=(code,debugMessage='Google Play diagnostic')=>Object.assign(new Error('Google Play is unavailable. Please try again.'),{code,data:{debugMessage}});
+test('One click fetches a missing catalog and opens payment, with duplicate clicks blocked',async()=>{
+ const s=setup();await s.api.initialize({nativeBilling:true});const host=s.el();s.api.mountPaywall(host);let finish,prices=0;
+ s.plugin.price=()=>{prices++;return new Promise(resolve=>finish=resolve)};
+ s.setResult({unlocked:false,status:'cancelled'});host.children[0].click();host.children[0].click();
+ assert.equal(prices,1);assert.equal(s.calls,0);assert.equal(host.children[0].disabled,true);
+ finish({price:'2,99 €'});await flush();assert.equal(s.calls,1);assert.equal(host.children[0].disabled,false);
+});
+test('Transient setup failures retry the catalog after one and two seconds, then continue the original click',async()=>{
+ const s=setup();await s.api.initialize({nativeBilling:true});const host=s.el();s.api.mountPaywall(host);let prices=0;
+ s.plugin.price=async()=>{if(++prices<3)throw playError('PLAY_SETUP_2');return {price:'2,99 €'}};
+ s.setResult({unlocked:false,status:'cancelled'});host.children[0].click();await flush();assert.equal(prices,1);
+ await s.advance(999);assert.equal(prices,1);await s.advance(1);assert.equal(prices,2);
+ await s.advance(1999);assert.equal(prices,2);await s.advance(1);assert.equal(prices,3);
+ assert.equal(s.calls,1);assert.equal(s.reloads,0);assert.equal(host.children[4].hidden,true);
+});
+test('Persistent setup failures stop after three attempts and never start post-payment recovery',async()=>{
+ const s=setup(),host=await readyToBuy(s);let purchases=0,restores=0;
+ s.plugin.purchase=async()=>{purchases++;throw playError('PLAY_SETUP_12')};s.plugin.restore=async()=>{restores++;return {unlocked:false,status:'not_owned'}};
+ host.children[0].click();await flush();await s.advance(60000);
+ assert.equal(purchases,3);assert.equal(restores,0);assert.equal(s.reloads,0);assert.equal(s.timers.size,0);
+ assert.equal(host.children[0].disabled,false);assert.equal(host.children[4].hidden,false);assert.match(host.children[4].children[1].textContent,/PLAY_SETUP_12/);
+});
+test('Only documented transient setup and catalog codes can replay a pre-payment request',async()=>{
+ for(const stage of ['SETUP','CATALOG'])for(const code of [-1,2,6,12]){
+  const s=setup(),host=await readyToBuy(s);let purchases=0;
+  s.plugin.purchase=async()=>{if(++purchases===1)throw playError(`PLAY_${stage}_${code}`);return {unlocked:false,status:'cancelled'}};
+  host.children[0].click();await flush();await s.advance(1000);assert.equal(purchases,2);assert.equal(s.reloads,0);
+ }
+});
+test('Billing refusal, missing products and offers fail immediately without payment or restore loops',async()=>{
+ for(const code of ['PLAY_SETUP_3','PLAY_SETUP_5','PLAY_SETUP_-2','PLAY_SETUP_TIMEOUT','PLAY_PRODUCT_UNAVAILABLE','PLAY_OFFER_UNAVAILABLE']){
+  const s=setup();await s.api.initialize({nativeBilling:true});const host=s.el();s.api.mountPaywall(host);let prices=0,restores=0;
+  s.plugin.price=async()=>{prices++;throw playError(code)};s.plugin.restore=async()=>{restores++;return {unlocked:false,status:'not_owned'}};
+  host.children[0].click();await flush();await s.advance(60000);
+  assert.equal(prices,1,code);assert.equal(s.calls,0,code);assert.equal(restores,0,code);assert.equal(s.reloads,0,code);
+ }
+});
+test('Launch and payment errors are never retried as new purchases, and iOS keeps its own behavior',async()=>{
+ for(const [platform,code] of [['android','PLAY_LAUNCH_2'],['android','PLAY_PURCHASE_12'],['android','UNKNOWN'],['ios','PLAY_SETUP_2']]){
+  const s=setup(false,platform),host=await readyToBuy(s);let purchases=0;
+  s.plugin.purchase=async()=>{purchases++;throw playError(code)};host.children[0].click();await flush();await s.advance(60000);
+  assert.equal(purchases,1,`${platform}: ${code}`);assert.equal(s.reloads,0);
+ }
+});
+test('Support details use plain text, exclude unrelated data and clear on a successful retry',async()=>{
+ const s=setup(),host=await readyToBuy(s),details=host.children[4],debug=details.children[1];
+ const error=playError('PLAY_SETUP_3','<img src=x onerror=alert(1)>');error.data.purchaseToken='must-never-be-rendered';
+ s.plugin.purchase=async()=>{throw error};host.children[0].click();await flush();
+ assert.equal(details.hidden,false);assert.equal(details.children[0].textContent,'Error details');assert.equal(debug.attrs['data-no-i18n'],'');
+ assert.equal(debug.textContent,'PLAY_SETUP_3\n<img src=x onerror=alert(1)>');assert.equal(debug.innerHTML,'');assert.doesNotMatch(host.textContent,/must-never/);
+ details.open=true;s.plugin.purchase=async()=>({unlocked:false,status:'cancelled'});host.children[0].click();await flush();
+ assert.equal(details.hidden,true);assert.equal(details.open,false);assert.equal(debug.textContent,'');
+});
+test('A late silent catalog response preserves the visible failure and its support details',async()=>{
+ const s=setup();await s.api.initialize({nativeBilling:true});await s.api.refreshPrice();let finish;
+ s.plugin.price=()=>new Promise(resolve=>finish=resolve);s.api.attach();await flush();const host=s.el();s.api.mountPaywall(host);
+ s.plugin.purchase=async()=>{throw playError('PLAY_SETUP_3')};host.children[0].click();await flush();
+ finish({price:'2,99 €'});await flush();assert.match(host.children[3].textContent,/unavailable/);assert.equal(host.children[4].hidden,false);
+});
+test('Pre-payment retries stop in the background or once another check confirms ownership',async()=>{
+ for(const verified of [false,true]){
+  const s=setup(),host=await readyToBuy(s);let purchases=0;
+  s.plugin.purchase=async()=>{purchases++;throw playError('PLAY_SETUP_2')};host.children[0].click();await flush();
+  if(verified){s.setResult({unlocked:true,status:'purchased'});s.events.online();await flush()}
+  else s.document.visibilityState='hidden';
+  await s.advance(60000);assert.equal(purchases,1);assert.equal(s.reloads,verified?1:0);
+ }
+});

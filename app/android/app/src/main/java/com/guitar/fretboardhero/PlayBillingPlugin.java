@@ -55,6 +55,12 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
     }
     @PluginMethod public void cachedState(PluginCall call) { resolveCached(call, "cached"); }
 
+    private void rejectPlay(PluginCall call, String message, String stage, BillingResult result) {
+        // SDK diagnostics only: never include purchase tokens or backend responses.
+        JSObject details = new JSObject(); details.put("debugMessage", result.getDebugMessage());
+        call.reject(message, "PLAY_" + stage + "_" + result.getResponseCode(), null, details);
+    }
+
     private void ready(PluginCall call, Runnable action) {
         getActivity().runOnUiThread(() -> {
             if (billing.isReady()) { action.run(); return; }
@@ -64,7 +70,7 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
             main.postDelayed(() -> {
                 if (!connecting || attempt != connectionAttempt) return;
                 connecting = false; connectionAttempt++;
-                for (PluginCall pending : waiting) pending.reject("Google Play connection timed out. Please try again.");
+                for (PluginCall pending : waiting) pending.reject("Google Play connection timed out. Please try again.", "PLAY_SETUP_TIMEOUT");
                 waiting.clear(); connected.clear();
             }, 12000);
             billing.startConnection(new BillingClientStateListener() {
@@ -74,7 +80,7 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
                     List<Runnable> actions = new ArrayList<>(connected); List<PluginCall> calls = new ArrayList<>(waiting);
                     connected.clear(); waiting.clear();
                     if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) { for (Runnable next : actions) next.run(); }
-                    else { for (PluginCall pending : calls) pending.reject("Google Play is unavailable. Please try again."); }
+                    else { for (PluginCall pending : calls) rejectPlay(pending, "Google Play is unavailable. Please try again.", "SETUP", result); }
                 }
                 @Override public void onBillingServiceDisconnected() { /* Automatic reconnection on next request. */ }
             });
@@ -84,17 +90,18 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
     private void product(PluginCall call, ProductCallback callback) {
         QueryProductDetailsParams.Product item = QueryProductDetailsParams.Product.newBuilder().setProductId(PRODUCT).setProductType(BillingClient.ProductType.INAPP).build();
         billing.queryProductDetailsAsync(QueryProductDetailsParams.newBuilder().setProductList(Collections.singletonList(item)).build(), (result, details) -> {
-            if (result.getResponseCode() != BillingClient.BillingResponseCode.OK || details.getProductDetailsList().isEmpty()) { call.reject("Unlock is not available in Google Play yet. Please try again later."); return; }
+            if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) { rejectPlay(call, "Unlock is not available in Google Play yet. Please try again later.", "CATALOG", result); return; }
+            if (details.getProductDetailsList().isEmpty()) { call.reject("Unlock is not available in Google Play yet. Please try again later.", "PLAY_PRODUCT_UNAVAILABLE"); return; }
             ProductDetails found = details.getProductDetailsList().get(0);
             List<ProductDetails.OneTimePurchaseOfferDetails> offers = found.getOneTimePurchaseOfferDetailsList();
-            if (offers == null || offers.isEmpty()) { call.reject("No purchase offer is available."); return; }
+            if (offers == null || offers.isEmpty()) { call.reject("No purchase offer is available.", "PLAY_OFFER_UNAVAILABLE"); return; }
             // Only the permanent "buy" option can unlock the application.
             for (ProductDetails.OneTimePurchaseOfferDetails offer : offers) {
                 if ("buy".equals(offer.getPurchaseOptionId()) && offer.getRentalDetails() == null && offer.getPreorderDetails() == null) {
                     callback.accept(found, offer); return;
                 }
             }
-            call.reject("The permanent purchase option is not available yet.");
+            call.reject("The permanent purchase option is not available yet.", "PLAY_OFFER_UNAVAILABLE");
         });
     }
     @PluginMethod public void price(PluginCall call) {
@@ -110,13 +117,13 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
                 purchaseCall = null;
                 if (result.getResponseCode() == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) restore(call);
                 else if (result.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) resolveCached(call, "cancelled");
-                else call.reject("Google Play could not open the purchase. Please try again.");
+                else rejectPlay(call, "Google Play could not open the purchase. Please try again.", "LAUNCH", result);
             }
         })));
     }
     @PluginMethod public void restore(PluginCall call) {
         ready(call, () -> billing.queryPurchasesAsync(QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(), (result, purchases) -> {
-            if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) { call.reject("Could not check purchases. Connect to Google Play and try again."); return; }
+            if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) { rejectPlay(call, "Could not check purchases. Connect to Google Play and try again.", "RESTORE", result); return; }
             process(purchases, call);
         }));
     }
@@ -128,7 +135,7 @@ public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListene
         } else if (call != null) {
             if (result.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) resolveCached(call, "cancelled");
             else if (result.getResponseCode() == BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED) restore(call);
-            else call.reject("Payment could not be completed. You can restore your access to check again.");
+            else rejectPlay(call, "Payment could not be completed. You can restore your access to check again.", "PURCHASE", result);
         }
     }
     private void process(List<Purchase> purchases, PluginCall call) {
