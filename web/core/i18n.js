@@ -140,6 +140,7 @@
     if(locale!=='en'){
       try{const response=await fetch('./locales/'+locale+'.json?v=10.49.10');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
     }
+    document.querySelector('a[href^="https://fretboard-hero.com/privacy"]')?.setAttribute('href','https://fretboard-hero.com/privacy?lang='+locale);
     document.documentElement.lang=locale;document.documentElement.dir='ltr';
     return locale;
   }

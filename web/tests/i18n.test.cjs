@@ -1,9 +1,13 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const locales=['en','es','fr','de','it','ja','ko','zh-CN','pt-BR','hi','id'];
 const catalogs=Object.fromEntries(locales.map(locale=>[locale,JSON.parse(fs.readFileSync(`web/locales/${locale}.json`,'utf8'))]));
-async function create({url='https://fretboard-hero.com/',saved=null,languages=['en'],fail=false}={}){
- const ctx={window:{},URL,navigator:{languages},location:{href:url},localStorage:{getItem:()=>saved},document:{documentElement:{}},fetch:async path=>({ok:!fail,json:async()=>catalogs[path.match(/locales\/(.+)\.json/)[1]]})};vm.runInNewContext(fs.readFileSync('web/core/i18n.js','utf8'),ctx);const i18n=ctx.window.FretboardI18n;await i18n.initialize();return i18n;
+async function create({url='https://fretboard-hero.com/',saved=null,languages=['en'],fail=false,privacy=null}={}){
+ const ctx={window:{},URL,navigator:{languages},location:{href:url},localStorage:{getItem:()=>saved},document:{documentElement:{},querySelector:()=>privacy},fetch:async path=>({ok:!fail,json:async()=>catalogs[path.match(/locales\/(.+)\.json/)[1]]})};vm.runInNewContext(fs.readFileSync('web/core/i18n.js','utf8'),ctx);const i18n=ctx.window.FretboardI18n;await i18n.initialize();return i18n;
 }
+test('The external privacy link carries the actual app language, including English fallback',async()=>{
+ for(const locale of locales){const privacy={setAttribute(key,value){this[key]=value}};await create({url:'https://fretboard-hero.com/?lang='+locale,privacy});assert.equal(privacy.href,'https://fretboard-hero.com/privacy?lang='+locale)}
+ const privacy={setAttribute(key,value){this[key]=value}};await create({languages:['fr'],fail:true,privacy});assert.equal(privacy.href,'https://fretboard-hero.com/privacy?lang=en');
+});
 test('Browser negotiation supports regions, ordered preferences and English fallback',async()=>{
  for(const [languages,expected] of [[['fr-CA'],'fr'],[['es-MX'],'es'],[['de-AT'],'de'],[['it-IT'],'it'],[['it-CH'],'it'],[['pt-PT'],'pt-BR'],[['zh-Hant-TW'],'zh-CN'],[['xx','ko-KR'],'ko'],[['xx'],'en']])assert.equal((await create({languages})).locale,expected);
  assert.equal((await create({languages:['fr'],saved:'de'})).locale,'de');assert.equal((await create({url:'https://fretboard-hero.com/?lang=ja',saved:'de'})).locale,'ja');assert.equal((await create({languages:['fr'],fail:true})).locale,'en');
