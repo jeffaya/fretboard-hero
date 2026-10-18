@@ -8,6 +8,22 @@
   --sa-right: 20px;
   --sa-bottom: 20px;
   --sa-left: 20px;
+  --fretboard-desktop-width: 96vw;
+  --control-h: 34px;
+  --control-border: #2a4054;
+  --control-bg: #09121d;
+  --control-active: #ff57d7;
+  --control-gap: 8px;
+  --ui-control-border: #2a4054;
+  --ui-control-bg: #09121d;
+  --ui-control-fg: #d4e7f2;
+  --ui-control-active: #ff57d7;
+  --ui-control-active-bg: #2b0b2c;
+  --ui-control-radius: 12px;
+  --ui-group-gap: 20px;
+  --ui-label-gap: 9px;
+  --ui-drawer-control-h: 54px;
+  --control-min-h: 44px;
 }
 
 * { box-sizing: border-box; }
@@ -34,30 +50,8 @@ a:active { transform: none; }
   body { height: 100%; overflow: hidden; }
 }
 
-:root {
-  --fretboard-desktop-width: 96vw;
-  --control-h: 34px;
-  --control-border: #2a4054;
-  --control-bg: #09121d;
-  --control-active: #ff57d7;
-  --control-gap: 8px;
-}
-
 @media (min-width:1200px) {
   :root { --control-gap: clamp(8px,1vw,16px); }
-}
-
-:root {
-  --ui-control-border: #2a4054;
-  --ui-control-bg: #09121d;
-  --ui-control-fg: #d4e7f2;
-  --ui-control-active: #ff57d7;
-  --ui-control-active-bg: #2b0b2c;
-  --ui-control-radius: 12px;
-  --ui-group-gap: 20px;
-  --ui-label-gap: 9px;
-  --ui-drawer-control-h: 54px;
-  --control-min-h: 44px;
 }
 
 @media (max-width:767px) {

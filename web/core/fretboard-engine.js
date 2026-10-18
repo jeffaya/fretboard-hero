@@ -10,10 +10,7 @@
       maxFret:profile.maxFret??21,fretOptions:profile.fretOptions??[12,15,17,21],
       noteAt:(courseIndex,fret)=>mod(courses[courseIndex].pc+fret),
       midiAt:(courseIndex,fret)=>courses[courseIndex].midi+fret,
-      stringRatio:i=>courses.length===1?.5:i/(courses.length-1),
-      visualStringIndex:(i,portrait)=>portrait?i:(courses.length-1-i),
-      triadSets:()=>profile.triadSets||{}, pentatonicPairs:()=>profile.pentatonic?.stringPairs||null,
-      mode:id=>profile.modes?.[id]||null, supports:id=>!!profile.modes?.[id]
+      visualStringIndex:(i,portrait)=>portrait?i:(courses.length-1-i)
     };
   }
   window.FretboardEngine={createInstrumentEngine};

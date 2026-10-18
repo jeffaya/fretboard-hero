@@ -21,7 +21,6 @@
       icon192:`${iconBase}icon-192.png`,
       icon512:`${iconBase}icon-512.png`,
       appleTouchIcon:`${iconBase}apple-touch-icon.png`,
-      maskable512:`${iconBase}icon-maskable-512.png`,
       ...(product.assets||{})
     };
     const name=branding.name||product.name||'Fretboard Hero';
@@ -91,20 +90,10 @@
     };
     Object.entries(iconMap).forEach(([sel,href])=>{if(href)setAttr(sel,'href',href)});
 
-    const manifest={
-      name:pwa.name||name,short_name:pwa.shortName||'Fretboard Hero',description:pwa.description||seo.description||'Interactive fretboard trainer.',
-      id:'./',start_url:'./',scope:'./',display:'standalone',orientation:'any',background_color:pwa.backgroundColor||'#05070b',theme_color:pwa.themeColor||'#05070b',
-      categories:pwa.categories||['education','music','games'],icons:[
-        {src:assets.icon192||'icon-192.png',sizes:'192x192',type:'image/png',purpose:'any'},
-        {src:assets.icon512||'icon-512.png',sizes:'512x512',type:'image/png',purpose:'any'},
-        {src:assets.maskable512||'icon-maskable-512.png',sizes:'512x512',type:'image/png',purpose:'maskable'}
-      ]
-    };
+    // Installation uses the checked-in, instrument-specific manifest.
     let manifestLink=q('link[rel="manifest"]');
     if(!manifestLink){manifestLink=document.createElement('link');manifestLink.rel='manifest';document.head.appendChild(manifestLink)}
     manifestLink.href=pwa.manifest||'manifest.webmanifest';
-    document.documentElement.dataset.productReady='true';
-    window.FRETBOARD_ACTIVE_BRANDING=Object.freeze({name,url,ogImage,manifest});
   }
   window.ProductShell=Object.freeze({apply});
 })();
