@@ -139,6 +139,18 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Release notes
 
+### V10.49.13 — Release cleanup
+
+- Audit all 12 stylesheets and all 51 first-party runtime web scripts, including
+  their dynamically generated classes and state-dependent rules.
+- Consolidate shared CSS tokens and typography declarations; remove an overridden
+  icon border width and the obsolete default control-panel grid columns.
+- Reuse the existing music-theory and quiz calculations in the application.
+  Remove unused engine helpers, old home-copy/wordmark fields and unused quiz targets.
+- Keep the checked-in PWA manifests as the installation source; remove the unused
+  in-memory manifest and diagnostic branding global.
+- Refresh changed asset URLs. See `docs/RELEASE_CLEANUP.md` for scope and validation.
+
 ### V10.49.12 — Instrument-aware privacy branding
 
 - Privacy uses the existing Guitar, Bass or Ukulele wordmark and the same product

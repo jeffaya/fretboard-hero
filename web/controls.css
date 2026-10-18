@@ -4,12 +4,11 @@
 .topbar { justify-content: space-between; }
 
 .icon-btn {
-  border: 1px solid #25384a;
+  border: 2px solid #25384a;
   background: #09111b;
   color: #cce9f9;
   border-radius: 12px;
   font-weight: 800;
-  border-width: 2px;
   justify-content: center;
   flex: 0 0 auto;
   width: 44px;
@@ -80,8 +79,6 @@
 
   #qualityControls { grid-template-columns: 1fr 1fr; }
 }
-
-.control-panel { grid-template-columns: 2fr .9fr 1.35fr; }
 
 .control-group label { display: block; margin: 0 5px 10px 0; }
 

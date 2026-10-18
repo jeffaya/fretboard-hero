@@ -22,7 +22,7 @@
   // Shared controls live in core/controls.js.
   ['learn','map','routine'].forEach(name=>FretboardControls.bindDrawer({name}));
 
-  // V6 custom select-buttons. They proxy the existing buttons, so gameplay has
+  // Adaptive select-buttons proxy the existing buttons, so gameplay has
   // one source of truth regardless of responsive presentation.
   function sourceButtonsFor(host){
     const key=host.dataset.selectFor;
@@ -164,8 +164,8 @@
 
 
   const noteAt=(stringIndex,fret)=>engine.noteAt(stringIndex,fret);
-  function degreeFor(pc){const diff=mod(pc-rootPC());if(diff===0)return 'root';if(pc===thirdPC())return 'third';if(diff===2)return 'second';if(diff===5)return 'fourth';if(diff===7)return 'fifth';if(diff===9)return 'sixth';if(diff===10||diff===11)return 'seventh';return null}
-  function pentaPCs(){return intervals[state.quality].penta.map(i=>mod(rootPC()+i))}
+  function degreeFor(pc){return MusicTheory.degreeFor(pc,rootPC(),state.quality)}
+  function pentaPCs(){return MusicTheory.pentatonicPCs(rootPC(),state.quality)}
   function updateLearnLegend(){
     $$('.learn-legend [data-degree-filter]').forEach(button=>{
       const degree=button.dataset.degreeFilter,pill=button.querySelector('.legend');
@@ -191,7 +191,7 @@
   const {surface:premiumSurface,fret:premiumFret,string:premiumString}=appearance;
 
 
-  // V7 FRETBOARD CORE — one structural/visual neck renderer for Learn, Map and Quiz.
+  // Shared neck renderer for Learn, Map and Quiz.
   // Modes only add their own overlays, notes and interactions on top of this shared core.
   function renderFretboardCore(svg,{prefix,maxFret,onSurface,fretOffset=0}={}){
     const layout=FretboardLayout.create({portrait:portrait(),stringCount:STRING_COUNT,maxFret});
@@ -347,7 +347,7 @@
     const quality=target==='third'?(Math.random()<.5?'major':'minor'):null;
     return{root,quality,target}
   }
-  function targetPC(q){const r=PC[q.root];return q.target==='root'?r:q.target==='third'?mod(r+intervals[q.quality].third):mod(r+7)}
+  function targetPC(q){return QuizEngine.targetPC({rootPC:PC[q.root],quality:q.quality,target:q.target,mod})}
   function nextQuestion(){
     const qz=state.quiz;if(!qz||qz.finished)return;if(performance.now()>=qz.endsAt){finishQuiz();return}
     const questionMultiplier=Math.max(1,Math.min(QUIZ_MAX_MULTIPLIER,Number(qz.multiplier)||1));qz.current=randomQuestion(questionMultiplier);if(questionMultiplier<3)qz.current.target='root';qz.current.multiplierAtStart=questionMultiplier;qz.current.window=pickQuizWindow(qz.correct);qz.questionId++;qz.locked=false;qz.inputEnabledAt=performance.now()+120;

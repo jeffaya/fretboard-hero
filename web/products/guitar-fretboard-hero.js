@@ -1,8 +1,7 @@
 window.FRETBOARD_PRODUCTS=window.FRETBOARD_PRODUCTS||{};
 window.FRETBOARD_PRODUCTS.guitar={
   id:'guitar-fretboard-hero',instrument:'guitar',name:'Guitar Fretboard Hero',shareEmoji:'🎸',url:'https://fretboard-hero.com/',
-  branding:{name:'Guitar Fretboard Hero',instrumentName:'Guitar',heroWords:['GUITAR','FRETBOARD','HERO']},
-  home:{taglineHtml:'SEE IT <span>•</span> LEARN IT <span>•</span> PLAY IT',learnDescription:'Pentatonics, triads & chords in every key',mapDescription:'Every note. One neck.',circleDescription:'Keys, chords & harmonic relationships',quizDescription:'Prove you know the neck. No excuses.'},
+  branding:{name:'Guitar Fretboard Hero',instrumentName:'Guitar'},
   seo:{
     title:'Guitar Fretboard Hero — Learn Guitar Fretboard Notes, Pentatonic Scales, Triads & Chords',
     description:'Learn the guitar fretboard with interactive note maps, major and minor pentatonic positions, triads, CAGED chord shapes and a 60-second fretboard quiz. Free, mobile-first and no account required.',
@@ -16,9 +15,9 @@ window.FRETBOARD_PRODUCTS.guitar={
     structuredDescription:'Free interactive guitar fretboard learning tool with note mapping, major and minor pentatonic positions, triads, CAGED chord shapes and a timed fretboard quiz.',
     featureList:['Interactive guitar fretboard note map','Major and minor pentatonic positions','Triad visualization','CAGED chord shapes','Circle of Fifths and key harmony','60-second fretboard quiz','Mobile and tablet friendly']
   },
-  pwa:{manifest:'manifests/guitar.webmanifest',name:'Guitar Fretboard Hero',shortName:'Fretboard Hero',description:'Free interactive guitar fretboard trainer for pentatonic scales, triads, chords, note mapping and quizzes.'},
+  pwa:{manifest:'manifests/guitar.webmanifest',shortName:'Fretboard Hero'},
   assets:{heroLogoViewport:'0 0 900 550',ogImage:'assets/instruments/guitar/og.png?v=20261014.2'},
-  quiz:{durationMs:60000,basePoints:100,scoreTable:[100,250,500,800,1200],maxMultiplier:5,maxFret:15,targets:['root','third','fifth']},
+  quiz:{durationMs:60000,basePoints:100,scoreTable:[100,250,500,800,1200],maxMultiplier:5,maxFret:15},
   ranks:[
     [10000,'🏆','VIRTUOSO','Total fretboard control at speed.'],[9000,'🎸','GUITAR LEGEND','The neck has nowhere left to hide.'],[8000,'🧙','NECK MASTER','Instant command across the fretboard.'],[7000,'✨','FRET WIZARD','Notes appear before you need to search.'],[6000,'👑','GUITAR HERO','Fast, confident fretboard mastery.'],[5300,'⭐','ROCKSTAR','Fast, accurate and stage-ready.'],[4700,'⚡','SHREDDER','The neck is starting to fear you.'],[4200,'🎛️','TONE MASTER','Control, speed and musical awareness.'],[3800,'🌀','STRING BENDER','Strong instincts across the strings.'],[3450,'🔥','FRET MASTER','The fretboard map is locking in.'],[3150,'💀','SOLO MASTER','Strong fretboard instincts.'],[2900,'🤘','RIFF LORD','You command the riffs.'],[2650,'🎤','HEADLINER','Ready for the big stage.'],[2450,'🎪','STAGE PLAYER','Comfortable under pressure.'],[2250,'🎵','LEAD GUITARIST','Solid lead-player territory.'],[2000,'🪓','AXE SLINGER','You know how to handle that axe.'],[1800,'🏄','RHYTHM RIDER','The neck is becoming familiar.'],[1600,'🎸','GIG PLAYER','Good enough to survive the set.'],[1400,'🎶','JAMMER','You can find your way through a jam.'],[1200,'🎼','PLAYER','A solid base is taking shape.'],[1000,'🎧','PRACTICER','The repetitions are paying off.'],[850,'🌱','ROOKIE','The journey has officially begun.'],[700,'🎸','BEGINNER','You found the guitar. Now find the notes.'],[550,'🎵','CHORD CHASER','Always one fret behind the chord.'],[400,'🧭','FRET EXPLORER','Boldly exploring unknown frets.'],[300,'🧠','NOTE HUNTER','The notes are hiding. Keep hunting.'],[200,'🗺️','NECK TOURIST','Nice neck. First time here?'],[100,'🙈','FRET GUESSER','Confidence: high. Accuracy: adventurous.'],[50,'😬','NEEDS A TUNER','The guitar might be fine. We should still check.'],[0,'💀','AIR GUITARIST','At least air guitar has no wrong frets.']
   ]
