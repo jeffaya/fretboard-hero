@@ -18,7 +18,6 @@
       const response=await fetch('./site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
       await load('./core/instrument-selection.js?v=10.49.12');
-      const CATALOG=FretboardInstrumentSelection.catalog;
       await load('./core/native-billing.js?v=10.49.10');
       const nativeUnlocked=await FretboardBilling.initialize(config);
       await load('./core/modal.js?v=10.27.4');
@@ -26,7 +25,7 @@
       window.FRETBOARD_ACCESS=FretboardAccess.create(config.nativeBilling===true?nativeUnlocked:await FretboardAccess.resolve(config,location.search));
       const defaultInstrument=config.instrument;
       config.instrument=FretboardInstrumentSelection.resolve(defaultInstrument);
-      const entry=CATALOG[config.instrument];if(!entry)throw new Error(`Unknown instrument "${config.instrument}". Supported: ${Object.keys(CATALOG).join(', ')}`);
+      const entry=FretboardInstrumentSelection.catalog[config.instrument];
       window.FRETBOARD_SITE_CONFIG=Object.freeze({...config,defaultInstrument});
       // Fetch scripts concurrently while classic-script async=false preserves execution order.
       await Promise.all([...CORE,...MODES,entry.instrument,entry.product].map(load));

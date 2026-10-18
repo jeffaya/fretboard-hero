@@ -3,16 +3,22 @@
   // All translations remain readable in the initial HTML without JavaScript.
   const articles=[...document.querySelectorAll('article[lang]')],links=[...document.querySelectorAll('[data-policy-language]')];
   const menu=document.querySelector('.language-menu'),trigger=menu.querySelector('summary');
+  const navigation=menu.querySelector('nav'),description=document.querySelector('meta[name="description"]');
   const label=document.querySelector('#language-label'),main=document.querySelector('main');
   const skip=document.querySelector('.skip-link'),back=document.querySelector('#back-label');
-  const supported=new Set(articles.map(article=>article.lang)),storageKey='fretboard-language';
+  const homeLinks=[...document.querySelectorAll('[data-policy-home]')];
+  const brand=document.querySelector('.brand'),logo=document.querySelector('.brand svg'),favicon=document.querySelector('link[rel="icon"]');
+  const policies=new Map(articles.map(article=>[article.lang,{
+    article,title:article.querySelector('h1').textContent,intro:article.querySelector('.policy-intro').textContent
+  }]));
+  const storageKey='fretboard-language';
   const selection=window.FretboardInstrumentSelection,products=new Map();
   let defaultInstrument='guitar',instrument=selection.resolve(defaultInstrument),brandName='Fretboard Hero';
   function updateHomeLinks(locale){
-    document.querySelectorAll('[data-policy-home]').forEach(link=>{link.href='./?lang='+locale+'&instrument='+instrument});
+    homeLinks.forEach(link=>{link.href='./?lang='+locale+'&instrument='+instrument});
   }
   function updateTitle(locale){
-    document.title=articles.find(article=>article.lang===locale).querySelector('h1').textContent+' — '+brandName;
+    document.title=policies.get(locale).title+' — '+brandName;
   }
   async function updateInstrument(){
     const chosen=selection.resolve(defaultInstrument);instrument=chosen;
@@ -31,16 +37,16 @@
       if(instrument!==chosen)return;
       const product=window.FRETBOARD_PRODUCTS[entry.productKey];
       brandName=product.branding?.name||product.name;
-      document.querySelector('.brand svg').setAttribute('viewBox',product.assets.heroLogoViewport);
-      document.querySelector('.brand').setAttribute('aria-label',brandName);
-      document.querySelector('link[rel="icon"]').href='./assets/instruments/'+entry.productKey+'/favicon.ico';
+      logo.setAttribute('viewBox',product.assets.heroLogoViewport);
+      brand.setAttribute('aria-label',brandName);
+      favicon.href='./assets/instruments/'+entry.productKey+'/favicon.ico';
       updateTitle(document.documentElement.lang);
     }catch{ /* The static policy and its navigation stay usable if branding fails to load. */ }
   }
   function match(value){
     if(typeof value!=='string')return null;
     const base=value.replace(/_/g,'-').toLowerCase().split('-')[0];
-    return base==='pt'?'pt-BR':base==='zh'?'zh-CN':supported.has(base)?base:null;
+    return base==='pt'?'pt-BR':base==='zh'?'zh-CN':policies.has(base)?base:null;
   }
   function requested(){
     const url=new URL(location.href),hash=url.hash.slice(1);
@@ -51,15 +57,16 @@
     return match(saved)||(navigator.languages||[navigator.language]).map(match).find(Boolean)||'en';
   }
   function select(locale){
-    const article=articles.find(item=>item.lang===locale);if(!article)return;
+    const policy=policies.get(locale);if(!policy)return;
+    const {article}=policy;
     articles.forEach(item=>{item.hidden=item!==article});
     links.forEach(link=>{link.setAttribute('aria-current',String(link.dataset.policyLanguage===locale))});
     document.documentElement.lang=locale;
     updateTitle(locale);
-    document.querySelector('meta[name="description"]').content=article.querySelector('.policy-intro').textContent;
+    description.content=policy.intro;
     label.textContent=links.find(link=>link.dataset.policyLanguage===locale).textContent;
     trigger.setAttribute('aria-label',article.dataset.languageLabel);
-    menu.querySelector('nav').setAttribute('aria-label',article.dataset.languageLabel);
+    navigation.setAttribute('aria-label',article.dataset.languageLabel);
     skip.textContent=article.dataset.skipLabel;back.textContent=article.dataset.backLabel;
     updateHomeLinks(locale);
     menu.open=false;

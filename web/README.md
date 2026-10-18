@@ -148,6 +148,8 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 - The home passes both language and active instrument to the external privacy
   page. Language changes and return links preserve the instrument; the favicon,
   accessible brand name and document title follow it too.
+- Clean up the privacy script's repeated DOM lookups and centralize language
+  content lookup. Instrument validation stays in the shared selector.
 
 ### V10.49.11 — Localized privacy policy
 
