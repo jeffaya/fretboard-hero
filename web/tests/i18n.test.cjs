@@ -11,6 +11,11 @@ test('Browser negotiation supports regions, ordered preferences and English fall
 test('Every catalog has the complete key set and preserves template placeholders',()=>{
  const keys=Object.keys(catalogs.en).sort();for(const locale of locales){assert.deepEqual(Object.keys(catalogs[locale]).sort(),keys);for(const key of keys){const placeholders=s=>[...new Set(s.match(/\{\w+\}/g)||[])].sort();assert.deepEqual(placeholders(catalogs[locale][key]),placeholders(key),`${locale}: ${key}`);assert.ok(catalogs[locale][key].trim())}}
 });
+test('Billing error titles, guidance and support details are localized in every supported language',async()=>{
+ const keys=['Error details','Could not complete the purchase','Purchases are unavailable','{store} is unavailable','Unable to connect to the payment service. Check your connection, then try again.','Lifetime access is unavailable','{store} could not load this purchase. Please try again later.','Could not restore your access','Could not verify your purchase','Could not open payment'];
+ for(const locale of locales){const i=await create({languages:[locale]});for(const key of keys){const message=key.replace('{store}','Google Play');assert.equal(i.text(message),catalogs[locale][key].replace('{store}','Google Play'));if(locale!=='en')assert.notEqual(i.text(message),message)}}
+ const fr=await create({languages:['fr']});assert.equal(fr.text('Google Play is unavailable'),'Google Play est indisponible');
+});
 test('All ten routine inspirations, the encouragement and its credit localize in every supported language',async()=>{
  const c={window:{}};vm.runInNewContext(fs.readFileSync('web/core/routine-encouragement.js','utf8'),c);
  const keys=['Keep it going!','Inspired by',...c.window.RoutineEncouragement.messages.map(message=>message.text)];

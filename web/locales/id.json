@@ -411,5 +411,15 @@
   "All notes, keys and modes.": "Semua nada, tonalitas, dan mode.",
   "Unlock for life": "Buka akses seumur hidup",
   "Restore your access": "Pulihkan akses Anda",
-  "Already purchased on another phone? Restore your access with the same account, without paying again.": "Sudah membeli di ponsel lain? Pulihkan akses Anda dengan akun yang sama, tanpa membayar lagi."
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "Sudah membeli di ponsel lain? Pulihkan akses Anda dengan akun yang sama, tanpa membayar lagi.",
+  "Error details": "Detail kesalahan",
+  "Could not complete the purchase": "Pembelian tidak dapat diselesaikan",
+  "Purchases are unavailable": "Pembelian tidak tersedia",
+  "{store} is unavailable": "{store} tidak tersedia",
+  "Unable to connect to the payment service. Check your connection, then try again.": "Tidak dapat terhubung ke layanan pembayaran. Periksa koneksi Anda, lalu coba lagi.",
+  "Lifetime access is unavailable": "Akses seumur hidup tidak tersedia",
+  "{store} could not load this purchase. Please try again later.": "{store} tidak dapat memuat pembelian ini. Silakan coba lagi nanti.",
+  "Could not restore your access": "Akses Anda tidak dapat dipulihkan",
+  "Could not verify your purchase": "Pembelian Anda tidak dapat diverifikasi",
+  "Could not open payment": "Halaman pembayaran tidak dapat dibuka"
 }

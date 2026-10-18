@@ -221,3 +221,36 @@ body[data-access="demo"] .circle-wheel-svg { touch-action: pan-y; cursor: defaul
 }
 
 .billing-status:empty { display: none; }
+
+.billing-error {
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #ff6b7d;
+  border-radius: 14px;
+  background: linear-gradient(135deg,#391825,#24111e);
+  box-shadow: 0 0 18px #ff40551a;
+  color: #ffe5e8;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.billing-error[hidden], .billing-diagnostics[hidden] { display: none; }
+
+.billing-error-heading { display: flex; align-items: flex-start; gap: 10px; color: #ffb9c2; font-size: 19px; line-height: 1.25; }
+
+.billing-error-heading>span { display: flex; flex: 0 0 24px; color: #ff8191; }
+
+.billing-error-heading svg { width: 24px; height: 24px; }
+
+.billing-error-heading strong { min-width: 0; font-weight: 800; }
+
+.billing-error-description { margin: 9px 0 0; font-size: 15px; line-height: 1.45; }
+
+.billing-diagnostics { min-width: 0; margin-top: 12px; border-top: 1px solid #ff81914d; font-size: 14px; color: #ffd3db; }
+
+.billing-diagnostics summary { cursor: pointer; padding: 12px 0 4px; min-height: 24px; line-height: 24px; }
+
+.billing-diagnostics summary:focus-visible { outline: 2px solid #ffb9c2; outline-offset: 3px; border-radius: 3px; }
+
+.billing-diagnostics code { display: block; margin-top: 8px; padding: 10px; border-radius: 8px; background: #14091280; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; line-height: 1.5; }

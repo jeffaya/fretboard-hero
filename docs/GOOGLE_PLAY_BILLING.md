@@ -96,7 +96,8 @@ Build sequentially within one checkout: all variants reuse the same native tree.
 The native plugin gets the installed package ID from Android, never from the selected
 instrument. The backend allowlists the three apps and verifies the token against that
 exact package and `lifetime_access` using Google's API. It acknowledges purchases and never
-consumes them. Tokens and raw Google errors are not logged or sent back to JavaScript.
+consumes them. Tokens and raw backend/Developer API errors are not logged or sent back
+to JavaScript. Client-side Play Billing SDK errors have separate support diagnostics below.
 
 After HTTPS verification, Android stores the token in an AES-GCM authenticated file
 under `getNoBackupFilesDir()`, with its key in Android Keystore. Authentication binds
@@ -130,6 +131,44 @@ Store AAB with a higher version code and install that update through Play testin
 Reinstallation, cleared app data or a new device requires an online restore with the
 purchasing Google account **in the same app**. No proof is transferred in Android backup.
 
+## Diagnose an unavailable Google Play connection
+
+After a failed purchase or restore, expand **Error details** in the app and record
+the `PLAY_...` code and SDK debug message. This section stays collapsed unless opened,
+is hidden after a successful action, and renders the SDK message as plain text.
+It never includes purchase tokens or raw verification-server responses.
+
+| Diagnostic | Meaning and next check |
+| --- | --- |
+| `PLAY_SETUP_<number>` | Play Billing connection failed before product lookup. Read Google's SDK message; the number is its BillingResponseCode. |
+| `PLAY_SETUP_3` | Billing is unavailable for this device/account. Check the SDK message, Play Store version and any account/device purchase restrictions. A missing product is not established by this code. |
+| `PLAY_SETUP_TIMEOUT` | No connection result within twelve seconds. Check connectivity and retry manually. |
+| `PLAY_CATALOG_<number>` | Play connected, but the catalog request failed. |
+| `PLAY_PRODUCT_UNAVAILABLE` | The catalog did not return `lifetime_access`. Check its app, active status, countries and tester eligibility in Play Console. |
+| `PLAY_OFFER_UNAVAILABLE` | No eligible permanent `buy` option was returned. Check activation, price and countries for that option. |
+| `PLAY_LAUNCH_<number>`, `PLAY_PURCHASE_<number>` | The payment sheet or purchase callback failed. Read the SDK message; the app never automatically opens another purchase flow for these errors. |
+| `PLAY_RESTORE_<number>` | Play could not query existing purchases. Existing verified ownership is preserved. |
+
+Explicit purchase/restore actions retry only setup/catalog codes `-1`, `2`, `6`
+and `12`, at most twice after one and two seconds. Retries stop when the app is in
+the background or another verification unlocks it. These stages precede the payment
+sheet; code `3`, configuration failures, missing products/offers and payment-stage
+errors are not replayed. Failed pre-payment checks do not start payment recovery loops.
+A missing cached price is fetched within the same click before opening the purchase.
+Quiet background catalog responses must not erase the visible failure or its details.
+
+The paywall groups all explicit billing failures in a red alert panel below the
+restore explanation. Store connection, catalog, payment, verification and restoration
+errors get a clear localized title and explanation. SDK details appear inside the
+panel only when provided, are collapsed for each new failure, and remain plain text.
+Starting a new action or completing an explicit check clears the old error. Quiet
+background checks preserve it until verified ownership changes. Pending payments,
+cancellations and a completed check finding no purchase use the ordinary status text.
+
+This diagnostic UI and the native codes require a newly built and installed AAB/APK;
+a Worker-only deployment cannot add them to an existing installation. Automated tests
+do not establish which Google error occurred on the reported version-code-5 device.
+
 ## Validation before publication
 
 Automated checks run the real sync/preparation scripts for both profiles and all apps,
@@ -154,4 +193,5 @@ References:
 - https://developer.android.com/google/play/billing/integrate
 - https://developer.android.com/google/play/billing/security
 - https://developer.android.com/google/play/billing/test
+- https://developer.android.com/google/play/billing/errors
 - https://developer.android.com/privacy-and-security/keystore

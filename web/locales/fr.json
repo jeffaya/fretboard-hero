@@ -411,5 +411,15 @@
   "All notes, keys and modes.": "Toutes les notes, tonalités et modes.",
   "Unlock for life": "Débloquer à vie",
   "Restore your access": "Récupérer votre accès",
-  "Already purchased on another phone? Restore your access with the same account, without paying again.": "Déjà acheté sur un autre téléphone ? Récupérez votre accès avec le même compte, sans repayer."
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "Déjà acheté sur un autre téléphone ? Récupérez votre accès avec le même compte, sans repayer.",
+  "Error details": "Détails de l’erreur",
+  "Could not complete the purchase": "Impossible de finaliser l’achat",
+  "Purchases are unavailable": "Achats indisponibles",
+  "{store} is unavailable": "{store} est indisponible",
+  "Unable to connect to the payment service. Check your connection, then try again.": "Impossible de se connecter au service de paiement. Vérifiez votre connexion, puis réessayez.",
+  "Lifetime access is unavailable": "Accès à vie indisponible",
+  "{store} could not load this purchase. Please try again later.": "{store} n’a pas pu charger cet achat. Réessayez plus tard.",
+  "Could not restore your access": "Impossible de récupérer votre accès",
+  "Could not verify your purchase": "Impossible de vérifier votre achat",
+  "Could not open payment": "Impossible d’ouvrir le paiement"
 }

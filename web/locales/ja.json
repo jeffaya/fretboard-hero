@@ -411,5 +411,15 @@
   "All notes, keys and modes.": "すべての音、キー、モード。",
   "Unlock for life": "永久にアンロック",
   "Restore your access": "アクセスを復元",
-  "Already purchased on another phone? Restore your access with the same account, without paying again.": "別のスマートフォンで購入済みですか？同じアカウントでアクセスを復元できます。追加のお支払いは不要です。"
+  "Already purchased on another phone? Restore your access with the same account, without paying again.": "別のスマートフォンで購入済みですか？同じアカウントでアクセスを復元できます。追加のお支払いは不要です。",
+  "Error details": "エラーの詳細",
+  "Could not complete the purchase": "購入を完了できませんでした",
+  "Purchases are unavailable": "購入は利用できません",
+  "{store} is unavailable": "{store}を利用できません",
+  "Unable to connect to the payment service. Check your connection, then try again.": "決済サービスに接続できません。接続を確認して、もう一度お試しください。",
+  "Lifetime access is unavailable": "永久アクセスを利用できません",
+  "{store} could not load this purchase. Please try again later.": "{store}でこの購入情報を読み込めませんでした。しばらくしてからもう一度お試しください。",
+  "Could not restore your access": "アクセスを復元できませんでした",
+  "Could not verify your purchase": "購入を確認できませんでした",
+  "Could not open payment": "決済画面を開けませんでした"
 }
