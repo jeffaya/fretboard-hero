@@ -103,8 +103,9 @@ Known product identities (see `web/README.md` for full changelog):
 - `app/instruments.json` owns the three app identities, names and launcher icons.
   Guitar (`com.guitar.fretboardhero`), Bass (`com.bass.fretboardhero`) and Ukulele
   (`com.ukulele.fretboardhero`) each include all three playable instruments.
-  Selection never changes the installed app ID. The `full_access` entitlement
-  unlocks everything inside that app; purchases are not shared between apps.
+  Selection never changes the installed app ID. The `lifetime_access` Google Play
+  product (`full_access` on the App Store) unlocks everything inside that app;
+  purchases are not shared between apps.
 
 ## 4. Build pipeline — exact mechanics
 

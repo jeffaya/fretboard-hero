@@ -3,11 +3,17 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { handlePlayBilling, PACKAGES } from '../play-billing.mjs';
 const env={PLAY_SERVICE_ACCOUNT_EMAIL:'test@example.com',PLAY_SERVICE_ACCOUNT_PRIVATE_KEY:'test-only-placeholder'};
-const input={packageName:'com.guitar.fretboardhero',productId:'full_access',purchaseToken:'valid.test-token'};
+const input={packageName:'com.guitar.fretboardhero',productId:'lifetime_access',purchaseToken:'valid.test-token'};
 const request=(body=input)=>new Request('https://fretboard-hero.com/api/billing/google/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
 const response=(body,status=200)=>Response.json(body,{status});
 const purchased={purchaseState:0,consumptionState:0,acknowledgementState:1};
 const deps=fetcher=>({fetcher,getAccessToken:async()=>'test-access-token'});
+test('The deleted full_access product is rejected before contacting Google',async()=>{
+ for(const packageName of PACKAGES){
+  const r=await handlePlayBilling(request({...input,packageName,productId:'full_access'}),env,deps(async()=>assert.fail('Deleted product must not reach Google')));
+  assert.equal(r.status,400);assert.deepEqual(await r.json(),{error:'invalid_request'});
+ }
+});
 test('The server allowlist matches all three application identities, without Preview IDs',()=>{
  const catalog=JSON.parse(readFileSync(new URL('../../app/instruments.json',import.meta.url)));
  assert.equal(PACKAGES.size,3);assert.deepEqual([...PACKAGES].sort(),Object.values(catalog).map(app=>app.appId).sort());
@@ -18,17 +24,17 @@ test('A purchase token is verified for its own application and cannot unlock ano
    assert.ok(url.includes(`/applications/${target}/`));
    return target===owner?response(purchased):response({},404);
   }));
-  assert.equal(r.status,200);assert.deepEqual(await r.json(),{unlocked:target===owner,status:target===owner?'purchased':'not_owned',packageName:target,productId:'full_access'});
+  assert.equal(r.status,200);assert.deepEqual(await r.json(),{unlocked:target===owner,status:target===owner?'purchased':'not_owned',packageName:target,productId:'lifetime_access'});
  }
 });
 test('Each allowed package grants one non-consumable entitlement, independent of selected instrument',async()=>{
- for(const packageName of PACKAGES){let calls=0;const r=await handlePlayBilling(request({...input,packageName}),env,deps(async(url,options)=>{calls++;assert.ok(url.includes('/applications/'+packageName+'/'));assert.ok(url.includes('/products/full_access/tokens/valid.test-token'));assert.equal(options.headers.Authorization,'Bearer test-access-token');return response(purchased)}));assert.equal(r.status,200);assert.deepEqual(await r.json(),{unlocked:true,status:'purchased',packageName,productId:'full_access'});assert.equal(calls,1);assert.equal(r.headers.get('Cache-Control'),'no-store')}
+ for(const packageName of PACKAGES){let calls=0;const r=await handlePlayBilling(request({...input,packageName}),env,deps(async(url,options)=>{calls++;assert.ok(url.includes('/applications/'+packageName+'/'));assert.ok(url.includes('/products/lifetime_access/tokens/valid.test-token'));assert.equal(options.headers.Authorization,'Bearer test-access-token');return response(purchased)}));assert.equal(r.status,200);assert.deepEqual(await r.json(),{unlocked:true,status:'purchased',packageName,productId:'lifetime_access'});assert.equal(calls,1);assert.equal(r.headers.get('Cache-Control'),'no-store')}
 });
 test('First purchase is acknowledged and never consumed',async()=>{
  const urls=[];const r=await handlePlayBilling(request(),env,deps(async(url,options)=>{urls.push(url);if(url.endsWith(':acknowledge')){assert.equal(options.method,'POST');return new Response(null,{status:204})}return response({...purchased,acknowledgementState:0})}));assert.equal((await r.json()).unlocked,true);assert.equal(urls.length,2);assert.ok(urls[1].endsWith(':acknowledge'));
 });
 test('Pending, refunded, consumed and invalid purchases never unlock or get acknowledged',async()=>{
- for(const [body,status] of [[{...purchased,purchaseState:2},'pending'],[{...purchased,purchaseState:1},'not_owned'],[{...purchased,consumptionState:1},'not_owned'],[{...purchased,productId:'another'},'not_owned']]){let calls=0;const r=await handlePlayBilling(request(),env,deps(async()=>{calls++;return response(body)}));assert.deepEqual(await r.json(),{unlocked:false,status,packageName:input.packageName,productId:'full_access'});assert.equal(calls,1)}
+ for(const [body,status] of [[{...purchased,purchaseState:2},'pending'],[{...purchased,purchaseState:1},'not_owned'],[{...purchased,consumptionState:1},'not_owned'],[{...purchased,productId:'another'},'not_owned']]){let calls=0;const r=await handlePlayBilling(request(),env,deps(async()=>{calls++;return response(body)}));assert.deepEqual(await r.json(),{unlocked:false,status,packageName:input.packageName,productId:'lifetime_access'});assert.equal(calls,1)}
  for(const status of [400,404,410]){const r=await handlePlayBilling(request(),env,deps(async()=>response({},status)));assert.equal((await r.json()).unlocked,false)}
 });
 test('Concurrent acknowledgement succeeds only after rechecking active ownership',async()=>{
@@ -68,5 +74,5 @@ test('Malformed acknowledgement rechecks are outages, not revocations',async()=>
 test('A pending acknowledgement recheck preserves the pending status',async()=>{
  let n=0;
  const r=await handlePlayBilling(request(),env,deps(async()=>++n===1?response({...purchased,acknowledgementState:0}):n===2?response({},409):response({purchaseState:2})));
- assert.equal(r.status,200);assert.deepEqual(await r.json(),{unlocked:false,status:'pending',packageName:input.packageName,productId:'full_access'});
+ assert.equal(r.status,200);assert.deepEqual(await r.json(),{unlocked:false,status:'pending',packageName:input.packageName,productId:'lifetime_access'});
 });

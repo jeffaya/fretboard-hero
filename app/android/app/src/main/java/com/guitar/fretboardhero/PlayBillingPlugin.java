@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 /** Google Play entitlement belongs to this package, regardless of selected instrument. */
 @CapacitorPlugin(name = "PlayBilling")
 public class PlayBillingPlugin extends Plugin implements PurchasesUpdatedListener {
-    private static final String PRODUCT = "full_access";
+    private static final String PRODUCT = "lifetime_access";
     private static final String VERIFY_URL = "https://fretboard-hero.com/api/billing/google/verify";
     private VerifiedPurchaseCache cache;
     private BillingClient billing;
