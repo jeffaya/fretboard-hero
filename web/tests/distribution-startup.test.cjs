@@ -88,7 +88,12 @@ for(const application of Object.keys(catalog)) for(const platform of ['android',
   assert.equal(ctx.FRETBOARD_ACCESS.unlocked,owned);assert.equal(ctx.FRETBOARD_SITE_CONFIG.instrument,instrument);
   assert.equal(ctx.FRETBOARD_SITE_CONFIG.appId,catalog[application].appId);assert.equal(ctx.FRETBOARD_SITE_CONFIG.defaultInstrument,application);
   assert.equal(new URL(privacy.href).searchParams.get('instrument'),instrument);assert.equal(new URL(privacy.href).searchParams.get('lang'),'fr');
-  assert.equal(ctx.FRETBOARD_ACCESS.allows('root','C'),owned);assert.equal(ctx.FRETBOARD_ACCESS.allows('mode','triads'),owned);
+  const access=ctx.FRETBOARD_ACCESS;
+  for(const [feature,value] of [['root','C'],['mapNote','all'],['routineRoot','B'],['routineQuality','major']])assert.equal(access.allows(feature,value),owned,feature);
+  assert.equal(access.allows('circle'),true,'circle navigation is free');
+  for(const [feature,values] of Object.entries({mode:['pentatonic','triads','chords','arpeggios'],quality:['minor','major'],position:['all','1','2','3','4','5']})){
+   for(const value of values)assert.equal(access.allows(feature,value),true,`${feature}: ${value} is free in Learn`);
+  }
   assert.equal(rows.length,0,'purchase controls belong in the dialog');assert.equal(footer.children.length,owned?0:1);
   if(!owned){const link=footer.children[0].children[1];assert.equal(link.textContent,'Unlock full access');link.events.click();assert.equal(app.children[0].hidden,false,'the footer link opens the purchase dialog')}
  });

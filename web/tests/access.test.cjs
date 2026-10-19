@@ -5,12 +5,23 @@ test('Demo defaults fail closed; only explicit boolean true or the valid key unl
  assert.equal(await Access.resolve(config,''),false);assert.equal(await Access.resolve(config,'?key=wrong'),false);assert.equal(await Access.resolve(config,'?key=valid-test-key'),true);assert.equal(await Access.resolve({unlocked:true}),true);
  await assert.rejects(Access.resolve({unlocked:'true'}));await assert.rejects(Access.resolve({}));
 });
-test('Demo policy allows A minor pentatonic only, fixed circle and A minor routine',()=>{
+test('Free access allows the circle, keeps Learn and Map in A and the routine in A minor',()=>{
  const a=Access.create(false);assert.equal(a.allows('mapNote','A'),true);assert.deepEqual(Array.from(a.notes),['A']);
  for(const n of ['all','A#','B','C','C#','D','D#','E','F','F#','G','G#'])assert.equal(a.allows('mapNote',n),false);
- assert.equal(a.allows('root','A'),true);assert.equal(a.allows('root','C'),false);assert.equal(a.allows('quality','major'),false);assert.equal(a.allows('mode','pentatonic'),true);for(const m of ['triads','chords','arpeggios'])assert.equal(a.allows('mode',m),false);
- assert.equal(a.allows('position','1'),true);for(const p of ['all','2','3','4','5'])assert.equal(a.allows('position',p),false);assert.equal(a.allows('circle'),false);assert.equal(a.allows('routineRoot','A'),true);assert.equal(a.allows('routineRoot','C'),false);assert.equal(a.allows('routineQuality','minor'),true);assert.equal(a.allows('routineQuality','major'),false);
+ assert.equal(a.unlocked,false);assert.equal(a.allows('root','A'),true);
+ for(const root of ['A#','B','C','C#','D','D#','E','F','F#','G','G#'])assert.equal(a.allows('root',root),false);
+ assert.equal(a.allows('circle'),true);assert.equal(a.allows('routineRoot','A'),true);assert.equal(a.allows('routineRoot','C'),false);assert.equal(a.allows('routineQuality','minor'),true);assert.equal(a.allows('routineQuality','major'),false);assert.equal(a.allows('unknown'),false);
  const full=Access.create(true);for(const f of ['circle','routineRoot','routineQuality','root','quality','mode','mapNote','position'])assert.equal(full.allows(f,'anything'),true);assert.equal(full.notes,null);
+});
+test('Free Learn allows both qualities, every registered mode and all pentatonic positions on all instruments',()=>{
+ const c={window:{}};vm.createContext(c);
+ for(const file of ['core/music-theory','instruments/guitar','instruments/bass-4','instruments/ukulele'])vm.runInContext(fs.readFileSync(`web/${file}.js`,'utf8'),c);
+ const access=Access.create(false);
+ for(const profile of Object.values(c.window.FRETBOARD_INSTRUMENTS)){
+  for(const quality of ['minor','major'])assert.equal(access.allows('quality',quality),true,`${profile.id}: ${quality}`);
+  for(const mode of Object.values(profile.modes))assert.equal(access.allows('mode',mode.plugin),true,`${profile.id}: ${mode.plugin}`);
+  for(const position of profile.modes.penta.context.values)assert.equal(access.allows('position',position),true,`${profile.id}: ${position}`);
+ }
 });
 test('Map filters hidden pitches at render time rather than only hiding controls',()=>{
  const c={window:{},MusicTheory:{noteName:n=>['A','B','C'][n]},FretboardLayout:{fretCenter:(f,p)=>p(f)}};vm.createContext(c);vm.runInContext(fs.readFileSync('web/core/fretboard-map.js','utf8'),c);const notes=[];
