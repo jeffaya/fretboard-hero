@@ -10,7 +10,8 @@
     return Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('')===config.testKeyHash;
   }
   function create(unlocked){
-    const allows=(feature,value)=>unlocked||({root:value==='A',quality:value==='minor',mapNote:value==='A',routineRoot:value==='A',routineQuality:value==='minor',circle:false,position:String(value)==='1',mode:value==='pentatonic'}[feature]===true);
+    // Learn modes, positions and major/minor are free; other roots still require access.
+    const allows=(feature,value)=>unlocked||({root:value==='A',quality:true,mapNote:value==='A',routineRoot:value==='A',routineQuality:value==='minor',circle:false,position:true,mode:true}[feature]===true);
     return Object.freeze({unlocked,allows,notes:unlocked?null:DEMO_MAP_NOTES});
   }
   function storeUrl(config,platform){

@@ -245,8 +245,10 @@ unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-br
 
 `web/site.config.json` is the central configuration:
 
-- `unlocked: false`: web preview, A minor pentatonic position 1 in Learn, the A note only in Map,
-  the A minor Daily Routine, and the C major / A minor circle preview.
+- `unlocked: false`: Learn in A with major/minor, every mode supported by the selected
+  instrument, and all positions (P1–P5 or ALL), string groups, chord shapes and arpeggio types.
+  Map keeps the A note only, Daily Routine stays in A minor, and the circle remains a
+  C major / A minor preview. These free permissions also apply to unpurchased native apps.
   The Quiz and all three instruments remain available.
 - `unlocked: true`: complete access.
 - `publicUrl`: public website URL included in Quiz score sharing, including native builds. Change it when moving to a new domain. Query parameters and fragments are omitted.
@@ -256,8 +258,8 @@ unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-br
 Three separate apps — **Guitar**, **Bass** and **Ukulele Fretboard Hero** — share
 one engine. `app/instruments.json` owns each app's ID, name and launcher icon.
 Each app includes all instruments. One non-consumable purchase (`lifetime_access`
-on Google Play, `full_access` on the App Store) unlocks all notes, keys, positions,
-modes and premium routines within the purchased app.
+on Google Play, `full_access` on the App Store) unlocks the other Learn roots,
+all Map notes, circle navigation and premium routine settings within the purchased app.
 Purchases are not transferred between the three apps or between Google and Apple.
 The chosen instrument is remembered locally (`fretboard-instrument`). Switching
 instrument does not change the installed app identity or its purchase state.
