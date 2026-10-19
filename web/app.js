@@ -136,7 +136,6 @@
   $$('#modeControls button').forEach(b=>premium.mark(b,'mode',ModeRegistry.kind(instrument,b.dataset.mode)));
   $$('#mapNoteControls button').forEach(b=>premium.mark(b,'mapNote',b.dataset.mapNote));
   premium.mark($('#circlePrevious'),'circle');premium.mark($('#circleNext'),'circle');
-  if(!access.unlocked){$('#circleWheel').setAttribute('aria-label','C major and A minor preview. Unlock the app to rotate.');$('.circle-navigation p').textContent='C major · A minor preview · Unlock to rotate';$('#circleWheel').addEventListener('click',premium.open);$('#circleWheel').addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Enter',' '].includes(e.key)){e.preventDefault();premium.open()}})}
   requestAnimationFrame(refreshAllSelects);
   function renderFretboardMap(){
     requestAnimationFrame(refreshAllSelects);
@@ -153,7 +152,7 @@
   function renderCircle(){
     const wheel=$('#circleWheel');if(!wheel)return;
     const key=CircleOfFifths.getKey(state.circleKey);
-    CircleRenderer.render({svg:wheel,selected:state.circleKey,onSelect:selectCircleKey,interactive:access.unlocked});
+    CircleRenderer.render({svg:wheel,selected:state.circleKey,onSelect:selectCircleKey,interactive:access.allows('circle')});
     $('#circleKeyTitle').textContent=`${key.name} MAJOR`;
     $('#circleRelative').textContent=`Relative minor • ${key.minor}`;
     $('#circleSignature').textContent=key.accidentals;

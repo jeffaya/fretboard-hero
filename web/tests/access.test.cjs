@@ -5,12 +5,12 @@ test('Demo defaults fail closed; only explicit boolean true or the valid key unl
  assert.equal(await Access.resolve(config,''),false);assert.equal(await Access.resolve(config,'?key=wrong'),false);assert.equal(await Access.resolve(config,'?key=valid-test-key'),true);assert.equal(await Access.resolve({unlocked:true}),true);
  await assert.rejects(Access.resolve({unlocked:'true'}));await assert.rejects(Access.resolve({}));
 });
-test('Demo keeps Learn in A, Map on A, a fixed circle and the A minor routine',()=>{
+test('Free access allows the circle, keeps Learn and Map in A and the routine in A minor',()=>{
  const a=Access.create(false);assert.equal(a.allows('mapNote','A'),true);assert.deepEqual(Array.from(a.notes),['A']);
  for(const n of ['all','A#','B','C','C#','D','D#','E','F','F#','G','G#'])assert.equal(a.allows('mapNote',n),false);
  assert.equal(a.unlocked,false);assert.equal(a.allows('root','A'),true);
  for(const root of ['A#','B','C','C#','D','D#','E','F','F#','G','G#'])assert.equal(a.allows('root',root),false);
- assert.equal(a.allows('circle'),false);assert.equal(a.allows('routineRoot','A'),true);assert.equal(a.allows('routineRoot','C'),false);assert.equal(a.allows('routineQuality','minor'),true);assert.equal(a.allows('routineQuality','major'),false);assert.equal(a.allows('unknown'),false);
+ assert.equal(a.allows('circle'),true);assert.equal(a.allows('routineRoot','A'),true);assert.equal(a.allows('routineRoot','C'),false);assert.equal(a.allows('routineQuality','minor'),true);assert.equal(a.allows('routineQuality','major'),false);assert.equal(a.allows('unknown'),false);
  const full=Access.create(true);for(const f of ['circle','routineRoot','routineQuality','root','quality','mode','mapNote','position'])assert.equal(full.allows(f,'anything'),true);assert.equal(full.notes,null);
 });
 test('Free Learn allows both qualities, every registered mode and all pentatonic positions on all instruments',()=>{
