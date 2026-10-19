@@ -25,6 +25,15 @@ For CSS changes, compare Home, Learn/Map controls, Daily Routine completion/repl
 
 Pentatonic position guides are owned by `core/pentatonic-renderer.js` and `fretboard.css`. They form one linear strip below the horizontal neck or beside the vertical neck. Shared fret space is divided between neighbouring positions, with a small gap between each closing/opening bracket. The strip is computed before filtering so isolated positions stay in the same place. Note geometry remains unchanged. The SVG reserves room for the guides while keeping badge text at a readable screen size. Short landscape phones scroll vertically to preserve neck size. The stage resize observer updates the guide layout when controls or orientation change.
 
+The Quiz screen has an explicit viewport height (`100dvh`, with a `100vh` fallback),
+so its flex stage receives a definite remaining height below navigation, HUD and
+question. On portrait phones and tablets, the SVG is absolutely positioned inside
+that stage with explicit percentage width and height. Keep this separate from the
+SVG's intrinsic flex sizing: an auto width and percentage height can leave the neck
+invisible in WebKit. The existing viewBox preserves the neck's aspect ratio and the
+resize handler rebuilds its geometry after rotation. Check first start, replay and
+portrait/landscape rotation on iPhone and iPad when changing this layout.
+
 ## V10.6.3 — Instrument artwork
 
 - Replaced hand-drawn instrument symbols with a single transparent WebP sprite reconstructed from the reference screenshot using image generation. It follows the reference silhouettes but is not a pixel-identical extraction of original assets.
