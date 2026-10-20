@@ -45,7 +45,8 @@
       release();owner=api;const token=++generation;report('pending');
       try{
         const Audio=window.AudioContext||window.webkitAudioContext;
-        if(!navigator.mediaDevices?.getUserMedia||!Audio)throw {name:'Unsupported'};
+        if(typeof navigator.mediaDevices?.getUserMedia!=='function')throw {name:window.isSecureContext===false?'InsecureContext':'CaptureUnavailable'};
+        if(!Audio)throw {name:'AudioUnavailable'};
         const pendingContext=new Audio();context=pendingContext;
         // Start both requests in the user gesture. An autoplay-suspended context
         // can leave resume() pending until mic consent; do not block that prompt.
@@ -98,7 +99,12 @@
     return api;
   }
   function errorMessage(error){
-    return error.name==='NotAllowedError'?'Microphone access denied.':error.name==='Unsupported'?'Microphone not supported.':'Microphone unavailable.';
+    return ({
+      InsecureContext:'Microphone access requires HTTPS. Open the secure version of this site.',
+      CaptureUnavailable:'Microphone access is unavailable here. Open the site directly in an up-to-date browser.',
+      AudioUnavailable:'Audio analysis is unavailable. Update your browser or system and try again.',
+      NotAllowedError:'Microphone access denied.'
+    })[error?.name]||'Microphone unavailable.';
   }
   document.addEventListener('visibilitychange',()=>{if(document.hidden)release()});
   window.addEventListener('pagehide',release);
