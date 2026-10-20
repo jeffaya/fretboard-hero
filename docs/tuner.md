@@ -8,6 +8,17 @@ Audio is analyzed locally using Web Audio and a YIN-style normalized difference 
 
 Android declares RECORD_AUDIO and uses Capacitor's WebChromeClient runtime permission handling. iOS declares NSMicrophoneUsageDescription and uses WKWebView capture. Rebuild native apps to pick up these changes. Web capture requires HTTPS (localhost also works).
 
+The public site's bootstrap upgrades HTTP visits to HTTPS before loading the app,
+preserving the instrument, language and fragment. Native and development origins
+are not redirected. Missing capture APIs on an insecure page now report the HTTPS
+requirement; missing capture APIs on a secure page and missing Web Audio each have
+their own translated guidance. A permission denial remains a separate error.
+The old "Microphone not supported" message did not distinguish these situations
+and was not evidence that iPhones generally lack microphone support. Safari's
+prefixed Web Audio constructor remains supported and is covered by capture tests.
+If a secure visit still cannot capture, record the browser/app, iOS version, full
+URL and exact error before attributing the failure to a particular device.
+
 Validation: Node tests cover all open pitches at 44.1/48 kHz with stronger second harmonics and ± detuning, silence, octave distinction, plus existing regression tests. Browser QA uses synthetic microphone input for correct/flat/sharp, denial, late permissions and cleanup on all three instruments. Portrait, landscape, tablet and desktop layouts are checked.
 
 Before store release, test real guitar, bass and ukulele microphones on Android and iPhone/iPad: grant/deny permissions, each open string, background/resume, close/reopen, unplug a microphone, and quiet/noisy rooms. Browser simulation does not establish real-device accuracy; low bass fundamentals and electric instruments at low acoustic volume especially need this validation.

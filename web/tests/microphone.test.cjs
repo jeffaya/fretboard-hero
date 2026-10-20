@@ -30,7 +30,30 @@ test('A new owner releases the old stream and late old permission cannot stop th
 test('Denied and missing APIs stay recoverable and never retain an audio context',async()=>{
  const r=environment(),errors=[],mic=r.api.create({onFrame(){},onState:(_,e)=>{if(e)errors.push(e.name)}});
  const pending=mic.start();await new Promise(setImmediate);r.requests[0].reject({name:'NotAllowedError'});await pending;assert.equal(mic.state,'off');assert.equal(r.contexts[0].state,'closed');assert.deepEqual(errors,['NotAllowedError']);
- delete r.c.navigator.mediaDevices;await mic.start();assert.deepEqual(errors,['NotAllowedError','Unsupported']);
+ delete r.c.navigator.mediaDevices;await mic.start();assert.deepEqual(errors,['NotAllowedError','CaptureUnavailable']);
+});
+test('An insecure page reports the HTTPS requirement before creating an audio context',async()=>{
+ const r=environment(),errors=[];r.c.window.isSecureContext=false;delete r.c.navigator.mediaDevices;
+ const mic=r.api.create({onFrame(){},onState:(_,error)=>{if(error)errors.push(error)}});await mic.start();
+ assert.equal(errors[0].name,'InsecureContext');assert.match(r.api.errorMessage(errors[0]),/HTTPS/);
+ assert.equal(mic.state,'off');assert.equal(r.contexts.length,0);assert.equal(r.requests.length,0);
+});
+test('Missing capture and missing Web Audio have distinct recoverable explanations',async()=>{
+ for(const missing of ['capture','audio']){
+  const r=environment(),errors=[];r.c.window.isSecureContext=true;
+  if(missing==='capture')delete r.c.navigator.mediaDevices;else delete r.c.window.AudioContext;
+  const mic=r.api.create({onFrame(){},onState:(_,error)=>{if(error)errors.push(error)}});await mic.start();
+  assert.equal(errors[0].name,missing==='capture'?'CaptureUnavailable':'AudioUnavailable');
+  assert.match(r.api.errorMessage(errors[0]),missing==='capture'?/Open the site directly/:/Audio analysis/);
+  assert.equal(mic.state,'off');assert.equal(r.contexts.length,0);assert.equal(r.requests.length,0);
+ }
+});
+test('Safari prefixed Web Audio captures and analyzes microphone samples',async()=>{
+ const r=environment(),received=[];r.c.window.webkitAudioContext=r.c.window.AudioContext;delete r.c.window.AudioContext;
+ const mic=r.api.create({onFrame:frame=>received.push(frame)}),pending=mic.start();
+ assert.equal(r.requests.length,1);r.requests[0].resolve(r.stream());await pending;
+ assert.equal(mic.state,'on');r.frames.values().next().value(100);assert.equal(received.length,1);assert.equal(received[0].sampleRate,48000);
+ mic.stop();assert.equal(r.tracks[0].readyState,'ended');assert.equal(r.contexts[0].state,'closed');
 });
 test('An explicit retry after denied permission starts a fresh capture without immediately switching off',async()=>{
  const r=environment(),states=[],mic=r.api.create({onFrame(){},onState:state=>states.push(state)});

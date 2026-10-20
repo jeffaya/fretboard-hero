@@ -15,6 +15,13 @@ test('Browser negotiation supports regions, ordered preferences and English fall
 test('Every catalog has the complete key set and preserves template placeholders',()=>{
  const keys=Object.keys(catalogs.en).sort();for(const locale of locales){assert.deepEqual(Object.keys(catalogs[locale]).sort(),keys);for(const key of keys){const placeholders=s=>[...new Set(s.match(/\{\w+\}/g)||[])].sort();assert.deepEqual(placeholders(catalogs[locale][key]),placeholders(key),`${locale}: ${key}`);assert.ok(catalogs[locale][key].trim())}}
 });
+test('Microphone support diagnostics give translated recovery guidance in every language',async()=>{
+ const keys=['Microphone access requires HTTPS. Open the secure version of this site.','Microphone access is unavailable here. Open the site directly in an up-to-date browser.','Audio analysis is unavailable. Update your browser or system and try again.'];
+ for(const locale of locales){
+  const i=await create({languages:[locale]});
+  for(const key of keys){assert.ok(catalogs[locale][key]);assert.equal(i.text(key),catalogs[locale][key]);if(locale!=='en')assert.notEqual(i.text(key),key)}
+ }
+});
 test('Billing error titles, guidance and support details are localized in every supported language',async()=>{
  const keys=['Error details','Could not complete the purchase','Purchases are unavailable','{store} is unavailable','Unable to connect to the payment service. Check your connection, then try again.','Lifetime access is unavailable','{store} could not load this purchase. Please try again later.','Could not restore your access','Could not verify your purchase','Could not open payment'];
  for(const locale of locales){const i=await create({languages:[locale]});for(const key of keys){const message=key.replace('{store}','Google Play');assert.equal(i.text(message),catalogs[locale][key].replace('{store}','Google Play'));if(locale!=='en')assert.notEqual(i.text(message),message)}}
