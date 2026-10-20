@@ -13,7 +13,7 @@ test('Initial share metadata uses the existing lightweight JPEG artwork',()=>{
  }
 });
 
-function worker(){
+function worker(source){
  class Rewriter {
   constructor(){this.handlers=[]}
   on(selector,handler){this.handlers.push([selector,handler]);return this}
@@ -26,11 +26,12 @@ function worker(){
    return {response,attributes};
   }
  }
- const source=fs.readFileSync('worker.js','utf8').replace(/^import .*;\n/,'').replace('export default','globalThis.worker =');
+ source=source.replace(/^import .*;\r?\n/,'').replace('export default','globalThis.worker =');
  const c=vm.createContext({URL,HTMLRewriter:Rewriter});vm.runInContext(source,c);return c.worker;
 }
-test('Worker supplies instrument JPEG metadata before client JavaScript, including shared query URLs',async()=>{
- const app=worker(),response=new Response(html,{headers:{'content-type':'text/html'}});
+for(const [format,newline] of [['LF','\n'],['CRLF','\r\n']])test(`Worker supplies instrument JPEG metadata before client JavaScript, including shared query URLs (${format})`,async()=>{
+ const source=fs.readFileSync('worker.js','utf8').replace(/\r?\n/g,newline);
+ const app=worker(source),response=new Response(html,{headers:{'content-type':'text/html'}});
  for(const pathname of ['/','/index.html'])for(const [instrument,key] of [['guitar','guitar'],['bass-4','bass'],['ukulele','ukulele'],['unknown','guitar']]){
   const {attributes}=await app.fetch(new Request(`https://fretboard-hero.com${pathname}?instrument=${instrument}&lang=fr`),{ASSETS:{fetch:async()=>response}});
   for(const selector of ['meta[property="og:image"]','meta[name="twitter:image"]'])assert.equal(attributes.get(selector).content,imageUrl(key));
