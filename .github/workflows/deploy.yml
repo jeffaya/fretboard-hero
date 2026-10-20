@@ -6,7 +6,12 @@ on:
       - main
 
 jobs:
+  verify:
+    uses: ./.github/workflows/check-android-access.yml
+    permissions:
+      contents: read
   deploy:
+    needs: verify
     runs-on: ubuntu-latest
     permissions:
       contents: read

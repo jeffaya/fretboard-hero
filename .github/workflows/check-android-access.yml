@@ -6,9 +6,14 @@ on:
       - 'web/**'
       - 'app/**'
       - 'server/**'
+      - 'tests/**'
+      - 'worker.js'
+      - 'wrangler.jsonc'
+      - '.github/workflows/deploy.yml'
       - '.github/workflows/check-android-access.yml'
       - '.github/workflows/build-apks.yml'
   workflow_dispatch:
+  workflow_call:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -36,3 +41,37 @@ jobs:
           $tests = Get-ChildItem web/tests/*.test.cjs, app/tests/*.test.cjs, app/tests/*.test.js, server/tests/*.test.mjs
           node --test $tests.FullName
           if ($LASTEXITCODE -ne 0) { throw "Regression tests failed" }
+  browser:
+    name: Browser / ${{ matrix.project }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { project: desktop-chromium, engine: chromium }
+          - { project: desktop-firefox, engine: firefox }
+          - { project: android-chromium, engine: chromium }
+          - { project: iphone-webkit, engine: webkit }
+          - { project: ipad-webkit, engine: webkit }
+    defaults:
+      run:
+        working-directory: tests/browser
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: tests/browser/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.engine }}
+      - run: npm test -- --project=${{ matrix.project }}
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: browser-failure-${{ matrix.project }}
+          path: |
+            tests/browser/playwright-report/
+            tests/browser/test-results/
+          retention-days: 14
