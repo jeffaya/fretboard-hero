@@ -12,7 +12,7 @@ const dimensions = require('../google-play/requirements.json').commonAssets['ico
       .toColourspace('srgb').removeAlpha().raw().toBuffer({ resolveWithObject: true });
     const image = () => sharp(pixels.data, { raw: pixels.info });
     await image().png({ compressionLevel: 9, adaptiveFiltering: true, palette: false }).toFile(path.join(destination, 'og.png'));
-    // Keep legacy URLs usable while all current references use the shared PNG.
+    // Lightweight JPEG for social previews; PNG remains the Google Play source.
     await image().jpeg({ quality: 90, chromaSubsampling: '4:4:4' }).toFile(path.join(destination, 'og.jpg'));
     execFileSync(process.execPath, [path.join(__dirname, 'export-feature.cjs'), path.join(repo, 'stores/google-play', instrument, 'en-US')], { stdio: 'inherit' });
   }

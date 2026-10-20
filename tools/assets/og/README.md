@@ -15,8 +15,8 @@ node stores/tools/validate.cjs
 The exporter preserves proportions and crops the decorative top/bottom margins
 to 1024 × 500. All text and all six feature cards remain in view. It writes:
 
-- `web/assets/instruments/<instrument>/og.png`: canonical opaque RGB PNG.
-- `web/assets/instruments/<instrument>/og.jpg`: JPEG for existing links.
+- `web/assets/instruments/<instrument>/og.png`: opaque RGB PNG for the Google Play export.
+- `web/assets/instruments/<instrument>/og.jpg`: lightweight JPEG for social previews.
 - `stores/google-play/<instrument>/en-US/icon/feature-graphic-1024x500.png`: exact copy of the canonical PNG.
 
 For a new graphic, replace the corresponding master, run the exporter, inspect the
@@ -29,6 +29,12 @@ Native Android/iOS preparation runs `scripts/sync-web.ps1`, which recreates
 second native master. Run the usual native build to include updated web assets
 in an APK/AAB or iOS app; changing these files does not update installed binaries.
 
-OG metadata declares the actual PNG type and 1024 × 500 dimensions. Social services
-may crop previews or retain an already-shared URL until they crawl it again.
+Initial HTML, worker metadata and client product profiles all use the JPEG and
+declare `image/jpeg` with its actual 1024 × 500 dimensions. The existing JPEGs
+are 238–246 KB, compared with 776–796 KB for the PNGs. Keep JPEG exports below
+our 300 KB sharing budget; `web/tests/open-graph.test.cjs` checks file size,
+format and agreement between the metadata layers. PNG store exports are separate.
+Social services may crop previews or retain an already-shared URL until they
+crawl it again. After deployment, check a newly pasted link in WhatsApp; automated
+metadata checks do not establish that the messaging app has refreshed its cache.
 Reference: https://ogp.me/#structured
