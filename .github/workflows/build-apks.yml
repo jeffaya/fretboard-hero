@@ -34,7 +34,12 @@ env:
   POWERSHELL_TELEMETRY_OPTOUT: 'true'
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 jobs:
+  verify:
+    uses: ./.github/workflows/check-android-access.yml
+    permissions:
+      contents: read
   build-apks:
+    needs: verify
     if: github.event_name == 'workflow_dispatch'
     runs-on: windows-latest
     permissions:
@@ -105,13 +110,6 @@ jobs:
       - name: Disable Capacitor telemetry
         working-directory: app
         run: node node_modules/@capacitor/cli/bin/capacitor telemetry off
-
-      - name: Verify store access before building
-        shell: pwsh
-        run: |
-          $tests = Get-ChildItem web/tests/*.test.cjs, app/tests/*.test.cjs, app/tests/*.test.js, server/tests/*.test.mjs
-          node --test $tests.FullName
-          if ($LASTEXITCODE -ne 0) { throw "Regression tests failed; refusing to distribute Android packages" }
 
       - name: Set up release signing
         shell: pwsh

@@ -17,7 +17,21 @@
   const rootPC=()=>PC[state.root];
   const thirdPC=()=>mod(rootPC()+intervals[state.quality].third);
   const fifthPC=()=>mod(rootPC()+7);
-  function go(screen){if(state.screen==='routine'&&screen!=='routine')routineSession.leave();document.body.dataset.screen=screen;state.screen=screen;$$('.screen').forEach(x=>x.classList.remove('active'));$('#'+screen).classList.add('active');if(screen==='routine') routineSession.enter();if(screen==='learn') renderLearn();if(screen==='fretmap') renderFretboardMap();if(screen==='circle') renderCircle();if(screen==='quiz') prepareQuiz();}
+  function go(screen){
+    if(state.screen==='routine'&&screen!=='routine')routineSession.leave();
+    if(state.screen==='quiz'&&screen!=='quiz'){
+      if(state.quiz?.timer)clearInterval(state.quiz.timer);
+      state.quiz=null;state.quizReveal=null;
+      $('#resultModal').classList.remove('show');$('#resultModal').setAttribute('aria-hidden','true');
+    }
+    document.body.dataset.screen=screen;state.screen=screen;
+    $$('.screen').forEach(x=>x.classList.remove('active'));$('#'+screen).classList.add('active');
+    if(screen==='routine')routineSession.enter();
+    if(screen==='learn')renderLearn();
+    if(screen==='fretmap')renderFretboardMap();
+    if(screen==='circle')renderCircle();
+    if(screen==='quiz')prepareQuiz();
+  }
   $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
   // Shared controls live in core/controls.js.
   ['learn','map','routine'].forEach(name=>FretboardControls.bindDrawer({name}));
@@ -443,8 +457,6 @@
     rankLadderReturn='score';showScoreResult();$('#resultModal').classList.add('show');$('#resultModal').setAttribute('aria-hidden','false');
   }
   function exitQuizToHome(){
-    const qz=state.quiz;if(qz?.timer){clearInterval(qz.timer);qz.timer=null}
-    $('#resultModal').classList.remove('show');$('#resultModal').setAttribute('aria-hidden','true');
     go('home');
   }
   $('#startQuizButton')?.addEventListener('click',startQuiz);
