@@ -3,6 +3,9 @@ const instruments=[['guitar',6],['bass-4',4],['ukulele',4]];
 
 for(const [instrument,strings] of instruments){
   for(const unlocked of [false,true])test(`${instrument}: ${unlocked?'premium':'free'} Learn, Map and Circle remain usable`,async({page})=>{
+    // This journey visits every mode in both qualities. WebKit's full sequence
+    // needs more time; individual clicks and assertions retain short deadlines.
+    test.setTimeout(120000);
     await configure(page,{unlocked});await page.goto(`/?instrument=${instrument}&lang=en`);await ready(page);
     await openMenu(page,'learn');await visibleDrawing(page,'#learnFretboard',{strings});
     const modes=await page.locator('#modeControls [data-mode]').evaluateAll(nodes=>nodes.map(n=>n.dataset.mode));

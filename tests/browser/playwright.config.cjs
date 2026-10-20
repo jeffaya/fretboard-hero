@@ -5,7 +5,7 @@ module.exports=defineConfig({
   forbidOnly:!!process.env.CI,retries:0,workers:process.env.CI?2:undefined,
   timeout:60000,expect:{timeout:7000},
   reporter:[['list'],['html',{open:'never'}]],
-  use:{baseURL:'http://127.0.0.1:4173',serviceWorkers:'block',locale:'en-US',
+  use:{baseURL:'http://127.0.0.1:4173',serviceWorkers:'block',locale:'en-US',actionTimeout:10000,navigationTimeout:15000,
     trace:'retain-on-failure',screenshot:'only-on-failure'},
   webServer:{command:'node server.cjs',url:'http://127.0.0.1:4173',reuseExistingServer:false},
   projects:[

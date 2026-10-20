@@ -45,6 +45,13 @@ async function visibleDrawing(page,selector,{strings,notes=true,minHeight=120}={
     const box=await svg.boundingBox();return !!box&&box.width>100&&box.height>=minHeight;
   },{message:`${selector} must have a usable rendered size`}).toBe(true);
   await expect(svg).toBeInViewport();
+  await expect.poll(()=>svg.evaluate(node=>{
+    for(let current=node;current;current=current.parentElement){
+      const style=getComputedStyle(current);
+      if(style.visibility!=='visible'||Number(style.opacity)===0)return false;
+    }
+    return true;
+  }),{message:`${selector} must not be hidden by an ancestor`}).toBe(true);
   if(strings)await expect(svg.locator('[data-string-gauge]')).toHaveCount(strings);
   if(notes){
     const note=svg.locator('.neck-note').first();await expect(note).toBeVisible();

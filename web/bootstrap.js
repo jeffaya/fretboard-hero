@@ -41,7 +41,7 @@
       window.ProductShell.apply(product,instrument);
       await load('./home.js?v=10.49.12');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
-      await load('./app.js?v=10.49.17');
+      await load('./app.js?v=10.49.20');
       FretboardBilling.attach();
       FretboardI18n.mount();
       await load('./tuner.js?v=10.34.1');
