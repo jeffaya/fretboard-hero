@@ -2,7 +2,8 @@
 
 ## What a green run means
 
-`Tests` runs Node tests on Windows and browser journeys on Linux. The browser
+`Tests` runs Node tests on Windows, Chromium/Firefox journeys on Linux and
+WebKit journeys on macOS (the closest Playwright platform to Safari). The browser
 suite loads the actual HTML, CSS, scripts, fonts and artwork from `web/`.
 It fails on uncaught JavaScript errors, failed HTTP resource loads, unusable
 fretboard dimensions, missing drawing content or broken interactions.
@@ -17,13 +18,13 @@ fretboard dimensions, missing drawing content or broken interactions.
 
 ## Browser matrix
 
-| CI project | Engine | Profile |
+| CI project | Engine / host | Profile |
 | --- | --- | --- |
-| `desktop-chromium` | Chromium | 1440 × 900 desktop |
-| `desktop-firefox` | Firefox | 1440 × 900 desktop |
-| `android-chromium` | Chromium | Pixel 5 emulation |
-| `iphone-webkit` | WebKit | iPhone 13 emulation |
-| `ipad-webkit` | WebKit | iPad Pro 11 emulation |
+| `desktop-chromium` | Chromium / Linux | 1440 × 900 desktop |
+| `desktop-firefox` | Firefox / Linux | 1440 × 900 desktop |
+| `android-chromium` | Chromium / Linux | Pixel 5 emulation |
+| `iphone-webkit` | WebKit / macOS | iPhone 13 emulation |
+| `ipad-webkit` | WebKit / macOS | iPad Pro 11 emulation |
 
 Quiz journeys resize portrait/landscape during play. Browser billing runs on the
 Android and iPhone profiles with the corresponding PlayBilling/StoreBilling test
@@ -88,4 +89,5 @@ in the faster Node suite.
 
 References: [Playwright projects](https://playwright.dev/docs/test-projects),
 [web server](https://playwright.dev/docs/test-webserver),
-[CI](https://playwright.dev/docs/ci-intro).
+[CI](https://playwright.dev/docs/ci-intro),
+[WebKit platform differences](https://playwright.dev/docs/browsers#webkit).

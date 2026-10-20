@@ -43,17 +43,18 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw "Regression tests failed" }
   browser:
     name: Browser / ${{ matrix.project }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { project: desktop-chromium, engine: chromium }
-          - { project: desktop-firefox, engine: firefox }
-          - { project: android-chromium, engine: chromium }
-          - { project: iphone-webkit, engine: webkit }
-          - { project: ipad-webkit, engine: webkit }
+          - { project: desktop-chromium, engine: chromium, os: ubuntu-latest }
+          - { project: desktop-firefox, engine: firefox, os: ubuntu-latest }
+          - { project: android-chromium, engine: chromium, os: ubuntu-latest }
+          # Use Apple's platform for WebKit's platform-dependent rendering.
+          - { project: iphone-webkit, engine: webkit, os: macos-latest }
+          - { project: ipad-webkit, engine: webkit, os: macos-latest }
     defaults:
       run:
         working-directory: tests/browser
