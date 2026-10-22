@@ -66,6 +66,14 @@ test('Melodic instructions, directions, box blocks and degree labels localize in
  for(const locale of locales){const i=await create({languages:[locale]});for(const phrase of phrases){const localized=i.text(phrase);if(locale!=='en'&&!['Block 3','Slide 7 → 9'].includes(phrase))assert.notEqual(localized,phrase,locale+' '+phrase);assert.equal(i.text(localized),localized)}}
  const fr=await create({languages:['fr']});assert.equal(fr.text(phrases[0]),'Partez de La : montez à l’octave, puis revenez à la fondamentale.');assert.equal(fr.text('Degree ♭3'),'Degré ♭3');assert.ok(fr.text(phrases[2]).includes('La Mineur'));
 });
+test('Pentatonic root cues localize the selected note as well as the sustain instruction',async()=>{
+ for(const locale of locales){
+  const i=await create({languages:[locale]});
+  assert.equal(i.text('Root: A — let it ring'),catalogs[locale]['Root: {note} — let it ring'].replace('{note}',i.note('A')));
+ }
+ const fr=await create({languages:['fr']});
+ assert.equal(fr.text('Root: A — let it ring'),'Fondamentale : La — laisse sonner');
+});
 
 test('Download and lifetime access explanations translate in every supported language',async()=>{
  const keys=['Contact us','Get the app','Get it free on','Download for free on the','One payment.','Lifetime access.','No subscription.','Guitar, bass & ukulele.','All notes, keys and modes.','Unlock for life','Restore your access','Already purchased on another phone? Restore your access with the same account, without paying again.','Could not read purchase status. Please restore your access.'];

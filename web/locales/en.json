@@ -423,5 +423,8 @@
   "{store} could not load this purchase. Please try again later.": "{store} could not load this purchase. Please try again later.",
   "Could not restore your access": "Could not restore your access",
   "Could not verify your purchase": "Could not verify your purchase",
-  "Could not open payment": "Could not open payment"
+  "Could not open payment": "Could not open payment",
+  "Let the root ring. Light vibrato is optional.": "Let the root ring. Light vibrato is optional.",
+  "~ = let the root ring; light vibrato optional": "~ = let the root ring; light vibrato optional",
+  "Root: {note} — let it ring": "Root: {note} — let it ring"
 }

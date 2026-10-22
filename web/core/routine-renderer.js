@@ -53,14 +53,14 @@
           const isRoot=engine.noteAt(note.string,note.fret)===exercise.rootPC;
           const attrs={x,'text-anchor':'middle','data-no-i18n':''};
           svg.append(el('text',{...attrs,y:offset+38,'class':'routine-melody-name',fill:isRoot?'#70f7ff':'#fff'},window.FretboardI18n?.note(column.noteName)||column.noteName),
-            el('text',{...attrs,y:offset+54,'class':'routine-melody-degree'},column.degree));
+            el('text',{...attrs,y:offset+54,'class':'routine-melody-degree'},column.degree+(column.holdMs?' ~':'')));
           if(column.slideFrom){
             const previous=points[index-1],from=column.slideFrom.fret,up=note.fret>from;
             const x1=previous?.line===line?previous.x+font*.8:x-font*1.5,x2=x-font*.8;
             svg.append(el('path',{d:`M${x1} ${y+(up?6:-6)} L${x2} ${y+(up?-6:6)}`,'class':'routine-slide','data-slide':`${from}:${note.fret}`}));
           }
           const target=guide&&guide.index===index,played=guide&&index<guide.index;
-          const node=el('g',{'data-column':index,'data-position':column.position||'','class':'routine-tab-column'+(played?' is-played':'')+(target?' is-target':'')});
+          const node=el('g',{'data-column':index,'data-position':column.position||'','data-staff-top':offset,'data-staff-height':lineHeight,'class':'routine-tab-column'+(played?' is-played':'')+(target?' is-target':'')});
           node.append(el('rect',{x:x-font*.7,y:y-font*.6,width:font*1.4,height:font*1.2,rx:5,fill:'#0a1425','class':'routine-note-face'}),
             el('text',{x,y:y+1,'text-anchor':'middle','dominant-baseline':'central',fill:isRoot?'#70f7ff':'#fff','font-size':font,'font-weight':800,'class':'routine-note-number'},String(note.fret)));
           svg.append(node);points[index]={x,y,line};
@@ -104,7 +104,7 @@
       renderStaff(svg,engine,layout,offset+top);
       columns.forEach((column,i)=>{
         const x=start+(i+.5)*step,index=line*count+i;
-        const group=el('g',{'data-column':index,'data-kind':column.kind||'','class':'routine-tab-column'+(guide&&index<guide.index?' is-played':'')+(guide&&guide.index===index?' is-target':'')});
+        const group=el('g',{'data-column':index,'data-kind':column.kind||'','data-staff-top':offset,'data-staff-height':lineHeight,'class':'routine-tab-column'+(guide&&index<guide.index?' is-played':'')+(guide&&guide.index===index?' is-target':'')});
         if(column.label)svg.append(el('text',{x,y:offset+13,'text-anchor':'middle',fill:column.kind==='third'?'#ffe38a':'#d8e4f4','font-size':labelFont,'data-no-i18n':''},column.label));
         if(column.subLabel)svg.append(el('text',{x,y:offset+30,'text-anchor':'middle',fill:'#b7c9df','font-size':labelFont,'data-no-i18n':''},column.subLabel));
         const ys=column.notes.map(n=>offset+top+(strings.length-1-strings.indexOf(n.string))*row),y=ys.reduce((a,b)=>a+b,0)/ys.length;

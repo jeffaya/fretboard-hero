@@ -423,5 +423,8 @@
   "{store} could not load this purchase. Please try again later.": "{store}无法加载此购买信息。请稍后重试。",
   "Could not restore your access": "无法恢复访问权限",
   "Could not verify your purchase": "无法验证您的购买",
-  "Could not open payment": "无法打开支付页面"
+  "Could not open payment": "无法打开支付页面",
+  "Let the root ring. Light vibrato is optional.": "让根音多响一会儿，可加入轻微揉弦。",
+  "~ = let the root ring; light vibrato optional": "~ = 延长根音，可轻微揉弦",
+  "Root: {note} — let it ring": "根音：{note} — 多响一会儿"
 }

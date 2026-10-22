@@ -67,29 +67,30 @@ test('Both diagonals repeat the same complete pentatonic motif at three octaves 
   assert.equal(e.columns.slice(15).filter(c=>c.slideFrom).length,3);
  }
  const e=c.RoutineExercises.create({engine,root:'A',quality:'minor',diagonal:0})[4];
- assert.equal(e.columns.slice(0,15).map(c=>c.position).filter((p,i,a)=>i===0||p!==a[i-1]).join(','),'4,5,1,2');
+ assert.equal(e.columns.slice(0,15).map(c=>c.position).filter((p,i,a)=>i===0||p!==a[i-1]).join(','),'5,1,2,3');
 });
-test('Pentatonics use the earliest playable start and never cross fret 12 in any guitar key',()=>{
+test('A minor diagonals match the reference fingerings and return along the same slides',()=>{
+ const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
+ const routes=[[[3,5],[3,5,7],[5,7],[5,7,9],[8,10],[8,10,12]],[[8,10,12],[10,12],[10,12,14],[12,14],[13,15,17],[15,17]]];
+ routes.forEach((strings,diagonal)=>{
+  const expected=strings.flatMap((frets,string)=>frets.map(fret=>({string,fret})));
+  const e=c.RoutineExercises.create({engine,root:'A',quality:'minor',diagonal})[4];
+  assert.equal(JSON.stringify(flatten(e)),JSON.stringify(expected.concat(expected.slice(0,-1).reverse())));
+  for(const column of e.columns){
+   assert.equal(Boolean(column.holdMs),engine.noteAt(column.notes[0].string,column.notes[0].fret)===c.MusicTheory.PC.A);
+   if(column.slideFrom)assert.equal(column.slideFrom.string,column.notes[0].string);
+  }
+ });
+});
+test('Both reference fingerings transpose without rotating their starting degree',()=>{
  const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
  for(const root of c.MusicTheory.NOTES)for(const quality of ['major','minor'])for(const diagonal of [0,1]){
-  const e=c.RoutineExercises.create({engine,root,quality,diagonal})[4],label=`${root} ${quality} ${diagonal}`;
-  assert.ok(flatten(e).every(n=>n.fret>=0&&n.fret<=12),label);
-  const selected=e.columns[0].notes[0].fret,pcs=c.MusicTheory.pentatonicPCs(c.MusicTheory.PC[root],quality);
-  const anchor=c.MusicTheory.mod(c.MusicTheory.PC[root]-(quality==='major'?3:0)-engine.courses[0].pc),boxes=c.PentatonicRenderer.visiblePairs({profile:engine.profile,anchor,maxFret:12});
-  // Independent brute-force oracle: every lower starting fret, consecutive
-  // scale pitches, fixed string allocation, then playable box membership.
-  for(let start=0;start<selected;start++){
-   const first=engine.midiAt(0,start);if(!pcs.includes(first%12))continue;
-   const pitches=[];for(let midi=first;pitches.length<5;midi++)if(pcs.includes(midi%12))pitches.push(midi);
-   let playable=true;
-   for(let block=0;block<3;block++){
-    const notes=pitches.map((midi,i)=>{const string=block*2+(i<(diagonal?3:2)?0:1);return {string,fret:midi+block*12-engine.courses[string].midi}}),shift=diagonal?2:4;
-    if(notes.some(n=>n.fret<0||n.fret>12)){playable=false;break}
-    if(!boxes.some(box=>notes.slice(0,shift).every(n=>box.pairs[n.string].includes(n.fret))))playable=false;
-    if(!boxes.some(box=>notes.slice(shift-1).every(n=>box.pairs[n.string].includes(n.fret))))playable=false;
-   }
-   assert.equal(playable,false,`${label}: skipped lower start ${start}`);
-  }
+  const e=c.RoutineExercises.create({engine,root,quality,diagonal})[4];
+  const expectedDegrees=quality==='minor'?(diagonal?'♭3,4,5,♭7,1':'♭7,1,♭3,4,5'):(diagonal?'1,2,3,5,6':'5,6,1,2,3');
+  assert.equal(e.columns.slice(0,5).map(c=>c.degree).join(','),expectedDegrees);
+  assert.ok(flatten(e).every(n=>n.fret>=0&&n.fret<=engine.maxFret));
+  assert.equal(flatten(e).length,29);
+  e.columns.forEach(column=>assert.equal(Boolean(column.holdMs),column.degree==='1'));
  }
 });
 test('Shared drawer is exposed inline and inert only when closed in compact mode',()=>{const nodes=new Map(),media={matches:false,addEventListener(_,f){this.change=f}},c={window:{},matchMedia:()=>media};function node(id){if(!nodes.has(id)){const classes=new Set();nodes.set(id,{attrs:{},events:{},classList:{contains:k=>classes.has(k),toggle:(k,on)=>on?classes.add(k):classes.delete(k)},getAttribute(k){return this.attrs[k]},setAttribute(k,v){this.attrs[k]=v},addEventListener(k,f){this.events[k]=f},focus(){c.focused=id}})}return nodes.get(id)}const root={querySelector:node};vm.createContext(c);vm.runInContext(fs.readFileSync(path.join(base,'core/controls.js'),'utf8'),c);c.window.FretboardControls.bindDrawer({root,name:'routine'});const drawer=node('#routineDrawer'),btn=node('#routineMenuBtn');assert.equal(drawer.inert,false);assert.equal(drawer.attrs['aria-hidden'],'false');media.matches=true;media.change();assert.equal(drawer.inert,true);btn.events.click();assert.equal(drawer.inert,false);assert.equal(btn.attrs['aria-expanded'],'true');drawer.events.keydown({key:'Escape',preventDefault(){}});assert.equal(drawer.inert,true);assert.equal(c.focused,'#routineMenuBtn');media.matches=false;media.change();assert.equal(drawer.inert,false)});
@@ -97,7 +98,7 @@ class Node{
  constructor(){this.children=[];this.events={};this.attrs={};this.dataset={};this.style={};this.classes=new Set();this.classList={contains:k=>this.classes.has(k),toggle:(k,on)=>on?this.classes.add(k):this.classes.delete(k)};this.textContent='';this.hidden=false;this.parentElement={clientWidth:390}}
  append(...nodes){this.children.push(...nodes)}replaceChildren(){this.children=[]}querySelectorAll(){return this.children}querySelector(){return null}getAttribute(k){return this.attrs[k]}setAttribute(k,v){this.attrs[k]=v}addEventListener(k,f){this.events[k]=f}click(){this.events.click?.()}focus(){}scrollIntoView(){}
 }
-function sessionRuntime(demo=false,enabled=true,storage=new Map(),playback=false,encouragementRandom=Math.random){
+function sessionRuntime(demo=false,enabled=true,storage=new Map(),playback=false,encouragementRandom=Math.random,random=rng(321)){
  const c=runtime(),nodes=new Map(),root={querySelector:s=>{if(!nodes.has(s))nodes.set(s,new Node());return nodes.get(s)}};
  c.document={createElement:()=>new Node(),createElementNS:()=>new Node(),addEventListener(){}};c.opens=0;
  c.localStorage={getItem:key=>storage.get(key),setItem:(key,value)=>storage.set(key,value)};
@@ -113,26 +114,28 @@ function sessionRuntime(demo=false,enabled=true,storage=new Map(),playback=false
  if(playback)c.RoutineRhythmAudio={create:()=>({open:async()=>true,close(){},stop(){},schedule(){c.scheduled=(c.scheduled||0)+1}})};
  const createStrumming=c.RoutineStrumming.create;c.RoutineStrumming={create(options){const strumming=createStrumming(options),update=strumming.update;strumming.update=function(e,...rest){if(e?.strumming)c.lastExercise=e;return update.call(this,e,...rest)};return strumming}};
  vm.runInContext(fs.readFileSync(path.join(base,'core/routine-session.js'),'utf8'),c);
- const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),session=c.window.RoutineSession.create({root,engine,refreshControls(){},random:rng(321),encouragementRandom});
+ const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),session=c.window.RoutineSession.create({root,engine,refreshControls(){},random,encouragementRandom});
  const nextGroup=()=>{nodes.get('#routineNext').click();flush()};
  return {session,nodes,c,flush,nextGroup,next(){const id=c.lastExercise.id;nextGroup();while(c.lastExercise.id===id&&nodes.get('#routineFinish').hidden)nextGroup()}};
 }
-test('Diagonal alternates on entry and replay, survives reload, and remains stable through settings and navigation',()=>{
- const storage=new Map(),r=sessionRuntime(false,false,storage),penta=()=>{r.nodes.get('#routineSteps').children[4].children[0].click();return r.c.lastExercise.diagonal};
- r.session.enter();assert.equal(penta(),1);r.nextGroup();assert.equal(r.nodes.get('#routineContext').textContent.includes('Returning'),true);
- r.nodes.get('#routineSteps').children[0].children[0].click();assert.equal(penta(),1);assert.ok(r.nodes.get('#routineContext').textContent.includes('Returning'));
+test('A random diagonal is chosen per routine and is stable through settings, audio and navigation',()=>{
+ let choice=0;const storage=new Map(),r=sessionRuntime(false,false,storage,false,Math.random,()=>choice);
+ const penta=()=>{r.nodes.get('#routineSteps').children[4].children[0].click();return r.c.lastExercise.diagonal};
+ r.session.enter();assert.equal(penta(),1);choice=.99;
+ r.nextGroup();assert.ok(r.nodes.get('#routineContext').textContent.includes('Returning'));
+ r.nodes.get('#routineSteps').children[0].children[0].click();assert.equal(penta(),1);
  r.nodes.get('#routineMic').click();r.nodes.get('#routineMic').click();assert.equal(r.c.lastExercise.diagonal,1);
  r.nodes.get('#routineRootControls').children.find(b=>b.dataset.value!=='A').click();r.nodes.get('#routineQualityControls').children[0].click();assert.equal(penta(),1);
  r.session.leave();r.session.enter();assert.equal(penta(),2);
- r.nodes.get('#routineSteps').children[0].children[0].click();for(let i=0;i<5;i++)r.next();r.nodes.get('#routineReplay').click();assert.equal(penta(),1);
- const restored=sessionRuntime(true,false,storage);restored.session.enter();restored.nodes.get('#routineSteps').children[4].children[0].click();assert.equal(restored.c.lastExercise.diagonal,2);
+ r.nodes.get('#routineSteps').children[0].children[0].click();for(let i=0;i<5;i++)r.next();
+ choice=0;r.nodes.get('#routineReplay').click();assert.equal(penta(),1);
 });
-test('Blocked storage still permits alternating routines and scale sections keep progress',()=>{
+test('Blocked storage still permits random routines and scale sections keep progress',()=>{
  const r=sessionRuntime(true,false,{get(){throw Error('Storage blocked')},set(){throw Error('Storage blocked')}});
  r.session.enter();r.nodes.get('#routineSteps').children[1].children[0].click();assert.equal(r.nodes.get('#routineContext').hidden,false);assert.equal(r.c.lastExercise.columns.length,8);
  assert.equal(r.nodes.get('#routineNext').textContent,'Return →');r.nextGroup();assert.equal(r.c.lastExercise.columns.length,7);assert.ok(r.nodes.get('#routineInstruction').textContent.includes('left to right'));
  assert.equal(r.nodes.get('#routineSteps').children[1].classes.has('is-complete'),false);r.nextGroup();assert.equal(r.c.lastExercise.id,'triads');assert.equal(r.nodes.get('#routineSteps').children[1].classes.has('is-complete'),true);
- r.session.leave();r.session.enter();r.nodes.get('#routineSteps').children[4].children[0].click();assert.equal(r.c.lastExercise.diagonal,2);
+ r.session.leave();r.session.enter();r.nodes.get('#routineSteps').children[4].children[0].click();assert.ok([1,2].includes(r.c.lastExercise.diagonal));
 });
 test('Demo permits all five stages and Done, but blocks other roots and major without resetting progress',()=>{
  const r=sessionRuntime(true);r.session.enter();
@@ -189,9 +192,52 @@ test('Every diagonal section shows three repeated blocks, six strings per staff,
    assert.equal(svg.children.filter(n=>n.attrs.class==='routine-slide').length,3);
    const strings=svg.children.filter(n=>n.attrs.stroke==='#899bb3');assert.equal(strings.length,width>=682?6:18);
    const columns=svg.children.filter(n=>'data-column' in n.attrs);assert.equal(columns.length,section.end-section.start);assert.equal(columns.filter(n=>n.attrs.class.includes('is-target')).length,1);
-   for(const col of columns){const fret=col.children.find(n=>n.attrs.class==='routine-note-number'),note=visible.columns[col.attrs['data-column']].notes[0];assert.ok(strings.some(s=>s.attrs.y1===fret.attrs.y-1));assert.equal(Number(fret.textContent),note.fret)}
+   for(const col of columns){
+    const fret=col.children.find(n=>n.attrs.class==='routine-note-number'),note=visible.columns[col.attrs['data-column']].notes[0];
+    assert.ok(strings.some(s=>s.attrs.y1===fret.attrs.y-1));assert.equal(Number(fret.textContent),note.fret);
+    const top=Number(col.attrs['data-staff-top']),height=Number(col.attrs['data-staff-height']);
+    assert.ok(top<=fret.attrs.y&&fret.attrs.y<top+height,'target belongs to the staff followed by the session');
+    assert.equal(strings.filter(s=>s.attrs.y1>=top&&s.attrs.y1<top+height).length,6);
+   }
+   const holds=svg.children.filter(n=>n.attrs.class==='routine-melody-degree'&&n.textContent.includes('~'));
+   assert.equal(holds.length,visible.columns.filter(c=>c.holdMs).length);
   }
  }
+});
+
+test('Following centers the entire next staff, stays still within it and can return upwards',()=>{
+ const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineSteps').children[4].children[0].click();
+ const svg=r.nodes.get('#routineTab'),screen=r.nodes.get('#routine'),target=new Node(),scrolls=[];
+ screen.clientHeight=740;screen.scrollTop=0;screen.getBoundingClientRect=()=>({top:0,bottom:740});
+ screen.scrollTo=options=>{scrolls.push(options);screen.scrollTop=options.top};
+ r.c.window.innerHeight=740;
+ svg.viewBox={baseVal:{height:669}};svg.getBoundingClientRect=()=>({top:300-screen.scrollTop,height:669});
+ target.setAttribute('data-staff-top',0);target.setAttribute('data-staff-height',223);svg.querySelector=()=>target;
+ r.session.resize();assert.equal(scrolls.length,0,'the first staff is already fully visible');
+ target.setAttribute('data-staff-top',223);r.session.resize();
+ assert.equal(scrolls.length,1);assert.equal(screen.scrollTop,264.5);assert.equal(scrolls[0].behavior,'auto');
+ r.session.resize();assert.equal(scrolls.length,1,'notes in the same visible staff do not make the page jump');
+ r.c.window.matchMedia=()=>({matches:false});target.setAttribute('data-staff-top',446);r.session.resize();
+ assert.equal(scrolls.length,1,'the next staff may already fit in the viewport');
+ screen.scrollTop=600;target.setAttribute('data-staff-top',0);r.session.resize();
+ assert.equal(scrolls.length,2);assert.equal(scrolls[1].behavior,'smooth');
+ assert.equal(screen.scrollTop,41.5,'the return can bring an earlier staff back to the center');
+ r.nodes.get('#routineMic').click();screen.scrollTop=0;target.setAttribute('data-staff-top',446);r.session.resize();
+ assert.equal(scrolls.length,2,'microphone-off practice never scrolls automatically');
+});
+
+test('Following uses the visible mobile viewport and keeps the note visible in short landscape',()=>{
+ const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineSteps').children[4].children[0].click();
+ const svg=r.nodes.get('#routineTab'),screen=r.nodes.get('#routine'),target=new Node();
+ screen.clientHeight=740;screen.scrollTop=0;screen.getBoundingClientRect=()=>({top:0,bottom:740});
+ screen.scrollTo=options=>{screen.scrollTop=options.top};
+ r.c.window.innerHeight=740;r.c.window.visualViewport={offsetTop:40,height:180};
+ svg.viewBox={baseVal:{height:669}};svg.getBoundingClientRect=()=>({top:300-screen.scrollTop,height:669});
+ target.setAttribute('data-staff-top',223);target.setAttribute('data-staff-height',223);
+ target.getBoundingClientRect=()=>({top:600-screen.scrollTop,height:22});svg.querySelector=()=>target;
+ r.session.resize();assert.equal(screen.scrollTop,481);
+ const note=target.getBoundingClientRect();assert.ok(note.top>=56&&note.top+note.height<=204);
+ r.session.resize();assert.equal(screen.scrollTop,481,'a visible target does not drift on resize');
 });
 
 test('Progress navigation reuses exercises and marks the active step',()=>{
@@ -318,6 +364,34 @@ for(const step of [0,2])test(`Routine step ${step+1} accepts quiet audio only af
  play(midis,2300);assert.equal(progress(),first);
  for(let now=2380;now<2940;now+=80)play(midis,now);
  assert.ok(progress().startsWith('2 /'),progress());
+});
+
+for(const diagonal of [0,1])test(`Microphone completes diagonal ${diagonal+1} out and back, sustaining each root without a tempo`,()=>{
+ const {samples,N}=require('./audio-fixtures.cjs');
+ const r=sessionRuntime(true,true,new Map(),false,Math.random,()=>diagonal?.99:0);
+ r.session.enter();r.nodes.get('#routineSteps').children[4].children[0].click();
+ const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);
+ let now=1500,played=0;
+ for(const count of [15,14]){
+  assert.equal(r.c.lastExercise.columns.length,count);
+  for(let i=0;i<count;i++){
+   const column=r.c.lastExercise.columns[i],note=column.notes[0];
+   const pcm=samples([engine.midiAt(note.string,note.fret)],{gain:.015,noise:.0001});
+   const input=at=>r.c.audio.onFrame({samples:pcm,spectrum:new Float32Array(N/2),sampleRate:48000,fftSize:N,now:at});
+   const progress=r.nodes.get('#routineNoteProgress').textContent;
+   for(let offset=0;offset<=240;offset+=80)input(now+offset);
+   if(column.holdMs){
+    assert.equal(r.nodes.get('#routineNoteProgress').textContent,progress,'a brief root cannot advance');
+    assert.match(r.nodes.get('#routineMicStatus').textContent,/Root: A/);
+    input(now+320);input(now+400);
+   }
+   if(i<count-1)assert.equal(r.nodes.get('#routineNoteProgress').textContent,`${i+2} / ${count}`);
+   else assert.equal(r.nodes.get('#routineTransition').hidden,false);
+   played++;now+=1000;
+  }
+  r.c.now=now;r.flush();now+=500;
+ }
+ assert.equal(played,29);assert.equal(r.nodes.get('#routineSteps').children[4].classes.has('is-complete'),true);
 });
 
 test('Daily Routine triads and connecting thirds stay at or below fret 12 in every instrument and key',()=>{

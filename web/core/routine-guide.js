@@ -6,7 +6,7 @@
     let since=null,last=-Infinity,blocked=false,quietSince=null,previousLevel=0,attack=0,confirmations=0;
     return {
       reset(repeat=false){since=null;last=-Infinity;blocked=repeat;quietSince=null;previousLevel=0;attack=0;confirmations=0},
-      update({match,level,now,chord=false}){
+      update({match,level,now,chord=false,holdMs=chord?160:190}){
         if(now-last>250){since=null;confirmations=0}last=now;
         // A fresh pluck is a relative rise, even when both notes are quiet.
         const onset=match&&previousLevel>0&&level>previousLevel*1.9;
@@ -22,7 +22,7 @@
         confirmations++;
         // Three complete chord observations at the 80 ms cadence are enough;
         // a long hold used to outlast short finger-plucked chords.
-        if(now-since<(chord?160:190)||(chord&&confirmations<3))return false;
+        if(now-since<holdMs||(chord&&confirmations<3))return false;
         since=null;confirmations=0;blocked=true;quietSince=null;attack=0;return true;
       }
     };

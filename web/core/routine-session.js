@@ -6,12 +6,9 @@
     const state={root:'A',quality:'minor',index:0,diagonal:0},completed=new Set(),gate=RoutineGuide.createGate(),strumGate=RoutineGuide.createStrumGate();
     let storage;try{storage=localStorage}catch{}
     const rhythmPractice=RoutinePatterns.practice(storage);let patterns=RoutinePatterns.defaults();
-    const diagonalKey='fretboard-routine-diagonal-'+engine.profile.id;
-    let nextDiagonal=0;
-    try{nextDiagonal=localStorage.getItem(diagonalKey)==='1'?1:0}catch{}
     function beginRoutine(){
-      if(engine.profile.family==='guitar')patterns=rhythmPractice.choose();state.diagonal=nextDiagonal;nextDiagonal=1-nextDiagonal;
-      if(engine.profile.family==='guitar')try{localStorage.setItem(diagonalKey,String(nextDiagonal))}catch{}
+      if(engine.profile.family==='guitar')patterns=rhythmPractice.choose();
+      state.diagonal=Math.floor(random()*2);
     }
     const detector=FretboardChordDetector.create({minMidi:Math.min(...engine.courses.map(c=>c.midi)),maxMidi:Math.max(...engine.courses.map(c=>c.midi))+15});
     const encouragements=RoutineEncouragement.createDeck(encouragementRandom);
@@ -52,6 +49,7 @@
       if(!exercise.strumming){
         $('#routineLegend').textContent=t(guided?'Highlight = target · Green = played':'Cyan = root note');
         if(exercise.melody)$('#routineLegend').textContent+=' · '+t(exercise.diagonal?'P1–P5 = boxes · / = slide · 1 = root':'Numbers above = degrees · 1 = root');
+        if(exercise.diagonal)$('#routineLegend').textContent+=' · '+t('~ = let the root ring; light vibrato optional');
       }
       const visible=section?{...exercise,columns:exercise.columns.slice(section.start,section.end)}:exercise;
       if(!exercise.strumming)RoutineRenderer.render($('#routineTab'),visible,engine,guided?{index:current().index-(section?.start||0),animate}:null);
@@ -60,15 +58,29 @@
         const guide=current();
         const count=section?section.end-section.start:exercise.columns.length;
         if(!exercise.strumming)$('#routineNoteProgress').textContent=`${Math.min(guide.index-(section?.start||0)+1,count)} / ${count}`;
-        $('#routineMicStatus').textContent=t('Listening…');
+        const column=exercise.columns[guide.index];
+        $('#routineMicStatus').textContent=t(column?.holdMs?`Root: ${column.noteName} — let it ring`:'Listening…');
       }
     }
     function showTarget(){
-      if(exercises[state.index]?.strumming)return;
-      const target=$('#routineTab').querySelector('.is-target');
-      if(target){
-        target.scrollIntoView({block:'nearest',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
-      }
+      if(!active||transition||microphone.state!=='on'||exercises[state.index]?.strumming)return;
+      const svg=$('#routineTab'),target=svg.querySelector('.is-target'),screen=$('#routine');
+      if(!target||!screen.clientHeight)return;
+      // Scroll the actual routine container, not an SVG <g> inside an
+      // overflow-hidden panel. Follow the whole staff, including its heading.
+      const viewport=window.visualViewport,screenRect=screen.getBoundingClientRect();
+      const top=Math.max(screenRect.top,viewport?.offsetTop||0)+16;
+      const bottom=Math.min(screenRect.bottom,viewport?viewport.offsetTop+viewport.height:window.innerHeight)-16;
+      if(bottom<=top)return;
+      const rect=svg.getBoundingClientRect(),scale=rect.height/svg.viewBox.baseVal.height;
+      let start=rect.top+Number(target.getAttribute('data-staff-top'))*scale;
+      let height=Number(target.getAttribute('data-staff-height'))*scale;
+      // In a short landscape viewport a complete staff may not fit. Keep
+      // the target itself comfortably visible instead of clipping the note.
+      if(height>bottom-top){const note=target.getBoundingClientRect();start=note.top;height=note.height}
+      if(start>=top&&start+height<=bottom)return;
+      screen.scrollTo({top:screen.scrollTop+start+height/2-(top+bottom)/2,
+        behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
     }
     function audioState(value,error){
       const on=value==='on';
@@ -92,6 +104,7 @@
       const e=exercises[state.index];
       const instruction=e.melody&&current().section===1?(e.diagonal?'Play the same motif back through the three blocks.':`Return to ${state.root}, reading from left to right.`):microphone.state==='on'&&e.id==='root'?'Play the highlighted note.':microphone.state==='on'&&e.id==='triads'&&!e.sections?'Play each triad together.':e.instruction;
       $('#routineInstruction').textContent=t(instruction);
+      if(e.diagonal)$('#routineInstruction').textContent+=' '+t('Let the root ring. Light vibrato is optional.');
     }
     function listen({samples,spectrum,sampleRate,fftSize,now}){
       if(!active||state.index>=5||transition||now<settleUntil)return;
@@ -117,7 +130,8 @@
           }
         }
       }
-      if(!gate.update({match,level,now,chord}))return;
+      const column=exercises[state.index].columns[current().index];
+      if(!gate.update({match,level,now,chord,holdMs:column.holdMs}))return;
       lastPitches=pitches;current().index++;
       draw(true);
       if(current().index===(currentSection()?.end||exercises[state.index].columns.length)){advance();return}
@@ -232,9 +246,9 @@
       if(!access.unlocked)state.quality='minor';
       beginRoutine();reset();if(micPreference.enabled)microphone.start();$('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
     });
-    if(window.ResizeObserver)new window.ResizeObserver(()=>draw()).observe($('#routineTabScroll'));
+    if(window.ResizeObserver)new window.ResizeObserver(()=>{draw();showTarget()}).observe($('#routineTabScroll'));
     return {
-      resize(){draw()},
+      resize(){draw();showTarget()},
       leave(){active=false;cancelTransition();microphone.stop();strumming.stop()},
       enter(){active=true;microphone.stop();state.root=access.unlocked?MusicTheory.NOTES[Math.floor(random()*MusicTheory.NOTES.length)]:'A';state.quality='minor';beginRoutine();reset();if(micPreference.enabled)microphone.start()}
     };
