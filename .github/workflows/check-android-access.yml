@@ -41,6 +41,65 @@ jobs:
           $tests = Get-ChildItem web/tests/*.test.cjs, app/tests/*.test.cjs, app/tests/*.test.js, server/tests/*.test.mjs
           node --test $tests.FullName
           if ($LASTEXITCODE -ne 0) { throw "Regression tests failed" }
+  android:
+    name: Android / insets and optimized release
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v4
+      - name: Install Android SDK
+        shell: pwsh
+        run: |
+          sdkmanager --install "platforms;android-36" "build-tools;35.0.0"
+          if ($LASTEXITCODE -ne 0) { throw "Android SDK installation failed" }
+      - run: npm ci --no-audit --no-fund
+        working-directory: app
+      - name: Generate disposable CI signing key
+        shell: pwsh
+        run: |
+          # Exercises the real release/R8 path without access to the store key.
+          keytool -genkeypair -keystore app/android/app/ci-test.keystore -alias ci -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 2 -dname "CN=CI Test Only"
+          if ($LASTEXITCODE -ne 0) { throw "CI key generation failed" }
+          @('storeFile=ci-test.keystore', 'storePassword=android', 'keyAlias=ci', 'keyPassword=android') | Set-Content app/android/keystore.properties -Encoding utf8NoBOM
+      - name: Build and validate optimized APK and AAB
+        shell: pwsh
+        run: ./scripts/build-instrument.ps1 -Instrument guitar -Profile Store -BuildType Release -Format Both -VersionCode 1 -VersionName 0.0.0-ci
+      - name: Verify the generated Android plugin registry
+        shell: pwsh
+        run: |
+          $config = Get-Content app/android/app/src/main/assets/capacitor.config.json -Raw | ConvertFrom-Json
+          if ($config.plugins.SystemBars.insetsHandling -ne 'disable') { throw "Two inset owners would resize the WebView twice" }
+          $plugins = Get-Content app/android/app/src/main/assets/capacitor.plugins.json -Raw | ConvertFrom-Json
+          if ($plugins.classpath -match 'statusbar') { throw "Legacy StatusBar must not ship on Android" }
+          if ($plugins.pkg -notcontains '@capacitor/app' -or $plugins.pkg -notcontains '@capacitor/splash-screen') { throw "Required native plugins are missing" }
+      - name: Native inset and purchase-cache regressions
+        shell: pwsh
+        working-directory: app/android
+        run: |
+          ./gradlew.bat --no-scan testDebugUnitTest
+          if ($LASTEXITCODE -ne 0) { throw "Native Android tests failed" }
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: android-native-test-reports
+          path: |
+            app/android/app/build/reports/tests/
+            app/android/app/build/test-results/
+          retention-days: 14
+      - name: Remove CI packages and signing files
+        if: always()
+        shell: pwsh
+        run: Remove-Item app/android/keystore.properties, app/android/app/ci-test.keystore, dist -Recurse -Force -ErrorAction SilentlyContinue
   browser:
     name: Browser / ${{ matrix.project }}
     runs-on: ${{ matrix.os }}

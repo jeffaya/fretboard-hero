@@ -93,10 +93,11 @@ Known product identities (see `web/README.md` for full changelog):
   safely when `window.Capacitor` is undefined (i.e. running as a plain web
   page). Logic is unit-tested in `app/tests/capacitor-bridge.test.js`
   (`node app/tests/capacitor-bridge.test.js`).
-- Splash/status bar theme color is `#05070b` (matches the site's dark
-  theme), configured via `capacitor.config.json` plugins block
-  (`SplashScreen`, `StatusBar`), regenerated per instrument by
-  `build-instrument.ps1` (see §4).
+- Splash and iOS StatusBar use `#05070b` via the Capacitor plugins block.
+  Android excludes the legacy StatusBar plugin; core SystemBars sets light icons,
+  while the native container draws `#030509` behind transparent system bars and
+  applies real bar/cutout/keyboard insets. `build-instrument.ps1` regenerates the
+  platform allowlist and SystemBars configuration for every instrument (see §4).
 - Viewport meta already sets `user-scalable=no` in `web/index.html` — this
   is what disables pinch-zoom in both the web and native builds; no
   additional native-side configuration is needed for that.
@@ -278,13 +279,10 @@ during the run.
 
 ### 6.4 Known benign noise during verification
 
-- `SystemBars.java` (inside `node_modules/@capacitor/android`, a Capacitor
-  core plugin) legitimately logs
-  `console.error('Error injecting safe area CSS: ...')` on the very first
-  WebView frame, when `document.documentElement` isn't attached to the DOM
-  yet. This is caught internally by the plugin's own try/catch and is a
-  known framework-level race condition, not an app bug — do not treat it as
-  a verification failure.
+- Android uses native container insets (see `docs/TESTING.md`). The core
+  SystemBars plugin only controls icon appearance; its inset/CSS injection is
+  disabled. An `Error injecting safe area CSS` message now indicates stale or
+  incorrect Capacitor configuration and must be investigated.
 - A Google Play Services "account error" system activity may appear after
   launching an app on some emulator images; this is an emulator/Play
   Services artifact unrelated to this app.
