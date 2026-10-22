@@ -423,5 +423,8 @@
   "{store} could not load this purchase. Please try again later.": "{store} non ha potuto caricare questo acquisto. Riprova più tardi.",
   "Could not restore your access": "Impossibile ripristinare il tuo accesso",
   "Could not verify your purchase": "Impossibile verificare il tuo acquisto",
-  "Could not open payment": "Impossibile aprire il pagamento"
+  "Could not open payment": "Impossibile aprire il pagamento",
+  "Let the root ring. Light vibrato is optional.": "Lascia risuonare la tonica. Un leggero vibrato è facoltativo.",
+  "~ = let the root ring; light vibrato optional": "~ = lascia risuonare la tonica; vibrato leggero facoltativo",
+  "Root: {note} — let it ring": "Tonica: {note} — lascia risuonare"
 }

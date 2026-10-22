@@ -423,5 +423,8 @@
   "{store} could not load this purchase. Please try again later.": "{store} इस खरीद की जानकारी लोड नहीं कर सका। कृपया बाद में फिर से कोशिश करें।",
   "Could not restore your access": "आपका एक्सेस बहाल नहीं हो सका",
   "Could not verify your purchase": "आपकी खरीद सत्यापित नहीं हो सकी",
-  "Could not open payment": "भुगतान स्क्रीन नहीं खुल सकी"
+  "Could not open payment": "भुगतान स्क्रीन नहीं खुल सकी",
+  "Let the root ring. Light vibrato is optional.": "मूल स्वर को थोड़ी देर गूँजने दें। हल्का वाइब्रेटो वैकल्पिक है।",
+  "~ = let the root ring; light vibrato optional": "~ = मूल स्वर को गूँजने दें; हल्का वाइब्रेटो वैकल्पिक",
+  "Root: {note} — let it ring": "मूल स्वर: {note} — गूँजने दें"
 }

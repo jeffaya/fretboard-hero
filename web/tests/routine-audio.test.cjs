@@ -34,6 +34,17 @@ test('Single notes and chords need sustained evidence, and held notes never repe
   assert.equal(hits,2);
  }
 });
+test('A root sustain needs longer consecutive evidence, with no beat or tempo requirement',()=>{
+ const gate=createGate(),hit=(now,match=true)=>gate.update({match,level:.02,now,holdMs:380});
+ for(const now of [0,80,160,240,320])assert.equal(hit(now),false);
+ assert.equal(hit(400),true);
+ for(const now of [480,560,640])assert.equal(hit(now),false,'a held root validates only once');
+ gate.reset();
+ for(const now of [1000,1080,1160,1240])assert.equal(hit(now),false);
+ assert.equal(hit(1320,false),false);
+ for(const now of [1400,1480,1560,1640,1720])assert.equal(hit(now),false,'a wrong pitch restarts the hold');
+ assert.equal(hit(1800),true);
+});
 test('A new attack can rearticulate a repeated pitch without complete silence',()=>{
  for(const level of [.03,.0006]){
   const gate=createGate();gate.reset(true);

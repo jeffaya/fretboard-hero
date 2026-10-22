@@ -148,6 +148,20 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Release notes
 
+## V10.49.21 — Pentatonic round trips and hands-free tablature following
+
+- Choose one of the two reference diagonals randomly per routine. In A minor,
+  keep the exact frets 3–12 or 8–17, with slides on the outward and return passages.
+- Center the active tablature staff in the routine's scroll container when it
+  leaves the visible area. Follow the target note on short landscape screens,
+  respect reduced motion and leave already visible staves still.
+- Mark roots with `1 ~` and a localized sustain cue. Require a slightly longer
+  matching root note in either direction; no BPM or required vibrato gesture.
+- Preserve the selected diagonal through settings, navigation and microphone
+  toggles. Refresh script and locale URLs for existing installations.
+- Cover exact fingerings, transposition, complete microphone-driven round trips,
+  root holds, scroll geometry and all eleven languages with automated tests.
+
 ### V10.49.13 — Release cleanup
 
 - Audit all 12 stylesheets and all 51 first-party runtime web scripts, including

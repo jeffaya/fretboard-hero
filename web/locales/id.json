@@ -423,5 +423,8 @@
   "{store} could not load this purchase. Please try again later.": "{store} tidak dapat memuat pembelian ini. Silakan coba lagi nanti.",
   "Could not restore your access": "Akses Anda tidak dapat dipulihkan",
   "Could not verify your purchase": "Pembelian Anda tidak dapat diverifikasi",
-  "Could not open payment": "Halaman pembayaran tidak dapat dibuka"
+  "Could not open payment": "Halaman pembayaran tidak dapat dibuka",
+  "Let the root ring. Light vibrato is optional.": "Biarkan nada dasar berbunyi lebih lama. Vibrato ringan bersifat opsional.",
+  "~ = let the root ring; light vibrato optional": "~ = tahan nada dasar; vibrato ringan opsional",
+  "Root: {note} — let it ring": "Nada dasar: {note} — tahan bunyinya"
 }

@@ -24,37 +24,30 @@
     return journey(notes.slice(0,8).map(note=>describe(note,engine,root,rootPC)));
   }
   function diagonal(engine,root,rootPC,quality,variant){
-    // Keep the 2+3 / 3+2 fingerings and octave repetition, but rotate the
-    // five-note cell to the lowest complete diagonal instead of fixing its
-    // starting degree (which pushed several keys to frets 18–20).
+    // Preserve the two reference fingerings when transposing: in A minor,
+    // G–A–C–D–E starts at fret 3 and C–D–E–G–A starts at fret 8.
     const minorRoot=mod(rootPC-(quality==='major'?3:0));
-    const scale=[0,3,5,7,10],lowerCount=variant===1?3:2,candidates=[];
-    for(let rotation=0;rotation<5;rotation++){
-      const offsets=scale.map((_,i)=>scale[(rotation+i)%5]+12*Math.floor((rotation+i)/5));
-      const firstFret=mod(minorRoot+offsets[0]-engine.courses[0].pc);
-      const firstMidi=engine.midiAt(0,firstFret),anchor=mod(minorRoot-engine.courses[0].pc);
-      const boxes=PentatonicRenderer.visiblePairs({profile:engine.profile,anchor,maxFret:engine.maxFret});
-      const up=[];
-      for(let block=0;block<3;block++){
-        const notes=offsets.map((offset,i)=>{
-          const string=block*2+(i<lowerCount?0:1);
-          return {string,fret:firstMidi+block*12+offset-offsets[0]-engine.courses[string].midi};
-        });
-        if(notes.some(n=>n.fret<0||n.fret>Math.min(12,engine.maxFret)))break;
-        const shift=lowerCount===3?2:4,slidingString=notes[shift].string;
-        const before=boxes.find(box=>notes.slice(0,2).every(n=>box.pairs[n.string].includes(n.fret)));
-        const after=boxes.find(box=>[notes[shift-1].fret,notes[shift].fret].every(fret=>box.pairs[slidingString].includes(fret)));
-        if(!before||!after)break;
-        if(notes.some((note,i)=>!(i<shift?before:after).pairs[note.string].includes(note.fret)))break;
-        notes.forEach((note,i)=>up.push({...describe(note,engine,root,rootPC),block:block+1,
-          position:i<shift?before.id:after.id,slideFrom:i===shift?notes[i-1]:undefined,fromPosition:i===shift?before.id:undefined}));
-      }
-      if(up.length===15)candidates.push(up);
+    const scale=[0,3,5,7,10],lowerCount=variant===1?3:2,rotation=variant===1?1:4;
+    const offsets=scale.map((_,i)=>scale[(rotation+i)%5]+12*Math.floor((rotation+i)/5));
+    const firstFret=mod(minorRoot+offsets[0]-engine.courses[0].pc);
+    const firstMidi=engine.midiAt(0,firstFret),anchor=mod(minorRoot-engine.courses[0].pc);
+    const boxes=PentatonicRenderer.visiblePairs({profile:engine.profile,anchor,maxFret:engine.maxFret});
+    const up=[];
+    for(let block=0;block<3;block++){
+      const notes=offsets.map((offset,i)=>{
+        const string=block*2+(i<lowerCount?0:1);
+        return {string,fret:firstMidi+block*12+offset-offsets[0]-engine.courses[string].midi};
+      });
+      if(notes.some(n=>n.fret<0||n.fret>engine.maxFret))throw new Error('No complete diagonal for this fretboard');
+      const shift=lowerCount===3?2:4,slidingString=notes[shift].string;
+      const before=boxes.find(box=>notes.slice(0,2).every(n=>box.pairs[n.string].includes(n.fret)));
+      const after=boxes.find(box=>[notes[shift-1].fret,notes[shift].fret].every(fret=>box.pairs[slidingString].includes(fret)));
+      if(!before||!after||notes.some((note,i)=>!(i<shift?before:after).pairs[note.string].includes(note.fret)))throw new Error('No matching pentatonic boxes');
+      notes.forEach((note,i)=>up.push({...describe(note,engine,root,rootPC),block:block+1,
+        holdMs:engine.noteAt(note.string,note.fret)===rootPC?380:undefined,
+        position:i<shift?before.id:after.id,slideFrom:i===shift?notes[i-1]:undefined,fromPosition:i===shift?before.id:undefined}));
     }
-    const frets=columns=>columns.map(c=>c.notes[0].fret);
-    candidates.sort((a,b)=>a[0].notes[0].fret-b[0].notes[0].fret||Math.max(...frets(a))-Math.max(...frets(b))||Math.min(...frets(a))-Math.min(...frets(b)));
-    if(!candidates.length)throw new Error('No complete low-position diagonal for this fretboard');
-    return {...journey(candidates[0]),diagonal:variant+1};
+    return {...journey(up),diagonal:variant+1};
   }
   window.RoutineMelody=Object.freeze({scale,diagonal});
 })();

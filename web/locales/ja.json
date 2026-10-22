@@ -423,5 +423,8 @@
   "{store} could not load this purchase. Please try again later.": "{store}でこの購入情報を読み込めませんでした。しばらくしてからもう一度お試しください。",
   "Could not restore your access": "アクセスを復元できませんでした",
   "Could not verify your purchase": "購入を確認できませんでした",
-  "Could not open payment": "決済画面を開けませんでした"
+  "Could not open payment": "決済画面を開けませんでした",
+  "Let the root ring. Light vibrato is optional.": "ルート音を長めに響かせましょう。軽いビブラートは任意です。",
+  "~ = let the root ring; light vibrato optional": "~ = ルート音を長めに響かせる（軽いビブラートは任意）",
+  "Root: {note} — let it ring": "ルート音：{note} — 長めに響かせる"
 }
