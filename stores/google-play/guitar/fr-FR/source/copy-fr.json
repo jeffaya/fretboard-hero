@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "locale": "fr-FR",
+  "instrument": "guitar",
+  "cards": [
+    {
+      "id": "01-routine",
+      "source_capture_id": "01-routine",
+      "headline": "Une routine. De vrais progrès.",
+      "headline_lines": [
+        "Une routine.",
+        "De vrais progrès."
+      ],
+      "supporting_text": "Progressez à la guitare, une routine après l’autre.",
+      "source": "screens-phone/01-routine-1080x1920.png"
+    },
+    {
+      "id": "02-triads",
+      "source_capture_id": "02-triads",
+      "headline": "Jouez avec assurance.",
+      "headline_lines": [
+        "Jouez avec",
+        "assurance."
+      ],
+      "supporting_text": "Repérez-vous sur le manche avec des triades simples.",
+      "source": "screens-phone/02-triads-1080x1920.png"
+    },
+    {
+      "id": "03-pentatonic",
+      "source_capture_id": "03-pentatonic",
+      "headline": "Reliez les cinq positions.",
+      "headline_lines": [
+        "Reliez les",
+        "cinq positions."
+      ],
+      "supporting_text": "Connectez les cinq positions pentatoniques sur tout le manche.",
+      "source": "screens-phone/03-pentatonic-1080x1920.png"
+    },
+    {
+      "id": "04-feedback",
+      "source_capture_id": "04-feedback",
+      "headline": "Jouez. Le micro vous suit.",
+      "headline_lines": [
+        "Jouez.",
+        "Le micro vous suit."
+      ],
+      "supporting_text": "Jouez les notes et les accords. Le micro vous guide en direct.",
+      "source": "screens-phone/04-feedback-1080x1920.png"
+    },
+    {
+      "id": "05-quiz",
+      "source_capture_id": "05-quiz",
+      "headline": "Testez vos connaissances.",
+      "headline_lines": [
+        "Testez vos",
+        "connaissances."
+      ],
+      "supporting_text": "Relevez le défi : retrouvez les notes en 60 secondes.",
+      "source": "screens-phone/05-quiz-1080x1920.png"
+    },
+    {
+      "id": "06-tuner",
+      "source_capture_id": "06-tuner",
+      "headline": "Accordez. À vous de jouer.",
+      "headline_lines": [
+        "Accordez.",
+        "À vous de jouer."
+      ],
+      "supporting_text": "Accordez votre guitare avec l’accordeur intégré.",
+      "source": "screens-phone/06-tuner-1080x1920.png"
+    },
+    {
+      "id": "07-map",
+      "source_capture_id": "07-map",
+      "headline": "Maîtrisez votre manche.",
+      "headline_lines": [
+        "Maîtrisez",
+        "votre manche."
+      ],
+      "supporting_text": "Repérez chaque note. Sachez où la jouer.",
+      "source": "screens-phone/07-map-1080x1920.png"
+    },
+    {
+      "id": "08-circle",
+      "source_capture_id": "08-circle",
+      "headline": "Comprenez l’harmonie.",
+      "headline_lines": [
+        "Comprenez",
+        "l’harmonie."
+      ],
+      "supporting_text": "Découvrez les liens entre les tonalités et les accords.",
+      "source": "screens-phone/08-circle-1080x1920.png"
+    }
+  ],
+  "note": "French marketing copy with real French application captures; shared approved artwork reused from en-US."
+}
