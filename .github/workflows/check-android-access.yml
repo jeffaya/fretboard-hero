@@ -99,7 +99,7 @@ jobs:
       - name: Remove CI packages and signing files
         if: always()
         shell: pwsh
-        run: Remove-Item app/android/keystore.properties, app/android/app/ci-test.keystore, app/dist -Recurse -Force -ErrorAction SilentlyContinue
+        run: Remove-Item app/android/keystore.properties, app/android/app/ci-test.keystore, dist -Recurse -Force -ErrorAction SilentlyContinue
   browser:
     name: Browser / ${{ matrix.project }}
     runs-on: ${{ matrix.os }}
