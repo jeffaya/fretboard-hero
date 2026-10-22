@@ -1,0 +1,70 @@
+name: Google Play visual export
+
+on:
+  pull_request:
+    paths:
+      - 'stores/tools/**'
+      - 'stores/google-play/guitar/fr-FR/source/**'
+      - '.github/workflows/store-visuals.yml'
+  workflow_dispatch:
+    inputs:
+      locale:
+        description: Google Play locale
+        type: choice
+        options: [fr-FR, en-US]
+        default: fr-FR
+        required: true
+
+concurrency:
+  group: store-visuals-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  capture:
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/guitar-fr-store-visuals')
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      STORE_LOCALE: ${{ inputs.locale || 'fr-FR' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: stores/tools/package-lock.json
+      - run: npm --prefix stores/tools ci --no-audit --no-fund
+      - run: npx --prefix stores/tools playwright install --with-deps chromium
+      - name: Capture the real localized application
+        run: node stores/tools/capture.cjs
+      - name: Render phone artwork and preserve the existing application icon
+        run: |
+          node stores/tools/render.cjs
+          node stores/tools/export-feature.cjs "stores/google-play/guitar/$STORE_LOCALE"
+          mkdir -p "stores/google-play/guitar/$STORE_LOCALE/icon"
+          if [ "$STORE_LOCALE" != en-US ]; then
+            cp stores/google-play/guitar/en-US/icon/app-icon-512x512.png "stores/google-play/guitar/$STORE_LOCALE/icon/app-icon-512x512.png"
+          fi
+      - name: Validate exported images
+        run: node stores/tools/validate.cjs "stores/google-play/guitar/$STORE_LOCALE"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: guitar-google-play-${{ env.STORE_LOCALE }}
+          path: stores/google-play/guitar/${{ env.STORE_LOCALE }}/
+          retention-days: 7
+      - name: Save the requested French assets to their PR branch
+        if: github.event_name == 'pull_request' && github.head_ref == 'codex/guitar-fr-store-visuals'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- stores/google-play/guitar/fr-FR
+          if ! git diff --cached --quiet; then
+            git commit -m 'assets(stores): export French guitar screenshots and validation'
+            git push origin HEAD:refs/heads/codex/guitar-fr-store-visuals
+          fi
