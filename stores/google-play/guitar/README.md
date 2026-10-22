@@ -59,7 +59,8 @@ Les clés 01 à 08 correspondent aux préfixes des captures dans les différents
 ## État des images
 
 - **en-US** : visuels existants et guide d'import ; Android XR reste un brouillon 2D.
-- **Les dix autres langues** : README et textes alternatifs uniquement. Les images localisées restent à produire avec l'interface et les accroches dans la même langue.
+- **fr-FR** : bannière et huit visuels téléphone en français, captures localisées pour tablettes et ordinateur ; Android XR reste un brouillon 2D.
+- **Les neuf autres langues** : README et textes alternatifs uniquement. Les images localisées restent à produire avec l'interface et les accroches dans la même langue.
 
 Ne pas présenter une image anglaise comme une capture traduite. Lors de l'ajout des visuels, vérifier que chaque texte alternatif décrit toujours l'état visible, puis lancer `stores/tools/validate.cjs` sur le dossier complet. Le rapport généré `validation.json` ne certifie pas des images absentes.
 

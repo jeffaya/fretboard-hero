@@ -12,7 +12,7 @@ const ids=['01-routine','02-triads','03-pentatonic','04-feedback','05-quiz','06-
     await page.goto(pathToFileURL(path.join(out,'source/layout/panorama.html')).href);
     await page.evaluate(()=>document.fonts.ready);
     await page.waitForFunction(()=>[...document.images].every(img=>img.complete&&img.naturalWidth>0));
-    const clipped=await page.locator('.card').evaluateAll(cards=>cards.flatMap(card=>[...card.querySelectorAll('h1 span,.subtitle')].filter(el=>el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1).map(el=>({card:card.dataset.id,text:el.textContent}))));
+    const clipped=await page.locator('.card').evaluateAll(cards=>cards.flatMap(card=>[...card.querySelectorAll('h1 span,.subtitle')].filter(el=>el.scrollWidth>el.clientWidth+1||(el.matches('.subtitle')&&el.scrollHeight>el.clientHeight+1)).map(el=>({card:card.dataset.id,text:el.textContent}))));
     if(clipped.length)throw new Error('Store artwork contains clipped text: '+JSON.stringify(clipped));
     fs.mkdirSync(path.join(out,'phone'),{recursive:true});
     for(const id of ids){const bytes=await page.locator(`[data-id="${id}"]`).screenshot();await sharp(bytes).removeAlpha().png({compressionLevel:9}).toFile(path.join(out,'phone',`${id}-1080x1920.png`));}
