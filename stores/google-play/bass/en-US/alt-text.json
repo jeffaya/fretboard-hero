@@ -1,0 +1,12 @@
+{
+  "app-icon": "App icon for Bass Fretboard Hero.",
+  "feature-graphic": "Bass Fretboard Hero: Tuner, Daily Routine, Learn, Fretboard Map, Circle of Fifths and Quiz.",
+  "01-routine": "Daily Routine scale exercise with note names, degrees and four-string tablature.",
+  "02-triads": "Triads and their connections shown in four-string tablature.",
+  "03-pentatonic": "Pentatonic positions with highlighted notes across the four-string fretboard.",
+  "04-feedback": "Daily Routine highlights the next note and shows live microphone feedback.",
+  "05-quiz": "Fretboard quiz with a 60-second timer, target note and score.",
+  "06-tuner": "Tuner for E–A–D–G, with string selection and a pitch indicator.",
+  "07-map": "Fretboard Map showing note names across all four strings.",
+  "08-circle": "Interactive Circle of Fifths with relative minor keys and harmony information."
+}

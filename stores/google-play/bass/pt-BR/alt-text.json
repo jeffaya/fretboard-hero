@@ -1,0 +1,12 @@
+{
+  "app-icon": "Ícone do aplicativo Bass Fretboard Hero.",
+  "feature-graphic": "Bass Fretboard Hero: afinador, rotina, aprendizado, mapa do braço, círculo das quintas e quiz.",
+  "01-routine": "Exercício de escala da Rotina diária com nomes de notas, graus e tablatura de quatro cordas.",
+  "02-triads": "Tríades e suas conexões em tablatura de quatro cordas.",
+  "03-pentatonic": "Posições pentatônicas com notas destacadas no braço de quatro cordas.",
+  "04-feedback": "A Rotina diária destaca a próxima nota e mostra o retorno do microfone.",
+  "05-quiz": "Quiz sobre o braço com cronômetro de 60 segundos, nota-alvo e pontuação.",
+  "06-tuner": "Afinador para Mi–Lá–Ré–Sol, com seleção de corda e indicador de afinação.",
+  "07-map": "Mapa do braço mostrando os nomes das notas nas quatro cordas.",
+  "08-circle": "Círculo das quintas interativo com tonalidades relativas menores e informações de harmonia."
+}

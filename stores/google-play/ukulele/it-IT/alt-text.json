@@ -1,0 +1,12 @@
+{
+  "app-icon": "Icona dell’app Ukulele Fretboard Hero.",
+  "feature-graphic": "Ukulele Fretboard Hero: accordatore, routine, apprendimento, mappa della tastiera, circolo delle quinte e quiz.",
+  "01-routine": "Esercizio di scala della Routine quotidiana con nomi delle note, gradi e tablatura a quattro corde.",
+  "02-triads": "Triadi e collegamenti presentati in tablatura a quattro corde.",
+  "03-pentatonic": "Posizioni pentatoniche con note evidenziate sulla tastiera a quattro corde.",
+  "04-feedback": "La Routine quotidiana evidenzia la nota successiva e mostra il riscontro del microfono.",
+  "05-quiz": "Quiz sulla tastiera con timer di 60 secondi, nota da trovare e punteggio.",
+  "06-tuner": "Accordatore per Sol–Do–Mi–La con Sol acuto, con selezione della corda e indicatore di intonazione.",
+  "07-map": "Mappa della tastiera con i nomi delle note sulle quattro corde.",
+  "08-circle": "Circolo delle quinte interattivo con tonalità relative minori e informazioni armoniche."
+}

@@ -1,0 +1,12 @@
+{
+  "app-icon": "Icono de la aplicación Ukulele Fretboard Hero.",
+  "feature-graphic": "Ukulele Fretboard Hero: afinador, rutina, aprendizaje, mapa del diapasón, círculo de quintas y cuestionario.",
+  "01-routine": "Ejercicio de escala de la Rutina diaria con nombres de notas, grados y tablatura de cuatro cuerdas.",
+  "02-triads": "Tríadas y sus conexiones en tablatura de cuatro cuerdas.",
+  "03-pentatonic": "Posiciones pentatónicas con notas resaltadas en el diapasón de cuatro cuerdas.",
+  "04-feedback": "La Rutina diaria resalta la siguiente nota y muestra las indicaciones del micrófono.",
+  "05-quiz": "Cuestionario del diapasón con temporizador de 60 segundos, nota objetivo y puntuación.",
+  "06-tuner": "Afinador para Sol–Do–Mi–La con Sol agudo, con selección de cuerda e indicador de afinación.",
+  "07-map": "Mapa del diapasón con los nombres de las notas en las cuatro cuerdas.",
+  "08-circle": "Círculo de quintas interactivo con tonalidades menores relativas e información de armonía."
+}
