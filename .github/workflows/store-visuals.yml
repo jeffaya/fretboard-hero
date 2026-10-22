@@ -1,11 +1,6 @@
 name: Google Play visual export
 
 on:
-  pull_request:
-    paths:
-      - 'stores/tools/**'
-      - 'stores/google-play/guitar/fr-FR/source/**'
-      - '.github/workflows/store-visuals.yml'
   workflow_dispatch:
     inputs:
       locale:
@@ -20,11 +15,10 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   capture:
-    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/guitar-fr-store-visuals')
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
@@ -32,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -58,13 +52,3 @@ jobs:
           name: guitar-google-play-${{ env.STORE_LOCALE }}
           path: stores/google-play/guitar/${{ env.STORE_LOCALE }}/
           retention-days: 7
-      - name: Save the requested French assets to their PR branch
-        if: github.event_name == 'pull_request' && github.head_ref == 'codex/guitar-fr-store-visuals'
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- stores/google-play/guitar/fr-FR
-          if ! git diff --cached --quiet; then
-            git commit -m 'assets(stores): export French guitar screenshots and validation'
-            git push origin HEAD:refs/heads/codex/guitar-fr-store-visuals
-          fi
