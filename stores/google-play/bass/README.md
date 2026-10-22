@@ -1,7 +1,79 @@
-# Bass — Google Play
+# Bass Fretboard Hero — fiches Google Play
 
-The shared English feature graphic is available in [en-US/icon/feature-graphic-1024x500.png](en-US/icon/feature-graphic-1024x500.png).
-It is an exact copy of the website's 1024 × 500 OG PNG, including Tuner and Daily Routine.
+Les **11 langues de l’application** disposent chacune d’un `README.md` avec les trois champs à copier-coller et d’un `alt-text.json` avec dix propositions de textes alternatifs. Les descriptions sont adaptées à l’édition basse ; la [fiche anglaise](en-US/README.md) sert de référence.
 
-The rest of this listing (descriptions, app icon and screenshots) remains to be prepared. No complete-listing validation is claimed.
-See [the common Android guide](../README.md). Regenerate all three shared graphics with `node stores/tools/export-og.cjs`.
+## Informations de l’application
+
+| Champ | Valeur |
+| --- | --- |
+| Nom public | Bass Fretboard Hero |
+| Identifiant Android | `com.bass.fretboardhero` |
+| Profil de l’instrument | `bass-4` |
+| Site | https://fretboard-hero.com/?instrument=bass-4 |
+| Politique de confidentialité | https://fretboard-hero.com/privacy |
+| Assistance | hello@fretboard-hero.com |
+| Achat intégré permanent | `lifetime_access` — achat unique, sans abonnement |
+
+Basse à quatre cordes, accordage standard Mi–La–Ré–Sol (E–A–D–G). Pentatoniques, triades et arpèges. Pas de formes CAGED de guitare.
+
+Les modes et positions d’Apprendre avec la fondamentale La, le Cycle des quintes et la Routine quotidienne en La mineur sont accessibles gratuitement. L’achat intégré débloque toutes les tonalités et notes à vie dans cette application. L’accès acheté n’est pas partagé automatiquement entre les applications Android distinctes.
+
+Ces informations suivent [les variantes Android](../../../app/instruments.json), [le profil de l’instrument](../../../web/instruments/bass-4.js), [les règles d’accès](../../../web/core/access.js) et [la politique de confidentialité](../../../web/privacy.html).
+
+## Langues
+
+| Langue | Code dans l’application | Dossier Google Play | Textes alternatifs |
+| --- | --- | --- | --- |
+| English (United States) | `en` | [en-US/README.md](en-US/README.md) | [alt-text.json](en-US/alt-text.json) |
+| Español | `es` | [es-ES/README.md](es-ES/README.md) | [alt-text.json](es-ES/alt-text.json) |
+| Français | `fr` | [fr-FR/README.md](fr-FR/README.md) | [alt-text.json](fr-FR/alt-text.json) |
+| Deutsch | `de` | [de-DE/README.md](de-DE/README.md) | [alt-text.json](de-DE/alt-text.json) |
+| Italiano | `it` | [it-IT/README.md](it-IT/README.md) | [alt-text.json](it-IT/alt-text.json) |
+| 日本語 | `ja` | [ja-JP/README.md](ja-JP/README.md) | [alt-text.json](ja-JP/alt-text.json) |
+| 한국어 | `ko` | [ko-KR/README.md](ko-KR/README.md) | [alt-text.json](ko-KR/alt-text.json) |
+| 简体中文 | `zh-CN` | [zh-CN/README.md](zh-CN/README.md) | [alt-text.json](zh-CN/alt-text.json) |
+| Português (Brasil) | `pt-BR` | [pt-BR/README.md](pt-BR/README.md) | [alt-text.json](pt-BR/alt-text.json) |
+| हिन्दी | `hi` | [hi-IN/README.md](hi-IN/README.md) | [alt-text.json](hi-IN/alt-text.json) |
+| Bahasa Indonesia | `id` | [id/README.md](id/README.md) | [alt-text.json](id/alt-text.json) |
+
+Les dossiers reprennent les codes déjà utilisés par la [fiche guitare](../guitar/README.md) et couvrent les 11 langues de [l’application](../../../web/core/i18n.js).
+
+## Copier les textes
+
+1. Ouvrir le README de la langue et copier les trois blocs dans les champs correspondants de Google Play Console.
+2. Conserver le nom **Bass Fretboard Hero** dans toutes les langues.
+3. Après préparation des images, vérifier les textes alternatifs face aux visuels avant de les renseigner si la console les demande.
+
+| Champ | Limite du dépôt |
+| --- | --- |
+| Nom de l’application | 30 caractères |
+| Brève description | 80 caractères |
+| Description complète | 4 000 caractères |
+| Chaque texte alternatif | 140 caractères |
+
+Les compteurs des README suivent le validateur : points de code Unicode, espaces et sauts de ligne compris. Les titres des rubriques restent en français pour être reconnus par `stores/tools/validate.cjs` ; seuls les contenus des blocs sont destinés à la fiche publique.
+
+## Correspondance des textes alternatifs
+
+| Identifiant | Visuel prévu |
+| --- | --- |
+| `app-icon` | Icône de l’application |
+| `feature-graphic` | Image de présentation |
+| `01-routine` | Routine quotidienne : gamme |
+| `02-triads` | Triades |
+| `03-pentatonic` | Positions pentatoniques |
+| `04-feedback` | Retour du microphone |
+| `05-quiz` | Quiz |
+| `06-tuner` | Accordeur |
+| `07-map` | Carte du manche |
+| `08-circle` | Cycle des quintes |
+
+Les clés sont stables dans toutes les langues. Les descriptions restent générales tant que les captures ne sont pas produites ; elles ne certifient pas un état d’écran qui n’existe pas encore.
+
+## État des visuels
+
+L’[image de présentation anglaise existante](en-US/icon/feature-graphic-1024x500.png) est conservée. Elle est une copie de l’image OG 1024 × 500 du site. L’icône, les captures et les visuels localisés restent à préparer séparément. Les captures de guitare ne constituent pas des captures de cette édition.
+
+Aucun rapport complet `validation.json` n’est ajouté pour des images absentes. Une fois les visuels disponibles, vérifier leur langue et les textes alternatifs, puis lancer `node stores/tools/validate.cjs stores/google-play/bass/<locale>`.
+
+Voir [le guide Google Play commun](../README.md). Les images de présentation partagées se régénèrent avec `node stores/tools/export-og.cjs`.

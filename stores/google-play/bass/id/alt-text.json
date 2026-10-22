@@ -1,0 +1,12 @@
+{
+  "app-icon": "Ikon aplikasi Bass Fretboard Hero.",
+  "feature-graphic": "Bass Fretboard Hero: tuner, latihan harian, belajar, peta fretboard, lingkaran kuint, dan kuis.",
+  "01-routine": "Latihan tangga nada dalam Latihan harian dengan nama nada, derajat, dan tablatur empat senar.",
+  "02-triads": "Triad dan hubungannya ditampilkan dalam tablatur empat senar.",
+  "03-pentatonic": "Posisi pentatonik dengan nada yang disorot pada fretboard empat senar.",
+  "04-feedback": "Latihan harian menyorot nada berikutnya dan menampilkan umpan balik mikrofon.",
+  "05-quiz": "Kuis fretboard dengan penghitung waktu 60 detik, nada target, dan skor.",
+  "06-tuner": "Tuner untuk E–A–D–G, dengan pilihan senar dan indikator tinggi nada.",
+  "07-map": "Peta fretboard menampilkan nama nada pada keempat senar.",
+  "08-circle": "Lingkaran kuint interaktif dengan tonalitas minor relatif dan informasi harmoni."
+}

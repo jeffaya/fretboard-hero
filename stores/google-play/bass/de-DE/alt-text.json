@@ -1,0 +1,12 @@
+{
+  "app-icon": "App-Symbol von Bass Fretboard Hero.",
+  "feature-graphic": "Bass Fretboard Hero: Stimmgerät, tägliche Routine, Lernen, Griffbrettkarte, Quintenzirkel und Quiz.",
+  "01-routine": "Tonleiterübung der Täglichen Routine mit Notennamen, Tonstufen und Tabulatur für vier Saiten.",
+  "02-triads": "Dreiklänge und ihre Verbindungen als Tabulatur für vier Saiten.",
+  "03-pentatonic": "Pentatonik-Positionen mit hervorgehobenen Noten auf dem viersaitigen Griffbrett.",
+  "04-feedback": "Die Tägliche Routine hebt die nächste Note hervor und zeigt Mikrofon-Feedback an.",
+  "05-quiz": "Griffbrett-Quiz mit 60-Sekunden-Timer, gesuchter Note und Punktestand.",
+  "06-tuner": "Stimmgerät für E–A–D–G, mit Saitenauswahl und Anzeige der Tonhöhe.",
+  "07-map": "Griffbrettkarte mit Notennamen auf allen vier Saiten.",
+  "08-circle": "Interaktiver Quintenzirkel mit parallelen Molltonarten und Harmonieinformationen."
+}
