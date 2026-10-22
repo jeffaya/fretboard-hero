@@ -96,7 +96,16 @@ $capacitorConfig = @{
     appId   = $entry.appId
     appName = $entry.name
     webDir  = "www"
+    # StatusBar is retained for iOS only. Android uses Capacitor's core SystemBars
+    # for icon appearance and MainActivity for insets, without legacy color APIs.
+    android = @{
+        includePlugins = @("@capacitor/app", "@capacitor/splash-screen")
+    }
     plugins = @{
+        SystemBars = @{
+            style          = "DARK"
+            insetsHandling = "disable"
+        }
         SplashScreen = @{
             backgroundColor    = "#05070b"
             launchAutoHide     = $true

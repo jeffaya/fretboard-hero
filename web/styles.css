@@ -1,5 +1,5 @@
 /* Application shell and shared tokens.
-   Fixed safe-area padding is intentional: native WebViews have reported unreliable env() insets. */
+   Android insets are applied to the native container, outside the WebView. */
 
 :root {
   --cyan: #27d7ff;
@@ -24,6 +24,15 @@
   --ui-label-gap: 9px;
   --ui-drawer-control-h: 54px;
   --control-min-h: 44px;
+}
+
+/* Android's viewport is already inside system bars and display cutouts. These
+   are ordinary content gaps, not a second estimate of the device's safe area. */
+:root[data-native-insets="android"] {
+  --sa-top: 12px;
+  --sa-right: 0px;
+  --sa-bottom: 12px;
+  --sa-left: 0px;
 }
 
 * { box-sizing: border-box; }

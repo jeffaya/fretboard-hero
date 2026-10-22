@@ -1,16 +1,26 @@
-﻿{
-    "appId":  "com.guitar.fretboardhero",
-    "webDir":  "www",
-    "appName":  "Guitar Fretboard Hero",
-    "plugins":  {
-                    "SplashScreen":  {
-                                         "launchAutoHide":  true,
-                                         "backgroundColor":  "#05070b",
-                                         "launchShowDuration":  400
-                                     },
-                    "StatusBar":  {
-                                      "style":  "DARK",
-                                      "backgroundColor":  "#05070b"
-                                  }
-                }
+{
+  "appId": "com.guitar.fretboardhero",
+  "webDir": "www",
+  "appName": "Guitar Fretboard Hero",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "backgroundColor": "#05070b",
+      "launchShowDuration": 400
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#05070b"
+    },
+    "SystemBars": {
+      "style": "DARK",
+      "insetsHandling": "disable"
+    }
+  },
+  "android": {
+    "includePlugins": [
+      "@capacitor/app",
+      "@capacitor/splash-screen"
+    ]
+  }
 }

@@ -19,7 +19,7 @@ Edit the owning component and its responsive rule instead of appending a new ver
 
 The shared access modal adapts to its platform: the website keeps the motivational pitch below the heading and states that downloading is free directly on each store button, without a separate badge or purchase copy. The native app shows the price, purchase/restore actions and the full-access purchase scope. Both store-button captions are translated in all eleven interface languages; they describe the download, not full access.
 
-The compact drawer and inline toolbar breakpoints are shared with `core/controls.js` and `app.js`. Preserve their behavior when changing CSS. Fixed safe-area padding is intentional for native WebViews. `scripts/sync-web.ps1` copies every stylesheet into native builds; generated `app/www` must not be edited.
+The compact drawer and inline toolbar breakpoints are shared with `core/controls.js` and `app.js`. Preserve their behavior when changing CSS. Android applies real system/keyboard insets outside the WebView; `data-native-insets="android"` scopes the remaining content spacing and is stamped by `scripts/sync-web.ps1` before first paint. The website and iOS keep the existing spacing. The script copies every stylesheet into native builds; generated `app/www` must not be edited.
 
 For CSS changes, compare Home, Learn/Map controls, Daily Routine completion/replay, Circle, Quiz/results, Premium, language menu and Tuner on portrait and landscape viewports. Include all three instruments and a non-Latin locale. Refresh changed CSS URLs in `index.html`; refresh the bootstrap/app URL when JavaScript changes.
 

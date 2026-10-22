@@ -63,6 +63,11 @@ test('Real sync separates Store and Preview on both platforms and preserves the 
     const result = run('sync-web.ps1', ['-Instrument', instrument, '-RepoPath', dir, '-Platform', platform, '-Profile', profile]);
     assert.equal(result.status, 0, result.output);
     const config = JSON.parse(fs.readFileSync(path.join(dir, 'app/www/site.config.json'), 'utf8'));
+    const html = fs.readFileSync(path.join(dir, 'app/www/index.html'), 'utf8');
+    assert.equal(html.includes('data-native-insets="android"'), platform === 'Android');
+    assert.equal(html.includes('viewport-fit=contain'), platform === 'Android');
+    assert.equal(html.includes('viewport-fit=cover'), platform === 'iOS');
+    assert.deepEqual(fs.readFileSync(path.join(dir, 'web/index.html')), fs.readFileSync(path.join(root, 'web/index.html')));
     assert.equal(config.instrument, instrument);
     assert.equal(config.appId, appId(instrument, profile));
     for (const icon of ['app/resources/icon.png', 'app/ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png']) {

@@ -80,6 +80,12 @@ $indexPath = Join-Path $wwwPath "index.html"
 # UTF-8 characters (emoji, arrows) in the source HTML.
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 $indexContent = [System.IO.File]::ReadAllText($indexPath, [System.Text.Encoding]::UTF8)
+if ($Platform -eq "Android") {
+    # Native padding already keeps the entire WebView clear of bars/cutouts/IME.
+    # Stamp this before the first paint; iOS and the website retain their layout.
+    $indexContent = $indexContent -replace '<html ', '<html data-native-insets="android" '
+    $indexContent = $indexContent -replace 'viewport-fit=cover', 'viewport-fit=contain'
+}
 $bridgeTag = "  <script src=`"./core/capacitor-bridge.js`" defer></script>`r`n"
 $indexContent = $indexContent -replace '(?=</body>)', $bridgeTag
 [System.IO.File]::WriteAllText($indexPath, $indexContent, $utf8NoBom)
