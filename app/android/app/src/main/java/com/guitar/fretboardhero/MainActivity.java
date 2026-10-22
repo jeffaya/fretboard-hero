@@ -28,7 +28,6 @@ public class MainActivity extends BridgeActivity {
             getWindow().setAttributes(attributes);
         }
         if (Build.VERSION.SDK_INT >= 29) {
-            getWindow().setStatusBarContrastEnforced(false);
             getWindow().setNavigationBarContrastEnforced(false);
         }
         if (this.bridge == null) return; // Capacitor's missing-WebView fallback.
