@@ -1,0 +1,117 @@
+{
+  "sourceCommit": "56e85344d928ad593063389657615c9b81bbfb62",
+  "locale": "fr-FR",
+  "instrument": "guitar",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "phone",
+      "width": 432,
+      "height": 768,
+      "dpr": 2.5,
+      "touch": true,
+      "folder": "source/screens-phone",
+      "outputs": [
+        {
+          "file": "source/screens-phone/01-routine-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "screen": "routine",
+          "title": "ROUTINE QUOTIDIENNE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nROUTINE QUOTIDIENNE\nRÉGLAGES DE LA ROUTINE\n×\nNOTE\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nTONALITÉ\nMAJEUR\nMINEUR\nAccordeur\nFondamentale\nGamme\nTriades\nRythme\nPenta\nJouez la gamme de La Mineur\n\nUne octave · Cases 5–8 · Montée\n\nPartez de La : montez à l’octave, puis revenez à la fondamentale.\n\nMicro désactivé\n\nMi\nLa\nRé\nSol\nSi\nMi\nLa\n1\n5\nSi\n2\n7\nDo\n♭3\n8\nRé\n4\n5\nMi\n5\n7\nFa\n♭6\n8\nSol\n♭7\n5\nLa\n1\n7\n\nCyan = fondamentale · Chiffres au-dessus = degrés · 1 = fondamentale\n\nRetour →",
+          "sizeBytes": 1089856
+        },
+        {
+          "file": "source/screens-phone/02-triads-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "screen": "routine",
+          "title": "ROUTINE QUOTIDIENNE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nROUTINE QUOTIDIENNE\nRÉGLAGES DE LA ROUTINE\n×\nNOTE\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nTONALITÉ\nMAJEUR\nMINEUR\nAccordeur\nFondamentale\nGamme\nTriades\nRythme\nPenta\nReliez les triades de La Mineur\n\nTriade → tierce seule → triade suivante. Slide facultatif.\n\nMicro désactivé\n\nMi\nLa\nRé\nSol\nSi\nMi\nPosition fondamentale\nFormes CAGED : A\n2\n1\n0\nTierce mineure — Do\n2 → 5\n5\n1er renversement\nFormes CAGED : E\n5\n5\n5\nMi\nLa\nRé\nSol\nSi\nMi\nTierce mineure — Do\n5 → 8\n8\n2e renversement\nFormes CAGED : C / D\n9\n10\n8\n\nCyan = fondamentale\n\nCordes suivantes →",
+          "sizeBytes": 789097
+        },
+        {
+          "file": "source/screens-phone/03-pentatonic-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "screen": "learn",
+          "title": "La MINEUR\nPENTATONIQUE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nLa MINEUR\nPENTATONIQUE\nRÉGLAGES D’APPRENTISSAGE\n×\nNOTE\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nTONALITÉ\nMAJEUR\nMINEUR\nMODE\nPENTATONIQUE\nTRIADES\nACCORDS CAGED\nPOSITIONS\nTOUT\n1\n2\n3\n4\n5\nMANCHE\n12 cases\n15 cases\n17 cases\n21 cases\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nSi\nP3\nP4\nP5\nP1\nP2\nP3\nP4\nMi\nSol\nLa\nDo\nRé\nMi\nLa\nDo\nRé\nMi\nSol\nLa\nRé\nMi\nSol\nLa\nDo\nRé\nSol\nLa\nDo\nRé\nMi\nSol\nDo\nRé\nMi\nSol\nLa\nMi\nSol\nLa\nDo\nRé\nMi\nLa\nFondamentale\nDo\nTierce\nRé\nQuarte\nMi\nQuinte\nSol\nSeptième",
+          "sizeBytes": 1855553
+        },
+        {
+          "file": "source/screens-phone/04-feedback-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "screen": "routine",
+          "title": "ROUTINE QUOTIDIENNE",
+          "mic": "À l’écoute…",
+          "visibleText": "←\nROUTINE QUOTIDIENNE\nRÉGLAGES DE LA ROUTINE\n×\nNOTE\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nTONALITÉ\nMAJEUR\nMINEUR\nAccordeur\nFondamentale\nGamme\nTriades\nRythme\nPenta\nTrouvez la fondamentale La\n\nJouez la note surlignée.\n\nÀ l’écoute…\n\n2 / 8\nMi\nLa\nRé\nSol\nSi\nMi\n5\n0\n12\n7\n2\n14\n10\n5\n\nSurligné = note à jouer · Vert = déjà joué\n\nSuivant →",
+          "sizeBytes": 1225127
+        },
+        {
+          "file": "source/screens-phone/05-quiz-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "screen": "quiz",
+          "title": "QUIZ DU MANCHE\nCONNAISSEZ LE MANCHE • MAÎTRISEZ-LE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nQUIZ DU MANCHE\nCONNAISSEZ LE MANCHE • MAÎTRISEZ-LE\nSCORE\n1 650\n+800\nSÉRIE\n×5\nRANG\n🎸 MUSICIEN DE CONCERT\nTEMPS RESTANT\n55.5s\nMi\n\nTrouvez la FONDAMENTALE\n\nCases 0–5 • Touchez une position correcte.\n0\n1\n2\n3\n4\n5\nMi\nLa\nRé\nSol\nSi\nMi",
+          "sizeBytes": 2097149
+        },
+        {
+          "file": "source/screens-phone/06-tuner-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "screen": "home",
+          "title": "PRATIQUER",
+          "mic": "Micro désactivé",
+          "visibleText": "Accordeur · Guitare\nAutomatique\nLa\n110.0 Hz · +0 cents\n−50\n0\n+50\n\nBien accordée\n\nMi\nLa\nRé\nSol\nSi\nMi\nMicrophone\n\nLe son reste sur votre appareil. Rien n’est enregistré.",
+          "sizeBytes": 615196
+        },
+        {
+          "file": "source/screens-phone/07-map-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "screen": "fretmap",
+          "title": "CARTE DU MANCHE\nCHAQUE NOTE • UN MANCHE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nCARTE DU MANCHE\nCHAQUE NOTE • UN MANCHE\nCARTE DU MANCHE\n×\nNOTE\nTOUT\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nMANCHE\n12 cases\n15 cases\n17 cases\n21 cases\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nLa\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRé\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi",
+          "sizeBytes": 2143972
+        },
+        {
+          "file": "source/screens-phone/08-circle-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "screen": "circle",
+          "title": "CYCLE DES QUINTES\nTONALITÉS • ACCORDS • HARMONIE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nCYCLE DES QUINTES\nTONALITÉS • ACCORDS • HARMONIE\nIV\nii\nI\nvi\nV\niii\nvii°\nDo\nLam\nSi°\nSol\nMim\nFa♯°\nRé\nSim\nDo♯°\nLa\nFa♯m\nSol♯°\nMi\nDo♯m\nRé♯°\nSi\nSol♯m\nLa♯°\nFa♯\nRé♯m\nMi♯°\nRé♭\nSi♭m\nDo°\nLa♭\nFam\nSol°\nMi♭\nDom\nRé°\nSi♭\nSolm\nLa°\nFa\nRém\nMi°\nCYCLE DES QUINTES\nSol\nMim · Mineur relatif\n←\n\nFaites glisser · Quartes ← → Quintes\n\n→\nACCORDS DIATONIQUES · FENÊTRE FIXE\nSol MAJEUR\nMineur relatif • Mim\n\n1 dièse • Fa♯\n\nLa zone éclairée montre les sept accords de cette tonalité. Les degrés en majuscules sont majeurs, en minuscules mineurs, et ° signifie diminué.\n\nSUITES D’ACCORDS COURANTES\nI\nSol\n→\nV\nRé\n→\nvi\nMim\n→\nIV\nDo\nI\nSol\n→\nIV\nDo\n→\nV\nRé\n→\nI\nSol\nvi\nMim\n→\nIV\nDo\n→\nI\nSol\n→\nV\nRé\n\nLisez les degrés au-dessus des accords. Tournez le cycle pour transposer chaque suite.",
+          "sizeBytes": 830706
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
