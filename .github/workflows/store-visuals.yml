@@ -10,11 +10,16 @@ on:
         default: guitar
         required: true
       locale:
-        description: Google Play locale (bass and ukulele currently support en-US artwork)
+        description: Google Play locale
         type: choice
         options: [fr-FR, en-US]
         default: fr-FR
         required: true
+  pull_request:
+    paths:
+      - stores/google-play/bass/fr-FR/source/**
+      - stores/google-play/ukulele/fr-FR/source/**
+      - .github/workflows/store-visuals.yml
 
 concurrency:
   group: store-visuals-${{ github.head_ref || github.ref }}
@@ -25,15 +30,19 @@ permissions:
 
 jobs:
   capture:
+    if: github.event_name == 'workflow_dispatch' || (github.head_ref == 'codex/bass-ukulele-en-store-visuals' && github.event.pull_request.head.repo.full_name == github.repository)
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
       STORE_LOCALE: ${{ inputs.locale || 'fr-FR' }}
-      STORE_INSTRUMENTS: ${{ inputs.instrument || 'guitar' }}
+      STORE_INSTRUMENTS: ${{ github.event_name == 'pull_request' && 'bass ukulele' || inputs.instrument || 'guitar' }}
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          ref: ${{ github.head_ref || github.ref_name }}
+          persist-credentials: ${{ github.event_name == 'pull_request' }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -69,3 +78,14 @@ jobs:
           name: google-play-${{ env.STORE_LOCALE }}
           path: ${{ steps.export.outputs.artifact_paths }}
           retention-days: 7
+      - name: Save the requested French visuals to their PR branch
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- stores/google-play/bass/fr-FR stores/google-play/ukulele/fr-FR
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add French bass and ukulele Google Play visuals'
+            git push origin HEAD:codex/bass-ukulele-en-store-visuals
+          fi
