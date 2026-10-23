@@ -72,8 +72,8 @@ Les clés sont stables dans toutes les langues. Les descriptions restent génér
 
 ## État des visuels
 
-L’[image de présentation anglaise existante](en-US/icon/feature-graphic-1024x500.png) est conservée. Elle est une copie de l’image OG 1024 × 500 du site. L’icône, les captures et les visuels localisés restent à préparer séparément. Les captures de guitare ne constituent pas des captures de cette édition.
+La [série anglaise](en-US/README.md) contient désormais les huit visuels téléphone, les captures tablette 7 pouces, tablette 10 pouces et ordinateur, l’icône et l’image de présentation. Les captures utilisent le profil de cet instrument, en anglais et avec quatre cordes. Les fichiers `android-xr/` restent des brouillons 2D, sans validation dans un environnement XR.
 
-Aucun rapport complet `validation.json` n’est ajouté pour des images absentes. Une fois les visuels disponibles, vérifier leur langue et les textes alternatifs, puis lancer `node stores/tools/validate.cjs stores/google-play/ukulele/<locale>`.
+Les dix autres langues contiennent uniquement les textes ; leurs visuels restent à produire. Le rapport `en-US/validation.json` mesure les fichiers anglais livrés et `en-US/overview-phone.png` permet de relire les huit visuels téléphone ensemble.
 
 Voir [le guide Google Play commun](../README.md). Les images de présentation partagées se régénèrent avec `node stores/tools/export-og.cjs`.

@@ -15,12 +15,6 @@ on:
         options: [fr-FR, en-US]
         default: fr-FR
         required: true
-  pull_request:
-    paths:
-      - stores/tools/**
-      - stores/google-play/bass/en-US/source/layout/panorama.html
-      - stores/google-play/ukulele/en-US/source/layout/panorama.html
-      - .github/workflows/store-visuals.yml
 
 concurrency:
   group: store-visuals-${{ github.head_ref || github.ref }}
@@ -31,19 +25,15 @@ permissions:
 
 jobs:
   capture:
-    if: github.event_name == 'workflow_dispatch' || (github.head_ref == 'codex/bass-ukulele-en-store-visuals' && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    permissions:
-      contents: write
     env:
-      STORE_LOCALE: ${{ github.event_name == 'pull_request' && 'en-US' || inputs.locale || 'fr-FR' }}
-      STORE_INSTRUMENTS: ${{ github.event_name == 'pull_request' && 'bass ukulele' || inputs.instrument || 'guitar' }}
+      STORE_LOCALE: ${{ inputs.locale || 'fr-FR' }}
+      STORE_INSTRUMENTS: ${{ inputs.instrument || 'guitar' }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref || github.ref_name }}
-          persist-credentials: ${{ github.event_name == 'pull_request' }}
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -79,14 +69,3 @@ jobs:
           name: google-play-${{ env.STORE_LOCALE }}
           path: ${{ steps.export.outputs.artifact_paths }}
           retention-days: 7
-      - name: Save the requested English visuals to their PR branch
-        if: github.event_name == 'pull_request'
-        shell: bash
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- stores/google-play/bass/en-US stores/google-play/ukulele/en-US
-          if ! git diff --cached --quiet; then
-            git commit -m 'Add English bass and ukulele Google Play visuals'
-            git push origin HEAD:codex/bass-ukulele-en-store-visuals
-          fi

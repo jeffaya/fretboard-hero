@@ -98,7 +98,7 @@ Les fichiers XR sont des **brouillons 2D pour relecture**, pas des captures pris
 
 Les champs vidéo et vidéos XR sont facultatifs. Aucun lien YouTube ni contenu spatial n'est inventé ; les laisser vides pour ce premier jet.
 
-Référence : [Ajouter des éléments d'aperçu — aide Google Play](https://support.google.com/googleplay/android-developer/answer/9866151?hl=en), consultée le 14 octobre 2026. Les limites visibles sur tes captures de la console sont également reprises dans `source/requirements.json`.
+Référence : [Ajouter des éléments d'aperçu — aide Google Play](https://support.google.com/googleplay/android-developer/answer/9866151?hl=en), consultée le 14 octobre 2026. Les limites visibles sur tes captures de la console sont également reprises dans [le profil de validation commun](../../requirements.json).
 
 
 ## Reproduction
@@ -106,6 +106,8 @@ Référence : [Ajouter des éléments d'aperçu — aide Google Play](https://su
 ```sh
 STORE_INSTRUMENT=bass STORE_LOCALE=en-US node stores/tools/capture.cjs
 STORE_INSTRUMENT=bass STORE_LOCALE=en-US node stores/tools/render.cjs
+node stores/tools/export-feature.cjs stores/google-play/bass/en-US
+STORE_INSTRUMENT=bass STORE_LOCALE=en-US node stores/tools/export-icon.cjs
 node stores/tools/validate.cjs stores/google-play/bass/en-US
 ```
 
