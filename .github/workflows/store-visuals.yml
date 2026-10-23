@@ -56,23 +56,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for STORE_INSTRUMENT in $STORE_INSTRUMENTS; do
-            export STORE_INSTRUMENT
-            listing="stores/google-play/$STORE_INSTRUMENT/$STORE_LOCALE"
-            test -f "$listing/source/layout/panorama.html"
-            node stores/tools/capture.cjs
-            node stores/tools/render.cjs
-            node stores/tools/export-feature.cjs "$listing"
-            mkdir -p "$listing/icon"
-            if [ ! -f "$listing/icon/app-icon-512x512.png" ]; then
-              if [ "$STORE_INSTRUMENT" = guitar ]; then
-                cp stores/google-play/guitar/en-US/icon/app-icon-512x512.png "$listing/icon/app-icon-512x512.png"
-              else
-                cp "web/assets/instruments/$STORE_INSTRUMENT/icon-512.png" "$listing/icon/app-icon-512x512.png"
-              fi
-            fi
-            node stores/tools/validate.cjs "$listing"
-          done
           {
             echo 'artifact_paths<<STORE_PATHS'
             for instrument in $STORE_INSTRUMENTS; do
@@ -80,7 +63,18 @@ jobs:
             done
             echo STORE_PATHS
           } >> "$GITHUB_OUTPUT"
+          for STORE_INSTRUMENT in $STORE_INSTRUMENTS; do
+            export STORE_INSTRUMENT
+            listing="stores/google-play/$STORE_INSTRUMENT/$STORE_LOCALE"
+            test -f "$listing/source/layout/panorama.html"
+            node stores/tools/capture.cjs
+            node stores/tools/render.cjs
+            node stores/tools/export-feature.cjs "$listing"
+            node stores/tools/export-icon.cjs
+            node stores/tools/validate.cjs "$listing"
+          done
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: google-play-${{ env.STORE_LOCALE }}
           path: ${{ steps.export.outputs.artifact_paths }}
