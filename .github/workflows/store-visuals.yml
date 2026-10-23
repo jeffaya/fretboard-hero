@@ -3,12 +3,24 @@ name: Google Play visual export
 on:
   workflow_dispatch:
     inputs:
+      instrument:
+        description: Instrument
+        type: choice
+        options: [guitar, bass, ukulele]
+        default: guitar
+        required: true
       locale:
-        description: Google Play locale
+        description: Google Play locale (bass and ukulele currently support en-US artwork)
         type: choice
         options: [fr-FR, en-US]
         default: fr-FR
         required: true
+  pull_request:
+    paths:
+      - stores/tools/**
+      - stores/google-play/bass/en-US/source/layout/panorama.html
+      - stores/google-play/ukulele/en-US/source/layout/panorama.html
+      - .github/workflows/store-visuals.yml
 
 concurrency:
   group: store-visuals-${{ github.head_ref || github.ref }}
@@ -19,14 +31,19 @@ permissions:
 
 jobs:
   capture:
+    if: github.event_name == 'workflow_dispatch' || (github.head_ref == 'codex/bass-ukulele-en-store-visuals' && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
+    permissions:
+      contents: write
     env:
-      STORE_LOCALE: ${{ inputs.locale || 'fr-FR' }}
+      STORE_LOCALE: ${{ github.event_name == 'pull_request' && 'en-US' || inputs.locale || 'fr-FR' }}
+      STORE_INSTRUMENTS: ${{ github.event_name == 'pull_request' && 'bass ukulele' || inputs.instrument || 'guitar' }}
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          ref: ${{ github.head_ref || github.ref_name }}
+          persist-credentials: ${{ github.event_name == 'pull_request' }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -34,21 +51,48 @@ jobs:
           cache-dependency-path: stores/tools/package-lock.json
       - run: npm --prefix stores/tools ci --no-audit --no-fund
       - run: npx --prefix stores/tools playwright install --with-deps chromium
-      - name: Capture the real localized application
-        run: node stores/tools/capture.cjs
-      - name: Render phone artwork and preserve the existing application icon
+      - name: Capture, render and validate the requested instruments
+        id: export
+        shell: bash
         run: |
-          node stores/tools/render.cjs
-          node stores/tools/export-feature.cjs "stores/google-play/guitar/$STORE_LOCALE"
-          mkdir -p "stores/google-play/guitar/$STORE_LOCALE/icon"
-          if [ "$STORE_LOCALE" != en-US ]; then
-            cp stores/google-play/guitar/en-US/icon/app-icon-512x512.png "stores/google-play/guitar/$STORE_LOCALE/icon/app-icon-512x512.png"
-          fi
-      - name: Validate exported images
-        run: node stores/tools/validate.cjs "stores/google-play/guitar/$STORE_LOCALE"
+          set -euo pipefail
+          for STORE_INSTRUMENT in $STORE_INSTRUMENTS; do
+            export STORE_INSTRUMENT
+            listing="stores/google-play/$STORE_INSTRUMENT/$STORE_LOCALE"
+            test -f "$listing/source/layout/panorama.html"
+            node stores/tools/capture.cjs
+            node stores/tools/render.cjs
+            node stores/tools/export-feature.cjs "$listing"
+            mkdir -p "$listing/icon"
+            if [ ! -f "$listing/icon/app-icon-512x512.png" ]; then
+              if [ "$STORE_INSTRUMENT" = guitar ]; then
+                cp stores/google-play/guitar/en-US/icon/app-icon-512x512.png "$listing/icon/app-icon-512x512.png"
+              else
+                cp "web/assets/instruments/$STORE_INSTRUMENT/icon-512.png" "$listing/icon/app-icon-512x512.png"
+              fi
+            fi
+            node stores/tools/validate.cjs "$listing"
+          done
+          {
+            echo 'artifact_paths<<STORE_PATHS'
+            for instrument in $STORE_INSTRUMENTS; do
+              echo "stores/google-play/$instrument/$STORE_LOCALE/"
+            done
+            echo STORE_PATHS
+          } >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: guitar-google-play-${{ env.STORE_LOCALE }}
-          path: stores/google-play/guitar/${{ env.STORE_LOCALE }}/
+          name: google-play-${{ env.STORE_LOCALE }}
+          path: ${{ steps.export.outputs.artifact_paths }}
           retention-days: 7
+      - name: Save the requested English visuals to their PR branch
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- stores/google-play/bass/en-US stores/google-play/ukulele/en-US
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add English bass and ukulele Google Play visuals'
+            git push origin HEAD:codex/bass-ukulele-en-store-visuals
+          fi
