@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "871036a1eee16b8dc89e98318876f865610d4607",
+  "locale": "fr-FR",
+  "instrument": "bass",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "desktop",
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "touch": false,
+      "folder": "desktop",
+      "outputs": [
+        {
+          "file": "desktop/01-routine-1920x1080.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "ROUTINE QUOTIDIENNE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nROUTINE QUOTIDIENNE\nLa\nMINEUR\nAccordeur\nFondamentale\nGamme\nTriades\nArpèges\nPenta\nJouez la gamme de La Mineur\n\nUne octave · Cases 5–8 · Montée\n\nPartez de La : montez à l’octave, puis revenez à la fondamentale.\n\nMicro désactivé\n\nMi\nLa\nRé\nSol\nLa\n1\n5\nSi\n2\n7\nDo\n♭3\n8\nRé\n4\n5\nMi\n5\n7\nFa\n♭6\n8\nSol\n♭7\n5\nLa\n1\n7\n\nCyan = fondamentale · Chiffres au-dessus = degrés · 1 = fondamentale\n\nRetour →",
+          "sizeBytes": 2420001
+        },
+        {
+          "file": "desktop/02-triads-1920x1080.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "ROUTINE QUOTIDIENNE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nROUTINE QUOTIDIENNE\nLa\nMINEUR\nAccordeur\nFondamentale\nGamme\nTriades\nArpèges\nPenta\nReliez les triades de La Mineur\n\nJoue chaque triade ensemble, puis note par note.\n\nMicro désactivé\n\nMi\nLa\nRé\nSol\nPosition fondamentale\n5\n3\n2\n1er renversement\n8\n7\n7\n2e renversement\n12\n12\n10\n\nCyan = fondamentale\n\nSuivant →",
+          "sizeBytes": 2474029
+        },
+        {
+          "file": "desktop/03-pentatonic-1920x1080.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "learn",
+          "title": "La MINEUR\nPENTATONIQUE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nLa MINEUR\nPENTATONIQUE\nNOTE\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nTONALITÉ\nMAJEUR\nMINEUR\nMODE\nPENTATONIQUE\nTRIADES\nARPÈGES\nPOSITIONS\nTOUT\n1\n2\n3\n4\n5\n21 cases\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\nP4\nP5\nP1\nP2\nP3\nP4\nP5\nP1\nP2\nP3\nMi\nSol\nLa\nDo\nRé\nMi\nSol\nLa\nDo\nLa\nDo\nRé\nMi\nSol\nLa\nDo\nRé\nMi\nRé\nMi\nSol\nLa\nDo\nRé\nMi\nSol\nLa\nSol\nLa\nDo\nRé\nMi\nSol\nLa\nDo\nRé\nMi\nToutes les positions sont visibles. Sélectionnez-en une pour l’isoler.\nLa\nFondamentale\nDo\nTierce\nRé\nQuarte\nMi\nQuinte\nSol\nSeptième",
+          "sizeBytes": 2099020
+        },
+        {
+          "file": "desktop/04-feedback-1920x1080.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "ROUTINE QUOTIDIENNE",
+          "mic": "À l’écoute…",
+          "visibleText": "←\nROUTINE QUOTIDIENNE\nLa\nMINEUR\nAccordeur\nFondamentale\nGamme\nTriades\nArpèges\nPenta\nTrouvez la fondamentale La\n\nJouez la note surlignée.\n\nÀ l’écoute…\n\n2 / 6\nMi\nLa\nRé\nSol\n5\n0\n12\n7\n2\n14\n\nSurligné = note à jouer · Vert = déjà joué\n\nSuivant →",
+          "sizeBytes": 2485017
+        },
+        {
+          "file": "desktop/05-quiz-1920x1080.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "quiz",
+          "title": "QUIZ DU MANCHE\nCONNAISSEZ LE MANCHE • MAÎTRISEZ-LE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nQUIZ DU MANCHE\nCONNAISSEZ LE MANCHE • MAÎTRISEZ-LE\nSCORE\n1 650\n+800\nSÉRIE\n×5\nRANG\n🎸 MUSICIEN DE CONCERT\nTEMPS RESTANT\n55.3s\nLa\n\nTrouvez la QUINTE\n\nCases 0–5 • Touchez une position correcte.\n0\n1\n2\n3\n4\n5\nMi\nLa\nRé\nSol",
+          "sizeBytes": 2115521
+        },
+        {
+          "file": "desktop/06-tuner-1920x1080.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "home",
+          "title": "PRATIQUER",
+          "mic": "Micro désactivé",
+          "visibleText": "Accordeur · Basse 4\nAutomatique\nLa\n55.0 Hz · +0 cents\n−50\n0\n+50\n\nBien accordée\n\nMi\nLa\nRé\nSol\nMicrophone\n\nLe son reste sur votre appareil. Rien n’est enregistré.",
+          "sizeBytes": 577162
+        },
+        {
+          "file": "desktop/07-map-1920x1080.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "fretmap",
+          "title": "CARTE DU MANCHE\nCHAQUE NOTE • UN MANCHE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nCARTE DU MANCHE\nCHAQUE NOTE • UN MANCHE\nNOTE\nTOUT\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nMANCHE\n12 cases\n15 cases\n17 cases\n21 cases\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi",
+          "sizeBytes": 2173302
+        },
+        {
+          "file": "desktop/08-circle-1920x1080.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "circle",
+          "title": "CYCLE DES QUINTES\nTONALITÉS • ACCORDS • HARMONIE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nCYCLE DES QUINTES\nTONALITÉS • ACCORDS • HARMONIE\nIV\nii\nI\nvi\nV\niii\nvii°\nDo\nLam\nSi°\nSol\nMim\nFa♯°\nRé\nSim\nDo♯°\nLa\nFa♯m\nSol♯°\nMi\nDo♯m\nRé♯°\nSi\nSol♯m\nLa♯°\nFa♯\nRé♯m\nMi♯°\nRé♭\nSi♭m\nDo°\nLa♭\nFam\nSol°\nMi♭\nDom\nRé°\nSi♭\nSolm\nLa°\nFa\nRém\nMi°\nCYCLE DES QUINTES\nSol\nMim · Mineur relatif\n←\n\nFaites glisser · Quartes ← → Quintes\n\n→\nACCORDS DIATONIQUES · FENÊTRE FIXE\nSol MAJEUR\nMineur relatif • Mim\n\n1 dièse • Fa♯\n\nLa zone éclairée montre les sept accords de cette tonalité. Les degrés en majuscules sont majeurs, en minuscules mineurs, et ° signifie diminué.\n\nSUITES D’ACCORDS COURANTES\nI\nSol\n→\nV\nRé\n→\nvi\nMim\n→\nIV\nDo\nI\nSol\n→\nIV\nDo\n→\nV\nRé\n→\nI\nSol\nvi\nMim\n→\nIV\nDo\n→\nI\nSol\n→\nV\nRé\n\nLisez les degrés au-dessus des accords. Tournez le cycle pour transposer chaque suite.",
+          "sizeBytes": 1775439
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
