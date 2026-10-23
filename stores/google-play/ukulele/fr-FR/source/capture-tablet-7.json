@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "871036a1eee16b8dc89e98318876f865610d4607",
+  "locale": "fr-FR",
+  "instrument": "ukulele",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "tablet-7",
+      "width": 720,
+      "height": 1280,
+      "dpr": 1.5,
+      "touch": true,
+      "folder": "tablet-7",
+      "outputs": [
+        {
+          "file": "tablet-7/01-routine-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "ROUTINE QUOTIDIENNE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nROUTINE QUOTIDIENNE\nRÉGLAGES DE LA ROUTINE\n×\nNOTE\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nTONALITÉ\nMAJEUR\nMINEUR\nAccordeur\nFondamentale\nGamme\nTriades\nAccords\nPenta\nJouez la gamme de La Mineur\n\nUne octave · Cases 9–12 · Montée\n\nPartez de La : montez à l’octave, puis revenez à la fondamentale.\n\nMicro désactivé\n\nSol\nDo\nMi\nLa\nLa\n1\n9\nSi\n2\n11\nDo\n♭3\n12\nRé\n4\n10\nMi\n5\n9\nFa\n♭6\n10\nSol\n♭7\n12\nLa\n1\n12\n\nCyan = fondamentale · Chiffres au-dessus = degrés · 1 = fondamentale\n\nRetour →",
+          "sizeBytes": 1293212
+        },
+        {
+          "file": "tablet-7/02-triads-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "ROUTINE QUOTIDIENNE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nROUTINE QUOTIDIENNE\nRÉGLAGES DE LA ROUTINE\n×\nNOTE\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nTONALITÉ\nMAJEUR\nMINEUR\nAccordeur\nFondamentale\nGamme\nTriades\nAccords\nPenta\nReliez les triades de La Mineur\n\nJoue chaque triade ensemble, puis note par note.\n\nMicro désactivé\n\nSol\nDo\nMi\nLa\n1er renversement\n2\n0\n0\n2e renversement\n5\n4\n5\nPosition fondamentale\n9\n9\n8\n\nCyan = fondamentale\n\nSuivant →",
+          "sizeBytes": 1304190
+        },
+        {
+          "file": "tablet-7/03-pentatonic-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "learn",
+          "title": "La MINEUR\nPENTATONIQUE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nLa MINEUR\nPENTATONIQUE\nRÉGLAGES D’APPRENTISSAGE\n×\nNOTE\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nTONALITÉ\nMAJEUR\nMINEUR\nMODE\nPENTATONIQUE\nTRIADES\nACCORDS\nARPÈGES\nPOSITIONS\nTOUT\n1\n2\n3\n4\n5\nMANCHE\n12 cases\n15 cases\n17 cases\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nP1\nP2\nP3\nP4\nP5\nP1\nSol\nLa\nDo\nRé\nMi\nSol\nDo\nRé\nMi\nSol\nLa\nDo\nMi\nSol\nLa\nDo\nRé\nMi\nLa\nDo\nRé\nMi\nSol\nLa\nLa\nFondamentale\nDo\nTierce\nRé\nQuarte\nMi\nQuinte\nSol\nSeptième",
+          "sizeBytes": 1910710
+        },
+        {
+          "file": "tablet-7/04-feedback-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "ROUTINE QUOTIDIENNE",
+          "mic": "À l’écoute…",
+          "visibleText": "←\nROUTINE QUOTIDIENNE\nRÉGLAGES DE LA ROUTINE\n×\nNOTE\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nTONALITÉ\nMAJEUR\nMINEUR\nAccordeur\nFondamentale\nGamme\nTriades\nAccords\nPenta\nTrouvez la fondamentale La\n\nJouez la note surlignée.\n\nÀ l’écoute…\n\n2 / 6\nSol\nDo\nMi\nLa\n2\n14\n9\n5\n0\n12\n\nSurligné = note à jouer · Vert = déjà joué\n\nSuivant →",
+          "sizeBytes": 1308555
+        },
+        {
+          "file": "tablet-7/05-quiz-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "quiz",
+          "title": "QUIZ DU MANCHE\nCONNAISSEZ LE MANCHE • MAÎTRISEZ-LE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nQUIZ DU MANCHE\nCONNAISSEZ LE MANCHE • MAÎTRISEZ-LE\nSCORE\n1 650\n+800\nSÉRIE\n×5\nRANG\n🎸 MUSICIEN DE CONCERT\nTEMPS RESTANT\n55.1s\nLa#\n\nTrouvez la QUINTE\n\nCases 0–5 • Touchez une position correcte.\n0\n1\n2\n3\n4\n5\nSol\nDo\nMi\nLa",
+          "sizeBytes": 2065764
+        },
+        {
+          "file": "tablet-7/06-tuner-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "home",
+          "title": "PRATIQUER",
+          "mic": "Micro désactivé",
+          "visibleText": "Accordeur · Ukulélé\nAutomatique\nLa\n440.1 Hz · +1 cents\n−50\n0\n+50\n\nBien accordée\n\nSol\nDo\nMi\nLa\nMicrophone\n\nLe son reste sur votre appareil. Rien n’est enregistré.",
+          "sizeBytes": 471539
+        },
+        {
+          "file": "tablet-7/07-map-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "fretmap",
+          "title": "CARTE DU MANCHE\nCHAQUE NOTE • UN MANCHE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nCARTE DU MANCHE\nCHAQUE NOTE • UN MANCHE\nCARTE DU MANCHE\n×\nNOTE\nTOUT\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nMANCHE\n12 cases\n15 cases\n17 cases\n21 cases\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nLa\nLa#\nSi\nDo\nDo#\nRé\nRé#\nMi\nFa\nFa#\nSol\nSol#\nLa",
+          "sizeBytes": 2185114
+        },
+        {
+          "file": "tablet-7/08-circle-1080x1920.png",
+          "language": {
+            "html": "fr",
+            "app": "fr"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "circle",
+          "title": "CYCLE DES QUINTES\nTONALITÉS • ACCORDS • HARMONIE",
+          "mic": "Micro désactivé",
+          "visibleText": "←\nCYCLE DES QUINTES\nTONALITÉS • ACCORDS • HARMONIE\nIV\nii\nI\nvi\nV\niii\nvii°\nDo\nLam\nSi°\nSol\nMim\nFa♯°\nRé\nSim\nDo♯°\nLa\nFa♯m\nSol♯°\nMi\nDo♯m\nRé♯°\nSi\nSol♯m\nLa♯°\nFa♯\nRé♯m\nMi♯°\nRé♭\nSi♭m\nDo°\nLa♭\nFam\nSol°\nMi♭\nDom\nRé°\nSi♭\nSolm\nLa°\nFa\nRém\nMi°\nCYCLE DES QUINTES\nSol\nMim · Mineur relatif\n←\n\nFaites glisser · Quartes ← → Quintes\n\n→\nACCORDS DIATONIQUES · FENÊTRE FIXE\nSol MAJEUR\nMineur relatif • Mim\n\n1 dièse • Fa♯\n\nLa zone éclairée montre les sept accords de cette tonalité. Les degrés en majuscules sont majeurs, en minuscules mineurs, et ° signifie diminué.\n\nSUITES D’ACCORDS COURANTES\nI\nSol\n→\nV\nRé\n→\nvi\nMim\n→\nIV\nDo\nI\nSol\n→\nIV\nDo\n→\nV\nRé\n→\nI\nSol\nvi\nMim\n→\nIV\nDo\n→\nI\nSol\n→\nV\nRé\n\nLisez les degrés au-dessus des accords. Tournez le cycle pour transposer chaque suite.",
+          "sizeBytes": 643343
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

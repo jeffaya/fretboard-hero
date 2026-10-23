@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "5bbb90b8c33ad70d5ffae72d5d3747bf12ec7c1f",
+  "locale": "en-US",
+  "instrument": "bass",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "tablet-7",
+      "width": 720,
+      "height": 1280,
+      "dpr": 1.5,
+      "touch": true,
+      "folder": "tablet-7",
+      "outputs": [
+        {
+          "file": "tablet-7/01-routine-1080x1920.png",
+          "language": {
+            "html": "en",
+            "app": "en"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Microphone off",
+          "visibleText": "←\nDAILY ROUTINE\nROUTINE SETUP\n×\nNOTE\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nKEY\nMAJOR\nMINOR\nTuner\nRoot\nScale\nTriads\nArpeggios\nPenta\nPlay the A minor scale\n\nOne octave · Frets 5–8 · Ascending\n\nStart on A. Play up to the octave, then return to the root.\n\nMicrophone off\n\nE\nA\nD\nG\nA\n1\n5\nB\n2\n7\nC\n♭3\n8\nD\n4\n5\nE\n5\n7\nF\n♭6\n8\nG\n♭7\n5\nA\n1\n7\n\nCyan = root note · Numbers above = degrees · 1 = root\n\nReturn →",
+          "sizeBytes": 1282609
+        },
+        {
+          "file": "tablet-7/02-triads-1080x1920.png",
+          "language": {
+            "html": "en",
+            "app": "en"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Microphone off",
+          "visibleText": "←\nDAILY ROUTINE\nROUTINE SETUP\n×\nNOTE\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nKEY\nMAJOR\nMINOR\nTuner\nRoot\nScale\nTriads\nArpeggios\nPenta\nConnect the A minor triads\n\nPlay each triad together, then one note at a time.\n\nMicrophone off\n\nE\nA\nD\nG\nRoot position\n5\n3\n2\n1st inversion\n8\n7\n7\n2nd inversion\n12\n12\n10\n\nCyan = root note\n\nNext →",
+          "sizeBytes": 1295173
+        },
+        {
+          "file": "tablet-7/03-pentatonic-1080x1920.png",
+          "language": {
+            "html": "en",
+            "app": "en"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "learn",
+          "title": "A MINOR\nPENTATONIC",
+          "mic": "Microphone off",
+          "visibleText": "←\nA MINOR\nPENTATONIC\nLEARN SETUP\n×\nNOTE\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nKEY\nMAJOR\nMINOR\nMODE\nPENTATONIC\nTRIADS\nARPEGGIOS\nPOSITIONS\nALL\n1\n2\n3\n4\n5\nFRETBOARD\n12 FT\n15 FT\n17 FT\n21 FT\n24 FT\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nP4\nP5\nP1\nP2\nP3\nP4\nE\nG\nA\nC\nD\nE\nA\nC\nD\nE\nG\nA\nD\nE\nG\nA\nC\nD\nG\nA\nC\nD\nE\nG\nA\nRoot\nC\n3rd\nD\n4th\nE\n5th\nG\n7th",
+          "sizeBytes": 2004678
+        },
+        {
+          "file": "tablet-7/04-feedback-1080x1920.png",
+          "language": {
+            "html": "en",
+            "app": "en"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "DAILY ROUTINE",
+          "mic": "Listening…",
+          "visibleText": "←\nDAILY ROUTINE\nROUTINE SETUP\n×\nNOTE\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nKEY\nMAJOR\nMINOR\nTuner\nRoot\nScale\nTriads\nArpeggios\nPenta\nFind the root note A\n\nPlay the highlighted note.\n\nListening…\n\n2 / 6\nE\nA\nD\nG\n5\n0\n12\n7\n2\n14\n\nHighlight = target · Green = played\n\nNext →",
+          "sizeBytes": 1302940
+        },
+        {
+          "file": "tablet-7/05-quiz-1080x1920.png",
+          "language": {
+            "html": "en",
+            "app": "en"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "quiz",
+          "title": "FRETBOARD QUIZ\nKNOW THE NECK • OWN THE NECK",
+          "mic": "Microphone off",
+          "visibleText": "←\nFRETBOARD QUIZ\nKNOW THE NECK • OWN THE NECK\nSCORE\n1,650\n+800\nSTREAK\n×5\nRANK\n🎸 GIG PLAYER\nTIME LEFT\n55.1s\nC#\n\nFind the ROOT\n\nFrets 0–5 • Touch any correct occurrence.\n0\n1\n2\n3\n4\n5\nE\nA\nD\nG",
+          "sizeBytes": 2172266
+        },
+        {
+          "file": "tablet-7/06-tuner-1080x1920.png",
+          "language": {
+            "html": "en",
+            "app": "en"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "home",
+          "title": "PRACTICE",
+          "mic": "Microphone off",
+          "visibleText": "Tuner · Bass 4\nAutomatic\nA\n55.0 Hz · +0 cents\n−50\n0\n+50\n\nIn tune\n\nE\nA\nD\nG\nMicrophone\n\nAudio stays on your device. Nothing is recorded.",
+          "sizeBytes": 465888
+        },
+        {
+          "file": "tablet-7/07-map-1080x1920.png",
+          "language": {
+            "html": "en",
+            "app": "en"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "fretmap",
+          "title": "FRETBOARD MAP\nEVERY NOTE • ONE NECK",
+          "mic": "Microphone off",
+          "visibleText": "←\nFRETBOARD MAP\nEVERY NOTE • ONE NECK\nFRETBOARD MAP\n×\nNOTE\nALL\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nFRETBOARD\n12 FT\n15 FT\n17 FT\n21 FT\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nE\nF\nF#\nG\nG#\nA\nA#\nB\nC\nC#\nD\nD#\nE\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nA\nD\nD#\nE\nF\nF#\nG\nG#\nA\nA#\nB\nC\nC#\nD\nG\nG#\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG",
+          "sizeBytes": 2231913
+        },
+        {
+          "file": "tablet-7/08-circle-1080x1920.png",
+          "language": {
+            "html": "en",
+            "app": "en"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "circle",
+          "title": "CIRCLE OF FIFTHS\nKEYS • CHORDS • HARMONY",
+          "mic": "Microphone off",
+          "visibleText": "←\nCIRCLE OF FIFTHS\nKEYS • CHORDS • HARMONY\nIV\nii\nI\nvi\nV\niii\nvii°\nC\nAm\nB°\nG\nEm\nF♯°\nD\nBm\nC♯°\nA\nF♯m\nG♯°\nE\nC♯m\nD♯°\nB\nG♯m\nA♯°\nF♯\nD♯m\nE♯°\nD♭\nB♭m\nC°\nA♭\nFm\nG°\nE♭\nCm\nD°\nB♭\nGm\nA°\nF\nDm\nE°\nCIRCLE OF FIFTHS\nG\nEm · relative minor\n←\n\nDrag to rotate · Fourths ← → Fifths\n\n→\nDIATONIC CHORDS · FIXED WINDOW\nG MAJOR\nRelative minor • Em\n\n1 sharp • F♯\n\nThe highlighted window shows the seven chords in this key. Uppercase degrees are major, lowercase are minor, and ° means diminished.\n\nCOMMON PROGRESSIONS\nI\nG\n→\nV\nD\n→\nvi\nEm\n→\nIV\nC\nI\nG\n→\nIV\nC\n→\nV\nD\n→\nI\nG\nvi\nEm\n→\nIV\nC\n→\nI\nG\n→\nV\nD\n\nRead the degrees above each chord. Rotate the circle to transpose every progression.",
+          "sizeBytes": 631220
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
