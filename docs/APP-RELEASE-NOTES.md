@@ -25,7 +25,7 @@ changed.
 
 - Use `lifetime_access` for Google Play catalog lookup, purchase, restoration and
   server verification. The permanent purchase option remains `buy`.
-- Replace the deleted `full_access` product before launch, without legacy purchase
+- Replace the deleted pre-release product before launch, without legacy purchase
   compatibility: there are no existing customers to migrate.
 - Deploy the updated Worker and rebuild Store AAB/APK with a higher version code.
   Configure the new product in each Android application before distributing it.
@@ -44,7 +44,7 @@ changed.
 ## App v1.1.0 — pending store configuration and device payment tests
 
 - Keep three distinct Guitar/Bass/Ukulele apps with their own IDs, names and icons.
-- Store builds are free demos. A permanent `full_access` purchase unlocks every
+- Store builds are free demos. A permanent non-consumable purchase unlocks every
   instrument and feature within the app where it was bought; no cross-app sharing.
 - Reuse the website's modal with native price, purchase and restoration actions.
 - Separate explicit, fully unlocked Preview builds from Store packages.

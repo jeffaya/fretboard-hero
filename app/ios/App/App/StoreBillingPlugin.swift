@@ -15,7 +15,7 @@ public class StoreBillingPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "price", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "purchase", returnType: CAPPluginReturnPromise)
     ]
-    private let productID = "full_access"
+    private let productID = "lifetime_access"
     private var updatesTask: Task<Void, Never>?
     private var purchasing = false
 
