@@ -27,6 +27,7 @@
       $('#routineConfetti').append(piece);
     }
     function current(){return guides[state.index]}
+    function isFlowExercise(){return engine.profile.family==='guitar'&&['penta','triads'].includes(exercises[state.index]?.id)}
     function currentSection(){return exercises[state.index]?.sections?.[current()?.section||0]}
     function targetPitches(){
       const guide=current(),column=exercises[state.index]?.columns[guide?.index];
@@ -42,7 +43,10 @@
       $('#routineTabScroll').hidden=Boolean(exercise.strumming);
       $('#routineLegend').hidden=false;
       $('#routineNoteProgress').hidden=!guided||Boolean(exercise.strumming);
-      microphone.setInterval?.(exercise.strumming?20:80);
+      microphone.setInterval?.(exercise.strumming?20:isFlowExercise()?25:80);
+      // A long FFT retains the previous shape during quick triad/liaison changes.
+      // Keep the larger window for low bass notes and the rhythm echo reference.
+      microphone.setFftSize?.(isFlowExercise()?8192:16384);
       // Match the known guide against raw instrument input. Speech-oriented
       // browser cancellation can suppress guitar and alter that reference.
       microphone.setEchoCancellation?.(false);
@@ -114,14 +118,18 @@
         return;
       }
       const pitches=targetPitches();if(!pitches.length)return;
-      let energy=0;for(const value of samples)energy+=value*value;
-      const level=Math.sqrt(energy/samples.length),chord=pitches.length>1;
+      const flow=isFlowExercise(),column=exercises[state.index].columns[current().index];
+      // Follow the arrival pitch, not a mixture of the slide and the old note.
+      const recent=samples.subarray(Math.max(0,samples.length-(flow?Math.ceil(sampleRate*.06):8192)));
+      const levelSamples=flow?recent:samples;
+      let energy=0;for(const value of levelSamples)energy+=value*value;
+      const level=Math.sqrt(energy/levelSamples.length),chord=pitches.length>1;
       let match=false;
       if(level>=FretboardPitch.minLevel){
         if(chord)match=detector.matches(detector.analyze(spectrum,sampleRate,fftSize),pitches);
         else{
-          const hz=FretboardPitch.detect(samples.subarray(samples.length-8192),sampleRate,{maxFrequency:1500});
-          match=Boolean(hz&&Math.abs(FretboardPitch.cents(hz,pitches[0]))<=38);
+          const hz=FretboardPitch.detect(recent,sampleRate,{maxFrequency:1500});
+          match=Boolean(hz&&Math.abs(FretboardPitch.cents(hz,pitches[0]))<=(flow?45:38));
           // A liaison is one isolated note. A full triad whose fundamental
           // happens to be that third must not skip the single-note target.
           if(match&&exercises[state.index].columns[current().index].kind==='third'){
@@ -130,13 +138,14 @@
           }
         }
       }
-      const column=exercises[state.index].columns[current().index];
-      if(!gate.update({match,level,now,chord,holdMs:column.holdMs}))return;
+      if(!gate.update({match,level,now,chord,holdMs:column.holdMs??(flow?(chord?64:50):undefined),minConfirmations:flow?3:undefined,maxGapMs:flow?120:undefined}))return;
       lastPitches=pitches;current().index++;
       draw(true);
       if(current().index===(currentSection()?.end||exercises[state.index].columns.length)){advance();return}
       const next=targetPitches();gate.reset(soundKey(next)===soundKey(pitches));
-      settleUntil=now+200;showTarget();
+      // Different notes can follow immediately, including a slide with no new
+      // pluck. The gate still requires fresh evidence and blocks held repeats.
+      settleUntil=now+(flow?0:200);showTarget();
     }
     function cancelTransition(){
       clearTimeout(transition);transition=0;
@@ -255,3 +264,4 @@
   }
   window.RoutineSession=Object.freeze({create});
 })();
+

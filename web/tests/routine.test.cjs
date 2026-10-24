@@ -105,7 +105,7 @@ function sessionRuntime(demo=false,enabled=true,storage=new Map(),playback=false
  const timers=new Map();let timerId=0;
  c.setTimeout=f=>{timers.set(++timerId,f);return timerId};c.clearTimeout=id=>timers.delete(id);c.now=1000;c.performance={now:()=>c.now};const frames=new Map();let frameId=0;c.requestAnimationFrame=f=>{frames.set(++frameId,f);return frameId};c.cancelAnimationFrame=id=>frames.delete(id);c.frame=now=>{c.now=now;for(const [id,f] of [...frames]){frames.delete(id);f(now)}};
  c.micPreference={get enabled(){return enabled},setEnabled(value){enabled=value}};
- c.FretboardMicrophone={preference:()=>c.micPreference,create({onFrame,onState}){let state='off';c.audio={onFrame,setEchoCancellation(value){c.echoCancellation=value},start(){state='on';onState(state)},stop(){state='off';onState(state)},get state(){return state}};return c.audio}};
+ c.FretboardMicrophone={preference:()=>c.micPreference,create({onFrame,onState,fftSize,interval}){let state='off';c.fftSize=fftSize;c.interval=interval;c.audio={onFrame,setInterval(value){c.interval=value},setFftSize(value){c.fftSize=value},setEchoCancellation(value){c.echoCancellation=value},start(){state='on';onState(state)},stop(){state='off';onState(state)},get state(){return state}};return c.audio}};
  c.window.matchMedia=()=>({matches:true});
  const flush=()=>{for(const [id,f] of timers){timers.delete(id);f()}};
  vm.runInContext(fs.readFileSync(path.join(base,'core/access.js'),'utf8'),c);
@@ -594,4 +594,61 @@ test('Microphone PCM strums validate repeats during Listen with raw instrument i
  assert.equal(r.nodes.get('#routinePatternSteps').children[1].attrs['aria-current'],'step');
  await new Promise(setImmediate);assert.equal(r.nodes.get('#routineRhythmPreview').attrs['aria-pressed'],'true');
  r.nodes.get('#routineSteps').children[0].children[0].click();assert.equal(r.c.echoCancellation,false);
+});
+
+
+function feedPhrase(r,segments,rate,start=1500){
+ const {phrase,spectrumOf}=require('./audio-fixtures.cjs'),pcm=phrase(segments,{rate});
+ const size=r.c.fftSize,hop=Math.round(rate/30);
+ for(let end=hop;end<=pcm.length;end+=hop){
+  const data=new Float32Array(size),from=Math.max(0,end-size);
+  data.set(pcm.subarray(from,end),size-(end-from));
+  const now=start+end*1000/rate;r.c.now=now;
+  r.c.audio.onFrame({samples:data,spectrum:spectrumOf(data),sampleRate:rate,fftSize:size,now});
+ }
+}
+for(const rate of [44100,48000])for(const diagonal of [0,1])test(`Continuous penta ${diagonal+1} at ${rate} Hz follows 180 ms notes and unpicked slides both ways`,()=>{
+ const r=sessionRuntime(true,true,new Map(),false,Math.random,()=>diagonal?.99:0);
+ r.session.enter();r.nodes.get('#routineSteps').children[4].children[0].click();
+ const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);
+ let now=1500;
+ for(const count of [15,14]){
+  const columns=r.c.lastExercise.columns;
+  const segments=columns.map(col=>({midis:Array.from(col.notes,n=>engine.midiAt(n.string,n.fret)),
+   durationMs:col.holdMs?620:col.slideFrom?240:180,
+   ...(col.slideFrom?{fromMidi:engine.midiAt(col.slideFrom.string,col.slideFrom.fret),glideMs:80}:{}),detune:-18}));
+  assert.equal(columns.length,count);
+  feedPhrase(r,segments,rate,now);
+  assert.equal(r.nodes.get('#routineTransition').hidden,false,`stuck at ${r.nodes.get('#routineNoteProgress').textContent}`);
+  now+=segments.reduce((sum,s)=>sum+s.durationMs,0)+500;r.c.now=now;r.flush();now+=500;
+ }
+ assert.equal(r.nodes.get('#routineSteps').children[4].classes.has('is-complete'),true);
+});
+for(const rate of [44100,48000])test(`Continuous acoustic triads at ${rate} Hz follow 300 ms shapes and sliding liaisons`,()=>{
+ const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineSteps').children[2].children[0].click();
+ const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);let now=1500;
+ for(let section=0;section<3;section++){
+  const segments=r.c.lastExercise.columns.map(col=>({midis:Array.from(col.notes,n=>engine.midiAt(n.string,n.fret)),durationMs:300,
+   ...(col.kind==='third'?{fromMidi:engine.midiAt(col.from.string,col.from.fret),glideMs:70}:{}),levels:[1,.8,.9],detune:18}));
+  feedPhrase(r,segments,rate,now);
+  assert.equal(r.nodes.get('#routineTransition').hidden,false,`group ${section+1}: ${r.nodes.get('#routineNoteProgress').textContent}`);
+  now+=segments.length*300+500;r.c.now=now;r.flush();now+=500;
+ }
+ assert.equal(r.c.lastExercise.id,'chords');
+});
+test('A slide that stops one fret short, transient crossings, noise and a wrong octave do not advance penta',()=>{
+ const r=sessionRuntime(true);r.session.enter();r.nodes.get('#routineSteps').children[4].children[0].click();
+ const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar),note=r.c.lastExercise.columns[0].notes[0],midi=engine.midiAt(note.string,note.fret);
+ const initial=r.nodes.get('#routineNoteProgress').textContent;
+ feedPhrase(r,[{midis:[midi-1],fromMidi:midi-3,glideMs:90,durationMs:250},
+  {midis:[midi+2],fromMidi:midi-2,glideMs:80,durationMs:250},
+  {midis:[midi+12],durationMs:350},{midis:[],durationMs:250}],48000);
+ assert.equal(r.nodes.get('#routineNoteProgress').textContent,initial);
+});
+test('Flow capture restores the original rhythm and scale analysis settings on navigation',()=>{
+ const r=sessionRuntime(true);r.session.enter();
+ for(const [step,size,interval] of [[4,8192,25],[3,16384,20],[2,8192,25],[1,16384,80],[0,16384,80]]){
+  r.nodes.get('#routineSteps').children[step].children[0].click();
+  assert.equal(r.c.fftSize,size);assert.equal(r.c.interval,interval);
+ }
 });
