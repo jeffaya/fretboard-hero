@@ -258,8 +258,8 @@ unit tests in `app/tests/capacitor-bridge.test.js` (`node app/tests/capacitor-br
 
 Three separate apps — **Guitar**, **Bass** and **Ukulele Fretboard Hero** — share
 one engine. `app/instruments.json` owns each app's ID, name and launcher icon.
-Each app includes all instruments. One non-consumable purchase (`lifetime_access`
-on Google Play, `full_access` on the App Store) unlocks the other Learn roots,
+Each app includes all instruments. One non-consumable `lifetime_access` purchase
+on Google Play or the App Store unlocks the other Learn roots,
 all Map notes and premium routine settings within the purchased app.
 Purchases are not transferred between the three apps or between Google and Apple.
 The chosen instrument is remembered locally (`fretboard-instrument`). Switching

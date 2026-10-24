@@ -8,9 +8,9 @@ const request=(body=input)=>new Request('https://fretboard-hero.com/api/billing/
 const response=(body,status=200)=>Response.json(body,{status});
 const purchased={purchaseState:0,consumptionState:0,acknowledgementState:1};
 const deps=fetcher=>({fetcher,getAccessToken:async()=>'test-access-token'});
-test('The deleted full_access product is rejected before contacting Google',async()=>{
+test('An unknown product is rejected before contacting Google',async()=>{
  for(const packageName of PACKAGES){
-  const r=await handlePlayBilling(request({...input,packageName,productId:'full_access'}),env,deps(async()=>assert.fail('Deleted product must not reach Google')));
+  const r=await handlePlayBilling(request({...input,packageName,productId:'unknown_product'}),env,deps(async()=>assert.fail('Unknown product must not reach Google')));
   assert.equal(r.status,400);assert.deepEqual(await r.json(),{error:'invalid_request'});
  }
 });

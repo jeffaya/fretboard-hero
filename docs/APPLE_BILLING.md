@@ -11,7 +11,7 @@ for each build come from `app/instruments.json`:
 
 Each supports iPhone and iPad, starts in its instrument's universe and remembers the
 last selection. All three instruments share one verified entitlement **inside each
-app**. A non-consumable `full_access` purchase unlocks all notes, keys, modes and
+app**. A non-consumable `lifetime_access` purchase unlocks all notes, keys, modes and
 premium routines there, without a subscription. It does not transfer to the other
 apps or to Android. StoreKit scopes purchases to the installed application.
 
@@ -24,7 +24,7 @@ localized price, open its purchase sheet, and offer Restore purchases.
 1. Register the explicit bundle ID in the Apple Developer account and create its
    matching app record in App Store Connect.
 2. Complete the required paid-app agreement, tax and banking setup. Make the download free.
-3. Create an In-App Purchase of type **Non-Consumable**, exact product ID `full_access`,
+3. Create an In-App Purchase of type **Non-Consumable**, exact product ID `lifetime_access`,
    within this app. Set its price, availability, localization and review screenshot.
    Describe the permanent access to all instruments within this app. The same product
    name in another app does not share ownership.
@@ -34,6 +34,11 @@ localized price, open its purchase sheet, and offer Restore purchases.
    and validate through TestFlight before submitting a production release.
 6. Put each app's actual App Store URL in its instrument entry in
    `web/site.config.json`. Unconfigured URLs leave that web button disabled.
+
+Google Play and the App Store use the same product identifier, `lifetime_access`.
+Configure it separately in each app's store catalog before distributing rebuilt
+Store apps. Updating this repository does not create or modify App Store Connect
+products; the catalog and installed binary must agree on the identifier.
 
 StoreKit 2 verifies Apple's signed transactions on device. No Apple private key is
 embedded or required by this implementation; the Google verification Worker is not used.
@@ -70,7 +75,7 @@ signing. It validates compilation and identity, not real provisioning or payment
 ## Purchase lifecycle
 
 The shared `StoreBillingPlugin` accepts only verified StoreKit transactions for
-`full_access` of type non-consumable. Current entitlements must be unrevoked. There
+`lifetime_access` of type non-consumable. Current entitlements must be unrevoked. There
 is no writable JavaScript purchase flag. Completed transactions remain restorable.
 
 Startup/resume and periodic foreground checks read `Transaction.currentEntitlements`

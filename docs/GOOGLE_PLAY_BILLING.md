@@ -33,13 +33,13 @@ are already unlocked and do not call the billing plugins.
 
 ## Configure Play Console and Cloudflare
 
-The deleted Google Play ID `full_access` is replaced by `lifetime_access` before
-launch; there are no existing customers to migrate. Android and the Worker accept
-only the replacement ID. Keep the purchase option ID `buy`. Configure this product
-in each Android application you release. App Store products remain `full_access`.
+Google Play and the App Store both use the product ID `lifetime_access`. Android,
+iOS and the Google verification Worker accept only this identifier. Keep the
+Google Play purchase option ID `buy`. Configure the product separately in each
+application you release; store catalogs and purchase ownership remain separate.
 
-Deploy the updated Worker and distribute a rebuilt Store AAB/APK together. Existing
-Android builds still request the deleted ID and cannot use the replacement product.
+Deploy the updated Worker and distribute a rebuilt Store AAB/APK together. Older
+Android builds that request a different ID cannot use this product.
 The Cloudflare service-account secrets do not need to change for this rename.
 
 For **each** of the three package IDs above:
