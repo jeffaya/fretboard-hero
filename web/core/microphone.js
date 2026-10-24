@@ -80,19 +80,25 @@
           }catch(error){if(token===generation){stop();onState('off',error)}}
           finally{if(token===generation)recovering=false}
         });
-        const samples=new Float32Array(fftSize),spectrum=new Float32Array(fftSize/2);
+        let samples=new Float32Array(fftSize),spectrum=new Float32Array(fftSize/2);
         let last=-Infinity;
         function tick(now){
           if(token!==generation)return;
           frame=requestAnimationFrame(tick);if(now-last<interval)return;last=now;
           if(pendingContext.state!=='running'||state!=='on')return;
+          if(samples.length!==fftSize){samples=new Float32Array(fftSize);spectrum=new Float32Array(fftSize/2)}
           analyser.getFloatTimeDomainData(samples);analyser.getFloatFrequencyData(spectrum);
           onFrame({samples,spectrum,sampleRate:context.sampleRate,fftSize,now});
         }
         report('on');frame=requestAnimationFrame(tick);
       }catch(error){if(token!==generation)return;stop();onState('off',error)}
     }
-    const api={start,stop,setInterval(value){interval=value},setEchoCancellation(value){
+    const api={start,stop,setInterval(value){interval=value},setFftSize(value){
+      if(value===fftSize)return;
+      if(!Number.isInteger(value)||value<32||value>32768||(value&(value-1)))throw new RangeError('Invalid FFT size');
+      if(analyser)analyser.fftSize=value;
+      fftSize=value;
+    },setEchoCancellation(value){
       value=Boolean(value);if(value===echoCancellation)return configuring;
       echoCancellation=value;return stream?configure(stream):Promise.resolve();
     },get state(){return state}};
@@ -111,3 +117,4 @@
   window.Capacitor?.Plugins?.App?.addListener('appStateChange',({isActive})=>{if(!isActive)release()});
   window.FretboardMicrophone=Object.freeze({create,release,errorMessage,preference});
 })();
+

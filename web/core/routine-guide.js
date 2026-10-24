@@ -6,8 +6,8 @@
     let since=null,last=-Infinity,blocked=false,quietSince=null,previousLevel=0,attack=0,confirmations=0;
     return {
       reset(repeat=false){since=null;last=-Infinity;blocked=repeat;quietSince=null;previousLevel=0;attack=0;confirmations=0},
-      update({match,level,now,chord=false,holdMs=chord?160:190}){
-        if(now-last>250){since=null;confirmations=0}last=now;
+      update({match,level,now,chord=false,holdMs=chord?160:190,minConfirmations=chord?3:2,maxGapMs=250}){
+        if(now-last>maxGapMs){since=null;confirmations=0}last=now;
         // A fresh pluck is a relative rise, even when both notes are quiet.
         const onset=match&&previousLevel>0&&level>previousLevel*1.9;
         previousLevel=level;
@@ -20,9 +20,9 @@
         if(!match){since=null;confirmations=0;return false}
         if(since===null)since=now;
         confirmations++;
-        // Three complete chord observations at the 80 ms cadence are enough;
-        // a long hold used to outlast short finger-plucked chords.
-        if(now-since<holdMs||(chord&&confirmations<3))return false;
+        // Both elapsed time and consecutive observations are required, even
+        // when a fluent exercise uses a shorter hold and a faster cadence.
+        if(now-since<holdMs||confirmations<minConfirmations)return false;
         since=null;confirmations=0;blocked=true;quietSince=null;attack=0;return true;
       }
     };
@@ -80,3 +80,4 @@
   const api={createGate,createStrumGate};
   if(typeof module==='object')module.exports=api;else root.RoutineGuide=Object.freeze(api);
 })(typeof window==='object'?window:globalThis);
+

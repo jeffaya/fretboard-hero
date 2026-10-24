@@ -17,9 +17,32 @@ function spectrum(midis,options={}){
  return spectrumOf(samples(midis,options));
 }
 function spectrumOf(data){
+ const N=data.length;
  const real=Float64Array.from(data,(value,i)=>value*(.42-.5*Math.cos(2*Math.PI*i/N)+.08*Math.cos(4*Math.PI*i/N))),imag=new Float64Array(N);
  for(let i=1,j=0;i<N;i++){let bit=N>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;if(i<j)[real[i],real[j]]=[real[j],real[i]]}
  for(let len=2;len<=N;len<<=1){const angle=-2*Math.PI/len;for(let i=0;i<N;i+=len){let wr=1,wi=0;for(let j=0;j<len/2;j++){const a=i+j,b=a+len/2,tr=wr*real[b]-wi*imag[b],ti=wr*imag[b]+wi*real[b];real[b]=real[a]-tr;imag[b]=imag[a]-ti;real[a]+=tr;imag[a]+=ti;const w=wr;wr=w*Math.cos(angle)-wi*Math.sin(angle);wi=w*Math.sin(angle)+wi*Math.cos(angle)}}}
  return Float32Array.from(real.subarray(0,N/2),(v,i)=>20*Math.log10(Math.max(1e-12,Math.hypot(v,imag[i])/N)));
 }
-module.exports={samples,spectrum,spectrumOf,N};
+// One continuous microphone recording: analysis frames must include real
+// transition history rather than a fresh stationary buffer for every target.
+function phrase(segments,{rate=48000,gain=.08,noise=.00003}={}){
+ const data=new Float32Array(Math.round(segments.reduce((sum,s)=>sum+s.durationMs,0)*rate/1000));
+ const phases=[];let start=0,seed=17;
+ for(const segment of segments){
+  const end=Math.min(data.length,start+Math.round(segment.durationMs*rate/1000));
+  for(let i=start;i<end;i++){
+   const age=(i-start)/rate,glide=Math.min(1,age*1000/(segment.glideMs||1));
+   seed=(seed*1664525+1013904223)>>>0;let value=noise*(seed/4294967296*2-1);
+   segment.midis.forEach((midi,j)=>{
+    const pitch=j===0&&segment.fromMidi!==undefined?segment.fromMidi+(midi-segment.fromMidi)*glide:midi;
+    phases[j]=(phases[j]||0)+2*Math.PI*440*2**((pitch-69+(segment.detune||0)/100)/12)/rate;
+    for(let h=1;h<=8;h++)value+=gain*.08*(segment.levels?.[j]??1)*Math.sin(phases[j]*h)/h**1.2;
+   });
+   data[i]=value;
+  }
+  start=end;
+ }
+ return data;
+}
+module.exports={samples,spectrum,spectrumOf,phrase,N};
+

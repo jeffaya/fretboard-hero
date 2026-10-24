@@ -150,3 +150,19 @@ test('Failed foreground recovery releases capture and reports a retryable error'
  r.contexts[0].resume=()=>Promise.reject({name:'NotAllowedError'});r.contexts[0].state='suspended';await r.contexts[0].events.statechange();
  assert.equal(mic.state,'off');assert.equal(r.tracks[0].readyState,'ended');assert.deepEqual(errors,['NotAllowedError']);
 });
+
+
+test('Changing exercise FFT size keeps one stream and delivers matching samples, bins and metadata',async()=>{
+ const r=environment(),received=[],mic=r.api.create({fftSize:16384,interval:25,onFrame:f=>received.push(f)});
+ const started=mic.start();mic.setFftSize(8192);r.requests[0].resolve(r.stream());await started;
+ const tick=now=>{for(const [id,f] of [...r.frames]){r.frames.delete(id);f(now)}};
+ tick(100);
+ for(const [size,now] of [[16384,140],[8192,180]]){
+  mic.setFftSize(size);tick(now);
+  const frame=received.at(-1);
+  assert.equal(frame.samples.length,size);assert.equal(frame.spectrum.length,size/2);assert.equal(frame.fftSize,size);
+  assert.equal(r.contexts[0].nodes.find(n=>'fftSize' in n).fftSize,size);
+ }
+ assert.equal(received[0].samples.length,8192);assert.equal(r.requests.length,1);assert.equal(r.contexts.length,1);
+ mic.stop();assert.equal(r.tracks[0].readyState,'ended');
+});

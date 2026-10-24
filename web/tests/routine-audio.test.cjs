@@ -134,3 +134,23 @@ test('Liaison tolerance still rejects substantial competing tones, the wrong oct
  assert.equal(detector.matchesSingle({fit:.5,notes:[{midi:54,strength:1}]},54),false);
  assert.equal(detector.matchesSingle({fit:.99,notes:[]},54),false);
 });
+
+
+test('Fluent validation needs consecutive evidence and cannot join matches across a stall',()=>{
+ const gate=createGate(),update=(now,match=true)=>gate.update({match,level:.02,now,holdMs:50,minConfirmations:3,maxGapMs:120});
+ assert.equal(update(0),false);assert.equal(update(33),false);assert.equal(update(66),true);
+ for(let now=99;now<500;now+=33)assert.equal(update(now),false,'a ringing note is counted once');
+ gate.reset();assert.equal(update(1000),false);assert.equal(update(1033),false);assert.equal(update(1066,false),false);
+ assert.equal(update(1100),false);assert.equal(update(1133),false);assert.equal(update(1300),false,'old evidence must expire');
+ assert.equal(update(1333),false);assert.equal(update(1366),true);
+ gate.reset();for(let now=1500;now<2500;now+=33)assert.equal(update(now,now%2===0),false);
+});
+for(const rate of [44100,48000])test(`Short triad FFT at ${rate} Hz keeps all tones and bass mandatory`,()=>{
+ for(const target of [[45,48,52],[51,54,58],[55,60,64],[60,64,69],[67,72,76]])for(const detune of [-25,0,25]){
+  const options={rate,detune,length:8192,gain:.02,noise:.00002,levels:[1,.7,.9]};
+  assert.ok(detector.matches(detector.analyze(spectrum(target,options),rate,8192),target));
+  for(const played of [target.slice(1),target.slice(0,2),target.map((m,i)=>i===1?m+1:m),target.map(m=>m+12),[target[0]],target.concat(target[0]+6)]){
+   assert.equal(detector.matches(detector.analyze(spectrum(played,options),rate,8192),target),false,JSON.stringify({target,played,rate,detune}));
+  }
+ }
+});
