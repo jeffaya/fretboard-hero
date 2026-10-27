@@ -10,9 +10,24 @@ const moduleURL=p=>pathToFileURL(path.resolve(p)).href;
 
 test('Public pages and sitemap are reproducible from the reviewed bilingual content',async()=>{
  const {generatedFiles}=await import(moduleURL('scripts/build-seo.mjs'));
+ const {languages}=await import(moduleURL('scripts/seo/content.mjs'));
  const generated=generatedFiles();
- assert.equal(generated.size,13);
+ assert.equal(generated.size,Object.values(languages).reduce((total,language)=>total+language.pages.length,0)+2);
  for(const [filename,content] of generated)assert.equal(read(filename),content,`${filename}: run node scripts/build-seo.mjs`);
+});
+
+test('Privacy and editorial pages share the same style dependencies and existing product logo',async()=>{
+ const {generatedFiles}=await import(moduleURL('scripts/build-seo.mjs'));
+ const expected=['/theme.css','/locales.css','/public-pages.css'];
+ for(const [file,html] of generatedFiles()){
+  if(!file.endsWith('.html'))continue;
+  const styles=[...html.matchAll(/rel="stylesheet" href="([^"]+)"/g)].map(m=>new URL(m[1],origin).pathname);
+  assert.deepEqual(styles,expected,file);
+  assert.match(html,/class="public-page"/);assert.match(html,/class="site-header"/);assert.match(html,/class="site-footer"/);
+  assert.match(html,/assets\/home\/product-wordmarks.webp/);
+  assert.doesNotMatch(html,/<style\b|style="|guides\.css|privacy\.css/);
+ }
+ assert.ok(!fs.existsSync('web/privacy.css')&&!fs.existsSync('web/guides.css'));
 });
 
 test('Every guide has readable initial HTML, a unique canonical and reciprocal language links',async()=>{
@@ -47,13 +62,15 @@ test('Every guide has readable initial HTML, a unique canonical and reciprocal l
    assert.ok(fs.existsSync(local),`${route}: missing local target ${link}`);
   }
  }
- assert.equal(canonicals.size,12);
+ assert.equal(canonicals.size,Object.values(languages).reduce((total,language)=>total+language.pages.length,0));
 });
 
-test('Sitemap contains only canonical public pages and robots leaves search crawling open',()=>{
+test('Sitemap contains only canonical public pages and robots leaves search crawling open',async()=>{
+ const {languages}=await import(moduleURL('scripts/seo/content.mjs'));
  const sitemap=read('web/sitemap.xml');
  const urls=[...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(m=>decode(m[1]));
- assert.equal(urls.length,16);assert.equal(new Set(urls).size,urls.length);
+ assert.equal(urls.length,Object.values(languages).reduce((total,language)=>total+language.pages.length,0)+4);
+ assert.equal(new Set(urls).size,urls.length);
  for(const value of urls){const url=new URL(value);assert.equal(url.origin,origin);assert.ok(!url.hash);assert.ok(!url.searchParams.has('screen'));assert.ok(!url.searchParams.has('key'));assert.ok(!url.pathname.startsWith('/api/'));}
  const robots=read('web/robots.txt');assert.match(robots,/User-agent: \*/);assert.match(robots,/Disallow: \/api\//);
  assert.doesNotMatch(robots,/Disallow:\s*\/$/m);assert.ok(robots.includes(`Sitemap: ${origin}/sitemap.xml`));

@@ -25,10 +25,38 @@ query combinations and API endpoints are excluded. No speculative prices, review
 scores or unavailable App Store links are emitted. The data describes the free
 demo and paid access separately; it makes no ranking or rich-result guarantee.
 
-`web/guides.css` is independent of the application styles. The application footer
-links to both guide languages; native builds open those public URLs externally,
-like the existing privacy link. The generated pages use the existing guitar share
-artwork and an accessible SVG/table example for A minor pentatonic.
+## Shared public page system
+
+Privacy and all editorial pages use the same build-time components in
+`scripts/pages/components.mjs`: document shell, header, language menu, footer,
+content sections, tables, FAQ and related cards. The header uses the existing
+product-wordmark sprite, including Privacy's instrument-aware branding.
+
+All public pages load the same three stylesheets:
+
+- `web/theme.css`: existing application fonts, colors, surfaces, scene and primary
+  action styling. Brand changes belong here, not in individual page templates.
+- `web/locales.css`: existing locale-specific fonts.
+- `web/public-pages.css`: document widths, responsive header/footer, reading layout,
+  content blocks and print rules. It uses the theme's `--ui-*` variables.
+
+There is no separate Privacy or guitar-guide stylesheet. Reading and wide layouts
+are options of the same document shell. Privacy's eleven complete translations
+live in `scripts/pages/privacy-content.html`; `scripts/pages/privacy.mjs` supplies
+metadata and its existing language/instrument enhancement scripts. The generated
+`web/privacy.html` stays directly readable without JavaScript.
+
+To add a guide, add corresponding entries with a stable shared `id` to each language
+in `scripts/seo/content.mjs`, using existing `paragraphs`, `items`, `steps`, `table`
+and `faq` fields. Regenerate once: navigation, related links, canonical/hreflang,
+structured data and sitemap are produced automatically. No page-specific CSS or
+new header/footer is needed. New reusable content types belong in the shared
+components and stylesheet, then become available to every page. For other document
+types, use `renderPage()` with the same header/footer and shared content blocks.
+
+The application footer links to both guide languages; native builds open those
+public URLs externally, like the existing privacy link. The generated pages use
+the existing guitar share artwork and an accessible SVG/table pentatonic example.
 
 ## Cloudflare and search consoles after deployment
 
@@ -65,9 +93,12 @@ access to private resources, which remain protected by server-side checks.
 
 `web/tests/seo.test.cjs` checks generated output, initial language/content, unique
 canonicals, reciprocal alternate links, local link targets and sitemap scope.
-`tests/browser/seo.spec.cjs` reads all 12 pages with JavaScript disabled, checks
-mobile overflow and language navigation, then follows real guide CTAs into the
-correct free-tier application screens. It also rejects unrecognized entry routes.
+`tests/browser/seo.spec.cjs` reads all 12 guides and the complete Privacy document
+with JavaScript disabled, checks mobile overflow, shared visual styles, language
+navigation, instrument branding and Privacy printing, then follows real guide CTAs
+into the correct free-tier application screens. It also rejects unrecognized entry
+routes. Run `web/tests/privacy.test.cjs` for all eleven locales and preference,
+history, denied-storage and instrument-selection regressions.
 
 ```sh
 cd tests/browser
