@@ -50,9 +50,9 @@
     const structured=q('#productStructuredData');
     if(structured){
       structured.textContent=JSON.stringify({
-        '@context':'https://schema.org','@type':['VideoGame','WebApplication'],name,url,image:ogImage,
+        '@context':'https://schema.org','@type':'WebApplication',name,url,image:ogImage,
         description:seo.structuredDescription||seo.description||'Interactive fretboard trainer.',
-        applicationCategory:'EducationalApplication',gamePlatform:['Web Browser','Mobile Web','Tablet'],operatingSystem:'Any',
+        applicationCategory:'EducationalApplication',operatingSystem:'Web browser',
         isAccessibleForFree:true,inLanguage:'en',keywords:(seo.keywords||[]).join(', '),
         genre:['Music','Education'],featureList:seo.featureList||[],
         author:{'@type':'Person',name:'Jean-François Seignemorte'},
@@ -61,10 +61,11 @@
     }
 
     setAttr('#home .hero-logo svg','viewBox',assets.heroLogoViewport);
+    setText('#home .hero-name',name);
     setAria('#home .hero-logo svg',name);
     setAria('#home',`${name} home`);
     setText('.tagline',`MASTER THE ${(branding.instrumentName||instrument?.label||'INSTRUMENT').toUpperCase()} NECK`);
-    setText('#home .learn-card small',ModeRegistry.list(instrument).map(m=>m.label.charAt(0)+m.label.slice(1).toLowerCase()).join(' · '));
+    setText('#home .learn-card small','Practice on the interactive fretboard');
     setText('#home .map-card small','Explore the neck');
     setText('#home .circle-card small','Visualize & practice');
     setText('#home .quiz-card small','Test your knowledge');

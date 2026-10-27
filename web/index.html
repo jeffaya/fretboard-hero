@@ -9,8 +9,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Fretboard Hero">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <title>Fretboard Hero — Interactive Fretboard Trainer</title>
-  <meta name="description" content="Interactive fretboard trainer for notes, patterns, harmony and fast fretboard quizzes. Free, mobile-first and no account required.">
+  <title>Guitar Fretboard Hero — Pentatonic Scales, Notes &amp; Triads</title>
+  <meta name="description" content="Practice guitar with pentatonic positions, note maps, triads, chords and a guided daily routine. Start with the free demo in A.">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <meta name="keywords" content="fretboard trainer, fretboard notes, music theory, fretboard quiz">
   <meta name="author" content="Jean-François Seignemorte">
@@ -48,12 +48,12 @@
   <link rel="stylesheet" href="./fretboard.css?v=10.32.1">
   <link rel="stylesheet" href="./quiz.css?v=10.49.14">
   <link rel="stylesheet" href="./circle.css?v=10.31.0">
-  <link rel="stylesheet" href="./home.css?v=10.49.15">
-  <link rel="stylesheet" href="./theme.css?v=10.49.13">
+  <link rel="stylesheet" href="./home.css?v=10.49.24">
+  <link rel="stylesheet" href="./theme.css?v=10.49.24">
   <link rel="stylesheet" href="./routine.css?v=10.47.0">
   <link rel="stylesheet" href="./premium.css?v=10.49.10">
   <link rel="stylesheet" href="./locales.css?v=10.47.0">
-  <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":["VideoGame","WebApplication"],"name":"Fretboard Hero","description":"Interactive fretboard trainer."}</script>
+  <script id="productStructuredData" type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Guitar Fretboard Hero","url":"https://fretboard-hero.com/","description":"Guitar practice tools with a free demo in A: pentatonic positions, notes, triads and daily routine.","applicationCategory":"EducationalApplication","operatingSystem":"Web browser","isAccessibleForFree":true,"inLanguage":"en"}</script>
   <link rel="stylesheet" href="./tuner.css?v=10.34.1">
 </head>
 <body data-loading="true" aria-busy="true">
@@ -69,7 +69,7 @@
     <section id="home" class="screen active home-screen" aria-label="Fretboard Hero home">
       <div class="home-content">
         <div class="home-brand">
-          <h1 class="hero-logo"><svg viewBox="0 0 900 550" role="img" aria-label="Guitar Fretboard Hero"><image width="2700" height="550"/></svg></h1>
+          <h1 class="hero-logo"><span class="hero-name">Guitar Fretboard Hero</span><svg viewBox="0 0 900 550" role="img" aria-label="Guitar Fretboard Hero" aria-hidden="true"><image width="2700" height="550"/></svg></h1>
           <p class="tagline">MASTER THE GUITAR NECK</p>
           <div class="home-setup">
             <p class="home-section-label">Choose instrument</p>
@@ -87,7 +87,7 @@
               <h2 id="homePracticeLabel" class="home-section-label">Practice</h2>
               <div class="home-action-grid">
                 <button class="hero-btn routine-card" data-go="routine"><span class="hero-icon"><img src="./assets/home/play.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>DAILY ROUTINE</strong><small>One key · Five guided exercises</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-                <button class="hero-btn learn-card" data-go="learn"><span class="hero-icon"><img src="./assets/home/learn.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>LEARN</strong><small>Notes · Triads · Scales · Chords</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+                <button class="hero-btn learn-card" data-go="learn"><span class="hero-icon"><img src="./assets/home/learn.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>LEARN</strong><small>Practice on the interactive fretboard</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
                 <button class="hero-btn quiz-card" data-go="quiz"><span class="hero-icon"><img src="./assets/home/quiz.svg?v=10.24.2" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>QUIZ</strong><small>Test your knowledge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
               </div>
             </section>
@@ -96,6 +96,7 @@
               <div class="home-action-grid">
                 <button class="hero-btn map-card" data-go="fretmap"><span class="hero-icon"><img src="./assets/home/map.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>FRETBOARD MAP</strong><small>Explore the neck</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
                 <button class="hero-btn circle-card" data-go="circle"><span class="hero-icon"><img src="./assets/home/circle.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>CIRCLE OF FIFTHS</strong><small>Visualize & practice</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+                <a class="hero-btn guide-card" href="/en/guitar/"><span class="hero-icon"><img src="./assets/home/guide.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>Guide</strong><small>Explanations, diagrams and tips</small></span><span class="home-chevron" aria-hidden="true">›</span></a>
               </div>
             </section>
           </nav>
@@ -307,7 +308,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.49.21" defer></script>
+  <script src="./bootstrap.js?v=10.49.24" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

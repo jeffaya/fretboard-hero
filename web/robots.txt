@@ -1,0 +1,6 @@
+# Public pages are available to search crawlers, including AI search services.
+# robots.txt is not an access-control mechanism for private or API data.
+User-agent: *
+Disallow: /api/
+
+Sitemap: https://fretboard-hero.com/sitemap.xml

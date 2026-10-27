@@ -476,4 +476,17 @@
   }
   $('#shareScore').addEventListener('click',async()=>{const qz=state.quiz||{score:0,correct:0},{emoji,rank}=quizRank(qz.score);const text=`${emoji} I reached ${rank} with ${qz.score.toLocaleString(window.FretboardI18n?.locale||'en-US')} points and ${qz.correct} correct answers in ${quizSeconds()} seconds on ${product.name} ${product.shareEmoji||''}\nCan you beat my score? Try the free fretboard quiz!`,url=quizShareUrl();try{const localized=window.FretboardI18n?.text(text)||text;if(navigator.share)await navigator.share({title:product.name,text:localized,url});else{await navigator.clipboard.writeText(`${localized}\n${url}`);const shareLabel=$('#shareScore span');if(shareLabel){shareLabel.textContent='COPIED!';setTimeout(()=>shareLabel.textContent='SHARE MY SCORE',1400)}}}catch{}});
   renderLearn();
+  // Public guides can open an existing exercise without accepting arbitrary
+  // selectors, changing access rights or overriding the learner's saved key.
+  const entry = new URLSearchParams(location.search);
+  const entryScreen = entry.get('screen');
+  if (['learn','fretmap','routine','circle','quiz'].includes(entryScreen)) {
+    if (entryScreen === 'learn') {
+      const mode = ModeRegistry.list(instrument).find(item => item.id === entry.get('mode'));
+      if (mode && access.allows('mode', ModeRegistry.kind(instrument, mode.id))) {
+        $$('#modeControls button').find(button => button.dataset.mode === mode.id)?.click();
+      }
+    }
+    go(entryScreen);
+  }
 })();

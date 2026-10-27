@@ -7,6 +7,17 @@
     url.searchParams.set('instrument',window.FRETBOARD_SITE_CONFIG.instrument);
     privacy.href=url.href;
   }
+  // Guides currently exist in French and English. Keep web navigation local;
+  // native builds open the public document outside the app like Privacy.
+  const guide=document.querySelector('.guide-card');
+  if(guide){
+    const route=window.FretboardI18n?.locale==='fr'?'/fr/guitare/':'/en/guitar/';
+    guide.href=route;
+    if(['android','ios'].includes(window.Capacitor?.getPlatform?.())){
+      guide.href=new URL(route,'https://fretboard-hero.com').href;
+      guide.target='_blank';guide.rel='noopener noreferrer';
+    }
+  }
   // Instrument selection and the shared footer entry; motion is automatic in CSS.
   const dock=document.querySelector('.home-instruments');
   const buttons=[...document.querySelectorAll('[data-home-instrument]')];

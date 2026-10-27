@@ -2,7 +2,11 @@
 
 ## Policy and publication
 
-The page is implemented at `web/privacy.html`. Cloudflare Workers static assets
+The page is generated at `web/privacy.html` from `scripts/pages/privacy-content.html`
+and `scripts/pages/privacy.mjs`, using the same public document components as the
+editorial guides. Run `node scripts/build-seo.mjs` after editing the source;
+`node scripts/build-seo.mjs --check` checks all generated public pages in CI.
+Cloudflare Workers static assets
 serve this file at **https://fretboard-hero.com/privacy** with the existing default
 HTML handling. No new Worker route, authentication, PDF viewer, third-party font
 or external script is needed. All eleven complete translations are in the initial
@@ -24,7 +28,10 @@ The header reuses the active Guitar, Bass or Ukulele wordmark from the existing
 bootstrap: valid `?instrument=` first, then `fretboard-instrument` (legacy
 `fretboard-home-instrument` session fallback), then `site.config.json`'s instrument.
 The favicon, accessible brand name and document title follow the selected product.
-Layout and print rules belong to `web/privacy.css`.
+The header, language menu and footer come from `scripts/pages/components.mjs`.
+Layout and print rules belong to `web/public-pages.css`, shared with the guides;
+fonts, colors and primary action styling come from the application's `web/theme.css`
+and `web/locales.css`. Do not add page-specific styles or duplicate the shell.
 
 The home link carries the current app language and active instrument to
 `/privacy?lang=…&instrument=…`, including when a native app opens an external browser
@@ -96,11 +103,13 @@ automatically share purchases. No fixed price is embedded in the policy.
 
 ## Editing and verification
 
-`web/privacy.html` is the canonical policy source; there is no translation service
-or build step at runtime. Keep the same nine sections, complete paragraphs,
-deletion instructions, provider links and date in every language. Update content
-and privacy asset query versions together. App-language changes should also update
-the policy menu and its language coverage test.
+`scripts/pages/privacy-content.html` is the canonical policy content source;
+`web/privacy.html` is generated and must not be edited directly. There is no
+translation service or build step at runtime. Keep the same nine sections,
+complete paragraphs, deletion instructions, provider links and date in every
+language, then regenerate with `node scripts/build-seo.mjs`. App-language changes
+should also update the menu data in `scripts/pages/privacy.mjs` and its language
+coverage test. Bump stylesheet/script query versions when changing their contents.
 
 Run `node --test web/tests/privacy.test.cjs web/tests/i18n.test.cjs web/tests/home-purchases.test.cjs web/tests/distribution-startup.test.cjs`
 to check static coverage, translated paragraphs, old anchors, preference order,

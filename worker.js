@@ -14,8 +14,8 @@ export default {
     const requested = url.searchParams.get('instrument');
     const instrument = Object.hasOwn(products, requested) ? products[requested] : products.guitar;
     const canonical = `https://fretboard-hero.com/${instrument.key === 'guitar' ? '' : `?instrument=${instrument.key === 'bass' ? 'bass-4' : instrument.key}`}`;
-    const title = `${instrument.name} Fretboard Hero — Tune, Learn & Play`;
-    const description = `Tune your ${instrument.name.toLowerCase()}, play Daily Routine with live mic feedback, and explore fretboard notes, scales, triads and ${instrument.shapes}. Test yourself in the quiz.`;
+    const title = `${instrument.name} Fretboard Hero — Pentatonic Scales, Notes & Triads`;
+    const description = `Practice ${instrument.name.toLowerCase()} with pentatonic positions, note maps, triads, ${instrument.shapes} and a guided daily routine. Start with the free demo in A.`;
     const image = `https://fretboard-hero.com/assets/instruments/${instrument.key}/og.jpg?v=20261020.1`;
     const imageAlt = `${instrument.name} Fretboard Hero neon concert artwork with a ${instrument.neck} neck, Tuner, Daily Routine with live mic feedback, Learn, Fretboard Map, Circle of Fifths and Quiz`;
     const attr = (name, value) => ({ element(el) { el.setAttribute(name, value); } });
@@ -30,6 +30,18 @@ export default {
       .on('meta[property="og:image:width"]', attr('content', '1024'))
       .on('meta[property="og:image:height"]', attr('content', '500'))
       .on('meta[property="og:image:alt"], meta[name="twitter:image:alt"]', attr('content', imageAlt))
+      .on('#home .hero-name', { element(el) { el.setInnerContent(`${instrument.name} Fretboard Hero`); } })
+      .on('#productStructuredData', { element(el) {
+        el.setInnerContent(JSON.stringify({
+          '@context':'https://schema.org', '@type':'WebApplication',
+          name:`${instrument.name} Fretboard Hero`, url:canonical, description,
+          applicationCategory:'EducationalApplication', operatingSystem:'Web browser',
+          isAccessibleForFree:true, inLanguage:'en', image,
+          author:{'@type':'Person',name:'Jean-François Seignemorte'},
+          featureList:['Pentatonic positions','Fretboard note map','Triads','Daily Routine','Tuner','Circle of Fifths','Quiz']
+        }).replace(/</g, '\\u003c'), {html:true});
+      } })
       .transform(response);
   }
 };
+

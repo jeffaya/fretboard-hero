@@ -426,5 +426,8 @@
   "Could not open payment": "无法打开支付页面",
   "Let the root ring. Light vibrato is optional.": "让根音多响一会儿，可加入轻微揉弦。",
   "~ = let the root ring; light vibrato optional": "~ = 延长根音，可轻微揉弦",
-  "Root: {note} — let it ring": "根音：{note} — 多响一会儿"
+  "Root: {note} — let it ring": "根音：{note} — 多响一会儿",
+  "Guide": "指南",
+  "Explanations, diagrams and tips": "讲解、图示与练习技巧",
+  "Practice on the interactive fretboard": "在交互式指板上练习"
 }

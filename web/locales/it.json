@@ -426,5 +426,8 @@
   "Could not open payment": "Impossibile aprire il pagamento",
   "Let the root ring. Light vibrato is optional.": "Lascia risuonare la tonica. Un leggero vibrato è facoltativo.",
   "~ = let the root ring; light vibrato optional": "~ = lascia risuonare la tonica; vibrato leggero facoltativo",
-  "Root: {note} — let it ring": "Tonica: {note} — lascia risuonare"
+  "Root: {note} — let it ring": "Tonica: {note} — lascia risuonare",
+  "Guide": "Guida",
+  "Explanations, diagrams and tips": "Spiegazioni, schemi e consigli",
+  "Practice on the interactive fretboard": "Esercitati sulla tastiera interattiva"
 }

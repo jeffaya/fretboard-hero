@@ -3,8 +3,8 @@ window.FRETBOARD_PRODUCTS.guitar={
   id:'guitar-fretboard-hero',instrument:'guitar',name:'Guitar Fretboard Hero',shareEmoji:'🎸',url:'https://fretboard-hero.com/',
   branding:{name:'Guitar Fretboard Hero',instrumentName:'Guitar'},
   seo:{
-    title:'Guitar Fretboard Hero — Learn Guitar Fretboard Notes, Pentatonic Scales, Triads & Chords',
-    description:'Learn the guitar fretboard with interactive note maps, major and minor pentatonic positions, triads, CAGED chord shapes and a 60-second fretboard quiz. Free, mobile-first and no account required.',
+    title:'Guitar Fretboard Hero — Pentatonic Scales, Notes & Triads',
+    description:'Practice guitar with pentatonic positions, note maps, triads, chords and a guided daily routine. Start with the free demo in A.',
     keywords:['guitar fretboard','guitar fretboard notes','learn guitar fretboard','guitar notes','guitar neck notes','fretboard trainer','guitar fretboard trainer','minor pentatonic guitar','major pentatonic guitar','pentatonic positions guitar','guitar triads','CAGED chords','guitar chord shapes','fretboard quiz','guitar music theory'],
     canonical:'https://fretboard-hero.com/',
     ogTitle:'Guitar Fretboard Hero — Tune, Learn & Play',
@@ -12,7 +12,7 @@ window.FRETBOARD_PRODUCTS.guitar={
     ogImageAlt:'Guitar Fretboard Hero neon concert artwork with a six-string guitar neck, Tuner, Daily Routine with live mic feedback, Learn, Fretboard Map, Circle of Fifths and Quiz',
     twitterTitle:'Guitar Fretboard Hero — Tune, Learn & Play',
     twitterDescription:'Tune your guitar, play Daily Routine with live mic feedback, and explore fretboard notes, scales, triads and chords. Test yourself in the quiz.',
-    structuredDescription:'Free interactive guitar fretboard learning tool with note mapping, major and minor pentatonic positions, triads, CAGED chord shapes and a timed fretboard quiz.',
+    structuredDescription:'Practice guitar with pentatonic positions, note maps, triads, chords and a guided daily routine. Start with the free demo in A.',
     featureList:['Interactive guitar fretboard note map','Major and minor pentatonic positions','Triad visualization','CAGED chord shapes','Circle of Fifths and key harmony','60-second fretboard quiz','Mobile and tablet friendly']
   },
   pwa:{manifest:'manifests/guitar.webmanifest',shortName:'Fretboard Hero'},

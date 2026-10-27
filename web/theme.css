@@ -100,9 +100,12 @@ body[data-screen]:not([data-screen="home"]) .stage-light { opacity: .08; animati
 
 .circle-card { --ui-accent: var(--ui-blue); --ui-tint: #052645; }
 
+.guide-card { --ui-accent: #ff6b6b; --ui-tint: #3b1421; }
+
 .hero-btn { --ui-radius: 16px; }
 
 body #app button,
+body #app a.hero-btn,
 body #resultModal button {
   border: 1px solid var(--ui-button-border, color-mix(in srgb, var(--ui-accent) 65%, #31415b));
   border-radius: var(--ui-radius);
@@ -122,12 +125,14 @@ body #resultModal button.modal-primary {
 }
 
 body #app button:hover,
+body #app a.hero-btn:hover,
 body #resultModal button:hover {
   border-color: var(--ui-accent);
   box-shadow: var(--ui-button-shadow), 0 0 18px color-mix(in srgb, var(--ui-accent) 25%, transparent);
 }
 
 body #app button:focus-visible,
+body #app a.hero-btn:focus-visible,
 body #resultModal button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
 body #app button:disabled,
@@ -325,7 +330,7 @@ body #resultModal :is(#quizIntroView,#quizResultView) .modal-action svg { flex-s
   .quiz-secondary-actions { grid-template-columns: 1fr; gap: 0; }
 }
 
-body :is(#app,#resultModal) :is(button,a):is(.ui-primary,.modal-primary) {
+body :is(#app,#resultModal,.public-shell) :is(button,a):is(.ui-primary,.modal-primary) {
   --ui-accent: #e927ff;
   background: var(--ui-gloss),linear-gradient(110deg,#790970,#210c30 94%);
   border-color: #e927ff;
@@ -333,7 +338,7 @@ body :is(#app,#resultModal) :is(button,a):is(.ui-primary,.modal-primary) {
   color: #fff;
 }
 
-body :is(#app,#resultModal) :is(button,a):is(.ui-primary,.modal-primary):hover {
+body :is(#app,#resultModal,.public-shell) :is(button,a):is(.ui-primary,.modal-primary):hover {
   border-color: #ff91f5;
   box-shadow: inset 0 0 20px #e927ff38,0 0 20px #e927ff80;
 }

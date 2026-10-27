@@ -37,6 +37,12 @@ for(const [format,newline] of [['LF','\n'],['CRLF','\r\n']])test(`Worker supplie
   for(const selector of ['meta[property="og:image"]','meta[name="twitter:image"]'])assert.equal(attributes.get(selector).content,imageUrl(key));
   assert.equal(attributes.get('meta[property="og:image:type"]').content,'image/jpeg');
   assert.equal(attributes.get('meta[property="og:image:width"]').content,'1024');assert.equal(attributes.get('meta[property="og:image:height"]').content,'500');
+  const structured=JSON.parse(attributes.get('#productStructuredData').textContent);
+  assert.equal(structured['@type'],'WebApplication');
+  assert.equal(structured.url,attributes.get('link[rel="canonical"]').href);
+  assert.equal(structured.image,imageUrl(key));
+  assert.match(structured.description,/free demo in A/);
+  assert.equal(structured.name,attributes.get('#home .hero-name').textContent);
  }
  const image=new Response('image',{headers:{'content-type':'image/jpeg'}});
  assert.equal(await app.fetch(new Request(imageUrl('bass')),{ASSETS:{fetch:async()=>image}}),image,'image responses pass through unchanged');

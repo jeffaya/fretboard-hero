@@ -426,5 +426,8 @@
   "Could not open payment": "Die Zahlung konnte nicht geöffnet werden",
   "Let the root ring. Light vibrato is optional.": "Lass den Grundton klingen. Leichtes Vibrato ist optional.",
   "~ = let the root ring; light vibrato optional": "~ = Grundton klingen lassen; leichtes Vibrato optional",
-  "Root: {note} — let it ring": "Grundton: {note} — klingen lassen"
+  "Root: {note} — let it ring": "Grundton: {note} — klingen lassen",
+  "Guide": "Ratgeber",
+  "Explanations, diagrams and tips": "Erklärungen, Diagramme und Tipps",
+  "Practice on the interactive fretboard": "Übe auf dem interaktiven Griffbrett"
 }
