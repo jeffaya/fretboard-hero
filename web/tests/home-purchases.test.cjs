@@ -1,12 +1,22 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
-function setup({native=false,unlocked=false,blocked=false}={}){
- const stored={},rows=[],footer=[],privacy={href:'https://fretboard-hero.com/privacy?lang=fr'};let destination,opens=0;
+function setup({native=false,unlocked=false,blocked=false,locale='fr',platform='web'}={}){
+ const stored={},rows=[],footer=[],privacy={href:'https://fretboard-hero.com/privacy?lang=fr'},guide={};let destination,opens=0;
  const node=()=>({dataset:{},events:{},children:[],setAttribute(){},addEventListener(name,fn){this.events[name]=fn},append(...items){this.children.push(...items)}});
  const buttons=['guitar','bass-4','ukulele'].map(instrument=>{const b=node();b.dataset.homeInstrument=instrument;return b});
- const c={URL,location:{href:'https://fretboard-hero.com/?lang=fr',assign(url){destination=url}},localStorage:{setItem(key,value){if(blocked)throw Error('Unavailable');stored[key]=value}},document:{querySelector:s=>s==='a[href^="https://fretboard-hero.com/privacy"]'?privacy:s==='.home-instruments'?{prepend(){}}:s==='.home-footer'?{append:(...items)=>footer.push(...items)}:{append:row=>rows.push(row)},querySelectorAll:()=>buttons,createElement:node},window:{FRETBOARD_SITE_CONFIG:{nativeBilling:native,instrument:'guitar',defaultInstrument:'guitar'},FRETBOARD_ACCESS:{unlocked},FRETBOARD_PREMIUM:{open(){opens++}}}};
+ const c={URL,location:{href:'https://fretboard-hero.com/?lang=fr',assign(url){destination=url}},localStorage:{setItem(key,value){if(blocked)throw Error('Unavailable');stored[key]=value}},document:{querySelector:s=>s==='a[href^="https://fretboard-hero.com/privacy"]'?privacy:s==='.guide-card'?guide:s==='.home-instruments'?{prepend(){}}:s==='.home-footer'?{append:(...items)=>footer.push(...items)}:{append:row=>rows.push(row)},querySelectorAll:()=>buttons,createElement:node},window:{FretboardI18n:{locale},Capacitor:{getPlatform:()=>platform},FRETBOARD_SITE_CONFIG:{nativeBilling:native,instrument:'guitar',defaultInstrument:'guitar'},FRETBOARD_ACCESS:{unlocked},FRETBOARD_PREMIUM:{open(){opens++}}}};
  vm.runInNewContext(fs.readFileSync('web/home.js','utf8'),c);
- return {buttons,stored,rows,footer,get destination(){return destination},get opens(){return opens}};
+ return {buttons,stored,rows,footer,guide,get destination(){return destination},get opens(){return opens}};
 }
+test('Guide navigation uses the resolved language, a supported fallback and external native URLs',()=>{
+ for(const locale of ['fr','en','es','de','it','ja','ko','zh-CN','pt-BR','hi','id'])for(const platform of ['web','android','ios']){
+  const {guide,opens}=setup({locale,platform,blocked:true,native:platform!=='web'});
+  const route=locale==='fr'?'/fr/guitare/':'/en/guitar/';
+  assert.equal(guide.href,platform==='web'?route:'https://fretboard-hero.com'+route);
+  assert.equal(guide.target,platform==='web'?undefined:'_blank');
+  assert.equal(guide.rel,platform==='web'?undefined:'noopener noreferrer');
+  assert.equal(opens,0);
+ }
+});
 test('Web and native demos open their dialog from the same footer link without adding a menu row',()=>{
  for(const native of [false,true]){
   const s=setup({native});assert.equal(s.rows.length,0);assert.equal(s.footer.length,1);

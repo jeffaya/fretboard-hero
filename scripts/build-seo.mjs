@@ -62,11 +62,13 @@ ${Object.keys(languages).map(lang=>`<link rel="alternate" hreflang="${lang}" hre
 <meta name="twitter:image" content="${image}">
 <link rel="icon" href="/assets/instruments/guitar/favicon.ico">
 <script type="application/ld+json">${json(graph)}</script>`;
+  const related = renderRelated(page.id==='home'?text.chooseGuide:text.related,text.pages.filter(p=>p.id!==page.id&&p.id!=='about'&&p.id!=='home').map(p=>({...p,href:pagePath(locale,p)})));
   const body = `<section class="page-hero${page.diagram?' with-diagram':''}"><div><p class="eyebrow">FRETBOARD HERO / ${escape(page.label.toUpperCase())}</p><h1>${escape(page.heading)}</h1><p class="page-intro">${escape(page.intro)}</p><div class="actions"><a class="button ui-primary" data-exercise-link href="${escape(appLink(locale,page))}">${escape(page.cta||text.try)} <span aria-hidden="true">↗</span></a><a class="store-link" href="${store}">${text.store}</a></div><p class="byline">${text.author} <a href="${text.about}">${author}</a> · ${text.updated} <time datetime="${reviewed}">${dateLabel}</time></p></div>${page.diagram?pentatonicDiagram(locale):''}</section>
+${page.id==='home'?related:''}
 <div class="article-layout"><article>${page.sections.map(renderSection).join('\n')}
 ${renderFAQ(text.questions,page.faq)}
 </article><aside class="page-aside"><p class="eyebrow">FRETBOARD HERO</p><h2>${text.offerTitle}</h2><p>${escape(text.offer)}</p><a class="button ui-primary" href="${escape(appLink(locale,page))}">${text.open}</a><p class="platform">${escape(text.platform)}</p></aside></div>
-${renderRelated(text.related,text.pages.filter(p=>p.id!==page.id&&p.id!=='about'&&p.id!=='home').map(p=>({...p,href:pagePath(locale,p)})))}
+${page.id==='home'?'':related}
 `;
   const home = {href:appLink(locale,text.pages[0]),label:locale==='fr'?'Retour à Fretboard Hero':'Back to Fretboard Hero'};
   return renderPage({

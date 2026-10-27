@@ -426,5 +426,8 @@
   "Could not open payment": "決済画面を開けませんでした",
   "Let the root ring. Light vibrato is optional.": "ルート音を長めに響かせましょう。軽いビブラートは任意です。",
   "~ = let the root ring; light vibrato optional": "~ = ルート音を長めに響かせる（軽いビブラートは任意）",
-  "Root: {note} — let it ring": "ルート音：{note} — 長めに響かせる"
+  "Root: {note} — let it ring": "ルート音：{note} — 長めに響かせる",
+  "Guide": "ガイド",
+  "Explanations, diagrams and tips": "解説・図解・練習のヒント",
+  "Practice on the interactive fretboard": "操作できる指板で練習しましょう"
 }

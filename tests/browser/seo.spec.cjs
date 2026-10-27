@@ -1,4 +1,40 @@
-const {test,expect,visibleDrawing}=require('./fixtures.cjs');
+const {test,expect,visibleDrawing,ready,installStore}=require('./fixtures.cjs');
+
+for(const [locale,route,description,learn,heading,triads,penta] of [
+ ['fr','/fr/guitare/','Explications, schémas et conseils','Pratiquez sur le manche interactif','Les guides pour comprendre le manche.','triades/','pentatonique/'],
+ ['en','/en/guitar/','Explanations, diagrams and tips','Practice on the interactive fretboard','Your guide to the guitar fretboard.','triads/','pentatonic-scales/']
+])test(`Home Guide opens the topic index and links between articles (${locale})`,async({page})=>{
+ await page.goto(`/?instrument=guitar&lang=${locale}`);await ready(page);
+ const guide=page.locator('#home .guide-card');await expect(guide).toBeVisible();
+ await expect(guide.locator('small')).toHaveText(description);
+ await expect(page.locator('#home .learn-card small')).toHaveText(learn);
+ await expect(guide).toHaveAttribute('href',route);
+ await expect(guide).not.toHaveAttribute('target','_blank');
+ await expect.poll(()=>guide.locator('img').evaluate(img=>img.complete&&img.naturalWidth>0)).toBe(true);
+ expect(await guide.evaluate(node=>getComputedStyle(node).getPropertyValue('--ui-accent').trim())).toBe('#ff6b6b');
+ const [card,grid]=await Promise.all([guide.boundingBox(),guide.locator('..').boundingBox()]);
+ expect(card.width).toBeCloseTo(grid.width,0);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ await guide.focus();await page.keyboard.press('Enter');
+ await expect(page).toHaveURL(new RegExp(route+'$'));await expect(page.getByRole('heading',{level:1,name:heading})).toBeVisible();
+ await expect(page.locator('.related-pages .card')).toHaveCount(4);
+ expect(await page.locator('.related-pages').evaluate(node=>!!(node.compareDocumentPosition(document.querySelector('.article-layout'))&Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
+ await page.locator(`.related-pages a[href="${route+triads}"]`).click();
+ await expect(page).toHaveURL(new RegExp(route+triads+'$'));
+ await page.locator(`.page-nav a[href="${route+penta}"]`).click();
+ await expect(page).toHaveURL(new RegExp(route+penta+'$'));
+ await expect(page.locator('.diagram')).toBeVisible();
+});
+
+test('Native Guide points to the public site without requiring a purchase',async({page})=>{
+ await installStore(page,{platform:'android',owned:false});
+ await page.goto('/?instrument=guitar&lang=fr');await ready(page);
+ const guide=page.locator('.guide-card');await expect(guide).toBeVisible();
+ await expect(guide).toHaveAttribute('href','https://fretboard-hero.com/fr/guitare/');
+ await expect(guide).toHaveAttribute('target','_blank');
+ await expect(guide).toHaveAttribute('rel','noopener noreferrer');
+ await expect(page.locator('body')).toHaveAttribute('data-access','demo');
+});
 
 test.describe('Public guides without JavaScript',()=>{
  test.use({javaScriptEnabled:false});

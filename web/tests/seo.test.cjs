@@ -74,7 +74,8 @@ test('Sitemap contains only canonical public pages and robots leaves search craw
  for(const value of urls){const url=new URL(value);assert.equal(url.origin,origin);assert.ok(!url.hash);assert.ok(!url.searchParams.has('screen'));assert.ok(!url.searchParams.has('key'));assert.ok(!url.pathname.startsWith('/api/'));}
  const robots=read('web/robots.txt');assert.match(robots,/User-agent: \*/);assert.match(robots,/Disallow: \/api\//);
  assert.doesNotMatch(robots,/Disallow:\s*\/$/m);assert.ok(robots.includes(`Sitemap: ${origin}/sitemap.xml`));
- const home=read('web/index.html');assert.ok(home.includes('https://fretboard-hero.com/fr/guitare/'));assert.ok(home.includes('https://fretboard-hero.com/en/guitar/'));
+ const home=read('web/index.html');assert.match(home,/<a class="hero-btn guide-card" href="\/en\/guitar\/">/);
+ assert.doesNotMatch(home,/class="home-guides"/);
 });
 
 test('Pentatonic example is available as real note and fret data, with an accessible diagram',()=>{

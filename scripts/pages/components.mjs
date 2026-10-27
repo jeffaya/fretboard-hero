@@ -64,7 +64,7 @@ export function renderPage({locale,head,body,header,footer,navigation = '',skipL
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#030b17">
 ${head}
-<link rel="stylesheet" href="${assetBase}theme.css?v=10.49.23">
+<link rel="stylesheet" href="${assetBase}theme.css?v=10.49.24">
 <link rel="stylesheet" href="${assetBase}locales.css?v=10.49.13">
 <link rel="stylesheet" href="${assetBase}public-pages.css?v=1">
 ${scripts.map(src => `<script src="${escape(src)}" defer></script>`).join('\n')}

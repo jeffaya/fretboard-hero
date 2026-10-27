@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="book-pages" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#ffb3ab" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#ff6b6b" stop-opacity=".12"/>
+    </linearGradient>
+  </defs>
+  <path d="M5 14v42c10-5 18-5 27 0 9-5 17-5 27 0V14" fill="none" stroke="#ff6b6b" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M32 13C24 7 16 7 8 10v40c8-3 16-3 24 3 8-6 16-6 24-3V10c-8-3-16-3-24 3Z" fill="url(#book-pages)" stroke="#ffaaa3" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M32 14v38" stroke="#ffd7d1" stroke-width="2"/>
+  <g fill="none" stroke="#ffd7d1" stroke-width="1.2" stroke-linecap="round" opacity=".9">
+    <path d="M13 19c5-1 9 0 14 2m-14 4c5-1 9 0 14 2m-14 4c5-1 9 0 14 2m-14 4c5-1 9 0 14 2m-14 4c5-1 9 0 14 2"/>
+    <path d="M37 21c5-2 9-3 14-2m-14 8c5-2 9-3 14-2m-14 8c5-2 9-3 14-2m-14 8c5-2 9-3 14-2m-14 8c5-2 9-3 14-2"/>
+  </g>
+  <g font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="#fff0ed" stroke="#813237" stroke-width="2" paint-order="stroke">
+    <text x="44" y="21">5</text><text x="40" y="34">7</text><text x="47" y="44">5</text>
+  </g>
+</svg>

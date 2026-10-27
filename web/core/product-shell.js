@@ -65,7 +65,7 @@
     setAria('#home .hero-logo svg',name);
     setAria('#home',`${name} home`);
     setText('.tagline',`MASTER THE ${(branding.instrumentName||instrument?.label||'INSTRUMENT').toUpperCase()} NECK`);
-    setText('#home .learn-card small',ModeRegistry.list(instrument).map(m=>m.label.charAt(0)+m.label.slice(1).toLowerCase()).join(' · '));
+    setText('#home .learn-card small','Practice on the interactive fretboard');
     setText('#home .map-card small','Explore the neck');
     setText('#home .circle-card small','Visualize & practice');
     setText('#home .quiz-card small','Test your knowledge');

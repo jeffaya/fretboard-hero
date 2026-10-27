@@ -54,9 +54,19 @@ new header/footer is needed. New reusable content types belong in the shared
 components and stylesheet, then become available to every page. For other document
 types, use `renderPage()` with the same header/footer and shared content blocks.
 
-The application footer links to both guide languages; native builds open those
-public URLs externally, like the existing privacy link. The generated pages use
-the existing guitar share artwork and an accessible SVG/table pentatonic example.
+The application home has a full-width coral Guide card with the shared home-card
+styles and a vector open-book/tablature icon. Its description explains the reading
+resources; Learn describes practice on the interactive fretboard. These labels are
+translated into all eleven app languages. The card opens the French guide index
+when the resolved app language is French and the English index otherwise (the
+guides currently have only those two translations). The index lists its four
+topics before the longer text, and each article keeps the shared navigation.
+
+Web navigation stays in the same tab. Native builds open an absolute public URL
+in a separate browser like Privacy, without requiring a purchase or exporting
+access parameters. Guides currently cover guitar. The old duplicate guide links
+in the footer have been removed. The generated pages use the existing guitar share
+artwork and an accessible SVG/table pentatonic example.
 
 ## Cloudflare and search consoles after deployment
 
