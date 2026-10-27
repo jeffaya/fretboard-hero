@@ -3,8 +3,8 @@ window.FRETBOARD_PRODUCTS.ukulele={
   id:'ukulele-fretboard-hero',instrument:'ukulele',name:'Ukulele Fretboard Hero',shareEmoji:'🎶',url:'https://fretboard-hero.com/?instrument=ukulele',
   branding:{name:'Ukulele Fretboard Hero',instrumentName:'Ukulele'},
   seo:{
-    title:'Ukulele Fretboard Hero — Learn Ukulele Fretboard Notes, Scales, Triads & Chords',
-    description:'Learn the ukulele fretboard with an interactive G–C–E–A note map, pentatonic positions, triads, chords, arpeggios and a 60-second fretboard quiz. Designed for standard reentrant high-G tuning.',
+    title:'Ukulele Fretboard Hero — Pentatonic Scales, Notes & Triads',
+    description:'Practice ukulele with pentatonic positions, note maps, triads, chords and a guided daily routine. Start with the free demo in A.',
     keywords:['ukulele fretboard','ukulele fretboard notes','learn ukulele fretboard','ukulele notes','GCEA ukulele notes','high G ukulele tuning','ukulele fretboard trainer','ukulele pentatonic scale','ukulele scales','ukulele triads','ukulele chords','ukulele arpeggios','ukulele fretboard quiz'],
     canonical:'https://fretboard-hero.com/?instrument=ukulele',
     ogTitle:'Ukulele Fretboard Hero — Tune, Learn & Play',
@@ -12,7 +12,7 @@ window.FRETBOARD_PRODUCTS.ukulele={
     ogImageAlt:'Ukulele Fretboard Hero neon concert artwork with a four-string ukulele neck, Tuner, Daily Routine with live mic feedback, Learn, Fretboard Map, Circle of Fifths and Quiz',
     twitterTitle:'Ukulele Fretboard Hero — Tune, Learn & Play',
     twitterDescription:'Tune your ukulele, play Daily Routine with live mic feedback, and explore fretboard notes, scales, triads and chords. Test yourself in the quiz.',
-    structuredDescription:'Free interactive ukulele fretboard learning tool for standard reentrant high-G G–C–E–A tuning with note mapping, pentatonic positions, triads, chords, arpeggios and quizzes.',
+    structuredDescription:'Practice ukulele with pentatonic positions, note maps, triads, chords and a guided daily routine. Start with the free demo in A.',
     featureList:['G–C–E–A ukulele fretboard note map','Reentrant high-G tuning','Pentatonic positions','Ukulele triads and chords','Ukulele arpeggios','Circle of Fifths and key harmony','60-second fretboard quiz']
   },
   pwa:{manifest:'manifests/ukulele.webmanifest',shortName:'Ukulele Hero'},

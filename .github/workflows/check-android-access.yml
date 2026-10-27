@@ -35,6 +35,8 @@ jobs:
           cache-dependency-path: app/package-lock.json
       - run: npm ci
         working-directory: app
+      - name: Check generated public pages and sitemap
+        run: node scripts/build-seo.mjs --check
       - name: Access, native sync and package regression tests
         shell: pwsh
         run: |
@@ -135,3 +137,4 @@ jobs:
             tests/browser/playwright-report/
             tests/browser/test-results/
           retention-days: 14
+

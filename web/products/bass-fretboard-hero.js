@@ -3,8 +3,8 @@ window.FRETBOARD_PRODUCTS.bass={
   id:'bass-fretboard-hero',instrument:'bass4',name:'Bass Fretboard Hero',shareEmoji:'🎸',url:'https://fretboard-hero.com/?instrument=bass-4',
   branding:{name:'Bass Fretboard Hero',instrumentName:'Bass'},
   seo:{
-    title:'Bass Fretboard Hero — Learn Bass Fretboard Notes, Pentatonic Scales, Triads & Arpeggios',
-    description:'Learn the bass fretboard with interactive note maps, major and minor pentatonic positions, triads, arpeggios and a 60-second fretboard quiz. Built for 4-string bass in standard E–A–D–G tuning.',
+    title:'Bass Fretboard Hero — Pentatonic Scales, Notes & Triads',
+    description:'Practice bass with pentatonic positions, note maps, triads, arpeggios and a guided daily routine. Start with the free demo in A.',
     keywords:['bass fretboard','bass fretboard notes','learn bass fretboard','bass guitar notes','4 string bass notes','bass neck notes','bass fretboard trainer','bass pentatonic scale','minor pentatonic bass','major pentatonic bass','bass triads','bass arpeggios','bass scales','bass fretboard quiz','EADG bass'],
     canonical:'https://fretboard-hero.com/?instrument=bass-4',
     ogTitle:'Bass Fretboard Hero — Tune, Learn & Play',
@@ -12,7 +12,7 @@ window.FRETBOARD_PRODUCTS.bass={
     ogImageAlt:'Bass Fretboard Hero neon concert artwork with a four-string bass neck, Tuner, Daily Routine with live mic feedback, Learn, Fretboard Map, Circle of Fifths and Quiz',
     twitterTitle:'Bass Fretboard Hero — Tune, Learn & Play',
     twitterDescription:'Tune your bass, play Daily Routine with live mic feedback, and explore fretboard notes, scales, triads and arpeggios. Test yourself in the quiz.',
-    structuredDescription:'Free interactive 4-string bass fretboard learning tool for standard E–A–D–G tuning with note mapping, pentatonic positions, triads, arpeggios and a timed quiz.',
+    structuredDescription:'Practice bass with pentatonic positions, note maps, triads, arpeggios and a guided daily routine. Start with the free demo in A.',
     featureList:['4-string bass fretboard note map','Standard E–A–D–G tuning','Major and minor pentatonic positions','Bass triads','Bass arpeggios','Circle of Fifths and key harmony','60-second fretboard quiz']
   },
   pwa:{manifest:'manifests/bass.webmanifest',shortName:'Bass Hero'},

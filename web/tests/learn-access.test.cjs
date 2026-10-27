@@ -39,7 +39,7 @@ class Element {
  click(){for(let node=this;node;node=node.parentElement)node.emit('click',{target:this})}
 }
 
-function setup(instrument,unlocked=false){
+function setup(instrument,unlocked=false,search=''){
  const body=new Element('body'),add=(id,parent=body,tag='div')=>{const node=new Element(tag);node.id=id;parent.append(node);return node};
  for(const id of ['home','learn','circle','rootControls','modeControls','qualityControls','fretCountControls','learnPositionButtons','learnPositionLabel','learnTitle','learnFormula','learnHint','legendFourth','legendSeventh','circlePrevious','circleNext','circleWheel','circleKeyTitle','circleRelative','circleSignature','circleProgressions','resultModal','replayQuiz','shareScore'])add(id);
  const screen=body.querySelector('#learn');screen.classList.add('screen');body.querySelector('#home').classList.add('screen');
@@ -48,7 +48,7 @@ function setup(instrument,unlocked=false){
  const navigation=add('circleNavigation');navigation.classList.add('circle-navigation');navigation.append(new Element('p'));
  add('learnFretboard',add('stage',screen),'svg');
  for(const quality of ['minor','major']){const b=add(quality,body.querySelector('#qualityControls'),'button');b.dataset.quality=quality}
- const c=vm.createContext({document:{body,querySelector:s=>body.querySelector(s),querySelectorAll:s=>body.querySelectorAll(s),createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),addEventListener(){}},
+ const c=vm.createContext({URLSearchParams,location:{search},document:{body,querySelector:s=>body.querySelector(s),querySelectorAll:s=>body.querySelectorAll(s),createElement:t=>new Element(t),createElementNS:(_,t)=>new Element(t),addEventListener(){}},
   navigator:{maxTouchPoints:1},innerWidth:390,matchMedia:()=>({matches:true,addEventListener(){}}),addEventListener(){},requestAnimationFrame:fn=>{fn(0);return 1},cancelAnimationFrame(){},performance:{now:()=>0},ResizeObserver:class{observe(){}},
   RoutineSession:{create:()=>({enter(){},leave(){},resize(){}})},FretboardModal:{bindDismiss(){}},FRETBOARD_SITE_CONFIG:{},opens:0});c.window=c;
  const load=file=>vm.runInContext(fs.readFileSync(`web/${file}.js`,'utf8'),c,{filename:file});
@@ -63,6 +63,18 @@ function setup(instrument,unlocked=false){
 }
 
 for(const instrument of ['guitar','bass-4','ukulele']){
+ test(`Public Learn link ${instrument}: selects the requested mode with demo access intact`,()=>{
+  const r=setup(instrument,false,'?screen=learn&mode=triad&unlocked=true');
+  assert.equal(r.get('#learn').classList.contains('active'),true);
+  assert.equal(r.all('#modeControls button').find(b=>b.classList.contains('active')).dataset.mode,'triad');
+  assert.equal(r.c.FRETBOARD_ACCESS.unlocked,false);
+  r.choose('#rootControls','root','C');assert.equal(r.c.opens,1);
+ });
+ test(`Unknown public route ${instrument}: keeps the home screen and default mode`,()=>{
+  const r=setup(instrument,false,'?screen=%23resultModal&mode=unknown');
+  assert.equal(r.c.document.body.dataset.screen,'home');
+  assert.equal(r.c.opens,0);
+ });
  test(`Free Learn ${instrument}: every mode, quality and context is usable without a purchase`,()=>{
   const r=setup(instrument);r.get('#openLearn').click();
   assert.equal(r.get('#learnTitle').textContent,'A MINOR');
