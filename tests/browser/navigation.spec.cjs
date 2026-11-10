@@ -3,6 +3,8 @@ const routes={routine:'/practice/daily-routine',learn:'/practice/learn',quiz:'/p
 async function loaded(page){await expect(page.locator('body')).toHaveAttribute('aria-busy','false');await expect(page.locator('#startupLoader')).toBeHidden()}
 async function closeButton(page,panel){
  const button=page.locator(`${panel} .ui-modal-close`);await expect(button).toBeVisible();
+ // Measure once the entrance animation has settled and the control can be tapped.
+ await button.click({trial:true});
  const bounds=await button.boundingBox(),container=await page.locator(panel).boundingBox();
  expect(bounds.width).toBeGreaterThanOrEqual(44);expect(bounds.height).toBeGreaterThanOrEqual(44);
  expect(bounds.x-container.x).toBeLessThan(50);expect(bounds.y-container.y).toBeLessThan(50);

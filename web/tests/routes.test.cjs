@@ -67,3 +67,9 @@ test('Native navigation keeps the packaged asset URL and legacy direct links can
  const legacy=await navigation({start:'https://fretboard-hero.com/?screen=learn&mode=triad&lang=fr'});
  legacy.nav.write(legacy.nav.read(),{replace:true});assert.equal(legacy.location.pathname,'/practice/learn');assert.equal(legacy.location.searchParams.get('mode'),'triad');assert.equal(legacy.writes[0][0],'replace');
 });
+
+
+test('A remembered instrument is included in section URLs even without an initial query parameter',async()=>{
+ const {nav,location}=await navigation({start:'https://fretboard-hero.com/'});
+ nav.write('learn');assert.equal(location.pathname,'/practice/learn');assert.equal(location.searchParams.get('instrument'),'bass-4');
+});

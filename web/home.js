@@ -44,7 +44,7 @@
     download.className='home-footer-link';download.type='button';
     download.textContent=window.FRETBOARD_SITE_CONFIG.nativeBilling?'Unlock full access':'Get the app';
     download.setAttribute('aria-haspopup','dialog');
-    download.addEventListener('click',()=>window.FRETBOARD_PREMIUM.open());
+    download.addEventListener('click',()=>window.FRETBOARD_PREMIUM.open(download));
     entry.append(separator,download);document.querySelector('.home-footer').append(entry);
   }
 })();

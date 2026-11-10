@@ -26,7 +26,7 @@
       await load('./core/native-billing.js?v=10.49.10');
       const nativeUnlocked=await FretboardBilling.initialize(config);
       await load('./core/modal.js?v=10.50.0');
-      await load('./core/access.js?v=10.50.1');
+      await load('./core/access.js?v=10.50.2');
       window.FRETBOARD_ACCESS=FretboardAccess.create(config.nativeBilling===true?nativeUnlocked:await FretboardAccess.resolve(config,location.search));
       const defaultInstrument=config.instrument;
       config.instrument=FretboardInstrumentSelection.resolve(defaultInstrument);
@@ -39,8 +39,8 @@
       window.FRETBOARD_ACTIVE_PRODUCT={...product,instrument:entry.instrumentKey};window.FRETBOARD_ACTIVE_INSTRUMENT=instrument;
       document.documentElement.dataset.instrument=config.instrument;
       window.ProductShell.apply(product,instrument);
-      await load('./core/navigation.js?v=10.50.0','module');
-      await load('./home.js?v=10.49.24');
+      await load('./core/navigation.js?v=10.50.2','module');
+      await load('./home.js?v=10.50.2');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
       await load('./app.js?v=10.50.0');
       FretboardBilling.attach();

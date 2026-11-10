@@ -23,10 +23,16 @@ export function createNavigation() {
       structured.textContent = JSON.stringify(data);
     }
   }
+  function destination(next) {
+    const url = routeURL(next, location.href);
+    // A remembered instrument must also survive sharing or opening a fresh tab.
+    if (window.FRETBOARD_SITE_CONFIG.instrument !== 'guitar' || url.searchParams.has('instrument')) url.searchParams.set('instrument', window.FRETBOARD_SITE_CONFIG.instrument);
+    return url;
+  }
   function write(next, {replace = false} = {}) {
     screen = next;
     if (!native) {
-      const url = routeURL(screen, location.href);
+      const url = destination(screen);
       if (url.href !== location.href) history[replace ? 'replaceState' : 'pushState'](null, '', url);
     }
     metadata();
@@ -35,9 +41,7 @@ export function createNavigation() {
     return !event.defaultPrevented && event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey && (!event.currentTarget.target || event.currentTarget.target === '_self');
   }
   for (const link of document.querySelectorAll('#home a[data-go],#home a[data-open-tuner]')) {
-    const url = routeURL(link.dataset.go || 'tuner', location.href);
-    url.searchParams.set('instrument', window.FRETBOARD_SITE_CONFIG.instrument);
-    url.searchParams.set('lang', window.FretboardI18n.locale);
+    const url = destination(link.dataset.go || 'tuner');
     link.href = url.pathname + url.search;
   }
   window.addEventListener('popstate', () => {
