@@ -23,7 +23,8 @@ test('Every interactive home link has a real canonical route included in the sit
  const {appRoutes}=await routeModule();
  const html=fs.readFileSync('web/index.html','utf8'),sitemap=fs.readFileSync('web/sitemap.xml','utf8');
  const config=JSON.parse(fs.readFileSync('wrangler.jsonc','utf8'));
- assert.match(html,/<base href="\/">/);
+ assert.doesNotMatch(html,/<base\b/,'SVG paint references must remain local to the current document');
+ assert.doesNotMatch(html,/(?:src|href)="\.\//,'App-shell assets are rooted for direct URLs');
  for(const [screen,route] of Object.entries(appRoutes)){
   if(screen==='home')continue;
   const selector=screen==='tuner'?'data-open-tuner':`data-go="${screen}"`;

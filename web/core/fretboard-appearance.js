@@ -38,7 +38,7 @@
       const neck=isP?{x:48,y:start,width:W-96,height:H-start-40,rx:5}:{x:start,y:60,width:W-start-38,height:H-92,rx:5};
       svg.append(svgEl('rect',{...neck,x:neck.x+4,y:neck.y+9,fill:'#000',opacity:.7}));
       svg.append(svgEl('rect',{...neck,fill:`url(#${prefix}Wood)`,stroke:'#3e3a4e','stroke-width':7}));
-      const texture=svgEl('image',{href:'./assets/fretboard/ebony.webp',x:0,y:0,width:isP?neck.height:neck.width,height:isP?neck.width:neck.height,preserveAspectRatio:'none',opacity:.72,transform:isP?`translate(${neck.x+neck.width} ${neck.y}) rotate(90)`:`translate(${neck.x} ${neck.y})`,'data-neck-texture':'ebony'});
+      const texture=svgEl('image',{href:'/assets/fretboard/ebony.webp',x:0,y:0,width:isP?neck.height:neck.width,height:isP?neck.width:neck.height,preserveAspectRatio:'none',opacity:.72,transform:isP?`translate(${neck.x+neck.width} ${neck.y}) rotate(90)`:`translate(${neck.x} ${neck.y})`,'data-neck-texture':'ebony'});
       svg.append(texture);
       svg.append(svgEl('rect',{...neck,fill:`url(#${prefix}Wood)`,opacity:.22}));
       svg.append(svgEl('rect',{...neck,fill:'none',stroke:'#9b93b7','stroke-width':1,opacity:.42}));
