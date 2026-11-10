@@ -80,7 +80,8 @@
     exercise={...exercise,title:t(exercise.title),detail:t(exercise.detail),columns:exercise.columns.map(column=>({...column,label:column.label?t(column.label):'',subLabel:column.subLabel?t(column.subLabel):''}))};
     svg.replaceChildren();
     const layout=tabLayout(svg),{width,left,right,font,row}=layout;
-    const strings=engine.courses.map((_,i)=>i),journey=Boolean(exercise.sections);
+    const strings=engine.courses.map((_,i)=>i),journey=Boolean(exercise.sections)&&!exercise.rootJourney;
+    const hiddenFret=index=>exercise.rootRecall&&index>0&&(!guide||index>=guide.index);
     const labelled=exercise.columns.some(c=>c.label),labelFont=journey?12:Math.min(22,font*.65);
     const widths=labelled?exercise.columns.map(c=>{
       if(!journey)return c.label.length*8;
@@ -95,8 +96,8 @@
     const top=journey?52:labelled?34:20;
     const lineHeight=top+(strings.length-1)*row+26,height=lines*lineHeight;
     svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.style.minWidth='0';
-    const description=exercise.columns.map(c=>`${c.label?c.label+': ':''}${c.subLabel?c.subLabel+'. ':''}${c.notes.map(n=>t(`${engine.tuning[n.string].name} string ${engine.stringCount-n.string}, fret ${n.fret}`)).join(', ')}`).join('; ');
-    svg.append(el('title',{},`${exercise.title}. ${exercise.detail}. ${description}`));
+    const description=exercise.columns.map((c,index)=>`${c.label?c.label+': ':''}${c.subLabel?c.subLabel+'. ':''}${c.notes.map(n=>t(hiddenFret(index)?`Find the fret on string ${engine.stringCount-n.string}`:`${engine.tuning[n.string].name} string ${engine.stringCount-n.string}, fret ${n.fret}`)).join(', ')}`).join('; ');
+    svg.append(el('title',{},`${exercise.title}. ${exercise.rootRecall?'':exercise.detail+'. '}${description}`));
     const paths=el('g',{'class':'routine-paths','aria-hidden':'true'}),points=[];
     if(guide)svg.append(paths);
     for(let line=0;line<lines;line++){
@@ -114,7 +115,7 @@
         if(column.muteMissing)engine.courses.forEach((_,string)=>{if(!notes.some(n=>n.string===string))notes.push({string,fret:'×'})});
         notes.forEach(n=>{
           const y=offset+top+(strings.length-1-strings.indexOf(n.string))*row,isRoot=n.fret!=='×'&&engine.noteAt(n.string,n.fret)===exercise.rootPC;
-          group.append(el('rect',{x:x-font*.7,y:y-font*.6,width:font*1.4,height:font*1.2,rx:5,fill:'#0a1425','class':n.fret!=='×'?'routine-note-face':''}),el('text',{x,y:y+1,'text-anchor':'middle','dominant-baseline':'central',fill:isRoot?'#70f7ff':'#fff','font-size':font,'font-weight':800,'class':n.fret!=='×'?'routine-note-number':''},String(n.fret)));
+          group.append(el('rect',{x:x-font*.7,y:y-font*.6,width:font*1.4,height:font*1.2,rx:5,fill:'#0a1425','class':n.fret!=='×'?'routine-note-face':''}),el('text',{x,y:y+1,'text-anchor':'middle','dominant-baseline':'central',fill:isRoot?'#70f7ff':'#fff','font-size':font,'font-weight':800,'class':n.fret!=='×'?'routine-note-number':''},hiddenFret(index)?'?':String(n.fret)));
         });
         svg.append(group);
       });

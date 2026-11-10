@@ -430,5 +430,17 @@
   "Root: {note} — let it ring": "Fondamentale : {note} — laisse sonner",
   "Guide": "Guide",
   "Explanations, diagrams and tips": "Explications, schémas et conseils",
-  "Practice on the interactive fretboard": "Pratiquez sur le manche interactif"
+  "Practice on the interactive fretboard": "Pratiquez sur le manche interactif",
+  "Connect the root notes": "Relie les fondamentales",
+  "Connect the root notes: {note}": "Relie les fondamentales : {note}",
+  "Skip one string each time. Play the octave path, then retrace it.": "Saute une corde à chaque fois. Joue le parcours par octaves, puis reviens sur tes pas.",
+  "From memory": "De mémoire",
+  "Guided round trip": "Aller-retour guidé",
+  "Use the first root to find the hidden frets on the indicated strings. Return along the same path.": "Pars de la première fondamentale pour retrouver les cases masquées sur les cordes indiquées. Reviens par le même chemin.",
+  "? = find the fret": "? = retrouve la case",
+  "Outward: +{a}, then +{b} frets": "Aller : +{a}, puis +{b} cases",
+  "Try from memory →": "Essaie de mémoire →",
+  "Next diagonal →": "Diagonale suivante →",
+  "Show frets": "Afficher les cases",
+  "Find the fret on string {string}": "Retrouve la case sur la corde {string}"
 }

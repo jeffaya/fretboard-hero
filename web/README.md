@@ -148,6 +148,18 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Release notes
 
+### V10.51.0 — Root octave paths
+
+- Guitar Daily Routine connects roots in two movable octave shapes, for all twelve
+  notes in either quality. A uses E5–D7–B10 and A12–G14–e17, each out and back.
+- Each path has a guided pass followed by a memory pass. Keep the starting fret
+  visible; reveal played notes with microphone progression or use Show frets for
+  manual practice. Preserve each pass through resize, audio toggles and navigation.
+- Skip one string, move two frets, then three across the G–B tuning offset. Start
+  on a fretted root, and omit an entire path if it exceeds the instrument range.
+- Bass and ukulele keep their existing root exercise. Copy is translated into
+  all eleven interface languages; native bundles use the same web sources.
+
 ## V10.49.21 — Pentatonic round trips and hands-free tablature following
 
 - Choose one of the two reference diagonals randomly per routine. In A minor,

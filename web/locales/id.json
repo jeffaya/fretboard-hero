@@ -430,5 +430,17 @@
   "Root: {note} — let it ring": "Nada dasar: {note} — tahan bunyinya",
   "Guide": "Panduan",
   "Explanations, diagrams and tips": "Penjelasan, diagram, dan tips",
-  "Practice on the interactive fretboard": "Berlatih di fretboard interaktif"
+  "Practice on the interactive fretboard": "Berlatih di fretboard interaktif",
+  "Connect the root notes": "Hubungkan nada dasar",
+  "Connect the root notes: {note}": "Hubungkan nada dasar: {note}",
+  "Skip one string each time. Play the octave path, then retrace it.": "Lewati satu senar setiap kali. Mainkan jalur oktaf, lalu kembali melalui jalur yang sama.",
+  "From memory": "Dari ingatan",
+  "Guided round trip": "Pergi-pulang terpandu",
+  "Use the first root to find the hidden frets on the indicated strings. Return along the same path.": "Gunakan nada dasar pertama untuk menemukan fret tersembunyi pada senar yang ditunjukkan. Kembali melalui jalur yang sama.",
+  "? = find the fret": "? = temukan fret",
+  "Outward: +{a}, then +{b} frets": "Pergi: +{a}, lalu +{b} fret",
+  "Try from memory →": "Coba dari ingatan →",
+  "Next diagonal →": "Diagonal berikutnya →",
+  "Show frets": "Tampilkan fret",
+  "Find the fret on string {string}": "Temukan fret pada senar {string}"
 }
