@@ -209,20 +209,23 @@
       $('#routineEncouragementCredit').textContent=t('Inspired by');
       $('#routineEncouragementAuthor').textContent=encouragement.author;
       $('#routineExercise').classList.toggle('is-transitioning',true);
-      transition=setTimeout(()=>{
-        cancelTransition();if(!active)return;
-        const section=currentSection(),hasNextSection=section&&current().section<exercises[state.index].sections.length-1;
-        if(hasNextSection){current().index=section.end;current().section++}
-        else{
-          completed.add(state.index);state.index++;
-          if(state.index===5&&completed.size<5)state.index=exercises.findIndex((_,i)=>!completed.has(i));
-        }
-        if(state.index===5)microphone.stop();
-        else {resetGates(soundKey(targetPitches())===soundKey(lastPitches));settleUntil=performance.now()+400}
-        render();$('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
-        if(hasNextSection||exercises[state.index]?.melody)showTarget();
-      },2600);
+      transition=setTimeout(completeTransition,2600);
     }
+    function completeTransition(){
+      if(!transition)return;
+      cancelTransition();if(!active)return;
+      const section=currentSection(),hasNextSection=section&&current().section<exercises[state.index].sections.length-1;
+      if(hasNextSection){current().index=section.end;current().section++}
+      else{
+        completed.add(state.index);state.index++;
+        if(state.index===5&&completed.size<5)state.index=exercises.findIndex((_,i)=>!completed.has(i));
+      }
+      if(state.index===5)microphone.stop();
+      else {resetGates(soundKey(targetPitches())===soundKey(lastPitches));settleUntil=performance.now()+400}
+      render();$('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
+      if(hasNextSection||exercises[state.index]?.melody)showTarget();
+    }
+    window.FretboardModal?.addClose($('#routineTransition'),completeTransition);
     function reset(){
       strumming.stop();cancelTransition();completed.clear();state.index=0;encouragements.reset();lastPitches=[];
       exercises=RoutineExercises.create({engine,root:state.root,quality:state.quality,random,diagonal:state.diagonal,patterns});

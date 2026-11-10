@@ -12,7 +12,7 @@
     const seo=product.seo||{};
     const pwa=product.pwa||{};
     const iconKey=(product.id||'').replace(/-fretboard-hero$/,'')||'guitar';
-    const iconBase=`assets/instruments/${iconKey}/`;
+    const iconBase=`/assets/instruments/${iconKey}/`;
     const assets={
       faviconIco:`${iconBase}favicon.ico`,
       favicon16:`${iconBase}favicon-16.png`,
@@ -94,7 +94,7 @@
     // Installation uses the checked-in, instrument-specific manifest.
     let manifestLink=q('link[rel="manifest"]');
     if(!manifestLink){manifestLink=document.createElement('link');manifestLink.rel='manifest';document.head.appendChild(manifestLink)}
-    manifestLink.href=pwa.manifest||'manifest.webmanifest';
+    manifestLink.href='/'+(pwa.manifest||'manifest.webmanifest').replace(/^\//,'');
   }
   window.ProductShell=Object.freeze({apply});
 })();

@@ -28,8 +28,11 @@ async function startup(config, cachedState, {saved=null,search='',session=null,p
     fonts: {load: async () => []},
     head: {appendChild(script) { queueMicrotask(() => {
       try {
-        const name = script.src.split('?')[0];
+        assert.ok(['text/javascript','module'].includes(script.type),'Scripts must have an executable MIME type');
+        const name = script.src.split('?')[0].replace(/^\//,'./');
         if (['./core/access.js', './core/native-billing.js', './core/instrument-selection.js', './home.js'].includes(name)) vm.runInContext(fs.readFileSync(`web/${name.slice(2)}`, 'utf8'), ctx);
+        // Navigation is covered by the route/browser suites; this harness isolates access wiring.
+        if (name === './core/navigation.js') ctx.FretboardNavigation={read:()=> 'home',write(){},refresh(){}};
         if (name === './app.js') {
           appStarted = true;
           ctx.FRETBOARD_PREMIUM = ctx.FretboardAccess.mount(ctx.FRETBOARD_SITE_CONFIG, ctx.FRETBOARD_ACCESS);

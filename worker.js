@@ -1,3 +1,4 @@
+import {appRoutes, matchRoute} from './web/core/routes.js';
 import { handlePlayBilling } from './server/play-billing.mjs';
 // Social crawlers need instrument metadata in the initial HTML, before JavaScript.
 const products = {
@@ -9,13 +10,16 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === '/api/billing/google/verify') return handlePlayBilling(request, env);
-    const response = await env.ASSETS.fetch(request);
-    if (!['/', '/index.html'].includes(url.pathname) || !response.headers.get('content-type')?.includes('text/html')) return response;
+    const screen = matchRoute(url.pathname);
+    const assetUrl = new URL(url);
+    if (screen && screen !== 'home') assetUrl.pathname = '/';
+    const response = await env.ASSETS.fetch(screen && screen !== 'home' ? new Request(assetUrl, request) : request);
+    if (!screen || !response.headers.get('content-type')?.includes('text/html')) return response;
     const requested = url.searchParams.get('instrument');
     const instrument = Object.hasOwn(products, requested) ? products[requested] : products.guitar;
-    const canonical = `https://fretboard-hero.com/${instrument.key === 'guitar' ? '' : `?instrument=${instrument.key === 'bass' ? 'bass-4' : instrument.key}`}`;
-    const title = `${instrument.name} Fretboard Hero — Pentatonic Scales, Notes & Triads`;
-    const description = `Practice ${instrument.name.toLowerCase()} with pentatonic positions, note maps, triads, ${instrument.shapes} and a guided daily routine. Start with the free demo in A.`;
+    const canonical = `https://fretboard-hero.com${appRoutes[screen].path}${instrument.key === 'guitar' ? '' : `?instrument=${instrument.key === 'bass' ? 'bass-4' : instrument.key}`}`;
+    const title = `${appRoutes[screen].title ? appRoutes[screen].title + ' · ' : ''}${instrument.name} Fretboard Hero — Pentatonic Scales, Notes & Triads`;
+    const description = appRoutes[screen].description || `Practice ${instrument.name.toLowerCase()} with pentatonic positions, note maps, triads, ${instrument.shapes} and a guided daily routine. Start with the free demo in A.`;
     const image = `https://fretboard-hero.com/assets/instruments/${instrument.key}/og.jpg?v=20261020.1`;
     const imageAlt = `${instrument.name} Fretboard Hero neon concert artwork with a ${instrument.neck} neck, Tuner, Daily Routine with live mic feedback, Learn, Fretboard Map, Circle of Fifths and Quiz`;
     const attr = (name, value) => ({ element(el) { el.setAttribute(name, value); } });

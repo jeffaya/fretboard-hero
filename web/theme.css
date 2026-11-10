@@ -366,6 +366,36 @@ body :is(#app .ui-modal,#resultModal .result-modal) {
 
 body #resultModal .result-modal h2 { color: #f4f3ff; text-shadow: none; }
 
+/* One visible, touch-sized close control on every modal, including iOS. */
+body :is(#app,#resultModal) .ui-dismissible {
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+}
+
+body :is(#app,#resultModal) button.ui-modal-close {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  align-self: flex-start;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  margin: 0 auto 12px 0;
+  padding: 10px;
+  border-radius: 12px;
+  background: #151026;
+  color: #fff;
+  touch-action: manipulation;
+  pointer-events: auto;
+}
+
+.ui-modal-close svg { display: block; width: 24px; height: 24px; pointer-events: none; }
+
 body :is(#app,#resultModal) button.ui-back {
   background: transparent;
   border-color: transparent;

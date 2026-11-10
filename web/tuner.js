@@ -102,9 +102,24 @@
   }
   function toggle(){const enable=microphone.state==='off';micPreference.setEnabled(enable);if(enable)microphone.start();else stop()}
   let opener=button;
-  function open(trigger){opener=trigger;FretboardMicrophone.release();stop();dialog.showModal();if(micPreference.enabled)microphone.start()}
-  document.querySelectorAll('[data-open-tuner]').forEach(trigger=>trigger.addEventListener('click',()=>open(trigger)));
+  let returnScreen='home';
+  function open(trigger,{history=true}={}){
+    if(dialog.open)return;
+    opener=trigger||button;returnScreen=document.body.dataset.screen||'home';
+    FretboardMicrophone.release();stop();dialog.showModal();
+    if(history)window.FretboardNavigation?.write('tuner');
+    if(micPreference.enabled)microphone.start();
+  }
+  document.querySelectorAll('[data-open-tuner]').forEach(trigger=>trigger.addEventListener('click',event=>{
+    if(trigger.tagName==='A'&&!window.FretboardNavigation.canHandle(event))return;
+    event.preventDefault();open(trigger);
+  }));
   mic.onclick=toggle;
-  FretboardModal.bindDismiss(dialog,()=>dialog.close());dialog.addEventListener('close',()=>{stop();opener.focus();});dialog.addEventListener('cancel',stop);
+  FretboardModal.bindDismiss(dialog,()=>dialog.close());dialog.addEventListener('close',()=>{
+    stop();opener?.focus();
+    if(window.FretboardNavigation?.read()==='tuner')window.FretboardNavigation.write(returnScreen,{replace:true});
+  });dialog.addEventListener('cancel',stop);
   stop();
+  window.FretboardNavigation?.subscribe(screen=>{if(screen==='tuner')open(button,{history:false});else if(dialog.open)dialog.close()});
+  if(window.FretboardNavigation?.read()==='tuner')open(button,{history:false});
 })();

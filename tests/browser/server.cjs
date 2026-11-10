@@ -2,14 +2,15 @@
 // injected by Playwright routes/init scripts, never shipped to the application.
 const http=require('node:http'),fs=require('node:fs/promises'),path=require('node:path');
 const root=path.resolve(__dirname,'../../web');
-const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json',
+const routes=import('../../web/core/routes.js');
+const types={'.mjs':'text/javascript','.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json',
   '.webmanifest':'application/manifest+json','.svg':'image/svg+xml','.webp':'image/webp',
   '.png':'image/png','.jpg':'image/jpeg','.ico':'image/x-icon','.woff2':'font/woff2','.woff':'font/woff',
   '.xml':'application/xml','.txt':'text/plain'};
 http.createServer(async(req,res)=>{
   try{
     let pathname=decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname);
-    if(pathname==='/')pathname='/index.html';
+    if((await routes).matchRoute(pathname))pathname='/index.html';
     if(pathname==='/privacy'||pathname==='/privacy/')pathname='/privacy.html';
     // Mirror Workers' default directory-index routing for generated guide pages.
     if(pathname.endsWith('/'))pathname+='index.html';

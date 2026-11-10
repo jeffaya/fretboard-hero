@@ -69,7 +69,7 @@ test('Sitemap contains only canonical public pages and robots leaves search craw
  const {languages}=await import(moduleURL('scripts/seo/content.mjs'));
  const sitemap=read('web/sitemap.xml');
  const urls=[...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(m=>decode(m[1]));
- assert.equal(urls.length,Object.values(languages).reduce((total,language)=>total+language.pages.length,0)+4);
+ assert.equal(urls.length,Object.values(languages).reduce((total,language)=>total+language.pages.length,0)+10);
  assert.equal(new Set(urls).size,urls.length);
  for(const value of urls){const url=new URL(value);assert.equal(url.origin,origin);assert.ok(!url.hash);assert.ok(!url.searchParams.has('screen'));assert.ok(!url.searchParams.has('key'));assert.ok(!url.pathname.startsWith('/api/'));}
  const robots=read('web/robots.txt');assert.match(robots,/User-agent: \*/);assert.match(robots,/Disallow: \/api\//);

@@ -25,3 +25,11 @@ test('Native paywall offers the global purchase instead of external store links'
  modal.open();assert.equal(prices,1);
 });
 
+
+test('Closing restores the explicit opener even when a touch did not focus it',()=>{
+ const {Access,app}=runtime();let focused=false;
+ const trigger={focus(){focused=true}};
+ const modal=Access.mount({instrument:'guitar'},Access.create(false));
+ modal.open(trigger);app.children[0].querySelector('.premium-close').events.click();
+ assert.equal(app.children[0].hidden,true);assert.equal(focused,true);
+});
