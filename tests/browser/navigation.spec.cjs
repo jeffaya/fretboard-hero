@@ -6,7 +6,8 @@ async function closeButton(page,panel){
  // Measure once the entrance animation has settled and the control can be tapped.
  await button.click({trial:true});
  const bounds=await button.boundingBox(),container=await page.locator(panel).boundingBox();
- expect(bounds.width).toBeGreaterThanOrEqual(44);expect(bounds.height).toBeGreaterThanOrEqual(44);
+ // Firefox can report 43.999984px for a 44px control; compare at CSS hundredth precision.
+ expect(Math.round(bounds.width*100)/100).toBeGreaterThanOrEqual(44);expect(Math.round(bounds.height*100)/100).toBeGreaterThanOrEqual(44);
  expect(bounds.x-container.x).toBeLessThan(50);expect(bounds.y-container.y).toBeLessThan(50);
  await button.click();
 }
