@@ -104,7 +104,7 @@ body[data-screen]:not([data-screen="home"]) .stage-light { opacity: .08; animati
 
 .hero-btn { --ui-radius: 16px; }
 
-body #app button,
+body :is(#app,.public-shell) button,
 body #app a.hero-btn,
 body #resultModal button {
   border: 1px solid var(--ui-button-border, color-mix(in srgb, var(--ui-accent) 65%, #31415b));
@@ -124,18 +124,18 @@ body #resultModal button.modal-primary {
   box-shadow: var(--ui-button-shadow), 0 0 12px color-mix(in srgb, var(--ui-accent) 30%, transparent);
 }
 
-body #app button:hover,
+body :is(#app,.public-shell) button:hover,
 body #app a.hero-btn:hover,
 body #resultModal button:hover {
   border-color: var(--ui-accent);
   box-shadow: var(--ui-button-shadow), 0 0 18px color-mix(in srgb, var(--ui-accent) 25%, transparent);
 }
 
-body #app button:focus-visible,
+body :is(#app,.public-shell) button:focus-visible,
 body #app a.hero-btn:focus-visible,
 body #resultModal button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
-body #app button:disabled,
+body :is(#app,.public-shell) button:disabled,
 body #resultModal button:disabled { opacity: .45; cursor: default; }
 
 body #app :is(.circle-info-panel, .circle-info-card, .quiz-hud, .select-popover, .rank-ladder-summary, .rank-ladder-item, .degree-chord),
@@ -175,7 +175,7 @@ body #resultModal { background: #030b17bf; }
 @media (prefers-reduced-motion: reduce) {
   .stage-light { animation: none !important; }
 
-  body #app button,
+  body :is(#app,.public-shell) button,
   body #resultModal button { transition: none !important; }
 }
 
@@ -357,7 +357,7 @@ body #app .control-panel button:hover {
   box-shadow: inset 0 1px 1px #ffffff40,0 0 10px #ffffff38;
 }
 
-body :is(#app .ui-modal,#resultModal .result-modal) {
+body :is(#app .ui-modal,#resultModal .result-modal,.public-shell .ui-modal) {
   --ui-modal-edge: #ff5deb;
   background: var(--ui-surface);
   border: 2px solid var(--ui-modal-edge);
@@ -366,44 +366,52 @@ body :is(#app .ui-modal,#resultModal .result-modal) {
 
 body #resultModal .result-modal h2 { color: #f4f3ff; text-shadow: none; }
 
-/* One visible, touch-sized close control on every modal, including iOS. */
-body :is(#app,#resultModal) .ui-dismissible {
+/* A light cross with an invisible touch target, anchored to each modal. */
+:where(.premium-dialog,.result-modal) { position: relative; }
+body :is(#app,#resultModal,.public-shell) .ui-dismissible {
   max-height: calc(100dvh - 32px);
   overflow-y: auto;
+  padding-top: 44px;
 }
 
-body :is(#app,#resultModal) button.ui-modal-close {
-  position: sticky;
-  top: 0;
+body :is(#app,#resultModal,.public-shell) button.ui-modal-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
   z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 44px;
-  align-self: flex-start;
+  display: grid;
+  place-items: center;
   width: 44px;
   min-width: 44px;
   height: 44px;
   min-height: 44px;
-  margin: 0 auto 12px 0;
-  padding: 10px;
-  border-radius: 12px;
-  background: #151026;
+  margin: 0;
+  padding: 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   color: #fff;
   touch-action: manipulation;
   pointer-events: auto;
 }
 
-.ui-modal-close svg { display: block; width: 24px; height: 24px; pointer-events: none; }
+body :is(#app,#resultModal,.public-shell) button.ui-modal-close:hover {
+  background: transparent;
+  box-shadow: none;
+  opacity: .75;
+}
 
-body :is(#app,#resultModal) button.ui-back {
+.ui-modal-close svg { display: block; width: 20px; height: 20px; pointer-events: none; }
+
+body :is(#app,#resultModal,.public-shell) button.ui-back {
   background: transparent;
   border-color: transparent;
   box-shadow: none;
   color: #d4dced;
 }
 
-body :is(#app,#resultModal) button.ui-back:hover {
+body :is(#app,#resultModal,.public-shell) button.ui-back:hover {
   background: transparent;
   border-color: transparent;
   box-shadow: none;

@@ -72,12 +72,12 @@
     document.querySelector('meta[property="og:locale"]')?.setAttribute('content',({'en':'en_US','zh-CN':'zh_CN','pt-BR':'pt_BR'})[locale]||locale+'_'+({'es':'ES','fr':'FR','de':'DE','it':'IT','ja':'JP','ko':'KR','hi':'IN','id':'ID'})[locale]);
     const structured=document.querySelector('#productStructuredData');if(structured){try{const data=JSON.parse(structured.textContent);data.inLanguage=locale;data.description=description;data.featureList=['Learn','Daily Routine','Fretboard Map','Circle of Fifths','Quiz'].map(value=>text(value));structured.textContent=JSON.stringify(data)}catch{}}
   }
-  function mount(){
+  function mount({choices,selected,navigate,roots=[document.body],updateMetadata=true,scrollRoot=document.querySelector('#home')||window}={}){
     const wrapper=document.querySelector('.language-picker');
     let saved;try{saved=localStorage.getItem(storageKey)}catch{}
     const requested=new URL(location.href).searchParams.get('lang');
-    const selected=supported.has(requested)?requested:supported.has(saved)?saved:'auto';
-    const choices=[['auto',text('Automatic')],...languages];
+    selected=selected??(supported.has(requested)?requested:supported.has(saved)?saved:'auto');
+    choices=choices||[['auto',text('Automatic')],...languages];
     const trigger=document.createElement('button');trigger.type='button';trigger.className='language-trigger home-footer-link';
     trigger.setAttribute('aria-haspopup','menu');trigger.setAttribute('aria-expanded','false');trigger.setAttribute('aria-controls','language-menu');
     trigger.setAttribute('popovertarget','language-menu');
@@ -91,6 +91,7 @@
       option.addEventListener('click',()=>{
         menu.hidePopover();
         try{if(value==='auto')localStorage.removeItem(storageKey);else localStorage.setItem(storageKey,value)}catch{}
+        if(navigate){navigate(value);return}
         const url=new URL(location.href);if(value==='auto')url.searchParams.delete('lang');else url.searchParams.set('lang',value);location.assign(url.href);
       });menu.append(option);
     });
@@ -118,27 +119,27 @@
     });
     menu.addEventListener('focusout',e=>{if(e.relatedTarget&&e.relatedTarget!==trigger&&!menu.contains(e.relatedTarget)&&menu.matches(':popover-open'))menu.hidePopover()});
     window.addEventListener('resize',()=>{if(menu.matches(':popover-open'))positionMenu()});
-    document.querySelector('#home').addEventListener('scroll',()=>{
+    scrollRoot.addEventListener('scroll',()=>{
       if(!menu.matches(':popover-open'))return;
       const r=trigger.getBoundingClientRect();
       if(r.top<64||r.bottom>innerHeight)menu.hidePopover();else positionMenu();
     });
     window.addEventListener('languagechange',()=>{if(selected==='auto'&&detect(navigator.languages)!==locale)location.reload()});
-    wrapper.append(trigger,menu);
-    translateNode(document.body);metadata();
+    wrapper.replaceChildren(trigger,menu);
+    roots.forEach(translateNode);if(updateMetadata)metadata();
     // Legacy renderers write text directly. Observe only changed nodes/labels,
     // never rewrite HTML, canonical gameplay attributes, or event handlers.
     const observer=new MutationObserver(records=>{
       for(const change of records){if(change.type==='childList')change.addedNodes.forEach(translateNode);else if(change.type==='characterData')translateNode(change.target);else{const el=change.target;if(!skip(el)){const value=el.getAttribute(change.attributeName),translated=text(value);if(value!==translated)el.setAttribute(change.attributeName,translated)}}}
     });
-    observer.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-label','title','placeholder','alt']});
+    roots.forEach(root=>observer.observe(root,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-label','title','placeholder','alt']}));
   }
-  async function initialize(){
+  async function initialize(pageLocale){
     let saved;try{saved=localStorage.getItem(storageKey)}catch{}
     const requested=new URL(location.href).searchParams.get('lang');
-    locale=supported.has(requested)?requested:supported.has(saved)?saved:detect(navigator.languages?.length?navigator.languages:[navigator.language]);
+    locale=supported.has(pageLocale)?pageLocale:supported.has(requested)?requested:supported.has(saved)?saved:detect(navigator.languages?.length?navigator.languages:[navigator.language]);
     if(locale!=='en'){
-      try{const response=await fetch('/locales/'+locale+'.json?v=10.51.0');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale='en';install({})}
+      try{const response=await fetch('/locales/'+locale+'.json?v=10.51.0');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale=supported.has(pageLocale)?pageLocale:'en';install({})}
     }
     document.querySelector('a[href^="https://fretboard-hero.com/privacy"]')?.setAttribute('href','https://fretboard-hero.com/privacy?lang='+locale);
     document.documentElement.lang=locale;document.documentElement.dir='ltr';

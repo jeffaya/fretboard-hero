@@ -78,7 +78,7 @@ html:lang(hi) { --ui-font: "Hero hi","Hero Condensed",system-ui,sans-serif; --lo
   to { opacity: 1; transform: translateY(0); }
 }
 
-body #app .language-menu button {
+body :is(#app,.public-shell) .language-menu button {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -96,15 +96,15 @@ body #app .language-menu button {
   cursor: pointer;
 }
 
-body #app .language-menu button[data-language="auto"] { margin-bottom: 5px; border-bottom: 1px solid #b8c7df26; border-radius: 0; }
+body :is(#app,.public-shell) .language-menu button[data-language="auto"] { margin-bottom: 5px; border-bottom: 1px solid #b8c7df26; border-radius: 0; }
 
-body #app .language-menu button[aria-checked="true"] { background: #ba7ce020; color: #f0c7ff; }
+body :is(#app,.public-shell) .language-menu button[aria-checked="true"] { background: #ba7ce020; color: #f0c7ff; }
 
 .language-menu button::after { content: ""; flex: none; width: 7px; height: 12px; margin-right: 3px; }
 
 .language-menu button[aria-checked="true"]::after { border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
-body #app .language-menu button:is(:hover,:focus-visible) {
+body :is(#app,.public-shell) .language-menu button:is(:hover,:focus-visible) {
   background: #ba7ce02b;
   outline: 2px solid #ba7ce08c;
   outline-offset: -2px;
@@ -144,6 +144,6 @@ html:lang(hi) button {
   html:not([lang="en"]) .tagline { letter-spacing: 2px; }
 }
 
-body #app .language-picker :is(button,span) {
+body :is(#app,.public-shell) .language-picker :is(button,span) {
   font-family: var(--language-font) !important;
 }

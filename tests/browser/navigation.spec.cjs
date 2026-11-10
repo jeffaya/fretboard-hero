@@ -8,7 +8,10 @@ async function closeButton(page,panel){
  const bounds=await button.boundingBox(),container=await page.locator(panel).boundingBox();
  // Firefox can report 43.999984px for a 44px control; compare at CSS hundredth precision.
  expect(Math.round(bounds.width*100)/100).toBeGreaterThanOrEqual(44);expect(Math.round(bounds.height*100)/100).toBeGreaterThanOrEqual(44);
- expect(bounds.x-container.x).toBeLessThan(50);expect(bounds.y-container.y).toBeLessThan(50);
+ expect(container.x+container.width-bounds.x-bounds.width).toBeLessThan(12);expect(bounds.y-container.y).toBeLessThan(12);
+ const style=await button.evaluate(node=>{const s=getComputedStyle(node);return {background:s.backgroundColor,border:s.borderTopWidth,shadow:s.boxShadow,color:s.color}});
+ expect(style).toEqual({background:'rgba(0, 0, 0, 0)',border:'0px',shadow:'none',color:'rgb(255, 255, 255)'});
+ expect(await button.locator('svg').evaluate(node=>node.getBoundingClientRect().width)).toBeLessThanOrEqual(20);
  await button.click();
 }
 
@@ -51,7 +54,7 @@ test('Links preserve new-tab behavior, and browser back/forward restores the sel
  await page.locator('#learn [data-go="home"]').click();await expect(page).toHaveURL(/\/\?instrument=bass-4&lang=en$/);
 });
 
-test('Every modal has a reachable top-left close button, including quiz results and routine transitions',async({page})=>{
+test('Every modal has a reachable top-right close cross, including quiz results and routine transitions',async({page})=>{
  await page.addInitScript(()=>{localStorage.setItem('fretboard-routine-microphone','off');localStorage.setItem('fretboard-tuner-microphone','off')});
  await page.goto('/?lang=en');await ready(page);await page.clock.install();
  await page.locator('#homeTuner').click();await closeButton(page,'.tuner-dialog');await expect(page.locator('.tuner-dialog')).toBeHidden();

@@ -30,7 +30,7 @@ async function startup(config, cachedState, {saved=null,search='',session=null,p
       try {
         assert.ok(['text/javascript','module'].includes(script.type),'Scripts must have an executable MIME type');
         const name = script.src.split('?')[0].replace(/^\//,'./');
-        if (['./core/access.js', './core/native-billing.js', './core/instrument-selection.js', './home.js'].includes(name)) vm.runInContext(fs.readFileSync(`web/${name.slice(2)}`, 'utf8'), ctx);
+        if (['./core/access.js', './core/native-billing.js', './core/instrument-selection.js', './core/footer.js', './home.js'].includes(name)) vm.runInContext(fs.readFileSync(`web/${name.slice(2)}`, 'utf8'), ctx);
         // Navigation is covered by the route/browser suites; this harness isolates access wiring.
         if (name === './core/navigation.js') ctx.FretboardNavigation={read:()=> 'home',write(){},refresh(){}};
         if (name === './app.js') {
@@ -49,7 +49,7 @@ async function startup(config, cachedState, {saved=null,search='',session=null,p
     localStorage:{getItem:()=>saved,setItem(){},removeItem(){}}, sessionStorage: {getItem: () => session,removeItem(){}}, fetch: async () => ({ok: true, json: async () => ({...config})}),
     console: {error: error => failures.push(error)},
     Capacitor: {getPlatform: () => platform, Plugins: {PlayBilling: plugin,StoreBilling:plugin}, registerPlugin: unavailable},
-    FretboardI18n: {initialize: async () => {}, mount() {}},
+    FretboardI18n: {text:v=>v,initialize: async () => {}, mount() {}},
     ProductShell: {apply() {}},
     FRETBOARD_INSTRUMENTS: {guitar: {}, bass4: {}, ukulele: {}},
     FRETBOARD_PRODUCTS: {guitar: {}, bass: {}, ukulele: {}},

@@ -94,7 +94,7 @@
 
 .premium-store-column { min-width: 0; }
 
-body #app .premium-store {
+body :is(#app,.public-shell) .premium-store {
   box-sizing: border-box;
   display: flex;
   width: 100%;

@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import {readFileSync} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {languages, reviewed} from './seo/content.mjs';
@@ -15,6 +16,13 @@ const json = value => JSON.stringify(value).replace(/</g, '\\u003c');
 const pagePath = (locale, page) => page.id === 'about' ? languages[locale].about : languages[locale].base + page.slug;
 const counterpart = (locale, id) => pagePath(locale, languages[locale].pages.find(p => p.id === id));
 const appLink = (locale, page) => `/?${new URLSearchParams({instrument:'guitar',lang:locale,...(page.screen !== 'home' ? {screen:page.screen} : {}),...(page.mode ? {mode:page.mode} : {})})}`;
+
+// Keep the public footer and download dialog's menu sourced from the homepage.
+const homeHTML=readFileSync(new URL('../web/index.html',import.meta.url),'utf8');
+const homeFooter=homeHTML.match(/<footer class="home-footer">[\s\S]*?<\/footer>/)[0];
+const homeMenus=[...homeHTML.matchAll(/<a class="hero-btn [^"]*"[^>]*data-go="[^"]+"[\s\S]*?<\/a>/g)].map(match=>match[0].replace(/ href="[^"]*"/g,'')).join('');
+const stores=JSON.parse(readFileSync(new URL('../web/site.config.json',import.meta.url),'utf8')).stores;
+const messages=Object.fromEntries(Object.keys(languages).map(locale=>[locale,JSON.parse(readFileSync(new URL(`../web/locales/${locale}.json`,import.meta.url),'utf8'))]));
 
 function pentatonicDiagram(locale) {
   const labels = locale === 'fr' ? ['Mi','Si','Sol','Ré','La','Mi'] : ['E','B','G','D','A','E'];
@@ -64,7 +72,7 @@ ${Object.keys(languages).map(lang=>`<link rel="alternate" hreflang="${lang}" hre
 <link rel="icon" href="/assets/instruments/guitar/favicon.ico">
 <script type="application/ld+json">${json(graph)}</script>`;
   const related = renderRelated(page.id==='home'?text.chooseGuide:text.related,text.pages.filter(p=>p.id!==page.id&&p.id!=='about'&&p.id!=='home').map(p=>({...p,href:pagePath(locale,p)})));
-  const body = `<section class="page-hero${page.diagram?' with-diagram':''}"><div><p class="eyebrow">FRETBOARD HERO / ${escape(page.label.toUpperCase())}</p><h1>${escape(page.heading)}</h1><p class="page-intro">${escape(page.intro)}</p><div class="actions"><a class="button ui-primary" data-exercise-link href="${escape(appLink(locale,page))}">${escape(page.cta||text.try)} <span aria-hidden="true">↗</span></a><a class="store-link" href="${store}">${text.store}</a></div><p class="byline">${text.author} <a href="${text.about}">${author}</a> · ${text.updated} <time datetime="${reviewed}">${dateLabel}</time></p></div>${page.diagram?pentatonicDiagram(locale):''}</section>
+  const body = `<section class="page-hero${page.diagram?' with-diagram':''}"><div><p class="eyebrow">FRETBOARD HERO / ${escape(page.label.toUpperCase())}</p><h1>${escape(page.heading)}</h1><p class="page-intro">${escape(page.intro)}</p><div class="actions"><a class="button ui-primary" data-exercise-link href="${escape(appLink(locale,page))}">${escape(page.cta||text.try)} <span aria-hidden="true">↗</span></a><button type="button" class="button ui-primary" data-get-app aria-haspopup="dialog" disabled>${escape(messages[locale]['Get the app'])}</button></div><p class="byline">${text.author} <a href="${text.about}">${author}</a> · ${text.updated} <time datetime="${reviewed}">${dateLabel}</time></p></div>${page.diagram?pentatonicDiagram(locale):''}</section>
 ${page.id==='home'?related:''}
 <div class="article-layout"><article>${page.sections.map(renderSection).join('\n')}
 ${renderFAQ(text.questions,page.faq)}
@@ -74,12 +82,15 @@ ${page.id==='home'?'':related}
   const home = {href:appLink(locale,text.pages[0]),label:locale==='fr'?'Retour à Fretboard Hero':'Back to Fretboard Hero'};
   return renderPage({
     locale,head,body,skipLabel:text.skip,
-    header:{home,languageLabel:locale==='fr'?'Choisir la langue':'Choose language',languages:Object.entries(languages).map(([lang,t])=>({locale:lang,label:t.label,href:counterpart(lang,page.id)}))},
+    header:{home},
     navigation:`<nav class="page-nav" aria-label="${text.guides}">${nav}</nav>`,
-    footer:{home,navigationLabel:locale==='fr'?'Informations':'Information',links:[
-      {href:text.about,label:text.aboutLabel},{href:`/privacy?lang=${locale}&instrument=guitar`,label:text.privacy},
-      {href:'mailto:hello@fretboard-hero.com',label:text.contact}
-    ]}
+    styles:['/footer.css?v=10.52.0','/premium.css?v=10.52.0'],
+    scripts:['/core/i18n.js?v=10.52.0','/core/modal.js?v=10.52.0','/core/access.js?v=10.52.0','/core/footer.js?v=10.52.0','/guide.js?v=10.52.0'],
+    footerHTML:homeFooter
+      .replace('<div class="language-picker"></div>',`<div class="language-picker">${Object.entries(languages).map(([lang,t])=>`<a href="${counterpart(lang,page.id)}" lang="${lang}" hreflang="${lang}">${t.label}</a>`).join(' · ')}</div>`)
+      .replace('https://fretboard-hero.com/privacy',`https://fretboard-hero.com/privacy?lang=${locale}&amp;instrument=guitar`)
+      .replace('Privacy policy',escape(messages[locale]['Privacy policy'])).replace('Contact us',escape(messages[locale]['Contact us']))+
+      `<template id="guideAppMenu">${homeMenus}</template><script type="application/json" id="guideConfig">${json({locale,stores,languages:Object.entries(languages).map(([lang,t])=>({locale:lang,label:t.label,href:counterpart(lang,page.id)}))})}</script>`
   });
 }
 

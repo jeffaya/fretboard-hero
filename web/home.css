@@ -30,48 +30,6 @@
 #home .home-brand,
 #home .home-menu { min-width: 0; }
 
-#home .home-footer {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  gap: 0 clamp(8px, 3vw, 16px);
-  min-width: 0;
-  padding-bottom: 8px;
-}
-
-#home .home-footer-entry {
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(8px, 3vw, 16px);
-  min-width: 0;
-  max-width: 100%;
-}
-
-body #app .home-footer-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 32px;
-  padding: 4px 0;
-  border: 0;
-  border-radius: 2px;
-  background: transparent;
-  box-shadow: none;
-  color: var(--ui-muted);
-  font: 500 13px/1.4 var(--ui-font);
-  text-underline-offset: 3px;
-}
-
-body #app .home-footer-link:hover { color: #fff; box-shadow: none; }
-body #app .home-footer-link:focus-visible { outline: 2px solid #7ce5fa; outline-offset: 4px; }
-
-body #app button.home-footer-link:not(.language-trigger) { text-decoration: underline; }
-
-#home .home-footer-separator { flex: 0 0 1px; width: 1px; height: 14px; background: #b8c7df40; }
-
 #home .hero-logo {
   display: block;
   width: min(100%, 310px);

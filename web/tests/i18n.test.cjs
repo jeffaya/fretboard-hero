@@ -1,8 +1,8 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const locales=['en','es','fr','de','it','ja','ko','zh-CN','pt-BR','hi','id'];
 const catalogs=Object.fromEntries(locales.map(locale=>[locale,JSON.parse(fs.readFileSync(`web/locales/${locale}.json`,'utf8'))]));
-async function create({url='https://fretboard-hero.com/',saved=null,languages=['en'],fail=false,privacy=null}={}){
- const ctx={window:{},URL,navigator:{languages},location:{href:url},localStorage:{getItem:()=>saved},document:{documentElement:{},querySelector:()=>privacy},fetch:async path=>({ok:!fail,json:async()=>catalogs[path.match(/locales\/(.+)\.json/)[1]]})};vm.runInNewContext(fs.readFileSync('web/core/i18n.js','utf8'),ctx);const i18n=ctx.window.FretboardI18n;await i18n.initialize();return i18n;
+async function create({url='https://fretboard-hero.com/',saved=null,languages=['en'],fail=false,privacy=null,pageLocale}={}){
+ const ctx={window:{},URL,navigator:{languages},location:{href:url},localStorage:{getItem:()=>saved},document:{documentElement:{},querySelector:()=>privacy},fetch:async path=>({ok:!fail,json:async()=>catalogs[path.match(/locales\/(.+)\.json/)[1]]})};vm.runInNewContext(fs.readFileSync('web/core/i18n.js','utf8'),ctx);const i18n=ctx.window.FretboardI18n;await i18n.initialize(pageLocale);return i18n;
 }
 test('The external privacy link carries the actual app language, including English fallback',async()=>{
  for(const locale of locales){const privacy={setAttribute(key,value){this[key]=value}};await create({url:'https://fretboard-hero.com/?lang='+locale,privacy});assert.equal(privacy.href,'https://fretboard-hero.com/privacy?lang='+locale)}
@@ -105,4 +105,12 @@ test('Root octave guidance and memory prompts translate in all interface languag
  for(const locale of locales){const i=await create({languages:[locale]});for(const phrase of phrases){const text=i.text(phrase);if(locale!=='en')assert.notEqual(text,phrase,locale+' '+phrase);assert.equal(i.text(text),text)}}
  const fr=await create({languages:['fr']});assert.equal(fr.text('Connect the root notes: A'),'Relie les fondamentales : La');
  assert.equal(fr.text('Outward: +2, then +3 frets'),'Aller : +2, puis +3 cases');
+});
+
+test('A public guide keeps its content language despite browser preferences, saved settings or query parameters',async()=>{
+ for(const pageLocale of ['fr','en']){
+  const i=await create({url:'https://fretboard-hero.com/fr/guitare/?lang=de',saved:'ja',languages:['es'],pageLocale});
+  assert.equal(i.locale,pageLocale);
+ }
+ assert.equal((await create({pageLocale:'fr',fail:true})).locale,'fr','a catalog failure must not relabel the French article as English');
 });
