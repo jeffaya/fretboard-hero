@@ -22,8 +22,8 @@ test('Privacy and editorial pages share the same style dependencies and existing
  for(const [file,html] of generatedFiles()){
   if(!file.endsWith('.html'))continue;
   const styles=[...html.matchAll(/rel="stylesheet" href="([^"]+)"/g)].map(m=>new URL(m[1],origin).pathname);
-  assert.deepEqual(styles,expected,file);
-  assert.match(html,/class="public-page"/);assert.match(html,/class="site-header"/);assert.match(html,/class="site-footer"/);
+  assert.deepEqual(styles,file==='web/privacy.html'?expected:expected.concat('/footer.css','/premium.css'),file);
+  assert.match(html,/class="public-page"/);assert.match(html,/class="site-header"/);assert.match(html,file==='web/privacy.html'?/class="site-footer"/:/class="home-footer"/);
   assert.match(html,/assets\/home\/product-wordmarks.webp/);
   assert.doesNotMatch(html,/<style\b|style="|guides\.css|privacy\.css/);
  }
@@ -43,7 +43,9 @@ test('Every guide has readable initial HTML, a unique canonical and reciprocal l
   const canonical=html.match(/rel="canonical" href="([^"]+)"/)[1];
   assert.equal(canonical,origin+route);assert.ok(!canonicals.has(canonical));canonicals.add(canonical);
   const title=html.match(/<title>(.*?)<\/title>/)[1];assert.ok(!titles.has(title));titles.add(title);
-  assert.doesNotMatch(html,/<script[^>]+src=|noindex/);
+  assert.doesNotMatch(html,/noindex/);
+  const scripts=[...html.matchAll(/<script src="([^"]+)"/g)].map(m=>m[1].split('?')[0]);
+  assert.deepEqual(scripts,['/core/i18n.js','/core/modal.js','/core/access.js','/core/footer.js','/guide.js']);
   for(const other of Object.keys(languages)){
    const match=html.match(new RegExp(`hreflang="${other}" href="([^"]+)"`));assert.ok(match);
    const target=read(`web${new URL(match[1]).pathname}index.html`);
@@ -84,5 +86,27 @@ test('Pentatonic example is available as real note and fret data, with an access
   assert.match(html,/aria-labelledby="penta-title penta-desc"/);
   assert.match(html,/<caption>/);assert.match(html,/5 → 8/);assert.match(html,/5 → 7/);
   assert.match(html,/screen=learn&amp;mode=penta/);
+ }
+});
+
+test('Every guide reuses the home footer, moves language links out of the header and opens the shared dialog',async()=>{
+ const {generatedFiles}=await import(moduleURL('scripts/build-seo.mjs'));
+ const home=read('web/index.html'),homeFooter=home.match(/<footer class="home-footer">([\s\S]*?)<\/footer>/)[1];
+ const shape=html=>[...html.matchAll(/class="([^"]+)"/g)].map(m=>m[1]);
+ const homeMenus=[...home.matchAll(/<a class="hero-btn [^"]*"[^>]*data-go="[^"]+"[\s\S]*?<\/a>/g)].map(m=>m[0].replace(/ href="[^"]*"/g,'')).join('');
+ for(const [file,html] of generatedFiles()){
+  if(!file.endsWith('.html')||file==='web/privacy.html')continue;
+  const footer=html.match(/<footer class="home-footer">([\s\S]*?)<\/footer>/)[1];
+  assert.deepEqual(shape(footer),shape(homeFooter),file);
+  const header=html.match(/<header class="site-header">([\s\S]*?)<\/header>/)[1];
+  assert.doesNotMatch(header,/language|<details|<summary/);
+  assert.match(footer,/hreflang="en"/);assert.match(footer,/hreflang="fr"/);
+  assert.match(footer,/mailto:hello@fretboard-hero.com/);
+  assert.match(html,/<button[^>]*data-get-app[^>]*aria-haspopup="dialog"/);
+  assert.doesNotMatch(html,/<a[^>]*href="https:\/\/play.google.com/);
+  assert.equal(html.match(/<template id="guideAppMenu">([\s\S]*?)<\/template>/)[1],homeMenus);
+  const data=JSON.parse(html.match(/<script type="application\/json" id="guideConfig">([\s\S]*?)<\/script>/)[1]);
+  assert.equal(data.locale,file.startsWith('web/fr/')?'fr':'en');
+  assert.equal(data.languages.find(l=>l.locale===data.locale).href,file.slice(3).replace('index.html',''));
  }
 });

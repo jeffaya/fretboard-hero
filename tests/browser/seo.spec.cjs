@@ -50,7 +50,6 @@ test.describe('Public guides without JavaScript',()=>{
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBe(true);
   }
   await page.goto('/fr/guitare/pentatonique/');
-  await page.locator('.language-menu summary').click();
   await page.getByRole('link',{name:'English',exact:true}).click();
   await expect(page).toHaveURL(/\/en\/guitar\/pentatonic-scales\/$/);
   const question=page.locator('.faq details').first();await question.locator('summary').click();await expect(question.locator('p')).toBeVisible();
@@ -59,7 +58,7 @@ test.describe('Public guides without JavaScript',()=>{
   await page.goto('/privacy');
   await expect(page.locator('article[lang]')).toHaveCount(11);
   for(const article of await page.locator('article[lang]').all())await expect(article).toBeVisible();
-  await page.locator('.language-menu summary').click();
+  await page.locator('.document-language-menu summary').click();
   await page.getByRole('link',{name:'English',exact:true}).click();
   await expect(page).toHaveURL(/\/privacy#en$/);
   await expect(page.locator('#en-title')).toBeInViewport();
@@ -72,7 +71,7 @@ test('Privacy and guides use the same responsive shell, logo and theme',async({p
  for(const route of ['/fr/guitare/triades/','/en/about/','/privacy?lang=fr&instrument=ukulele']){
   await page.goto(route);await page.evaluate(()=>document.fonts.ready);
   const shell=await page.locator('.site-header').evaluate(header=>{
-   const style=getComputedStyle(header),footer=getComputedStyle(document.querySelector('.site-footer'));
+   const style=getComputedStyle(header),footer=getComputedStyle(document.querySelector('.site-footer,.home-footer'));
    return {font:style.fontFamily,color:style.color,width:style.width,border:style.borderBottomColor,footerFont:footer.fontFamily,footerWidth:footer.width};
   });
   if(expected)expect(shell).toEqual(expected);else expected=shell;
@@ -82,13 +81,13 @@ test('Privacy and guides use the same responsive shell, logo and theme',async({p
  }
  await expect(page.locator('.brand')).toHaveAttribute('aria-label','Ukulele Fretboard Hero');
  await expect(page.locator('article[lang]:visible')).toHaveCount(1);
- await page.locator('.language-menu summary').click();
+ await page.locator('.document-language-menu summary').click();
  await page.getByRole('link',{name:'English',exact:true}).click();
  await expect(page.locator('html')).toHaveAttribute('lang','en');
  await expect(page.locator('#en-title')).toBeVisible();
  await expect(page.locator('.site-footer .back-link')).toHaveAttribute('href','./?lang=en&instrument=ukulele');
- await page.locator('.language-menu summary').click();await page.keyboard.press('Escape');
- await expect(page.locator('.language-menu')).not.toHaveAttribute('open','');
+ await page.locator('.document-language-menu summary').click();await page.keyboard.press('Escape');
+ await expect(page.locator('.document-language-menu')).not.toHaveAttribute('open','');
  await page.emulateMedia({media:'print'});
  await expect(page.locator('.site-header')).toBeHidden();await expect(page.locator('.site-footer')).toBeHidden();
  await expect(page.locator('#en-title')).toBeVisible();await expect(page.locator('article[lang]:visible')).toHaveCount(1);
@@ -122,4 +121,28 @@ test('Unrecognized entry routes fall back to home and never bypass free access',
  await expect(page.locator('body')).toHaveAttribute('aria-busy','false');
  await expect(page.locator('#learn')).toBeVisible();
  await expect(page.locator('#modeControls button[data-mode="penta"]')).toHaveClass(/active/);
+});
+
+test('Guide footer matches Home and both download controls open the same accessible modal',async({page})=>{
+ await page.goto('/?lang=fr&instrument=guitar');await ready(page);
+ const footerStyle=()=>page.locator('.home-footer button.home-footer-link:not(.language-trigger)').evaluate(node=>{
+  const s=getComputedStyle(node);return {font:s.font,color:s.color,padding:s.padding,border:s.border,background:s.backgroundColor};
+ });
+ const homeStyle=await footerStyle();
+ await page.goto('/fr/guitare/pentatonique/');
+ await expect(page.locator('.site-header .language-picker,.site-header details')).toHaveCount(0);
+ await expect(page.locator('.home-footer .language-trigger')).toBeVisible();
+ await expect.poll(footerStyle).toEqual(homeStyle);
+ const title=await page.title(),canonical=await page.locator('link[rel="canonical"]').getAttribute('href');
+ for(const trigger of [page.locator('[data-get-app]'),page.locator('.home-footer button.home-footer-link:not(.language-trigger)')]){
+  await trigger.click();await expect(page.locator('.premium-dialog')).toBeVisible();
+  await expect(page.locator('.premium-overlay')).toHaveCount(1);await expect(page).toHaveURL(/\/fr\/guitare\/pentatonique\/$/);
+  await expect(page.locator('.premium-skills li')).toHaveCount(5);
+  await expect(page.locator('.premium-stores a')).toHaveAttribute('href',/id=com.guitar.fretboardhero/);
+  await page.locator('.premium-dialog .ui-modal-close').click();await expect(page.locator('.premium-overlay')).toBeHidden();await expect(trigger).toBeFocused();
+ }
+ expect(await page.title()).toBe(title);expect(await page.locator('link[rel="canonical"]').getAttribute('href')).toBe(canonical);
+ await page.locator('.home-footer .language-trigger').click();await page.getByRole('menuitemradio',{name:'English',exact:true}).click();
+ await expect(page).toHaveURL(/\/en\/guitar\/pentatonic-scales\/$/);await expect(page.locator('.home-footer .language-trigger')).toContainText('English');
+ await expect(page.locator('html')).toHaveAttribute('lang','en');
 });

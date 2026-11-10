@@ -18,15 +18,15 @@
   const fail=err=>{document.body.setAttribute('aria-busy','false');console.error(err);document.body.innerHTML=`<main style="min-height:100vh;display:grid;place-items:center;background:#05080b;color:#f8fbff;font-family:system-ui;padding:24px"><div><h1 style="color:#ff3ec9">CONFIGURATION ERROR</h1><p>${String(err.message||err)}</p><p>Check <code>site.config.json</code> and README.md.</p></div></main>`;};
   (async()=>{
     try{
-      await load('./core/i18n.js?v=10.51.0');
+      await load('./core/i18n.js?v=10.52.0');
       await FretboardI18n.initialize();
       const response=await fetch('/site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
       await load('./core/instrument-selection.js?v=10.51.0');
       await load('./core/native-billing.js?v=10.49.10');
       const nativeUnlocked=await FretboardBilling.initialize(config);
-      await load('./core/modal.js?v=10.50.0');
-      await load('./core/access.js?v=10.50.2');
+      await load('./core/modal.js?v=10.52.0');
+      await load('./core/access.js?v=10.52.0');
       window.FRETBOARD_ACCESS=FretboardAccess.create(config.nativeBilling===true?nativeUnlocked:await FretboardAccess.resolve(config,location.search));
       const defaultInstrument=config.instrument;
       config.instrument=FretboardInstrumentSelection.resolve(defaultInstrument);
@@ -40,7 +40,8 @@
       document.documentElement.dataset.instrument=config.instrument;
       window.ProductShell.apply(product,instrument);
       await load('./core/navigation.js?v=10.50.2','module');
-      await load('./home.js?v=10.50.2');
+      await load('./core/footer.js?v=10.52.0');
+      await load('./home.js?v=10.52.0');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
       await load('./app.js?v=10.50.0');
       FretboardBilling.attach();

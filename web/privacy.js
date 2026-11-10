@@ -2,7 +2,7 @@
   'use strict';
   // All translations remain readable in the initial HTML without JavaScript.
   const articles=[...document.querySelectorAll('article[lang]')],links=[...document.querySelectorAll('[data-policy-language]')];
-  const menu=document.querySelector('.language-menu'),trigger=menu.querySelector('summary');
+  const menu=document.querySelector('.document-language-menu'),trigger=menu.querySelector('summary');
   const navigation=menu.querySelector('nav'),description=document.querySelector('meta[name="description"]');
   const label=document.querySelector('#language-label'),main=document.querySelector('main');
   const skip=document.querySelector('.skip-link'),back=document.querySelector('#back-label');

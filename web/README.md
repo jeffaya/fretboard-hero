@@ -10,10 +10,11 @@ The stylesheet order is explicit in `index.html`. Layout rules are split by resp
 | `quiz.css` | Quiz HUD, feedback, result dialogs and rank ladder |
 | `circle.css` | Circle of fifths layout |
 | `home.css` | Home composition and instrument selection |
+| `footer.css` | Shared home and guide footer |
 | `theme.css` | Shared typography, surfaces and button variants |
 | `routine.css`, `premium.css`, `locales.css`, `tuner.css` | Feature-specific presentation |
 
-Home keeps branding on the left and activities on the right in landscape, with the same blocks stacked in portrait. Instrument selection lives below the brand; language selection shares the footer with Privacy policy and the web demo's Get the app link. Secondary home actions belong in this shared footer, not in an extra menu row; Get the app opens the existing download dialog and stays absent from native apps and unlocked previews. The bottoms of both landscape columns align; the whole composition stays vertically centered when it fits. At 1000 px wide and 740 px high or above in landscape, all six menu cards use full-width rows and the instrument selector anchors the bottom of the brand column. Shorter landscape screens retain the compact card grid and a smaller logo. The tuner has a dedicated first card; Practice groups Daily Routine, Learn and Quiz, while Explore groups the map and circle. Home layout, instrument selection and shared footer links belong in `home.css`; the upward language popover belongs in `locales.css` and `core/i18n.js`. The tuner binds the static `data-open-tuner` card and the existing routine shortcut. Language controls stay in the footer at every breakpoint.
+Home keeps branding on the left and activities on the right in landscape, with the same blocks stacked in portrait. Instrument selection lives below the brand; language selection shares the footer with Privacy policy and the web demo's Get the app link. Secondary home actions belong in this shared footer, not in an extra menu row; Get the app opens the existing download dialog and stays absent from native apps and unlocked previews. The bottoms of both landscape columns align; the whole composition stays vertically centered when it fits. At 1000 px wide and 740 px high or above in landscape, all six menu cards use full-width rows and the instrument selector anchors the bottom of the brand column. Shorter landscape screens retain the compact card grid and a smaller logo. The tuner has a dedicated first card; Practice groups Daily Routine, Learn and Quiz, while Explore groups the map and circle. Home layout and instrument selection belong in `home.css`; shared footer links belong in `footer.css`; the upward language popover belongs in `locales.css` and `core/i18n.js`. The tuner binds the static `data-open-tuner` card and the existing routine shortcut. Language controls stay in the footer at every breakpoint.
 
 Edit the owning component and its responsive rule instead of appending a new versioned override to the global stylesheet. Keep intentional state selectors (active, locked, hidden, focus, reduced motion) explicit. The remaining `!important` declarations protect typography, hidden content and reduced-motion preferences; avoid adding them to layout rules.
 
@@ -147,6 +148,19 @@ The deployment rule remains: same package everywhere; edit only `site.config.jso
 The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele Fretboard Hero. String/course count stays an instrument-profile detail.
 
 ## Release notes
+
+### V10.52.0 — Shared guide footer and download dialog
+
+- All public guide pages use the homepage footer markup, stylesheet, language
+  picker and download entry. Language selection links to the matching French or
+  English article; both remain available without JavaScript.
+- Guide Get the app buttons open the existing download dialog in place, with the
+  same homepage skill list and store configuration. Article HTML, canonical URLs
+  and exercise links stay intact; the full app is not bootstrapped on a guide.
+- Modal close buttons use a fine white cross at the top right, without a visible
+  background or border. The invisible 44 px target remains keyboard accessible.
+- Privacy's document language menu has a distinct class so it cannot override
+  the shared footer popover styles.
 
 ### V10.51.0 — Root octave paths
 

@@ -33,3 +33,14 @@ test('Closing restores the explicit opener even when a touch did not focus it',(
  modal.open(trigger);app.children[0].querySelector('.premium-close').events.click();
  assert.equal(app.children[0].hidden,true);assert.equal(focused,true);
 });
+
+test('Public guides mount the same dialog with homepage menu artwork and restore the article',()=>{
+ const {Access,app,menus}=runtime();
+ const article={inert:false},footer={inert:true},host={children:[article,footer],append(node){this.children.push(node);node.parentElement=this}};
+ let focused=false;const trigger={focus(){focused=true}};
+ const modal=Access.mount({instrument:'guitar',stores:{guitar:{android:'https://example.com/guitar'}}},Access.create(false),{host,menus});
+ assert.equal(app.children.length,0,'standalone guide does not mount a hidden app');
+ const overlay=host.children[2];assert.equal(overlay.querySelector('.premium-skills').children.length,menus.length);
+ modal.open(trigger);assert.equal(overlay.hidden,false);assert.equal(article.inert,true);
+ overlay.querySelector('.premium-close').events.click();assert.equal(overlay.hidden,true);assert.equal(article.inert,false);assert.equal(footer.inert,true);assert.equal(focused,true);
+});

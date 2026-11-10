@@ -28,7 +28,7 @@
     for(let y=0;y<size;y++)for(let x=0;x<size;x++)if(qr.isDark(y,x))cells+=`M${x+4} ${y+4}h1v1h-1z`;
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${edge} ${edge}" role="img" aria-label="Scan to open the store" shape-rendering="crispEdges"><path fill="#fff" d="M0 0h${edge}v${edge}H0z"/><path fill="#080d1d" d="${cells}"/></svg>`;
   }
-  function mount(config,access){
+  function mount(config,access,{host=document.querySelector('#app'),menus=document.querySelectorAll('#home .hero-btn[data-go]')}={}){
     if(access.unlocked)return {open(){},mark(){}};
     const billing=window.FretboardBilling?.native?window.FretboardBilling:null;
     const lock='<svg class="premium-lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>';
@@ -42,10 +42,10 @@
       <div class="premium-stores"></div>
       <button type="button" class="ui-back premium-close">← Continue exploring</button>
     </section>`;
-    document.querySelector('#app').append(overlay);
+    host.append(overlay);
     const dialog=overlay.querySelector('section'),stores=overlay.querySelector('.premium-stores');
     // Home is the single source for menu order, labels and artwork.
-    for(const menu of document.querySelectorAll('#home .hero-btn[data-go]')){
+    for(const menu of menus){
       const icon=menu.querySelector('.hero-icon img'),title=menu.querySelector('.home-card-copy strong');
       if(!icon||!title)continue;
       const item=document.createElement('li'),label=document.createElement('span');

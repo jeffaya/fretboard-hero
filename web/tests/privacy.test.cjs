@@ -11,7 +11,7 @@ function setup({url='https://fretboard-hero.com/privacy',saved=null,languages=['
  const links=menuLinks.map(l=>({...el(l.name),dataset:{policyLanguage:l.attrs['data-policy-language']}}));
  const trigger=el(),nav=el(),label=el(),main=el(),skip=el(),back=el(),description=el(),home=[el(),el()],logo=el(),icon=el();
  const menu={...el(),open:false,contains:node=>[menu,trigger,nav,label,...links].includes(node),querySelector:selector=>selector==='summary'?trigger:nav};
- const single={'.language-menu':menu,'#language-label':label,main,'.skip-link':skip,'#back-label':back,'meta[name="description"]':description,'.brand':home[0],'.brand svg':logo,'link[rel="icon"]':icon};
+ const single={'.document-language-menu':menu,'#language-label':label,main,'.skip-link':skip,'#back-label':back,'meta[name="description"]':description,'.brand':home[0],'.brand svg':logo,'link[rel="icon"]':icon};
  const document={documentElement:{dataset:{}},querySelector:selector=>single[selector],querySelectorAll:selector=>selector==='article[lang]'?articles:selector==='[data-policy-language]'?links:home,addEventListener:(name,fn)=>events[name]=fn,createElement:el,head:{appendChild(script){queueMicrotask(()=>{try{vm.runInContext(fs.readFileSync('web/'+script.src.slice(2).split('?')[0],'utf8'),ctx);script.onload()}catch{script.onerror()}})}}};
  const location={href:url,get search(){return new URL(this.href).search}},history={pushState(_,__,url){location.href=String(url)}};
  const localStorage={getItem(key){if(storageBlocked)throw Error('blocked');return stored[key]},setItem(key,value){if(storageBlocked)throw Error('blocked');stored[key]=value},removeItem(key){delete stored[key]}};
