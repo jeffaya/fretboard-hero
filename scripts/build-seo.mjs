@@ -3,6 +3,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {languages, reviewed} from './seo/content.mjs';
 import {escape, renderPage, renderSection, renderFAQ, renderRelated} from './pages/components.mjs';
+import {appRoutes} from '../web/core/routes.js';
 import {renderPrivacy} from './pages/privacy.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -85,6 +86,7 @@ ${page.id==='home'?'':related}
 export function generatedFiles() {
   const files = new Map([['web/privacy.html',renderPrivacy()]]);
   const entries = [{url:origin+'/'},{url:origin+'/?instrument=bass-4'},{url:origin+'/?instrument=ukulele'},{url:origin+'/privacy'}];
+  for (const route of Object.values(appRoutes)) if (route.path !== '/') entries.push({url:origin+route.path});
   for (const [locale,text] of Object.entries(languages)) for (const page of text.pages) {
     files.set(`web${pagePath(locale,page)}index.html`,render(locale,page));
     entries.push({url:origin+pagePath(locale,page),id:page.id});

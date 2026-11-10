@@ -17,7 +17,7 @@
   const rootPC=()=>PC[state.root];
   const thirdPC=()=>mod(rootPC()+intervals[state.quality].third);
   const fifthPC=()=>mod(rootPC()+7);
-  function go(screen){
+  function go(screen,{history=true}={}){
     if(state.screen==='routine'&&screen!=='routine')routineSession.leave();
     if(state.screen==='quiz'&&screen!=='quiz'){
       if(state.quiz?.timer)clearInterval(state.quiz.timer);
@@ -31,8 +31,13 @@
     if(screen==='fretmap')renderFretboardMap();
     if(screen==='circle')renderCircle();
     if(screen==='quiz')prepareQuiz();
+    if(history)window.FretboardNavigation?.write(screen);
   }
-  $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+  $$('[data-go]').forEach(b=>b.addEventListener('click',event=>{
+    if(b.tagName==='A'&&!window.FretboardNavigation.canHandle(event))return;
+    event.preventDefault();go(b.dataset.go);
+  }));
+  window.FretboardNavigation?.subscribe(screen=>go(screen==='tuner'?'home':screen,{history:false}));
   // Shared controls live in core/controls.js.
   ['learn','map','routine'].forEach(name=>FretboardControls.bindDrawer({name}));
 
@@ -458,6 +463,7 @@
   }
   function exitQuizToHome(){
     go('home');
+    $('#home [data-go="quiz"]')?.focus();
   }
   $('#startQuizButton')?.addEventListener('click',startQuiz);
   $('#introRankLadder')?.addEventListener('click',()=>showRankLadder('intro'));
@@ -479,7 +485,7 @@
   // Public guides can open an existing exercise without accepting arbitrary
   // selectors, changing access rights or overriding the learner's saved key.
   const entry = new URLSearchParams(location.search);
-  const entryScreen = entry.get('screen');
+  const entryScreen = window.FretboardNavigation?.read() || entry.get('screen');
   if (['learn','fretmap','routine','circle','quiz'].includes(entryScreen)) {
     if (entryScreen === 'learn') {
       const mode = ModeRegistry.list(instrument).find(item => item.id === entry.get('mode'));
@@ -487,6 +493,6 @@
         $$('#modeControls button').find(button => button.dataset.mode === mode.id)?.click();
       }
     }
-    go(entryScreen);
+    go(entryScreen,{history:false});
   }
 })();

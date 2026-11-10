@@ -140,17 +140,17 @@ body #app button.home-footer-link:not(.language-trigger) { text-decoration: unde
 
 #home .home-action-group > .home-section-label { margin-bottom: 8px; }
 
-#home .home-action-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+#home .home-action-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
 
 #home .hero-btn {
   position: relative;
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-columns: 80px minmax(0, 1fr) 18px;
   align-items: center;
-  gap: 10px;
+  gap: 18px;
   width: 100%;
   min-height: 88px;
-  padding: 0 10px 0 0;
+  padding: 0 16px 0 0;
   overflow: hidden;
   color: #f4f3ff;
   text-align: left;
@@ -168,38 +168,22 @@ body #app button.home-footer-link:not(.language-trigger) { text-decoration: unde
   color: var(--ui-accent);
 }
 
-#home .hero-icon img { width: 34px; height: 34px; filter: drop-shadow(0 0 5px var(--ui-accent)); }
+#home .hero-icon img { width: 48px; height: 48px; filter: drop-shadow(0 0 5px var(--ui-accent)); }
 
 #home .home-card-copy { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding-block: 10px; }
 
 #home .hero-btn strong {
   margin: 0;
   color: #f5f2ff;
-  font: 800 18px/1.15 var(--ui-font);
+  font: 800 20px/1.15 var(--ui-font);
   letter-spacing: .01em;
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
 
-#home .hero-btn small { margin: 0; color: #b8c7df; font: 500 14px/1.2 var(--ui-font); }
+#home .hero-btn small { margin: 0; color: #b8c7df; font: 500 16px/1.2 var(--ui-font); }
 
-#home .home-chevron { display: none; color: var(--ui-accent); font: 500 38px/1 var(--ui-font); text-shadow: 0 0 7px var(--ui-accent); }
-
-#home :is(.routine-card, .tuner-card, .guide-card) {
-  grid-column: 1 / -1;
-  grid-template-columns: 80px minmax(0, 1fr) 18px;
-  gap: 18px;
-  min-height: 80px;
-  padding-right: 16px;
-}
-
-#home :is(.routine-card, .tuner-card, .guide-card) .hero-icon img { width: 48px; height: 48px; }
-
-#home :is(.routine-card, .tuner-card, .guide-card) strong { font-size: 20px; }
-
-#home :is(.routine-card, .tuner-card, .guide-card) small { font-size: 16px; }
-
-#home :is(.routine-card, .tuner-card, .guide-card) .home-chevron { display: block; }
+#home .home-chevron { display: block; color: var(--ui-accent); font: 500 38px/1 var(--ui-font); text-shadow: 0 0 7px var(--ui-accent); }
 
 #home .tuner-card { --ui-accent: #27d7ff; --ui-tint: #042d3c; }
 
@@ -239,17 +223,13 @@ body #app #home .home-instruments button[aria-pressed="true"]::after {
 @media (max-width: 359px) {
   #home.home-screen { padding-inline: 14px; }
 
-  #home .hero-btn { grid-template-columns: 38px minmax(0, 1fr); gap: 8px; padding-right: 8px; }
+  #home .hero-btn { grid-template-columns: 62px minmax(0, 1fr) 12px; gap: 12px; padding-right: 12px; }
 
-  #home .hero-icon img { width: 28px; height: 28px; }
+  #home .hero-icon img { width: 40px; height: 40px; }
 
-  #home .hero-btn strong { font-size: 17px; }
+  #home .hero-btn strong { font-size: 19px; }
 
-  #home .hero-btn small { font-size: 13px; }
-
-  #home :is(.routine-card, .tuner-card, .guide-card) { grid-template-columns: 62px minmax(0, 1fr) 12px; gap: 12px; }
-
-  #home :is(.routine-card, .tuner-card, .guide-card) strong { font-size: 19px; }
+  #home .hero-btn small { font-size: 14px; }
 
   #home .home-instruments button { gap: 2px; padding-inline: 3px; font-size: 13px; }
 
@@ -261,19 +241,14 @@ body #app #home .home-instruments button[aria-pressed="true"]::after {
 
   #home .hero-logo { width: 410px; }
 
-  #home .hero-btn { min-height: 100px; grid-template-columns: 62px minmax(0, 1fr); gap: 16px; }
+  #home .hero-btn { min-height: 92px; grid-template-columns: 90px minmax(0, 1fr) 22px; gap: 24px; }
 
-  #home .hero-icon img { width: 42px; height: 42px; }
+  #home .hero-icon img { width: 48px; height: 48px; }
 
-  #home .hero-btn strong { font-size: 22px; }
+  #home .hero-btn strong { font-size: 25px; }
 
-  #home .hero-btn small { font-size: 17px; }
+  #home .hero-btn small { font-size: 19px; }
 
-  #home :is(.routine-card, .tuner-card, .guide-card) { grid-template-columns: 90px minmax(0, 1fr) 22px; gap: 24px; min-height: 92px; }
-
-  #home :is(.routine-card, .tuner-card, .guide-card) strong { font-size: 25px; }
-
-  #home :is(.routine-card, .tuner-card, .guide-card) small { font-size: 19px; }
 }
 
 @media (min-width: 700px) and (orientation: landscape) {
@@ -299,8 +274,7 @@ body #app #home .home-instruments button[aria-pressed="true"]::after {
   #home .instrument-art { width: 42px; height: 56px; }
 }
 
-/* A full-height desktop menu uses the same row treatment as Daily Routine.
-   On shorter screens the compact grid keeps every action within reach. */
+/* Keep the desktop branding aligned with the full-width menu. */
 @media (min-width: 1000px) and (min-height: 740px) and (orientation: landscape) {
   #home .home-brand { align-self: stretch; display: flex; flex-direction: column; }
 
@@ -308,17 +282,6 @@ body #app #home .home-instruments button[aria-pressed="true"]::after {
 
   #home .home-setup { margin-top: auto; padding-top: 28px; }
 
-  #home .home-action-grid { grid-template-columns: minmax(0, 1fr); }
-
-  #home .hero-btn { grid-template-columns: 80px minmax(0, 1fr) 18px; gap: 18px; min-height: 80px; padding-right: 16px; }
-
-  #home .hero-icon img { width: 48px; height: 48px; }
-
-  #home .hero-btn strong { font-size: 20px; }
-
-  #home .hero-btn small { font-size: 16px; }
-
-  #home .home-chevron { display: block; }
 }
 
 @media (orientation: landscape) and (max-height: 600px) {
@@ -327,19 +290,13 @@ body #app #home .home-instruments button[aria-pressed="true"]::after {
   #home .home-menu,
   #home .home-actions { gap: 12px; }
 
-  #home .hero-btn { min-height: 66px; grid-template-columns: 40px minmax(0, 1fr); gap: 8px; padding-right: 8px; }
+  #home .hero-btn { min-height: 80px; grid-template-columns: 56px minmax(0, 1fr) 14px; gap: 12px; padding-right: 12px; }
 
-  #home .hero-icon img { width: 30px; height: 30px; }
+  #home .hero-icon img { width: 38px; height: 38px; }
 
   #home .hero-btn strong { font-size: 17px; }
 
   #home .hero-btn small { font-size: 13px; }
-
-  #home :is(.routine-card, .tuner-card, .guide-card) { grid-template-columns: 56px minmax(0, 1fr) 14px; gap: 12px; min-height: 62px; }
-
-  #home :is(.routine-card, .tuner-card, .guide-card) .hero-icon img { width: 38px; height: 38px; }
-
-  #home :is(.routine-card, .tuner-card, .guide-card) strong { font-size: 18px; }
 
   #home .home-setup { margin-top: 14px; }
 

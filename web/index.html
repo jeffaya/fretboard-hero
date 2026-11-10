@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <base href="/">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
   <meta name="theme-color" content="#05070b">
@@ -48,8 +49,8 @@
   <link rel="stylesheet" href="./fretboard.css?v=10.32.1">
   <link rel="stylesheet" href="./quiz.css?v=10.49.14">
   <link rel="stylesheet" href="./circle.css?v=10.31.0">
-  <link rel="stylesheet" href="./home.css?v=10.49.24">
-  <link rel="stylesheet" href="./theme.css?v=10.49.24">
+  <link rel="stylesheet" href="./home.css?v=10.50.0">
+  <link rel="stylesheet" href="./theme.css?v=10.50.0">
   <link rel="stylesheet" href="./routine.css?v=10.47.0">
   <link rel="stylesheet" href="./premium.css?v=10.49.10">
   <link rel="stylesheet" href="./locales.css?v=10.47.0">
@@ -81,21 +82,21 @@
           </div>
         </div>
         <div class="home-menu">
-          <button id="homeTuner" class="hero-btn tuner-card" type="button" data-open-tuner><span class="hero-icon"><span class="tuner-launch-icon" data-control-group="tuner" aria-hidden="true"></span></span><span class="home-card-copy"><strong>Tuner</strong><small>Tune your instrument</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+          <a id="homeTuner" class="hero-btn tuner-card" href="/tuner" data-open-tuner><span class="hero-icon"><span class="tuner-launch-icon" data-control-group="tuner" aria-hidden="true"></span></span><span class="home-card-copy"><strong>Tuner</strong><small>Tune your instrument</small></span><span class="home-chevron" aria-hidden="true">›</span></a>
           <nav class="home-actions" aria-label="Choose your session">
             <section class="home-action-group" aria-labelledby="homePracticeLabel">
               <h2 id="homePracticeLabel" class="home-section-label">Practice</h2>
               <div class="home-action-grid">
-                <button class="hero-btn routine-card" data-go="routine"><span class="hero-icon"><img src="./assets/home/play.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>DAILY ROUTINE</strong><small>One key · Five guided exercises</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-                <button class="hero-btn learn-card" data-go="learn"><span class="hero-icon"><img src="./assets/home/learn.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>LEARN</strong><small>Practice on the interactive fretboard</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-                <button class="hero-btn quiz-card" data-go="quiz"><span class="hero-icon"><img src="./assets/home/quiz.svg?v=10.24.2" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>QUIZ</strong><small>Test your knowledge</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+                <a class="hero-btn routine-card" data-go="routine" href="/practice/daily-routine"><span class="hero-icon"><img src="./assets/home/play.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>DAILY ROUTINE</strong><small>One key · Five guided exercises</small></span><span class="home-chevron" aria-hidden="true">›</span></a>
+                <a class="hero-btn learn-card" data-go="learn" href="/practice/learn"><span class="hero-icon"><img src="./assets/home/learn.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>LEARN</strong><small>Practice on the interactive fretboard</small></span><span class="home-chevron" aria-hidden="true">›</span></a>
+                <a class="hero-btn quiz-card" data-go="quiz" href="/practice/quiz"><span class="hero-icon"><img src="./assets/home/quiz.svg?v=10.24.2" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>QUIZ</strong><small>Test your knowledge</small></span><span class="home-chevron" aria-hidden="true">›</span></a>
               </div>
             </section>
             <section class="home-action-group" aria-labelledby="homeExploreLabel">
               <h2 id="homeExploreLabel" class="home-section-label">Explore</h2>
               <div class="home-action-grid">
-                <button class="hero-btn map-card" data-go="fretmap"><span class="hero-icon"><img src="./assets/home/map.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>FRETBOARD MAP</strong><small>Explore the neck</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
-                <button class="hero-btn circle-card" data-go="circle"><span class="hero-icon"><img src="./assets/home/circle.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>CIRCLE OF FIFTHS</strong><small>Visualize & practice</small></span><span class="home-chevron" aria-hidden="true">›</span></button>
+                <a class="hero-btn map-card" data-go="fretmap" href="/explore/fretboard-map"><span class="hero-icon"><img src="./assets/home/map.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>FRETBOARD MAP</strong><small>Explore the neck</small></span><span class="home-chevron" aria-hidden="true">›</span></a>
+                <a class="hero-btn circle-card" data-go="circle" href="/explore/circle-of-fifths"><span class="hero-icon"><img src="./assets/home/circle.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>CIRCLE OF FIFTHS</strong><small>Visualize & practice</small></span><span class="home-chevron" aria-hidden="true">›</span></a>
                 <a class="hero-btn guide-card" href="/en/guitar/"><span class="hero-icon"><img src="./assets/home/guide.svg" alt="" width="64" height="64"></span><span class="home-card-copy"><strong>Guide</strong><small>Explanations, diagrams and tips</small></span><span class="home-chevron" aria-hidden="true">›</span></a>
               </div>
             </section>
@@ -308,7 +309,7 @@
     </div>
   </div>
 
-  <script src="./bootstrap.js?v=10.49.24" defer></script>
+  <script src="./bootstrap.js?v=10.50.0" defer></script>
   <script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}</script>
 
 </body>

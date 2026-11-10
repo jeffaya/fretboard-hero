@@ -13,7 +13,7 @@ test('Initial share metadata uses the existing lightweight JPEG artwork',()=>{
  }
 });
 
-function worker(source){
+async function worker(source){
  class Rewriter {
   constructor(){this.handlers=[]}
   on(selector,handler){this.handlers.push([selector,handler]);return this}
@@ -26,12 +26,13 @@ function worker(source){
    return {response,attributes};
   }
  }
- source=source.replace(/^import .*;\r?\n/,'').replace('export default','globalThis.worker =');
- const c=vm.createContext({URL,HTMLRewriter:Rewriter});vm.runInContext(source,c);return c.worker;
+ source=source.replace(/^import .*;\r?\n/gm,'').replace('export default','globalThis.worker =');
+ const {appRoutes,matchRoute}=await import('../core/routes.js');
+ const c=vm.createContext({URL,Request,appRoutes,matchRoute,HTMLRewriter:Rewriter});vm.runInContext(source,c);return c.worker;
 }
 for(const [format,newline] of [['LF','\n'],['CRLF','\r\n']])test(`Worker supplies instrument JPEG metadata before client JavaScript, including shared query URLs (${format})`,async()=>{
  const source=fs.readFileSync('worker.js','utf8').replace(/\r?\n/g,newline);
- const app=worker(source),response=new Response(html,{headers:{'content-type':'text/html'}});
+ const app=await worker(source),response=new Response(html,{headers:{'content-type':'text/html'}});
  for(const pathname of ['/','/index.html'])for(const [instrument,key] of [['guitar','guitar'],['bass-4','bass'],['ukulele','ukulele'],['unknown','guitar']]){
   const {attributes}=await app.fetch(new Request(`https://fretboard-hero.com${pathname}?instrument=${instrument}&lang=fr`),{ASSETS:{fetch:async()=>response}});
   for(const selector of ['meta[property="og:image"]','meta[name="twitter:image"]'])assert.equal(attributes.get(selector).content,imageUrl(key));
@@ -56,4 +57,22 @@ test('All client product profiles preserve the server JPEG URL, MIME type and di
   assert.equal(get('meta[property="og:image"]').content,imageUrl(key));assert.equal(get('meta[name="twitter:image"]').content,imageUrl(key));
   assert.equal(get('meta[property="og:image:type"]').content,'image/jpeg');assert.equal(get('meta[property="og:image:width"]').content,'1024');assert.equal(get('meta[property="og:image:height"]').content,'500');
  }
+});
+
+test('Worker serves every deep link from the app shell with route-specific canonical metadata',async()=>{
+ const {appRoutes}=await import('../core/routes.js');
+ const app=await worker(fs.readFileSync('worker.js','utf8'));
+ for(const [screen,route] of Object.entries(appRoutes)){
+  if(screen==='home')continue;
+  for(const suffix of ['', '/']){
+   let requested;
+   const response=new Response(html,{headers:{'content-type':'text/html'}});
+   const result=await app.fetch(new Request(`https://fretboard-hero.com${route.path}${suffix}?instrument=ukulele`),{ASSETS:{fetch:async request=>{requested=new URL(request.url);return response}}});
+   assert.equal(requested.pathname,'/');assert.equal(requested.searchParams.get('instrument'),'ukulele');
+   assert.equal(result.attributes.get('link[rel="canonical"]').href,`https://fretboard-hero.com${route.path}?instrument=ukulele`);
+   assert.ok(result.attributes.get('title').textContent.startsWith(route.title));assert.equal(result.attributes.get('meta[name="description"]').content,route.description);
+  }
+ }
+ const missing=new Response('Not found',{status:404});
+ assert.equal(await app.fetch(new Request('https://fretboard-hero.com/practice/unknown'),{ASSETS:{fetch:async()=>missing}}),missing);
 });
