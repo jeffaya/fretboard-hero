@@ -430,5 +430,17 @@
   "Root: {note} — let it ring": "Grundton: {note} — klingen lassen",
   "Guide": "Ratgeber",
   "Explanations, diagrams and tips": "Erklärungen, Diagramme und Tipps",
-  "Practice on the interactive fretboard": "Übe auf dem interaktiven Griffbrett"
+  "Practice on the interactive fretboard": "Übe auf dem interaktiven Griffbrett",
+  "Connect the root notes": "Verbinde die Grundtöne",
+  "Connect the root notes: {note}": "Verbinde die Grundtöne: {note}",
+  "Skip one string each time. Play the octave path, then retrace it.": "Überspringe jedes Mal eine Saite. Spiele den Oktavweg und kehre auf demselben Weg zurück.",
+  "From memory": "Auswendig",
+  "Guided round trip": "Geführter Hin- und Rückweg",
+  "Use the first root to find the hidden frets on the indicated strings. Return along the same path.": "Finde vom ersten Grundton aus die verdeckten Bünde auf den angegebenen Saiten. Kehre auf demselben Weg zurück.",
+  "? = find the fret": "? = finde den Bund",
+  "Outward: +{a}, then +{b} frets": "Hinweg: +{a}, dann +{b} Bünde",
+  "Try from memory →": "Auswendig versuchen →",
+  "Next diagonal →": "Nächste Diagonale →",
+  "Show frets": "Bünde anzeigen",
+  "Find the fret on string {string}": "Finde den Bund auf Saite {string}"
 }

@@ -7,6 +7,26 @@
   const roundTrip=notes=>single(notes.concat(notes.slice(0,-1).reverse()));
   const range=notes=>`Frets ${Math.min(...notes.map(n=>n.fret))}–${Math.max(...notes.map(n=>n.fret))}`;
 
+  function rootJourney(engine,rootPC){
+    const columns=[],sections=[];
+    for(const [index,strings] of engine.profile.rootPaths.entries()){
+      // The first fretted root keeps the shape movable, including E and A.
+      const first=MusicTheory.mod(rootPC-engine.courses[strings[0]].pc)||12;
+      const pitch=engine.midiAt(strings[0],first);
+      const notes=strings.map((string,octave)=>({string,fret:pitch+12*octave-engine.midiAt(string,0)}));
+      // Keep complete octave shapes; never wrap an out-of-range note to fret 0.
+      if(notes.some(n=>n.fret<1||n.fret>engine.maxFret))continue;
+      const trip=roundTrip(notes);
+      for(const recall of [false,true]){
+        const start=columns.length;
+        columns.push(...trip);
+        sections.push({start,end:columns.length,recall,label:`Diagonal ${index+1}`,
+          steps:notes.slice(1).map((note,i)=>note.fret-notes[i].fret)});
+      }
+    }
+    return {rootJourney:true,columns,sections};
+  }
+
   // Work in MIDI for melodic order: a high-G ukulele is not tuned low to high.
   function sequences(engine,rootPC,intervals,maxFret){
     const candidates=[];
@@ -74,10 +94,18 @@
     const rootPC=MusicTheory.PC[root],maxFret=Math.min(15,engine.maxFret),key=`${root} ${quality}`;
     const shared={root,rootPC,quality};
     const make=(id,step,title,detail,instruction,columns)=>({...shared,id,step,title,detail,instruction,columns});
-    const roots=[];
-    engine.courses.forEach((_,string)=>{for(let fret=0;fret<=maxFret;fret++)if(engine.noteAt(string,fret)===rootPC)roots.push({string,fret})});
-    const rootExercise=make('root','Root',`Find every ${root} on the fretboard`,`${key} · Frets 0–${maxFret}`,
-      `Play each note and say “${root}” aloud.`,single(roots));
+    let rootExercise;
+    if(engine.profile.rootPaths){
+      const journey=rootJourney(engine,rootPC);
+      if(!journey.columns.length)throw new Error('No complete root octave path for this tuning');
+      rootExercise={...make('root','Root',`Connect the root notes: ${root}`,key,
+        'Skip one string each time. Play the octave path, then retrace it.',[]),...journey};
+    }else{
+      const roots=[];
+      engine.courses.forEach((_,string)=>{for(let fret=0;fret<=maxFret;fret++)if(engine.noteAt(string,fret)===rootPC)roots.push({string,fret})});
+      rootExercise=make('root','Root',`Find every ${root} on the fretboard`,`${key} · Frets 0–${maxFret}`,
+        `Play each note and say “${root}” aloud.`,single(roots));
+    }
 
     const intervals=quality==='major'?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10];
     // A stable, compact octave starting on the lowest available root string.

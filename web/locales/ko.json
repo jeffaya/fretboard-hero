@@ -430,5 +430,17 @@
   "Root: {note} — let it ring": "근음: {note} — 길게 울려 주세요",
   "Guide": "가이드",
   "Explanations, diagrams and tips": "설명, 도표와 연습 팁",
-  "Practice on the interactive fretboard": "인터랙티브 지판에서 연습하세요"
+  "Practice on the interactive fretboard": "인터랙티브 지판에서 연습하세요",
+  "Connect the root notes": "근음을 연결하세요",
+  "Connect the root notes: {note}": "근음을 연결하세요: {note}",
+  "Skip one string each time. Play the octave path, then retrace it.": "매번 줄 하나를 건너뛰세요. 옥타브 경로를 연주한 뒤 같은 경로로 돌아오세요.",
+  "From memory": "기억으로 연주",
+  "Guided round trip": "안내에 따라 왕복",
+  "Use the first root to find the hidden frets on the indicated strings. Return along the same path.": "첫 근음을 기준으로 표시된 줄의 숨겨진 프렛을 찾으세요. 같은 경로로 돌아오세요.",
+  "? = find the fret": "? = 프렛 찾기",
+  "Outward: +{a}, then +{b} frets": "가는 길: +{a}, 다음 +{b}프렛",
+  "Try from memory →": "기억으로 도전 →",
+  "Next diagonal →": "다음 대각선 →",
+  "Show frets": "프렛 표시",
+  "Find the fret on string {string}": "{string}번 줄에서 프렛 찾기"
 }

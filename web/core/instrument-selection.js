@@ -2,7 +2,7 @@
   'use strict';
   // Shared by the app bootstrap and Privacy: URL, remembered universe, build default.
   const catalog=Object.freeze({
-    'guitar':{instrumentKey:'guitar',instrument:'./instruments/guitar.js?v=10.26.4',productKey:'guitar',product:'./products/guitar-fretboard-hero.js?v=10.49.22'},
+    'guitar':{instrumentKey:'guitar',instrument:'./instruments/guitar.js?v=10.51.0',productKey:'guitar',product:'./products/guitar-fretboard-hero.js?v=10.49.22'},
     'bass-4':{instrumentKey:'bass4',instrument:'./instruments/bass-4.js?v=10.26.4',productKey:'bass',product:'./products/bass-fretboard-hero.js?v=10.49.22'},
     'ukulele':{instrumentKey:'ukulele',instrument:'./instruments/ukulele.js?v=10.26.4',productKey:'ukulele',product:'./products/ukulele-fretboard-hero.js?v=10.49.22'},
   });

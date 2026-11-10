@@ -430,5 +430,17 @@
   "Root: {note} — let it ring": "根音：{note} — 多响一会儿",
   "Guide": "指南",
   "Explanations, diagrams and tips": "讲解、图示与练习技巧",
-  "Practice on the interactive fretboard": "在交互式指板上练习"
+  "Practice on the interactive fretboard": "在交互式指板上练习",
+  "Connect the root notes": "连接根音",
+  "Connect the root notes: {note}": "连接根音：{note}",
+  "Skip one string each time. Play the octave path, then retrace it.": "每次跳过一根弦。沿八度路线弹奏，再原路返回。",
+  "From memory": "凭记忆练习",
+  "Guided round trip": "引导往返",
+  "Use the first root to find the hidden frets on the indicated strings. Return along the same path.": "以第一个根音为参照，找出指定琴弦上隐藏的品位，再原路返回。",
+  "? = find the fret": "? = 找出品位",
+  "Outward: +{a}, then +{b} frets": "去程：+{a}，再+{b}品",
+  "Try from memory →": "凭记忆试试 →",
+  "Next diagonal →": "下一条斜线路线 →",
+  "Show frets": "显示品位",
+  "Find the fret on string {string}": "找出第{string}弦上的品位"
 }

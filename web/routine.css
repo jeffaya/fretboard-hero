@@ -135,6 +135,8 @@ body #app .routine-pattern-steps .ui-step { min-height: 48px; padding: 8px 10px;
 }
 
 .routine-practice { min-width: 0; }
+.routine-root-help { text-align: center; }
+#routineRootReveal { min-height: 44px; padding: 8px 16px; font-size: 16px; }
 .routine-strumming { border-radius: 16px; font-family: var(--ui-font); padding: clamp(12px,2vw,24px); }
 #routinePatternHelp { margin: 8px 0 12px; color: #b7c9df; text-align: left; font-size: 14px; }
 .routine-rhythm-tab { position: relative; min-width: 0; }
