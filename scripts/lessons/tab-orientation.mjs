@@ -34,10 +34,11 @@ export function renderTabOrientation(instrument,lesson){
   neck+=`<path data-string="${count-i}" d="M${x} 24V302" stroke="${color(i,count)}" stroke-width="${1.2+(count-1-i)*.35}"/>`;
  }
  const labelString=(i,x,y)=>text(x,y,labels[i],color(i,count))+text(x,y+16,count-i,'#aab9d0',11);
+ const rowLabel=(i,x,y)=>text(x,y+6,labels[i],color(i,count))+text(x+16,y+4,count-i,'#aab9d0',11);
  const dot=(x,y,fret)=>`<g data-string="1" data-fret="${fret}"><circle cx="${x}" cy="${y}" r="13" fill="#10152c" stroke="#7ce5fa" stroke-width="2"/>${text(x,y+6,fret,'#7ce5fa')}</g>`;
  const front=neck+xs.map((x,i)=>labelString(i,x,328)).join('')+[1,2,3].map(f=>text(48,122+(f-1)*70,f,'#aab9d0',16)).join('')+notes.map(n=>dot(xs.at(-1),n.y,n.fret)).join('');
- const turned=`<g transform="translate(0 300) rotate(-90)">${neck}</g>`+xs.map((x,i)=>labelString(i,324,300-x-3)).join('')+[1,2,3].map(f=>text(111+(f-1)*70,252,f,'#aab9d0',16)).join('')+notes.map(n=>dot(n.y,300-xs.at(-1),n.fret)).join('');
- let tab=xs.map((x,i)=>`<g>${labelString(i,24,300-x-3)}<path data-string="${count-i}" d="M48 ${300-x}H318" stroke="${color(i,count)}" stroke-width="1.8"/></g>`).join('');
+ const turned=`<g transform="translate(0 300) rotate(-90)">${neck}</g>`+xs.map((x,i)=>rowLabel(i,320,300-x)).join('')+[1,2,3].map(f=>text(111+(f-1)*70,252,f,'#aab9d0',16)).join('')+notes.map(n=>dot(n.y,300-xs.at(-1),n.fret)).join('');
+ let tab=xs.map((x,i)=>`<g>${rowLabel(i,20,300-x)}<path data-string="${count-i}" d="M48 ${300-x}H318" stroke="${color(i,count)}" stroke-width="1.8"/></g>`).join('');
  tab+=notes.map((n,i)=>dot(88+i*96,300-xs.at(-1),n.fret)).join('');
  tab+='<path d="M70 252H290m-8-6 8 6-8 6" fill="none" stroke="#aab9d0" stroke-width="2"/>';
  const drawings=[front,turned,tab],boxes=['0 0 300 350','0 0 350 300','0 0 350 300'];
