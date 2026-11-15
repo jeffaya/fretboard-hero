@@ -126,7 +126,7 @@
 }
 @media print {
   .public-page { color-scheme: light; background: #fff; --ui-text: #111; --ui-muted: #333; --page-border: #aaa; --ui-surface: none; font-size: 11pt; }
-  .app-stage,.site-header,.home-footer,.premium-overlay,.page-nav,.skip-link,.actions,.related-pages { display: none; }
+  .app-stage,.site-header,.public-shell>.home-footer,.premium-overlay,.page-nav,.skip-link,.actions,.related-pages { display: none; }
   .page-content { width: 100%; max-width: none; }
   .page-hero.with-diagram { display: block; }
   .public-page a { color: #111; }
