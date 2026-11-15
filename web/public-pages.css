@@ -151,7 +151,7 @@
 .chord-diagram svg { max-width:240px; margin:auto; }
 .chord-diagram figcaption { padding:8px 0; font-size:.95rem; }
 .fret-code { color:var(--ui-text); font-variant-numeric:tabular-nums; }
-.chord-explorer { margin:24px 0; }
+.page-content .chord-explorer { border:0; padding:0; margin:24px 0; }
 .root-picker { border:0; padding:0; margin:0 0 20px; min-width:0; }
 .root-picker legend { font-weight:800; margin-bottom:10px; }
 .root-options { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; }
