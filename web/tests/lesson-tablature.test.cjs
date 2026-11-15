@@ -3,7 +3,12 @@ const routes=require('../core/guide-routes.js');
 test('Every translated lesson has substantive teaching, three references and complete notation guidance',async()=>{
  const {curriculum}=await import('../../scripts/lessons/curriculum.mjs'),{sources}=await import('../../scripts/lessons/sources.mjs');
  assert.deepEqual(Object.keys(curriculum).sort(),[...routes.languages].sort());
+ const {orientationCopy}=await import('../../scripts/lessons/tab-orientation.mjs');
+ assert.deepEqual(Object.keys(orientationCopy).sort(),[...routes.languages].sort());
  for(const locale of routes.languages){const c=curriculum[locale];
+  const orientation=orientationCopy[locale];assert.equal(orientation.steps.length,3);assert.equal(orientation.captions.length,3);
+  for(const value of Object.values(orientation).flat())assert.ok(value.length>0);
+  if(locale!=='en')for(const [key,value]of Object.entries(orientation))assert.notDeepEqual(value,orientationCopy.en[key]);
   assert.deepEqual(Object.keys(c.ui).sort(),Object.keys(curriculum.en.ui).sort());assert.equal(c.coach.length,3);assert.equal(c.tabs.length,5);assert.equal(c.symbols.length,10);
   for(const topic of routes.topics){assert.equal(c.course[topic].length,4);for(const [i,p] of c.course[topic].entries()){assert.ok(p.length>25);if(locale!=='en')assert.notEqual(p,curriculum.en.course[topic][i]);}}
   if(locale!=='en'){c.tabs.forEach((p,i)=>assert.notEqual(p,curriculum.en.tabs[i]));c.coach.forEach((p,i)=>assert.notEqual(p,curriculum.en.coach[i]));c.symbols.forEach((p,i)=>assert.notEqual(p[1],curriculum.en.symbols[i][1]));}

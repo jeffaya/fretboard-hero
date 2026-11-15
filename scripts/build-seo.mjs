@@ -63,7 +63,7 @@ ${topic!=='home'&&!isAbout?related:''}`;
 <nav class="page-nav" aria-label="${escape(text.nav[0])}">${routes.topics.map((t,i)=>`<a href="${routes.route(locale,instrument,t)}"${!isAbout&&t===topic?' aria-current="page"':''}>${escape(text.nav[i])}</a>`).join('')}</nav>`;
  return renderPage({locale,head,body,skipLabel:text.ui.skip,header:{home,branding:brand},navigation:nav,
   styles:documentStyles,
-  scripts:[...documentScripts,'/core/chord-library.js?v=10.53.0','/core/lesson-diagrams.js?v=10.53.0','/guide.js?v=10.54.0'],
+  scripts:[...documentScripts,'/core/chord-library.js?v=10.53.0','/core/lesson-diagrams.js?v=10.55.0','/guide.js?v=10.55.0'],
   footerHTML:renderDocumentFooter({locale,instrument,languages:pageLanguages,ui:text.ui,configId:'guideConfig'})
  });
 }
