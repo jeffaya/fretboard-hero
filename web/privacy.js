@@ -7,12 +7,11 @@
   const label=document.querySelector('#language-label'),main=document.querySelector('main');
   const skip=document.querySelector('.skip-link'),back=document.querySelector('#back-label');
   const homeLinks=[...document.querySelectorAll('[data-policy-home]')];
-  const brand=document.querySelector('.brand'),logo=document.querySelector('.brand svg'),favicon=document.querySelector('link[rel="icon"]');
   const policies=new Map(articles.map(article=>[article.lang,{
     article,title:article.querySelector('h1').textContent,intro:article.querySelector('.policy-intro').textContent
   }]));
   const storageKey='fretboard-language';
-  const selection=window.FretboardInstrumentSelection,products=new Map();
+  const selection=window.FretboardInstrumentSelection;
   let defaultInstrument='guitar',instrument=selection.resolve(defaultInstrument),brandName='Fretboard Hero';
   function updateHomeLinks(locale){
     homeLinks.forEach(link=>{link.href='./?lang='+locale+'&instrument='+instrument});
@@ -24,22 +23,10 @@
     const chosen=selection.resolve(defaultInstrument);instrument=chosen;
     document.documentElement.dataset.instrument=chosen;
     updateHomeLinks(document.documentElement.lang);
-    const entry=selection.catalog[chosen];
-    if(!products.has(chosen)){
-      products.set(chosen,new Promise((resolve,reject)=>{
-        const script=document.createElement('script');script.src=entry.product;
-        script.onload=resolve;script.onerror=()=>reject(new Error('Product branding unavailable'));
-        document.head.appendChild(script);
-      }).catch(error=>{products.delete(chosen);throw error}));
-    }
     try{
-      await products.get(chosen);
+      const product=await window.FretboardDocumentBranding.apply(chosen,'./');
       if(instrument!==chosen)return;
-      const product=window.FRETBOARD_PRODUCTS[entry.productKey];
       brandName=product.branding?.name||product.name;
-      logo.setAttribute('viewBox',product.assets.heroLogoViewport);
-      brand.setAttribute('aria-label',brandName);
-      favicon.href='./assets/instruments/'+entry.productKey+'/favicon.ico';
       updateTitle(document.documentElement.lang);
     }catch{ /* The static policy and its navigation stay usable if branding fails to load. */ }
   }

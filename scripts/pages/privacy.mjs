@@ -16,7 +16,7 @@ export function renderPrivacy() {
 <title>Politique de confidentialité — Fretboard Hero</title>
 <link rel="canonical" href="https://fretboard-hero.com/privacy">
 <link rel="icon" href="./assets/instruments/guitar/favicon.ico">`,
-    scripts:['./core/instrument-selection.js?v=10.49.22','./privacy.js?v=10.52.0'],
+    scripts:['./core/instrument-selection.js?v=10.49.22','./core/document-branding.js?v=10.53.0','./privacy.js?v=10.53.0'],
     header:{home,languages,languageLabel:'Choisir la langue'},
     footer:{home,navigationLabel:'Contact',links:[{href:'mailto:hello@fretboard-hero.com',label:'hello@fretboard-hero.com'}]},
     body:content

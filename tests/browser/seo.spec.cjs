@@ -1,8 +1,8 @@
 const {test,expect,visibleDrawing,ready,installStore}=require('./fixtures.cjs');
 
 for(const [locale,route,description,learn,heading,triads,penta] of [
- ['fr','/fr/guitare/','Explications, schémas et conseils','Pratiquez sur le manche interactif','Les guides pour comprendre le manche.','triades/','pentatonique/'],
- ['en','/en/guitar/','Explanations, diagrams and tips','Practice on the interactive fretboard','Your guide to the guitar fretboard.','triads/','pentatonic-scales/']
+ ['fr','/fr/guitare/','Explications, schémas et conseils','Pratiquez sur le manche interactif','Comprends le manche. Joue ce que tu vois.','triades/','pentatonique/'],
+ ['en','/en/guitar/','Explanations, diagrams and tips','Practice on the interactive fretboard','Understand the neck. Play what you see.','triads/','pentatonic-scales/']
 ])test(`Home Guide opens the topic index and links between articles (${locale})`,async({page})=>{
  await page.goto(`/?instrument=guitar&lang=${locale}`);await ready(page);
  const guide=page.locator('#home .guide-card');await expect(guide).toBeVisible();
@@ -17,13 +17,13 @@ for(const [locale,route,description,learn,heading,triads,penta] of [
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await guide.focus();await page.keyboard.press('Enter');
  await expect(page).toHaveURL(new RegExp(route+'$'));await expect(page.getByRole('heading',{level:1,name:heading})).toBeVisible();
- await expect(page.locator('.related-pages .card')).toHaveCount(4);
- expect(await page.locator('.related-pages').evaluate(node=>!!(node.compareDocumentPosition(document.querySelector('.article-layout'))&Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
+ await expect(page.locator('.related-pages .card')).toHaveCount(5);
+ expect(await page.locator('.related-pages').evaluate(node=>!!(node.compareDocumentPosition(document.querySelector('.lesson-body'))&Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
  await page.locator(`.related-pages a[href="${route+triads}"]`).click();
  await expect(page).toHaveURL(new RegExp(route+triads+'$'));
  await page.locator(`.page-nav a[href="${route+penta}"]`).click();
  await expect(page).toHaveURL(new RegExp(route+penta+'$'));
- await expect(page.locator('.diagram')).toBeVisible();
+ await expect(page.locator('.diagram').first()).toBeVisible();
 });
 
 test('Native Guide points to the public site without requiring a purchase',async({page})=>{
@@ -52,7 +52,7 @@ test.describe('Public guides without JavaScript',()=>{
   await page.goto('/fr/guitare/pentatonique/');
   await page.getByRole('link',{name:'English',exact:true}).click();
   await expect(page).toHaveURL(/\/en\/guitar\/pentatonic-scales\/$/);
-  const question=page.locator('.faq details').first();await question.locator('summary').click();await expect(question.locator('p')).toBeVisible();
+  await expect(page.locator('.lesson-body .content-section')).toHaveCount(3);
  });
  test('Privacy retains every translation and anchor navigation without JavaScript',async({page})=>{
   await page.goto('/privacy');
@@ -123,7 +123,7 @@ test('Unrecognized entry routes fall back to home and never bypass free access',
  await expect(page.locator('#modeControls button[data-mode="penta"]')).toHaveClass(/active/);
 });
 
-test('Guide footer matches Home and both download controls open the same accessible modal',async({page})=>{
+test('Guide retains the shared footer dialog without a promotional hero button',async({page})=>{
  await page.goto('/?lang=fr&instrument=guitar');await ready(page);
  const footerStyle=()=>page.locator('.home-footer button.home-footer-link:not(.language-trigger)').evaluate(node=>{
   const s=getComputedStyle(node);return {font:s.font,color:s.color,padding:s.padding,border:s.border,background:s.backgroundColor};
@@ -134,7 +134,8 @@ test('Guide footer matches Home and both download controls open the same accessi
  await expect(page.locator('.home-footer .language-trigger')).toBeVisible();
  await expect.poll(footerStyle).toEqual(homeStyle);
  const title=await page.title(),canonical=await page.locator('link[rel="canonical"]').getAttribute('href');
- for(const trigger of [page.locator('[data-get-app]'),page.locator('.home-footer button.home-footer-link:not(.language-trigger)')]){
+ await expect(page.locator('[data-get-app],.byline,.page-aside')).toHaveCount(0);
+ for(const trigger of [page.locator('.home-footer button.home-footer-link:not(.language-trigger)')]){
   await trigger.click();await expect(page.locator('.premium-dialog')).toBeVisible();
   await expect(page.locator('.premium-overlay')).toHaveCount(1);await expect(page).toHaveURL(/\/fr\/guitare\/pentatonique\/$/);
   await expect(page.locator('.premium-skills li')).toHaveCount(5);
@@ -145,4 +146,40 @@ test('Guide footer matches Home and both download controls open the same accessi
  await page.locator('.home-footer .language-trigger').click();await page.getByRole('menuitemradio',{name:'English',exact:true}).click();
  await expect(page).toHaveURL(/\/en\/guitar\/pentatonic-scales\/$/);await expect(page.locator('.home-footer .language-trigger')).toContainText('English');
  await expect(page.locator('html')).toHaveAttribute('lang','en');
+});
+
+for(const [locale,label] of [['hi','हिन्दी'],['ja','日本語'],['ko','한국어'],['zh-CN','简体中文'],['es','Español'],['de','Deutsch'],['it','Italiano'],['id','Bahasa Indonesia'],['pt-BR','Português (Brasil)']])test(`Translated lessons and chord selection retain instrument and language: ${locale}`,async({page})=>{
+ await page.goto(`/?instrument=ukulele&lang=${locale}`);await ready(page);
+ await expect(page.locator('.guide-card')).toHaveAttribute('href',`/${locale}/ukulele/`);
+ await page.locator('.guide-card').click();
+ await page.locator(`.page-nav a[href="/${locale}/ukulele/chords/"]`).click();
+ await expect(page.locator('html')).toHaveAttribute('lang',locale);
+ await expect(page.locator('.brand')).toHaveAttribute('aria-label','Ukulele Fretboard Hero');
+ await expect(page.locator('.brand svg')).toHaveAttribute('viewBox','1800 0 900 550');
+ await expect(page.locator('[data-chord-root]')).toHaveCount(12);
+ await page.locator('[data-chord-root="1"]').click();await page.selectOption('#chord-quality','m7');
+ await expect(page.locator('#chord-summary')).toContainText('C#m7');
+ await expect(page.locator('#chord-positions figure')).toHaveCount(2);
+ await expect(page.locator('.home-footer .language-trigger')).toContainText(label);
+ await expect(page.locator('.home-footer a[href*="privacy"]')).toHaveAttribute('href',new RegExp(`lang=${locale}&instrument=ukulele`));
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ await page.locator('.home-footer .language-trigger').click();await page.getByRole('menuitemradio',{name:'Français',exact:true}).click();
+ await expect(page).toHaveURL(/\/fr\/ukulele\/accords\/\?root=1&quality=m7$/);
+ await expect(page.locator('#chord-summary')).toContainText('C#m7');
+});
+
+test('G chord library contains open and barre shapes, with keyboard-accessible controls',async({page})=>{
+ await page.goto('/fr/guitare/accords/');
+ await expect(page.locator('#chord-positions figure')).toHaveCount(4);
+ await expect(page.locator('.fret-code')).toHaveText(['3 · 2 · 0 · 0 · 0 · 3','3 · 2 · 0 · 0 · 3 · 3','3 · 5 · 5 · 4 · 3 · 3','× · 10 · 12 · 12 · 12 · 10']);
+ await page.locator('[data-chord-root="10"]').focus();await page.keyboard.press('Enter');
+ await expect(page.locator('[data-chord-root="10"]')).toHaveAttribute('aria-pressed','true');
+ await expect(page.locator('#chord-summary')).toContainText('Bb');
+ await page.selectOption('#chord-quality','dim');await expect(page.locator('#chord-summary')).toContainText('Bbdim');
+ await page.reload();await expect(page.locator('#chord-quality')).toHaveValue('dim');
+ await page.locator('.instrument-nav a[href*="/basse/"]').click();
+ await expect(page.locator('.brand')).toHaveAttribute('aria-label','Bass Fretboard Hero');
+ await expect(page.locator('#chord-positions .neck-diagram')).toHaveCount(2);
+ await expect(page.locator('#chord-summary')).toContainText('Bbdim');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });

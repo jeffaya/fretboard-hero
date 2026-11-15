@@ -9,11 +9,11 @@ export function renderLink({href,label,attrs}) {
   return `<a href="${escape(href)}"${attributes(attrs)}>${escape(label)}</a>`;
 }
 
-export function renderHeader({home,locale,languages,languageLabel,assetBase}) {
+export function renderHeader({home,locale,languages,languageLabel,assetBase,branding}) {
   const current = languages?.find(language => language.locale === locale);
   return `<header class="site-header">
-<a class="brand" href="${escape(home.href)}" aria-label="Fretboard Hero"${attributes(home.attrs)}>
-<svg viewBox="0 0 900 550" width="152" height="93" aria-hidden="true" focusable="false"><image href="${assetBase}assets/home/product-wordmarks.webp" width="2700" height="550"/></svg>
+<a class="brand" href="${escape(home.href)}" aria-label="${escape(branding?.name||'Guitar Fretboard Hero')}"${attributes(home.attrs)}>
+<svg viewBox="${escape(branding?.viewport||'0 0 900 550')}" width="152" height="93" aria-hidden="true" focusable="false"><image href="${assetBase}assets/home/product-wordmarks.webp" width="2700" height="550"/></svg>
 </a>
 ${languages?`<details class="document-language-menu">
 <summary aria-label="${escape(languageLabel)}">
@@ -65,8 +65,8 @@ export function renderPage({locale,head,body,header,footer,navigation = '',skipL
 <meta name="theme-color" content="#030b17">
 ${head}
 <link rel="stylesheet" href="${assetBase}theme.css?v=10.52.0">
-<link rel="stylesheet" href="${assetBase}locales.css?v=10.52.0">
-<link rel="stylesheet" href="${assetBase}public-pages.css?v=10.52.0">
+<link rel="stylesheet" href="${assetBase}locales.css?v=10.53.0">
+<link rel="stylesheet" href="${assetBase}public-pages.css?v=10.53.0">
 ${styles.map(src => `<link rel="stylesheet" href="${escape(src)}">`).join('\n')}
 ${scripts.map(src => `<script src="${escape(src)}" defer></script>`).join('\n')}
 </head>
