@@ -156,30 +156,49 @@ for(const [locale,label] of [['hi','हिन्दी'],['ja','日本語'],['ko
  await expect(page.locator('.brand')).toHaveAttribute('aria-label','Ukulele Fretboard Hero');
  await expect(page.locator('.brand svg')).toHaveAttribute('viewBox','1800 0 900 550');
  await expect(page.locator('[data-chord-root]')).toHaveCount(12);
- await page.locator('[data-chord-root="1"]').click();await page.selectOption('#chord-quality','m7');
- await expect(page.locator('#chord-summary')).toContainText('C#m7');
- await expect(page.locator('#chord-positions figure')).toHaveCount(2);
+ await page.locator('[data-chord-root="1"]').click();
+ await expect(page.locator('[data-chord-family="m7"] h2')).toContainText('C#m7');
+ await expect(page.locator('[data-chord-family]')).toHaveCount(12);
+ await expect(page.locator('[data-chord-family="m7"] figure')).toHaveCount(2);
  await expect(page.locator('.home-footer .language-trigger')).toContainText(label);
  await expect(page.locator('.home-footer a[href*="privacy"]')).toHaveAttribute('href',new RegExp(`lang=${locale}&instrument=ukulele`));
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await page.locator('.home-footer .language-trigger').click();await page.getByRole('menuitemradio',{name:'Français',exact:true}).click();
- await expect(page).toHaveURL(/\/fr\/ukulele\/accords\/\?root=1&quality=m7$/);
- await expect(page.locator('#chord-summary')).toContainText('C#m7');
+ await expect(page).toHaveURL(/\/fr\/ukulele\/accords\/\?root=1$/);
+ await expect(page.locator('[data-chord-family="m7"] h2')).toContainText('C#m7');
 });
 
-test('G chord library contains open and barre shapes, with keyboard-accessible controls',async({page})=>{
+test('Root selection shows every chord family, preserves links and has no outer border',async({page},testInfo)=>{
+ await page.goto('/en/guitar/chords/?root=9&quality=major');
+ await expect(page).toHaveURL(/\/en\/guitar\/chords\/\?root=9$/);
+ await expect(page.locator('#chord-quality')).toHaveCount(0);
+ await expect(page.locator('[data-chord-family]')).toHaveCount(12);
+ await expect(page.locator('[data-chord-family] h2')).toHaveText([
+  'A · Major','Am · Minor','A7 · Dominant 7th','Am7 · Minor 7th','Amaj7 · Major 7th','A6 · Major 6th',
+  'Am6 · Minor 6th','Asus2 · Suspended 2nd','Asus4 · Suspended 4th','Adim · Diminished','Aaug · Augmented','Aadd9 · Added 9th'
+ ]);
+ for(const selector of ['.chord-explorer','.root-picker']){
+  expect(await page.locator(selector).evaluate(node=>{
+   const style=getComputedStyle(node);return ['Top','Right','Bottom','Left'].every(side=>style['border'+side+'Width']==='0px');
+  })).toBe(true);
+ }
+ await page.evaluate(async()=>{await document.fonts.ready;window.scrollTo(0,document.querySelector('.root-picker').getBoundingClientRect().top+scrollY-24)});
+ await page.screenshot({path:testInfo.outputPath('chords-all-families.png')});
  await page.goto('/fr/guitare/accords/');
- await expect(page.locator('#chord-positions figure')).toHaveCount(4);
- await expect(page.locator('.fret-code')).toHaveText(['3 · 2 · 0 · 0 · 0 · 3','3 · 2 · 0 · 0 · 3 · 3','3 · 5 · 5 · 4 · 3 · 3','× · 10 · 12 · 12 · 12 · 10']);
+ const major=page.locator('[data-chord-family="major"]');
+ await expect(major.locator('figure')).toHaveCount(4);
+ await expect(major.locator('.fret-code')).toHaveText(['3 · 2 · 0 · 0 · 0 · 3','3 · 2 · 0 · 0 · 3 · 3','3 · 5 · 5 · 4 · 3 · 3','× · 10 · 12 · 12 · 12 · 10']);
  await page.locator('[data-chord-root="10"]').focus();await page.keyboard.press('Enter');
  await expect(page.locator('[data-chord-root="10"]')).toHaveAttribute('aria-pressed','true');
  await expect(page.locator('#chord-summary')).toContainText('Bb');
- await page.selectOption('#chord-quality','dim');await expect(page.locator('#chord-summary')).toContainText('Bbdim');
- await page.reload();await expect(page.locator('#chord-quality')).toHaveValue('dim');
+ await expect(page.locator('[data-chord-family="dim"] h2')).toContainText('Bbdim');
+ await page.reload();await expect(page.locator('[data-chord-family="dim"] h2')).toContainText('Bbdim');
  await page.locator('.instrument-nav a[href*="/basse/"]').click();
+ await expect(page).toHaveURL(/\/fr\/basse\/accords\/\?root=10$/);
  await expect(page.locator('.brand')).toHaveAttribute('aria-label','Bass Fretboard Hero');
- await expect(page.locator('#chord-positions .neck-diagram')).toHaveCount(2);
- await expect(page.locator('#chord-summary')).toContainText('Bbdim');
+ await expect(page.locator('[data-chord-family]')).toHaveCount(12);
+ await expect(page.locator('#chord-positions .neck-diagram')).toHaveCount(24);
+ await expect(page.locator('[data-chord-family="dim"] h2')).toContainText('Bbdim');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
@@ -189,6 +208,11 @@ for(const [instrument,frSlug,strings]of [['guitar','guitare',6],['bass','basse',
   await page.goto(route);await page.evaluate(()=>document.fonts.ready);
   await expect(page.locator('html')).toHaveAttribute('lang',locale);
   await expect(page.locator('.tab-diagram')).toHaveCount(2);
+  await expect(page.locator('.orientation-diagram')).toHaveCount(3);
+  for(const diagram of await page.locator('.orientation-diagram').all()){
+   await expect(diagram.locator('path[data-string]')).toHaveCount(strings);
+   await expect(diagram.locator('g[data-fret]')).toHaveCount(3);
+  }
   await expect(page.locator('.tab-diagram').first().locator('.tab-string')).toHaveCount(strings);
   await expect(page.locator('.symbol-table tbody tr')).toHaveCount(10);
   await expect(page.locator('.lesson-sources a')).toHaveCount(3);
@@ -198,6 +222,7 @@ for(const [instrument,frSlug,strings]of [['guitar','guitare',6],['bass','basse',
   await page.locator('.tab-transcript summary').click();await expect(page.locator('.tab-transcript>ol')).toBeVisible();
   if(locale==='fr'||(instrument==='bass'&&locale==='hi')||(instrument==='ukulele'&&locale==='ja')){
    await page.screenshot({path:testInfo.outputPath(`guide-${instrument}-${locale}.png`),fullPage:true});
+   await page.locator('.tab-orientation').screenshot({path:testInfo.outputPath(`orientation-${instrument}-${locale}.png`)});
   }
  }
 });

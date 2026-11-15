@@ -48,7 +48,7 @@ export function renderPage({locale,head,body,header,navigation = '',skipLabel,ma
 ${head}
 <link rel="stylesheet" href="${assetBase}theme.css?v=10.52.0">
 <link rel="stylesheet" href="${assetBase}locales.css?v=10.54.0">
-<link rel="stylesheet" href="${assetBase}public-pages.css?v=10.54.0">
+<link rel="stylesheet" href="${assetBase}public-pages.css?v=10.55.0">
 ${styles.map(src => `<link rel="stylesheet" href="${escape(src)}">`).join('\n')}
 ${scripts.map(src => `<script src="${escape(src)}" defer></script>`).join('\n')}
 </head>

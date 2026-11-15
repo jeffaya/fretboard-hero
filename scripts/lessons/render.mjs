@@ -1,4 +1,5 @@
 import {renderTab} from './tablature.mjs';
+import {renderTabOrientation} from './tab-orientation.mjs';
 import {sources} from './sources.mjs';
 import {createRequire} from 'node:module';
 import {escape as e} from '../pages/components.mjs';
@@ -6,7 +7,7 @@ const require=createRequire(import.meta.url);
 const diagrams=require('../../web/core/lesson-diagrams.js'),chords=require('../../web/core/chord-library.js');
 export function illustration(topic,instrument,text){
  const {ui}=text;
- if(topic==='tabs')return '';
+ if(topic==='tabs')return renderTabOrientation(instrument,text);
  if(topic==='chords')return chordExplorer(instrument,text);
  if(topic==='routine')return diagrams.rhythm(instrument==='bass-4'?{...ui,rhythmTip:text.bass[2]}:ui);
  if(topic==='triads'){
@@ -17,13 +18,12 @@ export function illustration(topic,instrument,text){
  return `<div class="note-map">${[[0,5],[6,12]].map(([from,to])=>diagrams.fretboard({instrument,root:9,from,to,ui,title:text.nav[1]+' · A · '+ui.fret+' '+from+'–'+to})).join('')}</div>`;
 }
 function chordExplorer(instrument,text){
- const {ui}=text,qualityNames=['major','minor','7','m7','maj7','6','m6','sus2','sus4','dim','aug','add9'];
+ const {ui}=text;
  return `<section class="chord-explorer" aria-label="${e(text.nav[4])}">
  <fieldset class="root-picker"><legend>${e(ui.root)}</legend><div class="root-options">${[9,10,11,0,1,2,3,4,5,6,7,8].map(root=>`<button type="button" data-chord-root="${root}" aria-pressed="${root===7}">${e(({1:'C♯ / D♭',3:'D♯ / E♭',6:'F♯ / G♭',8:'G♯ / A♭',10:'A♯ / B♭'})[root]||chords.roots[root])}</button>`).join('')}</div></fieldset>
- <label class="quality-picker" for="chord-quality">${e(ui.quality)}<select id="chord-quality">${qualityNames.map(q=>`<option value="${q}"${q==='major'?' selected':''}>${e(ui[q])}${chords.qualities[q].suffix?' · '+chords.qualities[q].suffix:''}</option>`).join('')}</select></label>
- <p id="chord-summary" class="chord-summary" role="status" aria-live="polite" aria-atomic="true">G · ${e(ui.major)} — ${e(ui.tones)}: G · B · D</p>
+ <p id="chord-summary" class="chord-summary" role="status" aria-live="polite" aria-atomic="true">${e(ui.root)}: G</p>
  <p>${e(instrument==='bass-4'?ui.oneAtATime:ui.fingers)}</p>
- <div id="chord-positions" class="diagram-grid${instrument==='bass-4'?' bass-arpeggios':''}">${diagrams.chordCards({instrument,root:7,quality:'major',ui})}</div>
+ <div id="chord-positions">${diagrams.chordFamilies({instrument,root:7,ui})}</div>
  <noscript><p>${e(ui.noScript)}</p></noscript>
  </section>`;
 }

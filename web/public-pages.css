@@ -151,27 +151,41 @@
 .chord-diagram svg { max-width:240px; margin:auto; }
 .chord-diagram figcaption { padding:8px 0; font-size:.95rem; }
 .fret-code { color:var(--ui-text); font-variant-numeric:tabular-nums; }
-.chord-explorer { border:1px solid var(--page-border); border-radius:var(--ui-radius); padding:20px; margin:24px 0; }
+.page-content .chord-explorer { border:0; padding:0; margin:24px 0; }
 .root-picker { border:0; padding:0; margin:0 0 20px; min-width:0; }
-.root-picker legend,.quality-picker { font-weight:800; margin-bottom:10px; }
+.root-picker legend { font-weight:800; margin-bottom:10px; }
 .root-options { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; }
-.root-options button,.quality-picker select { color:var(--ui-text); background:#10152c; border:1px solid var(--page-border); border-radius:8px; min-height:48px; padding:10px; font:inherit; }
+.root-options button { color:var(--ui-text); background:#10152c; border:1px solid var(--page-border); border-radius:8px; min-height:48px; padding:10px; font:inherit; }
 .root-options button { cursor:pointer; font-size:1rem; }
 .root-options button[aria-pressed="true"] { background:#541553; border-color:#ff64cd; box-shadow:inset 0 -3px #ff64cd; }
 .public-page :is(button,select,.diagram-scroll):focus-visible { outline:2px solid #77e4fa; outline-offset:4px; }
-.quality-picker { display:flex; align-items:center; flex-wrap:wrap; gap:12px; }
-.quality-picker select { max-width:100%; }
 .chord-summary { margin:20px 0!important; color:var(--ui-text)!important; font-size:1.2rem; }
+.chord-family { margin-top:32px; }
+.chord-family h2 { margin-bottom:8px; }
+.chord-family .chord-tones { margin:0 0 16px; }
 .bass-arpeggios { grid-template-columns:1fr; }
 .rhythm-grid { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); text-align:center; }
 .rhythm-grid span { color:var(--ui-muted); }
 .rhythm-grid strong { display:block; color:#77e4fa; font-size:2.2rem; }
 .rhythm-grid div:nth-child(2n+1) { border-left:1px solid var(--page-border); }
 .diagram-key { font-size:1rem; }
+.tab-orientation { margin-block:32px; }
+.orientation-steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.orientation-step { margin:0; min-width:0; padding:18px 12px; border-radius:12px; background:#10152c; display:flex; flex-direction:column; }
+.orientation-step h3 { min-height:3.9em; margin:0; font-size:1.1rem; }
+.orientation-step h3 span { color:#7ce5fa; }
+.orientation-diagram { display:block; width:100%; height:280px; }
+.orientation-step figcaption { margin-top:16px; color:var(--ui-muted); font-size:1rem; line-height:1.5; }
+.orientation-key { font-size:1rem; }
+@media(max-width:800px){
+ .orientation-steps { grid-template-columns:1fr; }
+ .orientation-step { padding:20px; }
+ .orientation-step h3 { min-height:0; }
+ .orientation-diagram { height:auto; max-height:300px; margin-top:16px; }
+}
 @media(max-width:680px){
  .instrument-nav { width:calc(100% - 40px); margin-top:16px; }
  .page-nav a { padding-block:8px; }
- .chord-explorer { padding:14px 10px; }
  .root-options { grid-template-columns:repeat(4,minmax(0,1fr)); }
  .diagram-grid,.diagram-grid.triad-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
  .bass-arpeggios { grid-template-columns:1fr; }
@@ -181,7 +195,7 @@
 }
 @media(max-width:359px){.diagram-grid,.diagram-grid.triad-grid { grid-template-columns:1fr; }}
 @media print {
- .instrument-nav,.root-picker,.quality-picker { display:none; }
+ .instrument-nav,.root-picker { display:none; }
  .diagram { break-inside:avoid; }
  .diagram-scroll { overflow:visible; }
  .neck-diagram svg { min-width:0!important; }

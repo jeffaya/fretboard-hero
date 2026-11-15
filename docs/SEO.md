@@ -2,7 +2,7 @@
 
 The guides are lessons with initial HTML and inline SVG diagrams. They do not
 require JavaScript to read. The interactive chord selector progressively enhances
-the initial G major examples; it does not gate the lessons behind app access.
+the initial G chord families; it does not gate the lessons behind app access.
 
 ## Sources and shared components
 
@@ -33,6 +33,9 @@ the initial G major examples; it does not gate the lessons behind app access.
   common errors, success checks and notation glossary, translated in all locales.
 - `scripts/lessons/tablature.mjs`: original, rhythmically explicit SVG examples
   with a text equivalent, separate bars on mobile and instrument-specific tuning.
+- `scripts/lessons/tab-orientation.mjs`: a three-step neck-to-tab illustration,
+  translated in all 11 languages. The same geometry rotates 90° counterclockwise,
+  preserving string order; the open string and frets 2/3 match the reading exercise.
 - `scripts/lessons/sources.mjs`: three public references per instrument/topic.
   See `GUIDE-RESEARCH.md` for search methodology and source limitations.
 
@@ -55,8 +58,10 @@ preferences cannot change the content/branding of a directly opened lesson.
 Home uses the resolved app language and instrument to choose the guide URL.
 Native apps open the same public guide in the external browser.
 
-Chord selection is bookmarkable with validated `root=0..11` and `quality`
-parameters. Language and instrument changes preserve the selected chord.
+Chord selection is bookmarkable with validated `root=0..11`. All 12 chord
+families are displayed together, with localized names, tones and positions.
+Legacy `quality` parameters are removed without losing the selected root.
+Language and instrument changes preserve the selected root.
 These parameters do not create new canonical pages or bypass paid app features.
 
 ## Fonts and future translations

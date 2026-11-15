@@ -13,7 +13,7 @@ test('Every app language has complete translated courses and UI, with no paragra
  assert.deepEqual([...routes.languages].sort(),Array.from(ctx.window.FretboardI18n.languages,x=>x[0]).sort());
  const {lessonCopy}=await import('../../scripts/lessons/translations.mjs');
  for(const locale of routes.languages){const t=lessonCopy(locale);
-  assert.equal(t.nav.length,7);assert.equal(t.tuning.length,3);assert.equal(t.bass.length,3);assert.equal(Object.keys(t.ui).length,41);
+  assert.equal(t.nav.length,7);assert.equal(t.tuning.length,3);assert.equal(t.bass.length,3);assert.equal(Object.keys(t.ui).length,40);
   for(const topic of routes.topics){assert.equal(t[topic].length,5);for(const [i,p] of t[topic].entries()){assert.ok(p.trim().length>0);if(locale!=='en')assert.notEqual(p,lessonCopy('en')[topic][i],`${locale} ${topic} ${i}`);}}
  }
 });
@@ -28,6 +28,10 @@ test('Every lesson has initial HTML illustrations, correct product branding and 
   const canonical=html.match(/rel="canonical" href="([^"]+)"/)[1];assert.equal(canonical,origin+route);assert.ok(!canonicals.has(canonical));canonicals.add(canonical);
   const expectedViewport={guitar:'0 0 900 550','bass-4':'900 0 900 550',ukulele:'1800 0 900 550'}[instrument];
   assert.ok(html.includes(`viewBox="${expectedViewport}"`));
+  if(topic==='chords'){
+   assert.equal((html.match(/data-chord-family="/g)||[]).length,12,route);
+   assert.doesNotMatch(html,/chord-quality|quality-picker/);
+  }
   const config=JSON.parse(html.match(/id="guideConfig">([\s\S]*?)<\/script>/)[1]);assert.equal(config.instrument,instrument);assert.equal(config.locale,locale);assert.equal(config.languages.length,11);
   for(const other of routes.languages){const target=origin+routes.route(other,instrument,topic);assert.ok(html.includes(`hreflang="${other}" href="${target}"`));const counterpart=generated.get('web'+routes.route(other,instrument,topic)+'index.html');assert.ok(counterpart.includes(`hreflang="${locale}" href="${canonical}"`));}
   const graph=JSON.parse(html.match(/type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);assert.ok(graph['@graph'].some(n=>n.url===canonical&&n.inLanguage===locale));

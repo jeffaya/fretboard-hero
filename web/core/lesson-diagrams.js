@@ -48,9 +48,15 @@
    if(instrument==='bass-4')return [0,5].map((from,i)=>fretboard({instrument,root,intervals:chords.qualities[quality].intervals,from,to:from+4,ui,noteNames:chords.notes(root,quality),title:ui.arpeggio+' '+(i+1)+' · '+chords.roots[root]+chords.qualities[quality].suffix})).join('');
    return chords.voicings(instrument,root,quality).map(voicing=>chord({instrument,root,quality,voicing,ui})).join('');
  }
+ function chordFamilies({instrument,root,ui}){
+   return ['major','minor','7','m7','maj7','6','m6','sus2','sus4','dim','aug','add9'].map(quality=>{
+    const name=chords.roots[root]+chords.qualities[quality].suffix;
+    return `<section class="chord-family" data-chord-family="${quality}" aria-labelledby="chord-${quality}"><h2 id="chord-${quality}">${esc(name+' · '+ui[quality])}</h2><p class="chord-tones">${esc(ui.tones+': '+chords.notes(root,quality).join(' · '))}</p><div class="diagram-grid${instrument==='bass-4'?' bass-arpeggios':''}">${chordCards({instrument,root,quality,ui})}</div></section>`;
+   }).join('');
+ }
  function rhythm(ui){
    const strokes=['↓','—','↓','↑','—','↑','↓','↑'],labels=['1','&','2','&','3','&','4','&'];
    return `<figure class="diagram rhythm-diagram"><div class="rhythm-grid">${strokes.map((s,i)=>`<div><span>${labels[i]}</span><strong aria-label="${esc(s==='↓'?ui.down:s==='↑'?ui.up:ui.rest)}">${s}</strong></div>`).join('')}</div><figcaption>${esc(ui.rhythmTip)}</figcaption></figure>`;
  }
- return Object.freeze({fretboard,chord,chordCards,rhythm});
+ return Object.freeze({fretboard,chord,chordCards,chordFamilies,rhythm});
 });
