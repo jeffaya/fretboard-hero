@@ -1,125 +1,76 @@
-# Public search pages
+# Public lessons and search discovery
 
-The application remains at `/`. Searchable guitar guides are static HTML under
-`/en/guitar/` and `/fr/guitare/`; about pages live at `/en/about/` and `/fr/a-propos/`.
-They work without JavaScript, with localized content, canonical URLs, reciprocal
-`hreflang`, social metadata and JSON-LD. Public guides link to the same application
-using `instrument`, `lang`, `screen` and optional `mode` query parameters. Entry
-routes use existing screen/mode handlers and do not grant access to paid features.
+The guides are lessons with initial HTML and inline SVG diagrams. They do not
+require JavaScript to read. The interactive chord selector progressively enhances
+the initial G major examples; it does not gate the lessons behind app access.
 
-## Updating content
+## Sources and shared components
 
-Edit `scripts/seo/content.mjs`, then run:
+- `scripts/lessons/translations.mjs`: full copy for all 11 app languages. Every
+  language has six topics: overview, notes, pentatonic, triads, chords and routine.
+- `web/core/guide-routes.js`: one route registry for Home and the page generator,
+  covering guitar, four-string bass and high-G ukulele. Existing English/French
+  URLs are retained. Other languages use stable English topic slugs.
+- `scripts/lessons/render.mjs`: lesson structure, instrument-specific instruction,
+  diagrams and the initial chord explorer.
+- `web/core/chord-library.js`: standard tuning, musical spelling and curated
+  movable/open grips for 12 roots and 12 chord qualities. Guitar and ukulele each
+  have at least two shapes per combination. The conventional open C7 omits its
+  fifth. Bass uses chord-tone maps for arpeggios, not guitar chord grips.
+- `web/core/lesson-diagrams.js`: the same SVG renderer at build time and in the
+  interactive selector. String order, open/muted strings, frets and barres come
+  from the voicing data. High-G ukulele is explicitly re-entrant.
+- `scripts/pages/components.mjs` and `web/core/document-branding.js`: common
+  public header and product-branding logic for guides and Privacy. The static
+  guide already has the correct product wordmark and favicon before scripts run.
+- `scripts/seo/content.mjs`: the existing English and French About pages only.
+- `scripts/pages/privacy-content.html`: unchanged legal text in 11 languages.
+
+## Generation and verification
 
 ```sh
 node scripts/build-seo.mjs
 node scripts/build-seo.mjs --check
-node --test web/tests/seo.test.cjs web/tests/open-graph.test.cjs
+node --test web/tests/seo.test.cjs web/tests/chord-library.test.cjs web/tests/guide.test.cjs web/tests/privacy.test.cjs web/tests/home-purchases.test.cjs
 ```
 
-Commit the generated HTML and `web/sitemap.xml`. Deployment still serves `web/`
-directly; it does not require another framework or a new runtime service. CI rejects
-stale generated output. Update `reviewed` after a substantive content review, not
-on every deployment. The sitemap includes only public canonical pages; exercise
-query combinations and API endpoints are excluded. No speculative prices, review
-scores or unavailable App Store links are emitted. The data describes the free
-demo and paid access separately; it makes no ranking or rich-result guarantee.
+The generator produces 198 lesson pages, two existing About pages, Privacy and
+the sitemap. Each lesson has reciprocal `hreflang` links for all 11 languages,
+a unique canonical, localized metadata, structured data and instrument-aware
+exercise/Privacy links. There is no author byline or promotional sidebar. The
+Try action remains in the hero; the only download entry is the common footer.
 
-## Shared public page system
+The page route is authoritative for its language and instrument. Saved app
+preferences cannot change the content/branding of a directly opened lesson.
+Home uses the resolved app language and instrument to choose the guide URL.
+Native apps open the same public guide in the external browser.
 
-Privacy and all editorial pages use the same build-time components in
-`scripts/pages/components.mjs`: document shell, header, language menu, footer,
-content sections, tables, FAQ and related cards. The header uses the existing
-product-wordmark sprite, including Privacy's instrument-aware branding.
+Chord selection is bookmarkable with validated `root=0..11` and `quality`
+parameters. Language and instrument changes preserve the selected chord.
+These parameters do not create new canonical pages or bypass paid app features.
 
-All public pages load the same three stylesheets:
+## Fonts and future translations
 
-- `web/theme.css`: existing application fonts, colors, surfaces, scene and primary
-  action styling. Brand changes belong here, not in individual page templates.
-- `web/locales.css`: existing locale-specific fonts.
-- `web/public-pages.css`: document widths, responsive header/footer, reading layout,
-  content blocks and print rules. It uses the theme's `--ui-*` variables.
-
-There is no separate Privacy or guitar-guide stylesheet. Reading and wide layouts
-are options of the same document shell. Privacy's eleven complete translations
-live in `scripts/pages/privacy-content.html`; `scripts/pages/privacy.mjs` supplies
-metadata and its existing language/instrument enhancement scripts. The generated
-`web/privacy.html` stays directly readable without JavaScript.
-
-To add a guide, add corresponding entries with a stable shared `id` to each language
-in `scripts/seo/content.mjs`, using existing `paragraphs`, `items`, `steps`, `table`
-and `faq` fields. Regenerate once: navigation, related links, canonical/hreflang,
-structured data and sitemap are produced automatically. No page-specific CSS or
-new header/footer is needed. New reusable content types belong in the shared
-components and stylesheet, then become available to every page. For other document
-types, use `renderPage()` with the same header/footer and shared content blocks.
-
-The application home has a full-width coral Guide card with the shared home-card
-styles and a vector open-book/tablature icon. Its description explains the reading
-resources; Learn describes practice on the interactive fretboard. These labels are
-translated into all eleven app languages. The card opens the French guide index
-when the resolved app language is French and the English index otherwise (the
-guides currently have only those two translations). The index lists its four
-topics before the longer text, and each article keeps the shared navigation.
-
-Web navigation stays in the same tab. Native builds open an absolute public URL
-in a separate browser like Privacy, without requiring a purchase or exporting
-access parameters. Guides currently cover guitar. The old duplicate guide links
-in the footer have been removed. The generated pages use the existing guitar share
-artwork and an accessible SVG/table pentatonic example.
-
-## Cloudflare and search consoles after deployment
-
-These account-level tasks cannot be configured just by merging source code:
-
-1. Verify the domain in Google Search Console and Bing Webmaster Tools, if not
-   already verified. Submit `https://fretboard-hero.com/sitemap.xml` in each.
-2. Confirm Cloudflare serves the checked-in `robots.txt`. Its managed robots and
-   AI Crawl Control settings may add rules independently of the Worker. Check
-   bot-management/WAF events for real, verified search crawlers. Allow legitimate
-   Googlebot, Bingbot, OAI-SearchBot, PerplexityBot and Claude-SearchBot traffic to
-   public pages; do not disable protection site-wide or trust a user-agent alone.
-3. Check actual URL Inspection results for one French and one English guide,
-   including rendered text, canonical selection and successful indexing. Merely
-   fetching a URL with a spoofed bot user-agent does not establish bot access.
-4. Inspect deployed directory URLs and sitemap responses. Cloudflare's default
-   `auto-trailing-slash` serves `folder/index.html` at `folder/`; missing pages
-   should retain a genuine 404 instead of returning the app shell.
-5. Record an initial baseline: indexed guide pages, non-brand queries, clicks,
-   visits from identifiable AI referrers, exercise starts and store visits. The
-   PR does not install analytics, submit forms or create external accounts.
-6. Review citations in Bing's AI Performance report and repeat a small, dated set
-   of unbranded questions in search-enabled AI services. Responses are variable;
-   one favorable answer is not a stable ranking. External reviews and teacher
-   feedback remain separate editorial work.
-
-Search crawling and model training are separate controls. The checked-in wildcard
-robots group permits public pages and disallows `/api/`; it does not introduce a
-new training opt-out policy. OAI-SearchBot controls OpenAI search crawling, while
-GPTBot controls training-related crawling. robots.txt is not authorization for
-access to private resources, which remain protected by server-side checks.
-
-## Validation
-
-`web/tests/seo.test.cjs` checks generated output, initial language/content, unique
-canonicals, reciprocal alternate links, local link targets and sitemap scope.
-`tests/browser/seo.spec.cjs` reads all 12 guides and the complete Privacy document
-with JavaScript disabled, checks mobile overflow, shared visual styles, language
-navigation, instrument branding and Privacy printing, then follows real guide CTAs
-into the correct free-tier application screens. It also rejects unrecognized entry
-routes. Run `web/tests/privacy.test.cjs` for all eleven locales and preference,
-history, denied-storage and instrument-selection regressions.
+After changing copy, rebuild the HTML, then run:
 
 ```sh
-cd tests/browser
-npm ci
-npx playwright install chromium
-npm test -- seo.spec.cjs --project=desktop-chromium --project=android-chromium
+python scripts/subset-locale-fonts.py
 ```
 
-Official references:
-- https://developers.openai.com/api/docs/bots
-- https://developers.google.com/search/docs/appearance/ai-features
-- https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics
-- https://developers.google.com/search/docs/specialty/international/localized-versions
-- https://developers.cloudflare.com/workers/static-assets/routing/advanced/html-handling/
+This downloads full public Noto font binaries from fixed URLs and subsets them
+**locally** using the app catalogs, lesson text and Privacy articles. No project
+text or character list is sent to a font service. Commit the WOFF output and bump
+its cache versions. The runtime uses local fonts only.
+
+Add a language to the app and the route registry together, and provide every
+lesson/UI field before generation. Tests compare language coverage with the app
+catalog and reject missing or reused English paragraphs. Musical symbols and
+international note names are intentionally shared.
+
+## Browser coverage
+
+`tests/browser/seo.spec.cjs` covers Home entry, external native links, initial
+HTML without JavaScript, header branding, exercise links, shared footer dialog,
+chord selection, keyboard operation, query restoration and language/instrument
+switching. Run the Chromium/Firefox/WebKit projects as described in TESTING.md.
+A Node run cannot establish the mobile layout or native Safari behavior.
