@@ -1,4 +1,4 @@
-/* Shared homepage and guide footer. */
+/* Shared homepage, guide and Privacy footer. */
 .home-footer {
   grid-column: 1 / -1;
   display: flex;
@@ -40,4 +40,3 @@ body :is(#app,.public-shell) .home-footer-link:focus-visible { outline: 2px soli
 body :is(#app,.public-shell) button.home-footer-link:not(.language-trigger) { text-decoration: underline; }
 
 .home-footer-separator { flex: 0 0 1px; width: 1px; height: 14px; background: #b8c7df40; }
-

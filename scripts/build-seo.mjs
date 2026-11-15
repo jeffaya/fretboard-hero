@@ -1,128 +1,98 @@
 import fs from 'node:fs/promises';
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
+import vm from 'node:vm';
 import {fileURLToPath} from 'node:url';
-import {languages, reviewed} from './seo/content.mjs';
-import {escape, renderPage, renderSection, renderFAQ, renderRelated} from './pages/components.mjs';
+import {createRequire} from 'node:module';
+import {languages as legacy,reviewed as legacyReviewed} from './seo/content.mjs';
+import {copy,lessonCopy} from './lessons/translations.mjs';
+import {lessonBody} from './lessons/render.mjs';
+import {escape,renderPage,renderSection,renderRelated} from './pages/components.mjs';
 import {appRoutes} from '../web/core/routes.js';
 import {renderPrivacy} from './pages/privacy.mjs';
-
-const root = fileURLToPath(new URL('../', import.meta.url));
-const origin = 'https://fretboard-hero.com';
-const store = 'https://play.google.com/store/apps/details?id=com.guitar.fretboardhero';
-const image = `${origin}/assets/instruments/guitar/og.jpg`;
-const author = 'Jean-François Seignemorte';
-const json = value => JSON.stringify(value).replace(/</g, '\\u003c');
-const pagePath = (locale, page) => page.id === 'about' ? languages[locale].about : languages[locale].base + page.slug;
-const counterpart = (locale, id) => pagePath(locale, languages[locale].pages.find(p => p.id === id));
-const appLink = (locale, page) => `/?${new URLSearchParams({instrument:'guitar',lang:locale,...(page.screen !== 'home' ? {screen:page.screen} : {}),...(page.mode ? {mode:page.mode} : {})})}`;
-
-// Keep the public footer and download dialog's menu sourced from the homepage.
-const homeHTML=readFileSync(new URL('../web/index.html',import.meta.url),'utf8');
-const homeFooter=homeHTML.match(/<footer class="home-footer">[\s\S]*?<\/footer>/)[0];
-const homeMenus=[...homeHTML.matchAll(/<a class="hero-btn [^"]*"[^>]*data-go="[^"]+"[\s\S]*?<\/a>/g)].map(match=>match[0].replace(/ href="[^"]*"/g,'')).join('');
-const stores=JSON.parse(readFileSync(new URL('../web/site.config.json',import.meta.url),'utf8')).stores;
-const messages=Object.fromEntries(Object.keys(languages).map(locale=>[locale,JSON.parse(readFileSync(new URL(`../web/locales/${locale}.json`,import.meta.url),'utf8'))]));
-
-function pentatonicDiagram(locale) {
-  const labels = locale === 'fr' ? ['Mi','Si','Sol','Ré','La','Mi'] : ['E','B','G','D','A','E'];
-  // High E at the top, low E at the bottom. Frets are 5–8, not open strings.
-  const rows = [ [[5,'A'],[8,'C']], [[5,'E'],[8,'G']], [[5,'C'],[7,'D']], [[5,'G'],[7,'A']], [[5,'D'],[7,'E']], [[5,'A'],[8,'C']] ];
-  return `<figure class="diagram"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 304" role="img" aria-labelledby="penta-title penta-desc">
-<title id="penta-title">${locale === 'fr' ? 'Pentatonique de La mineur, position 1' : 'A minor pentatonic, position 1'}</title>
-<desc id="penta-desc">${escape(languages[locale].diagram)}</desc>
-<rect x="80" y="36" width="440" height="228" rx="10" fill="#191827"/>
-${[5,6,7,8].map((f,i) => `<text x="${135+i*110}" y="22" text-anchor="middle" fill="#b8bed2" font-size="16">${f}</text>`).join('')}
-${[0,1,2,3,4].map(i => `<path d="M${80+i*110} 36V264" stroke="#6b687c" stroke-width="3"/>`).join('')}
-${rows.map((notes,s) => `<text x="54" y="${61+s*37}" text-anchor="end" fill="#dce1f5" font-size="16">${labels[s]}</text><path d="M80 ${56+s*37}H520" stroke="#b8bed2" stroke-width="${1+s*.45}"/>${notes.map(([f,n]) => `<circle cx="${135+(f-5)*110}" cy="${56+s*37}" r="17" fill="${n==='A'?'#ff64cd':'#e6e9ff'}"/><text x="${135+(f-5)*110}" y="${62+s*37}" text-anchor="middle" fill="#10101c" font-size="17" font-weight="700">${n}</text>`).join('')}`).join('')}
-</svg><figcaption>${escape(languages[locale].diagram)}</figcaption></figure>`;
-}
-
-function render(locale, page) {
-  const text = languages[locale], url = origin + pagePath(locale,page), isAbout = page.id === 'about';
-  const dateLabel = new Intl.DateTimeFormat(locale === 'fr' ? 'fr-FR' : 'en-GB', {day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(`${reviewed}T00:00:00Z`));
-  const isGuide = !['home','about'].includes(page.id);
-  const app = {'@type':'SoftwareApplication','@id':`${origin}/#guitar-app`,name:'Guitar Fretboard Hero',url:origin+'/',applicationCategory:'EducationalApplication',operatingSystem:'Web browser, Android',description:text.pages[0].description,image,downloadUrl:store,featureList:text.pages[0].sections[0].items};
-  const person = {'@type':'Person','@id':`${origin}/#creator`,name:author,url:origin+text.about};
-  const webpage = {'@type':isAbout?'AboutPage':isGuide?'Article':'WebPage','@id':url+'#page',url,name:page.title,headline:page.heading,description:page.description,inLanguage:locale,dateModified:reviewed,author:{'@id':person['@id']},about:{'@id':app['@id']},mainEntityOfPage:url};
-  const breadcrumbs = {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Fretboard Hero',item:origin+'/'},{'@type':'ListItem',position:2,name:text.guides,item:origin+text.base},...(page.id !== 'home' ? [{'@type':'ListItem',position:3,name:page.label,item:url}] : [])]};
-  const graph = {'@context':'https://schema.org','@graph':[app,person,webpage,breadcrumbs]};
-  const nav = text.pages.filter(p=>p.id!=='about').map(p=>`<a href="${pagePath(locale,p)}"${page.id===p.id?' aria-current="page"':''}>${escape(p.label)}</a>`).join('\n');
-  const head = `<title>${escape(page.title)} | Fretboard Hero</title>
-<meta name="description" content="${escape(page.description)}">
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+import {documentStyles,documentScripts,renderDocumentFooter} from './pages/document-shell.mjs';
+const require=createRequire(import.meta.url),routes=require('../web/core/guide-routes.js');
+const root=fileURLToPath(new URL('../',import.meta.url)),origin='https://fretboard-hero.com',reviewed='2026-11-15';
+const json=value=>JSON.stringify(value).replace(/</g,'\\u003c');
+const productContext={window:{}};
+for(const key of ['guitar','bass','ukulele'])vm.runInNewContext(readFileSync(new URL(`../web/products/${key}-fretboard-hero.js`,import.meta.url),'utf8'),productContext);
+const products=productContext.window.FRETBOARD_PRODUCTS;
+const family=instrument=>instrument==='bass-4'?'bass':instrument;
+const exercise=(locale,instrument,topic)=>{
+ const destination={notes:{screen:'fretmap'},penta:{screen:'learn',mode:'penta'},triads:{screen:'learn',mode:'triad'},chords:{screen:'learn',mode:instrument==='bass-4'?'arpeggio':'chord'},routine:{screen:'routine'}}[topic]||{};
+ return '/?'+new URLSearchParams({instrument,lang:locale,...destination});
+};
+function render(locale,instrument,topic,aboutPage){
+ const text=lessonCopy(locale),isAbout=!!aboutPage,index=routes.instruments.indexOf(instrument),name=text.instruments[index];
+ const route=isAbout?legacy[locale].about:routes.route(locale,instrument,topic),url=origin+route;
+ const title=isAbout?aboutPage.title:`${text.nav[routes.topics.indexOf(topic)]} · ${name}`;
+ const heading=isAbout?aboutPage.heading:text[topic][0],intro=isAbout?aboutPage.intro:text[topic][1];
+ const pageLanguages=(isAbout?['en','fr']:routes.languages).map(lang=>({locale:lang,label:copy[lang].label,href:isAbout?legacy[lang].about:routes.route(lang,instrument,topic)}));
+ const product=products[family(instrument)],brand={name:product.branding.name,viewport:product.assets.heroLogoViewport};
+ const appURL=exercise(locale,instrument,topic),home={href:exercise(locale,instrument,'home'),label:text.ui.back};
+ const image=origin+`/assets/instruments/${family(instrument)}/og.jpg`;
+ const graph={'@context':'https://schema.org','@graph':[
+  {'@type':isAbout?'AboutPage':topic==='home'?'WebPage':'LearningResource','@id':url+'#page',url,name:title,headline:heading,description:intro,inLanguage:locale,dateModified:isAbout?legacyReviewed:reviewed,image,learningResourceType:'lesson',isAccessibleForFree:true},
+  {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Fretboard Hero',item:origin+'/'},{'@type':'ListItem',position:2,name:text.nav[0]+' · '+name,item:origin+routes.route(locale,instrument)},...(!isAbout&&topic!=='home'?[{'@type':'ListItem',position:3,name:title,item:url}]:[])]}
+ ]};
+ const head=`<title>${escape(title)} | Fretboard Hero</title>
+<meta name="description" content="${escape(intro)}">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="${url}">
-${Object.keys(languages).map(lang=>`<link rel="alternate" hreflang="${lang}" href="${origin+counterpart(lang,page.id)}">`).join('\n')}
-<link rel="alternate" hreflang="x-default" href="${origin+counterpart('en',page.id)}">
-<meta property="og:type" content="${isGuide?'article':'website'}">
-<meta property="og:site_name" content="Fretboard Hero">
-<meta property="og:title" content="${escape(page.title)}">
-<meta property="og:description" content="${escape(page.description)}">
+${pageLanguages.map(lang=>`<link rel="alternate" hreflang="${lang.locale}" href="${origin+lang.href}">`).join('\n')}
+<link rel="alternate" hreflang="x-default" href="${origin+pageLanguages.find(l=>l.locale==='en').href}">
+<meta property="og:type" content="${topic==='home'?'website':'article'}">
+<meta property="og:site_name" content="${escape(brand.name)}">
+<meta property="og:title" content="${escape(title)}">
+<meta property="og:description" content="${escape(intro)}">
 <meta property="og:url" content="${url}">
-<meta property="og:locale" content="${text.locale}">
-<meta property="og:locale:alternate" content="${languages[locale==='fr'?'en':'fr'].locale}">
+<meta property="og:locale" content="${({en:'en_US',fr:'fr_FR',es:'es_ES',de:'de_DE',it:'it_IT','pt-BR':'pt_BR',hi:'hi_IN',id:'id_ID',ja:'ja_JP',ko:'ko_KR','zh-CN':'zh_CN'})[locale]}">
 <meta property="og:image" content="${image}">
-<meta property="og:image:width" content="1024">
-<meta property="og:image:height" content="500">
-<meta property="og:image:alt" content="Guitar Fretboard Hero">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${escape(page.title)}">
-<meta name="twitter:description" content="${escape(page.description)}">
-<meta name="twitter:image" content="${image}">
-<link rel="icon" href="/assets/instruments/guitar/favicon.ico">
+<meta property="og:image:width" content="1024"><meta property="og:image:height" content="500">
+<meta property="og:image:alt" content="${escape(brand.name)}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(title)}">
+<meta name="twitter:description" content="${escape(intro)}"><meta name="twitter:image" content="${image}">
+<link rel="icon" href="/assets/instruments/${family(instrument)}/favicon.ico">
 <script type="application/ld+json">${json(graph)}</script>`;
-  const related = renderRelated(page.id==='home'?text.chooseGuide:text.related,text.pages.filter(p=>p.id!==page.id&&p.id!=='about'&&p.id!=='home').map(p=>({...p,href:pagePath(locale,p)})));
-  const body = `<section class="page-hero${page.diagram?' with-diagram':''}"><div><p class="eyebrow">FRETBOARD HERO / ${escape(page.label.toUpperCase())}</p><h1>${escape(page.heading)}</h1><p class="page-intro">${escape(page.intro)}</p><div class="actions"><a class="button ui-primary" data-exercise-link href="${escape(appLink(locale,page))}">${escape(page.cta||text.try)} <span aria-hidden="true">↗</span></a><button type="button" class="button ui-primary" data-get-app aria-haspopup="dialog" disabled>${escape(messages[locale]['Get the app'])}</button></div><p class="byline">${text.author} <a href="${text.about}">${author}</a> · ${text.updated} <time datetime="${reviewed}">${dateLabel}</time></p></div>${page.diagram?pentatonicDiagram(locale):''}</section>
-${page.id==='home'?related:''}
-<div class="article-layout"><article>${page.sections.map(renderSection).join('\n')}
-${renderFAQ(text.questions,page.faq)}
-</article><aside class="page-aside"><p class="eyebrow">FRETBOARD HERO</p><h2>${text.offerTitle}</h2><p>${escape(text.offer)}</p><a class="button ui-primary" href="${escape(appLink(locale,page))}">${text.open}</a><p class="platform">${escape(text.platform)}</p></aside></div>
-${page.id==='home'?'':related}
-`;
-  const home = {href:appLink(locale,text.pages[0]),label:locale==='fr'?'Retour à Fretboard Hero':'Back to Fretboard Hero'};
-  return renderPage({
-    locale,head,body,skipLabel:text.skip,
-    header:{home},
-    navigation:`<nav class="page-nav" aria-label="${text.guides}">${nav}</nav>`,
-    styles:['/footer.css?v=10.52.0','/premium.css?v=10.52.0'],
-    scripts:['/core/i18n.js?v=10.52.0','/core/modal.js?v=10.52.0','/core/access.js?v=10.52.0','/core/footer.js?v=10.52.0','/guide.js?v=10.52.0'],
-    footerHTML:homeFooter
-      .replace('<div class="language-picker"></div>',`<div class="language-picker">${Object.entries(languages).map(([lang,t])=>`<a href="${counterpart(lang,page.id)}" lang="${lang}" hreflang="${lang}">${t.label}</a>`).join(' · ')}</div>`)
-      .replace('https://fretboard-hero.com/privacy',`https://fretboard-hero.com/privacy?lang=${locale}&amp;instrument=guitar`)
-      .replace('Privacy policy',escape(messages[locale]['Privacy policy'])).replace('Contact us',escape(messages[locale]['Contact us']))+
-      `<template id="guideAppMenu">${homeMenus}</template><script type="application/json" id="guideConfig">${json({locale,stores,languages:Object.entries(languages).map(([lang,t])=>({locale:lang,label:t.label,href:counterpart(lang,page.id)}))})}</script>`
-  });
+ const related=renderRelated(text.ui.choose,routes.topics.filter(t=>t!=='home'&&t!==topic).map(t=>({label:text.nav[routes.topics.indexOf(t)],description:text[t][1],href:routes.route(locale,instrument,t)})));
+ const body=`<section class="page-hero"><p class="eyebrow">${escape(name)} / ${escape(isAbout?aboutPage.label:text.nav[routes.topics.indexOf(topic)])}</p><h1>${escape(heading)}</h1><p class="page-intro">${escape(intro)}</p><div class="actions"><a class="button ui-primary" data-exercise-link href="${escape(appURL)}">${escape(text.ui.try)} <span aria-hidden="true">↗</span></a></div></section>
+${topic==='home'&&!isAbout?related:''}
+${isAbout?`<article class="lesson-body">${aboutPage.sections.map(renderSection).join('\n')}</article>`:lessonBody(topic,instrument,text)}
+${topic!=='home'&&!isAbout?related:''}`;
+ const nav=`<nav class="instrument-nav" aria-label="${escape(text.ui.instrument)}">${routes.instruments.map((inst,i)=>`<a data-guide-route href="${routes.route(locale,inst,topic)}"${inst===instrument?' aria-current="true"':''}>${escape(text.instruments[i])}</a>`).join('')}</nav>
+<nav class="page-nav" aria-label="${escape(text.nav[0])}">${routes.topics.map((t,i)=>`<a href="${routes.route(locale,instrument,t)}"${!isAbout&&t===topic?' aria-current="page"':''}>${escape(text.nav[i])}</a>`).join('')}</nav>`;
+ return renderPage({locale,head,body,skipLabel:text.ui.skip,header:{home,branding:brand},navigation:nav,
+  styles:documentStyles,
+  scripts:[...documentScripts,'/core/chord-library.js?v=10.53.0','/core/lesson-diagrams.js?v=10.53.0','/guide.js?v=10.54.0'],
+  footerHTML:renderDocumentFooter({locale,instrument,languages:pageLanguages,ui:text.ui,configId:'guideConfig'})
+ });
 }
-
-export function generatedFiles() {
-  const files = new Map([['web/privacy.html',renderPrivacy()]]);
-  const entries = [{url:origin+'/'},{url:origin+'/?instrument=bass-4'},{url:origin+'/?instrument=ukulele'},{url:origin+'/privacy'}];
-  for (const route of Object.values(appRoutes)) if (route.path !== '/') entries.push({url:origin+route.path});
-  for (const [locale,text] of Object.entries(languages)) for (const page of text.pages) {
-    files.set(`web${pagePath(locale,page)}index.html`,render(locale,page));
-    entries.push({url:origin+pagePath(locale,page),id:page.id});
-  }
-  files.set('web/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?>
+export function generatedFiles(){
+ const files=new Map([['web/privacy.html',renderPrivacy()]]);
+ const entries=[{url:origin+'/'},{url:origin+'/?instrument=bass-4'},{url:origin+'/?instrument=ukulele'},{url:origin+'/privacy'}];
+ for(const route of Object.values(appRoutes))if(route.path!=='/')entries.push({url:origin+route.path});
+ for(const locale of routes.languages)for(const instrument of routes.instruments)for(const topic of routes.topics){
+  const route=routes.route(locale,instrument,topic);
+  files.set('web'+route+'index.html',render(locale,instrument,topic));
+  entries.push({url:origin+route,alternates:routes.languages.map(lang=>({lang,href:origin+routes.route(lang,instrument,topic)}))});
+ }
+ for(const locale of ['en','fr']){
+  files.set('web'+legacy[locale].about+'index.html',render(locale,'guitar','home',legacy[locale].pages.find(p=>p.id==='about')));
+  entries.push({url:origin+legacy[locale].about,alternates:['en','fr'].map(lang=>({lang,href:origin+legacy[lang].about}))});
+ }
+ files.set('web/sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${entries.map(({url,id})=>`  <url><loc>${escape(url)}</loc>${id?`<lastmod>${reviewed}</lastmod>${[...Object.keys(languages),'x-default'].map(lang=>`<xhtml:link rel="alternate" hreflang="${lang}" href="${origin+counterpart(lang==='x-default'?'en':lang,id)}"/>`).join('')}`:''}</url>`).join('\n')}
-</urlset>
-`);
-  return files;
+${entries.map(({url,alternates})=>`  <url><loc>${escape(url)}</loc>${alternates?`<lastmod>${reviewed}</lastmod>${[...alternates,{...alternates.find(a=>a.lang==='en'),lang:'x-default'}].map(a=>`<xhtml:link rel="alternate" hreflang="${a.lang}" href="${a.href}"/>`).join('')}`:''}</url>`).join('\n')}
+</urlset>\n`);
+ return files;
 }
-
-async function main() {
-  const check = process.argv.includes('--check');
-  const stale = [];
-  for (const [relative,content] of generatedFiles()) {
-    const filename = path.join(root,relative);
-    if (check) {
-      if (await fs.readFile(filename,'utf8').catch(()=>null) !== content) stale.push(relative);
-    } else {
-      await fs.mkdir(path.dirname(filename),{recursive:true});
-      await fs.writeFile(filename,content);
-    }
-  }
-  if (stale.length) throw new Error(`Generated SEO files are stale. Run node scripts/build-seo.mjs:\n${stale.join('\n')}`);
-  console.log(`${check?'Checked':'Generated'} ${generatedFiles().size} SEO files.`);
+async function main(){
+ const check=process.argv.includes('--check'),files=generatedFiles(),stale=[];
+ for(const [relative,content] of files){const filename=path.join(root,relative);
+  if(check){if(await fs.readFile(filename,'utf8').catch(()=>null)!==content)stale.push(relative);}
+  else{await fs.mkdir(path.dirname(filename),{recursive:true});await fs.writeFile(filename,content);}
+ }
+ if(stale.length)throw new Error('Generated files are stale. Run node scripts/build-seo.mjs:\n'+stale.join('\n'));
+ console.log(`${check?'Checked':'Generated'} ${files.size} public files.`);
 }
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main();
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))await main();

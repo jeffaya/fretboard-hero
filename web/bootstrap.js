@@ -41,7 +41,8 @@
       window.ProductShell.apply(product,instrument);
       await load('./core/navigation.js?v=10.50.2','module');
       await load('./core/footer.js?v=10.52.0');
-      await load('./home.js?v=10.52.0');
+      await load('./core/guide-routes.js?v=10.53.0');
+      await load('./home.js?v=10.53.0');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
       await load('./app.js?v=10.50.0');
       FretboardBilling.attach();

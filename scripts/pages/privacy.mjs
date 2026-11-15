@@ -1,5 +1,7 @@
 import {readFileSync} from 'node:fs';
 import {renderPage} from './components.mjs';
+import {documentStyles,documentScripts,renderDocumentFooter} from './document-shell.mjs';
+import {lessonCopy} from '../lessons/translations.mjs';
 
 // Legal copy is kept intact, in eleven languages, separately from the shared shell.
 const content = readFileSync(new URL('./privacy-content.html',import.meta.url),'utf8');
@@ -16,9 +18,10 @@ export function renderPrivacy() {
 <title>Politique de confidentialité — Fretboard Hero</title>
 <link rel="canonical" href="https://fretboard-hero.com/privacy">
 <link rel="icon" href="./assets/instruments/guitar/favicon.ico">`,
-    scripts:['./core/instrument-selection.js?v=10.49.22','./privacy.js?v=10.52.0'],
-    header:{home,languages,languageLabel:'Choisir la langue'},
-    footer:{home,navigationLabel:'Contact',links:[{href:'mailto:hello@fretboard-hero.com',label:'hello@fretboard-hero.com'}]},
+    styles:documentStyles,
+    scripts:[...documentScripts,'./privacy.js?v=10.54.0'],
+    header:{home},
+    footerHTML:renderDocumentFooter({locale:'fr',instrument:'guitar',languages,ui:lessonCopy('fr').ui,configId:'policyConfig',localizedUI:Object.fromEntries(languages.map(({locale})=>{const {privacy,contact}=lessonCopy(locale).ui;return [locale,{privacy,contact}]}))}),
     body:content
   });
 }
