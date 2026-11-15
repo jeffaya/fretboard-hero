@@ -7,7 +7,7 @@ the initial G major examples; it does not gate the lessons behind app access.
 ## Sources and shared components
 
 - `scripts/lessons/translations.mjs`: full copy for all 11 app languages. Every
-  language has six topics: overview, notes, pentatonic, triads, chords and routine.
+  language has seven topics: overview, notes, pentatonic, triads, chords, routine and reading tablature.
 - `web/core/guide-routes.js`: one route registry for Home and the page generator,
   covering guitar, four-string bass and high-G ukulele. Existing English/French
   URLs are retained. Other languages use stable English topic slugs.
@@ -26,15 +26,25 @@ the initial G major examples; it does not gate the lessons behind app access.
 - `scripts/seo/content.mjs`: the existing English and French About pages only.
 - `scripts/pages/privacy-content.html`: unchanged legal text in 11 languages.
 
+- `scripts/pages/document-shell.mjs` and `web/core/document-shell.js`: one shared
+  footer, language picker and app dialog for guides and Privacy. Language is never
+  in the header; no-JavaScript footer links still work.
+- `scripts/lessons/curriculum.mjs`: expanded explanations, worked exercises,
+  common errors, success checks and notation glossary, translated in all locales.
+- `scripts/lessons/tablature.mjs`: original, rhythmically explicit SVG examples
+  with a text equivalent, separate bars on mobile and instrument-specific tuning.
+- `scripts/lessons/sources.mjs`: three public references per instrument/topic.
+  See `GUIDE-RESEARCH.md` for search methodology and source limitations.
+
 ## Generation and verification
 
 ```sh
 node scripts/build-seo.mjs
 node scripts/build-seo.mjs --check
-node --test web/tests/seo.test.cjs web/tests/chord-library.test.cjs web/tests/guide.test.cjs web/tests/privacy.test.cjs web/tests/home-purchases.test.cjs
+node --test web/tests/lesson-tablature.test.cjs web/tests/seo.test.cjs web/tests/chord-library.test.cjs web/tests/guide.test.cjs web/tests/privacy.test.cjs web/tests/home-purchases.test.cjs
 ```
 
-The generator produces 198 lesson pages, two existing About pages, Privacy and
+The generator produces 231 lesson pages, two existing About pages, Privacy and
 the sitemap. Each lesson has reciprocal `hreflang` links for all 11 languages,
 a unique canonical, localized metadata, structured data and instrument-aware
 exercise/Privacy links. There is no author byline or promotional sidebar. The

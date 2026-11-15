@@ -17,7 +17,7 @@ for(const [locale,route,description,learn,heading,triads,penta] of [
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await guide.focus();await page.keyboard.press('Enter');
  await expect(page).toHaveURL(new RegExp(route+'$'));await expect(page.getByRole('heading',{level:1,name:heading})).toBeVisible();
- await expect(page.locator('.related-pages .card')).toHaveCount(5);
+ await expect(page.locator('.related-pages .card')).toHaveCount(6);
  expect(await page.locator('.related-pages').evaluate(node=>!!(node.compareDocumentPosition(document.querySelector('.lesson-body'))&Node.DOCUMENT_POSITION_FOLLOWING))).toBe(true);
  await page.locator(`.related-pages a[href="${route+triads}"]`).click();
  await expect(page).toHaveURL(new RegExp(route+triads+'$'));
@@ -52,14 +52,13 @@ test.describe('Public guides without JavaScript',()=>{
   await page.goto('/fr/guitare/pentatonique/');
   await page.getByRole('link',{name:'English',exact:true}).click();
   await expect(page).toHaveURL(/\/en\/guitar\/pentatonic-scales\/$/);
-  await expect(page.locator('.lesson-body .content-section')).toHaveCount(3);
+  await expect(page.locator('.lesson-body .content-section')).toHaveCount(7);
  });
  test('Privacy retains every translation and anchor navigation without JavaScript',async({page})=>{
   await page.goto('/privacy');
   await expect(page.locator('article[lang]')).toHaveCount(11);
   for(const article of await page.locator('article[lang]').all())await expect(article).toBeVisible();
-  await page.locator('.document-language-menu summary').click();
-  await page.getByRole('link',{name:'English',exact:true}).click();
+  await page.locator('.home-footer').getByRole('link',{name:'English',exact:true}).click();
   await expect(page).toHaveURL(/\/privacy#en$/);
   await expect(page.locator('#en-title')).toBeInViewport();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBe(true);
@@ -81,15 +80,15 @@ test('Privacy and guides use the same responsive shell, logo and theme',async({p
  }
  await expect(page.locator('.brand')).toHaveAttribute('aria-label','Ukulele Fretboard Hero');
  await expect(page.locator('article[lang]:visible')).toHaveCount(1);
- await page.locator('.document-language-menu summary').click();
- await page.getByRole('link',{name:'English',exact:true}).click();
+ await page.locator('.home-footer .language-trigger').click();
+ await page.getByRole('menuitemradio',{name:'English',exact:true}).click();
  await expect(page.locator('html')).toHaveAttribute('lang','en');
  await expect(page.locator('#en-title')).toBeVisible();
- await expect(page.locator('.site-footer .back-link')).toHaveAttribute('href','./?lang=en&instrument=ukulele');
- await page.locator('.document-language-menu summary').click();await page.keyboard.press('Escape');
- await expect(page.locator('.document-language-menu')).not.toHaveAttribute('open','');
+ await expect(page.locator('.site-header .brand')).toHaveAttribute('href','./?lang=en&instrument=ukulele');
+ await page.locator('.home-footer .language-trigger').click();await page.keyboard.press('Escape');
+ await expect(page.locator('.home-footer .language-trigger')).toHaveAttribute('aria-expanded','false');
  await page.emulateMedia({media:'print'});
- await expect(page.locator('.site-header')).toBeHidden();await expect(page.locator('.site-footer')).toBeHidden();
+ await expect(page.locator('.site-header')).toBeHidden();await expect(page.locator('.home-footer')).toBeHidden();
  await expect(page.locator('#en-title')).toBeVisible();await expect(page.locator('article[lang]:visible')).toHaveCount(1);
 });
 
@@ -182,4 +181,45 @@ test('G chord library contains open and barre shapes, with keyboard-accessible c
  await expect(page.locator('#chord-positions .neck-diagram')).toHaveCount(2);
  await expect(page.locator('#chord-summary')).toContainText('Bbdim');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
+for(const [instrument,frSlug,strings]of [['guitar','guitare',6],['bass','basse',4],['ukulele','ukulele',4]])test(`Tablature lessons are readable in all 11 languages: ${instrument}`,async({page},testInfo)=>{
+ for(const locale of ['en','fr','es','de','it','pt-BR','hi','id','ja','ko','zh-CN']){
+  const route=locale==='fr'?`/fr/${frSlug}/lire-les-tablatures/`:`/${locale}/${instrument}/reading-tablature/`;
+  await page.goto(route);await page.evaluate(()=>document.fonts.ready);
+  await expect(page.locator('html')).toHaveAttribute('lang',locale);
+  await expect(page.locator('.tab-diagram')).toHaveCount(2);
+  await expect(page.locator('.tab-diagram').first().locator('.tab-string')).toHaveCount(strings);
+  await expect(page.locator('.symbol-table tbody tr')).toHaveCount(10);
+  await expect(page.locator('.lesson-sources a')).toHaveCount(3);
+  await expect(page.locator('.home-footer .language-trigger')).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+  const svg=await page.locator('.tab-diagram').first().boundingBox();expect(svg.width).toBeGreaterThan(240);
+  await page.locator('.tab-transcript summary').click();await expect(page.locator('.tab-transcript>ol')).toBeVisible();
+  if(locale==='fr'||(instrument==='bass'&&locale==='hi')||(instrument==='ukulele'&&locale==='ja')){
+   await page.screenshot({path:testInfo.outputPath(`guide-${instrument}-${locale}.png`),fullPage:true});
+  }
+ }
+});
+
+test('Privacy shares guide footer language and download controls',async({page},testInfo)=>{
+ await page.goto('/privacy?lang=hi&instrument=bass-4');
+ await expect(page.locator('.site-header .language-picker,.site-header details')).toHaveCount(0);
+ await expect(page.locator('.home-footer .language-trigger')).toContainText('हिन्दी');
+ await expect(page.locator('.home-footer a[href*="privacy"]')).toHaveAttribute('href',/lang=hi&instrument=bass-4/);
+ await expect(page.locator('.home-footer a[href^="mailto:"]')).not.toHaveText('Nous contacter');
+ await page.locator('.home-footer button.home-footer-link:not(.language-trigger)').click();
+ await expect(page.locator('.premium-dialog')).toBeVisible();
+ await expect(page.locator('.premium-stores a')).toHaveAttribute('href',/id=com.bass.fretboardhero/);
+ await page.locator('.premium-dialog .ui-modal-close').click();
+ await page.locator('.home-footer .language-trigger').click();
+ await page.getByRole('menuitemradio',{name:'日本語',exact:true}).click();
+ await expect(page).toHaveURL(/privacy\?lang=ja&instrument=bass-4$/);
+ await expect(page.locator('article[lang]:visible')).toHaveCount(1);
+ await expect(page.locator('article[lang="ja"]')).toBeVisible();
+ await expect(page.locator('.home-footer .language-trigger')).toContainText('日本語');
+ await expect(page.locator('.home-footer a[href*="privacy"]')).toHaveAttribute('href',/lang=ja&instrument=bass-4/);
+ await expect(page.locator('.brand')).toHaveAttribute('aria-label','Bass Fretboard Hero');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ await page.locator('.home-footer').screenshot({path:testInfo.outputPath('privacy-footer-ja.png')});
 });

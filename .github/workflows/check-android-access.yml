@@ -130,11 +130,12 @@ jobs:
       - run: npx playwright install --with-deps ${{ matrix.engine }}
       - run: npm test -- --project=${{ matrix.project }}
       - uses: actions/upload-artifact@v7
-        if: failure()
+        if: always()
         with:
-          name: browser-failure-${{ matrix.project }}
+          name: browser-report-${{ matrix.project }}
           path: |
             tests/browser/playwright-report/
             tests/browser/test-results/
           retention-days: 14
+
 

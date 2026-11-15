@@ -10,13 +10,10 @@ import {lessonBody} from './lessons/render.mjs';
 import {escape,renderPage,renderSection,renderRelated} from './pages/components.mjs';
 import {appRoutes} from '../web/core/routes.js';
 import {renderPrivacy} from './pages/privacy.mjs';
+import {documentStyles,documentScripts,renderDocumentFooter} from './pages/document-shell.mjs';
 const require=createRequire(import.meta.url),routes=require('../web/core/guide-routes.js');
 const root=fileURLToPath(new URL('../',import.meta.url)),origin='https://fretboard-hero.com',reviewed='2026-11-15';
 const json=value=>JSON.stringify(value).replace(/</g,'\\u003c');
-const homeHTML=readFileSync(new URL('../web/index.html',import.meta.url),'utf8');
-const homeFooter=homeHTML.match(/<footer class="home-footer">[\s\S]*?<\/footer>/)[0];
-const homeMenus=[...homeHTML.matchAll(/<a class="hero-btn [^"]*"[^>]*data-go="[^"]+"[\s\S]*?<\/a>/g)].map(match=>match[0].replace(/ href="[^"]*"/g,'')).join('');
-const stores=JSON.parse(readFileSync(new URL('../web/site.config.json',import.meta.url),'utf8')).stores;
 const productContext={window:{}};
 for(const key of ['guitar','bass','ukulele'])vm.runInNewContext(readFileSync(new URL(`../web/products/${key}-fretboard-hero.js`,import.meta.url),'utf8'),productContext);
 const products=productContext.window.FRETBOARD_PRODUCTS;
@@ -65,12 +62,9 @@ ${topic!=='home'&&!isAbout?related:''}`;
  const nav=`<nav class="instrument-nav" aria-label="${escape(text.ui.instrument)}">${routes.instruments.map((inst,i)=>`<a data-guide-route href="${routes.route(locale,inst,topic)}"${inst===instrument?' aria-current="true"':''}>${escape(text.instruments[i])}</a>`).join('')}</nav>
 <nav class="page-nav" aria-label="${escape(text.nav[0])}">${routes.topics.map((t,i)=>`<a href="${routes.route(locale,instrument,t)}"${!isAbout&&t===topic?' aria-current="page"':''}>${escape(text.nav[i])}</a>`).join('')}</nav>`;
  return renderPage({locale,head,body,skipLabel:text.ui.skip,header:{home,branding:brand},navigation:nav,
-  styles:['/footer.css?v=10.52.0','/premium.css?v=10.52.0'],
-  scripts:['/core/instrument-selection.js?v=10.49.22','/core/document-branding.js?v=10.53.0','/core/i18n.js?v=10.52.0','/core/modal.js?v=10.52.0','/core/access.js?v=10.52.0','/core/footer.js?v=10.52.0','/core/chord-library.js?v=10.53.0','/core/lesson-diagrams.js?v=10.53.0','/guide.js?v=10.53.0'],
-  footerHTML:homeFooter.replace('<div class="language-picker"></div>',`<div class="language-picker">${pageLanguages.map(l=>`<a data-guide-route href="${l.href}" lang="${l.locale}" hreflang="${l.locale}"${l.locale===locale?' aria-current="page"':''}>${l.label}</a>`).join(' · ')}</div>`)
-   .replace('https://fretboard-hero.com/privacy',`https://fretboard-hero.com/privacy?lang=${locale}&amp;instrument=${instrument}`)
-   .replace('Privacy policy',escape(text.ui.privacy)).replace('Contact us',escape(text.ui.contact))+
-   `<template id="guideAppMenu">${homeMenus}</template><script type="application/json" id="guideConfig">${json({locale,instrument,stores,languages:pageLanguages,ui:text.ui})}</script>`
+  styles:documentStyles,
+  scripts:[...documentScripts,'/core/chord-library.js?v=10.53.0','/core/lesson-diagrams.js?v=10.53.0','/guide.js?v=10.54.0'],
+  footerHTML:renderDocumentFooter({locale,instrument,languages:pageLanguages,ui:text.ui,configId:'guideConfig'})
  });
 }
 export function generatedFiles(){

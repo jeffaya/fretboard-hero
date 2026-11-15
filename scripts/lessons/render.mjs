@@ -1,9 +1,12 @@
+import {renderTab} from './tablature.mjs';
+import {sources} from './sources.mjs';
 import {createRequire} from 'node:module';
 import {escape as e} from '../pages/components.mjs';
 const require=createRequire(import.meta.url);
 const diagrams=require('../../web/core/lesson-diagrams.js'),chords=require('../../web/core/chord-library.js');
 export function illustration(topic,instrument,text){
  const {ui}=text;
+ if(topic==='tabs')return '';
  if(topic==='chords')return chordExplorer(instrument,text);
  if(topic==='routine')return diagrams.rhythm(instrument==='bass-4'?{...ui,rhythmTip:text.bass[2]}:ui);
  if(topic==='triads'){
@@ -25,7 +28,7 @@ function chordExplorer(instrument,text){
  </section>`;
 }
 export function lessonBody(topic,instrument,text){
- const lesson=text[topic],ui=text.ui,index=['guitar','bass-4','ukulele'].indexOf(instrument);
+ const lesson=text[topic],ui=text.ui,more=text.course[topic],pedagogy=text.pedagogy,index=['guitar','bass-4','ukulele'].indexOf(instrument);
  let explanation=lesson[2],exercise=lesson[3],tip=lesson[4];
  if(topic==='chords'&&instrument==='bass-4'){explanation+=' '+text.bass[0];exercise=text.bass[1];tip=text.bass[2];}
  if(topic==='chords'&&instrument==='ukulele')exercise=text.uke;
@@ -34,7 +37,12 @@ export function lessonBody(topic,instrument,text){
  return `<article class="lesson-body">
  ${section(ui.understand,explanation,`<p class="tuning-note">${e(text.tuning[index])}</p>`)}
  ${illustration(topic,instrument,text)}
- ${section(ui.play,exercise,topic==='chords'?diagrams.rhythm(instrument==='bass-4'?{...ui,rhythmTip:text.bass[2]}:ui):'')}
+ ${section(pedagogy.deeper,more[0])}
+ ${section(ui.play,exercise,`<p>${e(more[1])}</p><p class="tuning-note">${e(text.coach[index])}</p><h3>${e(pedagogy.example)}</h3>${renderTab(topic,instrument,{...ui,...pedagogy})}`)}
+ ${topic==='tabs'?`<section class="content-section"><h2>${e(pedagogy.symbols)}</h2><table class="symbol-table"><thead><tr><th scope="col">${e(pedagogy.symbol)}</th><th scope="col">${e(pedagogy.action)}</th></tr></thead><tbody>${text.symbols.map(([symbol,action])=>`<tr><th scope="row"><code>${e(symbol)}</code></th><td>${e(action)}</td></tr>`).join('')}</tbody></table></section>`:''}
+ ${section(pedagogy.avoid,more[2])}
  ${section(ui.listen,tip)}
- </article>`;
+ ${section(pedagogy.checkpoint,more[3])}
+ <section class="content-section lesson-sources"><h2>${e(pedagogy.sources)}</h2><ol>${sources[instrument+'.'+topic].map(source=>`<li><a href="${e(source.url)}" lang="en">${e(source.title)}</a></li>`).join('')}</ol></section>
+ </article>`.replace(/^[ \t]+$/gm,'');
 }

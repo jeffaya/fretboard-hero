@@ -4,8 +4,8 @@ const origin='https://fretboard-hero.com';
 const decode=s=>s.replace(/&amp;/g,'&');
 let generated,copy;
 async function content(){generated||=(await import('../../scripts/build-seo.mjs')).generatedFiles();copy||=(await import('../../scripts/lessons/translations.mjs')).copy;return generated;}
-test('All 198 instrument lessons, Privacy and existing About pages are reproducible',async()=>{
- assert.equal((await content()).size,202);
+test('All 231 instrument lessons, Privacy and existing About pages are reproducible',async()=>{
+ assert.equal((await content()).size,235);
  for(const [filename,html] of generated)assert.equal(fs.readFileSync(filename,'utf8'),html,filename);
 });
 test('Every app language has complete translated courses and UI, with no paragraph fallback',async()=>{
@@ -13,8 +13,8 @@ test('Every app language has complete translated courses and UI, with no paragra
  assert.deepEqual([...routes.languages].sort(),Array.from(ctx.window.FretboardI18n.languages,x=>x[0]).sort());
  const {lessonCopy}=await import('../../scripts/lessons/translations.mjs');
  for(const locale of routes.languages){const t=lessonCopy(locale);
-  assert.equal(t.nav.length,6);assert.equal(t.tuning.length,3);assert.equal(t.bass.length,3);assert.equal(Object.keys(t.ui).length,41);
-  for(const topic of routes.topics){assert.equal(t[topic].length,5);for(const [i,p] of t[topic].entries()){assert.ok(p.trim().length>0);if(locale!=='en')assert.notEqual(p,copy.en[topic][i],`${locale} ${topic} ${i}`);}}
+  assert.equal(t.nav.length,7);assert.equal(t.tuning.length,3);assert.equal(t.bass.length,3);assert.equal(Object.keys(t.ui).length,41);
+  for(const topic of routes.topics){assert.equal(t[topic].length,5);for(const [i,p] of t[topic].entries()){assert.ok(p.trim().length>0);if(locale!=='en')assert.notEqual(p,lessonCopy('en')[topic][i],`${locale} ${topic} ${i}`);}}
  }
 });
 test('Every lesson has initial HTML illustrations, correct product branding and 11 reciprocal language routes',async()=>{
@@ -22,8 +22,8 @@ test('Every lesson has initial HTML illustrations, correct product branding and 
  for(const locale of routes.languages)for(const instrument of routes.instruments)for(const topic of routes.topics){
   const route=routes.route(locale,instrument,topic),html=generated.get('web'+route+'index.html');
   assert.match(html,new RegExp(`<html lang="${locale}">`));assert.equal((html.match(/<h1>/g)||[]).length,1);
-  assert.equal((html.match(/class="content-section"/g)||[]).length,3);assert.match(html,/class="diagram/);
-  assert.ok(html.includes(copy[locale][topic][0]));assert.match(html,/data-exercise-link/);
+  assert.equal((html.match(/class="content-section(?: lesson-sources)?"/g)||[]).length,topic==='tabs'?8:7);assert.match(html,/class="tab-diagram/);
+  assert.ok(html.includes((await import('../../scripts/lessons/translations.mjs')).lessonCopy(locale)[topic][0]));assert.match(html,/data-exercise-link/);
   assert.doesNotMatch(html,/class="byline"|class="page-aside"|data-get-app|Written by|Start with the free demo/);
   const canonical=html.match(/rel="canonical" href="([^"]+)"/)[1];assert.equal(canonical,origin+route);assert.ok(!canonicals.has(canonical));canonicals.add(canonical);
   const expectedViewport={guitar:'0 0 900 550','bass-4':'900 0 900 550',ukulele:'1800 0 900 550'}[instrument];
@@ -39,7 +39,7 @@ test('Every lesson has initial HTML illustrations, correct product branding and 
    assert.ok(generated.has('web'+pathname)||fs.existsSync('web'+pathname),route+': '+pathname);
   }
  }
- assert.equal(canonicals.size,198);
+ assert.equal(canonicals.size,231);
 });
 test('Sitemap contains every course once, preserving older canonical routes',async()=>{
  const files=await content(),xml=files.get('web/sitemap.xml');const urls=[...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(m=>decode(m[1]));assert.equal(new Set(urls).size,urls.length);

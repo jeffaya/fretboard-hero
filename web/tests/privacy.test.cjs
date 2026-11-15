@@ -5,19 +5,17 @@ const attrs=s=>Object.fromEntries([...s.matchAll(/([\w-]+)="([^"]*)"/g)].map(m=>
 const policies=[...html.matchAll(/<article\b([^>]*)>([\s\S]*?)<\/article>/g)].map(m=>({attrs:attrs(m[1]),body:m[2]}));
 const menuLinks=[...html.matchAll(/<a\b([^>]*data-policy-language[^>]*)>([^<]*)<\/a>/g)].map(m=>({attrs:attrs(m[1]),name:decode(m[2])}));
 function setup({url='https://fretboard-hero.com/privacy',saved=null,languages=['en'],storageBlocked=false,instrument=null,session=null,defaultInstrument='guitar',configUnavailable=false}={}){
- let focused;const stored={'fretboard-language':saved,'fretboard-instrument':instrument},events={},windowEvents={};
- const el=(text='')=>({textContent:text,attrs:{},events:{},setAttribute(k,v){this.attrs[k]=v},addEventListener(k,fn){this.events[k]=fn},focus(){focused=this},scrollIntoView(){this.scrolled=true}});
- const articles=policies.map(p=>({...el(),lang:p.attrs.lang,hidden:false,dataset:{languageLabel:p.attrs['data-language-label'],backLabel:p.attrs['data-back-label'],skipLabel:p.attrs['data-skip-label']},querySelector:selector=>({textContent:decode(p.body.match(selector==='h1'?/<h1[^>]*>([^<]*)/:/<p class="policy-intro">([^<]*)/)[1])})}));
- const links=menuLinks.map(l=>({...el(l.name),dataset:{policyLanguage:l.attrs['data-policy-language']}}));
- const trigger=el(),nav=el(),label=el(),main=el(),skip=el(),back=el(),description=el(),home=[el(),el()],logo=el(),icon=el();
- const menu={...el(),open:false,contains:node=>[menu,trigger,nav,label,...links].includes(node),querySelector:selector=>selector==='summary'?trigger:nav};
- const single={'.document-language-menu':menu,'#language-label':label,main,'.skip-link':skip,'#back-label':back,'meta[name="description"]':description,'.brand':home[0],'.brand svg':logo,'link[rel="icon"]':icon};
- const document={documentElement:{dataset:{}},querySelector:selector=>single[selector],querySelectorAll:selector=>selector==='article[lang]'?articles:selector==='[data-policy-language]'?links:home,addEventListener:(name,fn)=>events[name]=fn,createElement:el,head:{appendChild(script){queueMicrotask(()=>{try{vm.runInContext(fs.readFileSync('web/'+script.src.slice(2).split('?')[0],'utf8'),ctx);script.onload()}catch{script.onerror()}})}}};
- const location={href:url,get search(){return new URL(this.href).search}},history={pushState(_,__,url){location.href=String(url)}};
- const localStorage={getItem(key){if(storageBlocked)throw Error('blocked');return stored[key]},setItem(key,value){if(storageBlocked)throw Error('blocked');stored[key]=value},removeItem(key){delete stored[key]}};
- const ctx=vm.createContext({document,window:{addEventListener:(name,fn)=>windowEvents[name]=fn},URL,URLSearchParams,location,history,navigator:{languages},localStorage,sessionStorage:{getItem(){return session},removeItem(){session=null}},fetch:async()=>{if(configUnavailable)throw Error('offline');return {ok:true,json:async()=>({instrument:defaultInstrument})}}});
- vm.runInContext(fs.readFileSync('web/core/instrument-selection.js','utf8'),ctx);vm.runInContext(fs.readFileSync('web/core/document-branding.js','utf8'),ctx);vm.runInContext(source,ctx);
- return {articles,links,menu,trigger,nav,label,main,skip,back,description,home,logo,icon,document,location,events,windowEvents,ready:()=>new Promise(setImmediate),get product(){const key=ctx.window.FretboardInstrumentSelection.catalog[document.documentElement.dataset.instrument].productKey;return ctx.window.FRETBOARD_PRODUCTS[key]},get stored(){return stored['fretboard-language']},get focused(){return focused},click(locale,extra={}){const event={button:0,preventDefault(){this.prevented=true},...extra};links.find(l=>l.dataset.policyLanguage===locale).events.click(event);return event}};
+ const stored={'fretboard-language':saved,'fretboard-instrument':instrument},events={},calls={};
+ const el=()=>({attrs:{},setAttribute(k,v){this.attrs[k]=v}});
+ const articles=policies.map(p=>({lang:p.attrs.lang,hidden:false,dataset:{skipLabel:p.attrs['data-skip-label']},querySelector:s=>({textContent:decode(p.body.match(s==='h1'?/<h1[^>]*>([^<]*)/:/<p class="policy-intro">([^<]*)/)[1])})}));
+ const home=[el()],logo=el(),icon=el(),description={},skip={};
+ const data=JSON.parse(html.match(/id="policyConfig">([\s\S]*?)<\/script>/)[1]);
+ const single={'#policyConfig':{textContent:JSON.stringify(data)},'meta[name="description"]':description,'.skip-link':skip,'.brand':home[0],'.brand svg':logo,'link[rel="icon"]':icon};
+ const document={documentElement:{dataset:{}},querySelector:s=>single[s],querySelectorAll:s=>s==='article[lang]'?articles:home,createElement:el,head:{appendChild(script){queueMicrotask(()=>{try{vm.runInContext(fs.readFileSync('web/'+script.src.slice(2).split('?')[0],'utf8'),ctx);script.onload()}catch{script.onerror()}})}}};
+ const location={href:url,get search(){return new URL(this.href).search},assign(value){this.href=value},reload(){calls.reloaded=true}};
+ const ctx=vm.createContext({console,document,window:{addEventListener:(name,fn)=>events[name]=fn,FretboardDocumentShell:{async mount(data,options){calls.shell=data;calls.navigate=options.navigate}}},URL,URLSearchParams,location,navigator:{languages},localStorage:{getItem(key){if(storageBlocked)throw Error('blocked');return stored[key]}},sessionStorage:{getItem(){return session},removeItem(){session=null}},fetch:async()=>{if(configUnavailable)throw Error('offline');return {ok:true,json:async()=>({instrument:defaultInstrument})}}});
+ for(const file of ['web/core/instrument-selection.js','web/core/document-branding.js','web/privacy.js'])vm.runInContext(fs.readFileSync(file,'utf8'),ctx);
+ return {articles,document,home,logo,icon,description,skip,location,events,calls,ready:()=>new Promise(setImmediate),get product(){const key=ctx.window.FretboardInstrumentSelection.catalog[document.documentElement.dataset.instrument].productKey;return ctx.window.FRETBOARD_PRODUCTS[key]}};
 }
 test('Every app language has a complete static policy, contact, retention and deletion sections',()=>{
  const ctx={window:{}};vm.runInNewContext(fs.readFileSync('web/core/i18n.js','utf8'),ctx);
@@ -40,75 +38,32 @@ test('All policy paragraphs are translated instead of falling back to English',(
  const english=paragraphs(policies.find(p=>p.attrs.lang==='en'));
  for(const p of policies.filter(p=>p.attrs.lang!=='en')){const text=paragraphs(p);assert.equal(text.length,english.length);text.forEach((line,i)=>assert.notEqual(line,english[i],p.attrs.lang+': '+i))}
 });
-test('Initial selection respects explicit URLs, old anchors, saved choice and browser language',()=>{
- const cases=[
-  [{url:'https://fretboard-hero.com/privacy?lang=ja',saved:'de'},'ja'],
-  [{url:'https://fretboard-hero.com/privacy?lang=de#fr-payments'},'fr'],
-  [{url:'https://fretboard-hero.com/privacy#en'},'en'],
-  [{saved:'it',languages:['fr']},'it'],[{saved:'auto',languages:['xx','ko-KR']},'ko'],
-  [{languages:['pt-PT']},'pt-BR'],[{languages:['zh-Hant']},'zh-CN'],
-  [{storageBlocked:true,languages:['fr-CA']},'fr'],[{languages:['xx']},'en']
- ];
- for(const [options,expected] of cases){const s=setup(options);assert.equal(s.document.documentElement.lang,expected);assert.deepEqual(s.articles.filter(a=>!a.hidden).map(a=>a.lang),[expected])}
+test('Selection respects URL, legacy anchor, storage and browser preferences',async()=>{
+ const cases=[[{url:'https://fretboard-hero.com/privacy?lang=ja',saved:'de'},'ja'],[{url:'https://fretboard-hero.com/privacy?lang=de#fr-payments'},'fr'],[{saved:'it'},'it'],[{saved:'auto',languages:['xx','ko-KR']},'ko'],[{languages:['pt-PT']},'pt-BR'],[{languages:['zh-Hant']},'zh-CN'],[{storageBlocked:true,languages:['fr-CA']},'fr'],[{languages:['xx']},'en']];
+ for(const [options,expected] of cases){const s=setup(options);await s.ready();assert.equal(s.document.documentElement.lang,expected);assert.deepEqual(s.articles.filter(a=>!a.hidden).map(a=>a.lang),[expected]);assert.equal(s.calls.shell.locale,expected)}
 });
-test('Switching among all languages updates content, accessibility, metadata, URL and return links',()=>{
- const s=setup();
- for(const p of policies){const lang=p.attrs.lang;s.menu.open=true;assert.equal(s.click(lang).prevented,true);
-  assert.equal(s.stored,lang);assert.equal(new URL(s.location.href).searchParams.get('lang'),lang);assert.equal(s.menu.open,false);
-  assert.deepEqual(s.articles.filter(a=>!a.hidden).map(a=>a.lang),[lang]);assert.equal(s.focused,s.main);assert.equal(s.main.scrolled,true);
-  assert.equal(s.trigger.attrs['aria-label'],p.attrs['data-language-label']);assert.equal(s.nav.attrs['aria-label'],p.attrs['data-language-label']);
-  assert.equal(s.skip.textContent,p.attrs['data-skip-label']);assert.equal(s.back.textContent,p.attrs['data-back-label']);
-  assert.equal(s.label.textContent,menuLinks.find(l=>l.attrs.lang===lang).name);
-  assert.equal(s.links.filter(l=>l.attrs['aria-current']==='true').length,1);
-  assert.ok(s.document.title.startsWith(s.articles.find(a=>a.lang===lang).querySelector('h1').textContent));
-  assert.equal(s.description.content,s.articles.find(a=>a.lang===lang).querySelector('.policy-intro').textContent);
-  s.home.forEach(link=>assert.equal(link.href,'./?lang='+lang+'&instrument=guitar'));
+test('Every footer language navigates with the instrument and translated labels',async()=>{
+ for(const instrument of ['guitar','bass-4','ukulele'])for(const policy of policies){const locale=policy.attrs.lang;
+  const s=setup({url:'https://fretboard-hero.com/privacy?lang='+locale+'&instrument='+instrument,saved:'en',storageBlocked:true});await s.ready();
+  assert.equal(s.calls.shell.locale,locale);assert.equal(s.calls.shell.instrument,instrument);assert.equal(s.calls.shell.languages.length,11);
+  assert.ok(s.calls.shell.ui.privacy);assert.ok(s.calls.shell.ui.contact);if(locale!=='en')assert.notEqual(s.calls.shell.ui.privacy,'Privacy policy');
+  assert.equal(s.logo.attrs.viewBox,s.product.assets.heroLogoViewport);assert.equal(s.home[0].attrs['aria-label'],s.product.branding.name);
+  assert.ok(s.document.title.endsWith(s.product.branding.name));assert.equal(s.description.content,s.articles.find(a=>a.lang===locale).querySelector('.policy-intro').textContent);
+  assert.equal(s.home[0].href,'./?lang='+locale+'&instrument='+instrument);
+  s.calls.navigate('hi');const target=new URL(s.location.href);assert.equal(target.searchParams.get('lang'),'hi');assert.equal(target.searchParams.get('instrument'),instrument);assert.equal(target.hash,'');
  }
 });
-test('Privacy reuses each home product wordmark and keeps instrument and language across navigation',async()=>{
- for(const instrument of ['guitar','bass-4','ukulele']){
-  // Simulate the external browser with conflicting storage, including denied storage.
-  for(const storageBlocked of [false,true]){
-   const s=setup({url:'https://fretboard-hero.com/privacy?lang=fr&instrument='+instrument,instrument:instrument==='guitar'?'bass-4':'guitar',storageBlocked});await s.ready();
-   assert.equal(s.document.documentElement.dataset.instrument,instrument);
-   assert.equal(s.logo.attrs.viewBox,s.product.assets.heroLogoViewport);
-   assert.equal(s.home[0].attrs['aria-label'],s.product.branding.name);
-   assert.ok(s.icon.href.includes('/'+s.product.id.replace('-fretboard-hero','')+'/favicon.ico'));
-   for(const lang of policies.map(p=>p.attrs.lang)){
-    s.click(lang);assert.equal(new URL(s.location.href).searchParams.get('instrument'),instrument);
-    assert.ok(s.document.title.endsWith(s.product.branding.name));
-    for(const link of s.home){const url=new URL(link.href,s.location.href);assert.equal(url.searchParams.get('instrument'),instrument);assert.equal(url.searchParams.get('lang'),lang)}
-   }
-  }
- }
+test('Privacy shares the application instrument precedence, including offline configuration',async()=>{
+ const cases=[[{instrument:'bass-4',defaultInstrument:'ukulele'},'bass-4'],[{session:'ukulele'},'ukulele'],[{defaultInstrument:'bass-4'},'bass-4'],[{instrument:'invalid',defaultInstrument:'ukulele'},'ukulele'],[{url:'https://fretboard-hero.com/privacy?instrument=constructor',instrument:'bass-4'},'bass-4'],[{storageBlocked:true,defaultInstrument:'ukulele'},'ukulele'],[{url:'https://fretboard-hero.com/privacy?instrument=bass-4',configUnavailable:true},'bass-4'],[{configUnavailable:true},'guitar']];
+ for(const [options,expected] of cases){const s=setup(options);await s.ready();assert.equal(s.document.documentElement.dataset.instrument,expected);assert.equal(s.calls.shell.instrument,expected)}
 });
-test('Direct Privacy visits share home preference, legacy session and build-default precedence',async()=>{
- const cases=[
-  [{instrument:'bass-4',defaultInstrument:'ukulele'},'bass-4'],
-  [{session:'ukulele'},'ukulele'],
-  [{defaultInstrument:'bass-4'},'bass-4'],
-  [{instrument:'invalid',defaultInstrument:'ukulele'},'ukulele'],
-  [{url:'https://fretboard-hero.com/privacy?instrument=constructor',instrument:'bass-4'},'bass-4'],
-  [{storageBlocked:true,defaultInstrument:'ukulele'},'ukulele'],
-  [{url:'https://fretboard-hero.com/privacy?instrument=bass-4',configUnavailable:true},'bass-4'],
-  [{configUnavailable:true},'guitar']
- ];
- for(const [options,expected] of cases){const s=setup(options);await s.ready();assert.equal(s.document.documentElement.dataset.instrument,expected);assert.equal(s.logo.attrs.viewBox,s.product.assets.heroLogoViewport)}
+test('History and legacy language anchors reload the complete shell when its context changes',async()=>{
+ const s=setup({url:'https://fretboard-hero.com/privacy?lang=en&instrument=guitar'});await s.ready();
+ s.location.href='https://fretboard-hero.com/privacy?lang=en#fr-rights';s.events.hashchange();assert.equal(s.calls.reloaded,true);
+ s.calls.reloaded=false;s.location.href='https://fretboard-hero.com/privacy?lang=en&instrument=ukulele';s.events.popstate();assert.equal(s.calls.reloaded,true);
 });
-test('History navigation restores the matching product branding as well as the language',async()=>{
- const s=setup({url:'https://fretboard-hero.com/privacy?instrument=bass-4&lang=fr'});await s.ready();
- s.location.href='https://fretboard-hero.com/privacy?instrument=ukulele&lang=ja';s.windowEvents.popstate();await s.ready();
- assert.equal(s.document.documentElement.lang,'ja');assert.equal(s.document.documentElement.dataset.instrument,'ukulele');assert.equal(s.logo.attrs.viewBox,s.product.assets.heroLogoViewport);
- assert.ok(s.home.every(link=>link.href==='./?lang=ja&instrument=ukulele'));
-});
-test('Selection works with blocked storage and browser navigation restores the visible policy',()=>{
- const s=setup({storageBlocked:true});s.click('hi');assert.equal(s.document.documentElement.lang,'hi');
- s.location.href='https://fretboard-hero.com/privacy?lang=de';s.windowEvents.popstate();assert.equal(s.document.documentElement.lang,'de');
- s.location.href='https://fretboard-hero.com/privacy#fr-rights';s.windowEvents.hashchange();assert.equal(s.document.documentElement.lang,'fr');
- assert.equal(s.click('en',{ctrlKey:true}).prevented,undefined);assert.equal(s.document.documentElement.lang,'fr');
-});
-test('The language disclosure closes on Escape, outside click and keyboard focus leaving',()=>{
- const s=setup();s.menu.open=true;s.menu.events.keydown({key:'Escape',preventDefault(){}});assert.equal(s.menu.open,false);assert.equal(s.focused,s.trigger);
- s.menu.open=true;s.events.click({target:s.label});assert.equal(s.menu.open,true);s.events.click({target:s.main});assert.equal(s.menu.open,false);
- s.menu.open=true;s.menu.events.focusout({relatedTarget:s.links[0]});assert.equal(s.menu.open,true);s.menu.events.focusout({relatedTarget:s.main});assert.equal(s.menu.open,false);
+test('Privacy uses the same footer and contains no language control in its header',()=>{
+ assert.doesNotMatch(html.match(/<header[\s\S]*?<\/header>/)[0],/language|<details/);
+ assert.match(html,/<footer class="home-footer">/);assert.doesNotMatch(html,/class="site-footer"|document-language-menu/);
+ assert.match(html,/core\/document-shell\.js/);
 });

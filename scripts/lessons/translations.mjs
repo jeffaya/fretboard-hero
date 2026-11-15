@@ -1,3 +1,4 @@
+import {curriculum} from './curriculum.mjs';
 // Complete lesson copy in every language offered by the app. No English fallback.
 // Each lesson: heading, introduction, explanation, exercise, listening/check tip.
 export const copy = {
@@ -147,9 +148,9 @@ export const copy = {
 };
 
 export function lessonCopy(locale){
- const data=copy[locale];if(!data)throw new Error(`Missing lesson language: ${locale}`);
+ const data=copy[locale],extra=curriculum[locale];if(!data||!extra)throw new Error(`Missing lesson language: ${locale}`);
  const uiKeys=['try','understand','play','listen','choose','instrument','skip','root','quality','tones','open','barre','compact','shape','fret','string','fingers','legend','down','up','rest','rhythmTip','noScript','arpeggio','oneAtATime','privacy','contact','back','minor','major','7','m7','maj7','6','m6','sus2','sus4','dim','aug','add9'];
  if(data.ui.length!==uiKeys.length)throw new Error(`Incomplete UI: ${locale}`);
  const omittedFifth={en:'The fifth is omitted in this voicing.',fr:'La quinte est omise dans cette position.',es:'En esta posición se omite la quinta.',de:'Bei diesem Griff entfällt die Quinte.',it:'In questa posizione si omette la quinta.','pt-BR':'A quinta é omitida nesta posição.',hi:'इस स्थिति में पाँचवाँ स्वर नहीं बजाया जाता।',id:'Kuint tidak dimainkan dalam bentuk ini.',ja:'このフォームでは五度を省略しています。',ko:'이 운지에서는 5도를 생략합니다.','zh-CN':'此指型省略五音。'}[locale];
- return {...data,ui:{...Object.fromEntries(uiKeys.map((key,i)=>[key,data.ui[i]])),omittedFifth}};
+ return {...data,nav:[...data.nav,extra.nav],tabs:extra.tabs,course:extra.course,coach:extra.coach,pedagogy:extra.ui,symbols:extra.symbols,ui:{...Object.fromEntries(uiKeys.map((key,i)=>[key,data.ui[i]])),omittedFifth}};
 }

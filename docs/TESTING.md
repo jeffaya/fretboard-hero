@@ -57,8 +57,9 @@ so a flaky failure remains visible. Do not use forced clicks or skip an assertio
 to turn an interaction failure green. Fix a test when its expectation is wrong;
 fix the application when a real user cannot complete the intended action.
 
-On GitHub, inspect the failing `Browser / ...` check. Its failure artifact contains
-an HTML report, screenshots and Playwright traces for 14 days. Open a downloaded
+On GitHub, inspect the failing `Browser / ...` check. Its `browser-report-<project>` artifact contains
+an HTML report and guide/Privacy preview screenshots for 14 days, plus Playwright
+traces and failure screenshots when a test fails. Open a downloaded
 trace with `npx playwright show-trace path/to/trace.zip` from `tests/browser`.
 No store credentials or live purchase tokens are used in browser fixtures.
 
