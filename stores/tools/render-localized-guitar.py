@@ -46,9 +46,14 @@ def wrap(text, face, width, locale):
     lines, line = [], ''
     for piece in pieces:
         trial = sep.join((line, piece)) if line else piece
-        if line and face.getlength(trial) > width and piece not in '、。，！？・':
-            lines.append(line)
-            line = piece
+        if line and face.getlength(trial) > width:
+            if joined and piece in '、。，！？・」』）' and len(line) > 1:
+                # Keep closing punctuation with the preceding character.
+                lines.append(line[:-1])
+                line = line[-1] + piece
+            else:
+                lines.append(line)
+                line = piece
         else:
             line = trial
     return lines + [line]
