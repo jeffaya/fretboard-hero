@@ -15,6 +15,7 @@ const variants = [
   {id:'desktop', width:1920, height:1080, dpr:1, touch:false, folder:'desktop'},
   {id:'android-xr-console', width:1600, height:900, dpr:1.6, touch:false, folder:'android-xr'}
 ];
+const jpeg = instrument === 'guitar' && !['en-US','fr-FR'].includes(locale);
 const names = ['01-routine','02-triads','03-pentatonic','04-feedback','05-quiz','06-tuner','07-map','08-circle'];
 const evidence = {sourceCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),locale,instrument,capture:'Chromium rendering of local web source; viewport emulation, not physical-device certification',access:'Local capture-only unlocked configuration; production config unchanged',audio:'Synthetic microphone input processed by the real detector',variants:[]};
 const types = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.woff2':'font/woff2'};
@@ -43,9 +44,10 @@ async function save(page,v,name){
   const actualInstrument=await page.evaluate(()=>({id:FRETBOARD_ACTIVE_INSTRUMENT.id,strings:FRETBOARD_ACTIVE_INSTRUMENT.courses.length,product:FRETBOARD_ACTIVE_PRODUCT.name,tuning:FRETBOARD_ACTIVE_INSTRUMENT.courses.map(c=>c.name)}));
   if(actualInstrument.id!==profileId||actualInstrument.strings!==strings)throw new Error(`Capture instrument mismatch: ${JSON.stringify(actualInstrument)}`);
   const dir=path.join(out,v.folder);fs.mkdirSync(dir,{recursive:true});
-  const file=path.join(dir,`${name}-${Math.round(v.width*v.dpr)}x${Math.round(v.height*v.dpr)}.png`);
+  const file=path.join(dir,`${name}-${Math.round(v.width*v.dpr)}x${Math.round(v.height*v.dpr)}.${jpeg?'jpg':'png'}`);
   const bytes=await page.screenshot({animations:'disabled',fullPage:false});
-  const encoded=await sharp(bytes).removeAlpha().png({compressionLevel:9}).toBuffer();
+  const rgb=sharp(bytes).removeAlpha();
+  const encoded=await (jpeg?rgb.jpeg({quality:91}):rgb.png({compressionLevel:9})).toBuffer();
   fs.writeFileSync(file+'.tmp',encoded);fs.renameSync(file+'.tmp',file);
   const visibleText=await page.locator(name==='06-tuner'?'.tuner-dialog[open]':'.screen.active').innerText();
   return {file:path.relative(out,file).split(path.sep).join('/'),language:actualLanguage,instrument:actualInstrument,screen:await page.locator('body').getAttribute('data-screen'),title:await page.locator('.screen.active h2, .screen.active .section-heading').first().innerText().catch(()=>''),mic:await page.locator('#routineMicStatus').innerText(),visibleText,sizeBytes:fs.statSync(file).size};
@@ -83,7 +85,9 @@ async function capture(browser,v,base){
   for(let n=0;n<4;n++){
     const selector=await page.evaluate(()=>{
       const notes=MusicTheory.PC,displayedRoot=document.querySelector('#quizChord').textContent.trim().split(' ')[0],label=document.querySelector('#quizPrompt strong').textContent.trim().toUpperCase();
-      const root=Object.keys(notes).find(note=>FretboardI18n.note(note).toUpperCase()===displayedRoot.toUpperCase());
+      // Match the longest localized note first: CJK chord qualities may touch the root.
+      const root=Object.keys(notes).sort((a,b)=>FretboardI18n.note(b).length-FretboardI18n.note(a).length)
+        .find(note=>displayedRoot.toUpperCase().startsWith(FretboardI18n.note(note).toUpperCase()));
       if(root===undefined)throw new Error(`Unknown localized quiz root: ${displayedRoot}`);
       const translated=value=>FretboardI18n.text(value).toUpperCase();
       const target=(notes[root]+(label===translated('5TH')?7:label===translated('3RD')?4:label===translated('♭3RD')?3:0))%12;
