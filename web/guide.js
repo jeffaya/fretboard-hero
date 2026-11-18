@@ -14,7 +14,6 @@
   positions.innerHTML=window.FretboardLessonDiagrams.chordFamilies({instrument:data.instrument,root,ui:data.ui});
   const url=new URL(location.href);
   if(updateURL||url.searchParams.has('quality')){url.searchParams.set('root',root);url.searchParams.delete('quality');history.replaceState(null,'',url);}
-  for(const link of document.querySelectorAll('[data-guide-route]')){const url=new URL(link.href);url.searchParams.set('root',root);url.searchParams.delete('quality');link.href=url.href;}
  }
  function restore(){const search=new URLSearchParams(location.search),requested=Number(search.get('root'));
   root=search.has('root')&&Number.isInteger(requested)&&requested>=0&&requested<12?requested:7;

@@ -55,13 +55,14 @@ Try action remains in the hero; the only download entry is the common footer.
 
 The page route is authoritative for its language and instrument. Saved app
 preferences cannot change the content/branding of a directly opened lesson.
-Home uses the resolved app language and instrument to choose the guide URL.
+The Music theory card on Home opens the section for the selected language and instrument.
+The lesson header links back to Home, where readers can switch instruments.
 Native apps open the same public guide in the external browser.
 
 Chord selection is bookmarkable with validated `root=0..11`. All 12 chord
 families are displayed together, with localized names, tones and positions.
 Legacy `quality` parameters are removed without losing the selected root.
-Language and instrument changes preserve the selected root.
+Changing the lesson language preserves the selected root. Each instrument’s chord URL also accepts a root directly.
 These parameters do not create new canonical pages or bypass paid app features.
 
 ## Fonts and future translations
@@ -86,6 +87,5 @@ international note names are intentionally shared.
 
 `tests/browser/seo.spec.cjs` covers Home entry, external native links, initial
 HTML without JavaScript, header branding, exercise links, shared footer dialog,
-chord selection, keyboard operation, query restoration and language/instrument
-switching. Run the Chromium/Firefox/WebKit projects as described in TESTING.md.
+chord selection, keyboard operation, query restoration and switching instruments via Home. Run the Chromium/Firefox/WebKit projects as described in TESTING.md.
 A Node run cannot establish the mobile layout or native Safari behavior.

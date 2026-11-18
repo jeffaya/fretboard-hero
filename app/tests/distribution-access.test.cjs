@@ -137,12 +137,12 @@ test('iOS preparation switches bundle ID, display name, icon and access together
 
 test('Build-all calls each application once with all build options, and stops on a failure', t => {
   const dir=temporary(t);write(dir,'app/instruments.json',JSON.stringify(catalog));
-  write(dir,'scripts/build-instrument.ps1',`param($Instrument,$RepoPath,$Profile,$BuildType,$Format,$VersionCode,$VersionName)\n$PSBoundParameters | ConvertTo-Json -Compress | Add-Content (Join-Path $RepoPath 'calls.jsonl')\nif ((Test-Path (Join-Path $RepoPath 'fail-bass')) -and $Instrument -eq 'bass-4') { throw 'Simulated build failure' }\n`);
-  const args=['-RepoPath',dir,'-Profile','Store','-BuildType','Release','-Format','Both','-VersionCode','9','-VersionName','1.1.0'];
+  write(dir,'scripts/build-instrument.ps1',`param($Instrument,$RepoPath,$Profile,$BuildType,$VersionCode,$VersionName)\n$PSBoundParameters | ConvertTo-Json -Compress | Add-Content (Join-Path $RepoPath 'calls.jsonl')\nif ((Test-Path (Join-Path $RepoPath 'fail-bass')) -and $Instrument -eq 'bass-4') { throw 'Simulated build failure' }\n`);
+  const args=['-RepoPath',dir,'-Profile','Store','-BuildType','Release','-VersionCode','9','-VersionName','1.1.0'];
   let result=run('build-all.ps1',args);assert.equal(result.status,0,result.output);
   const calls=()=>fs.readFileSync(path.join(dir,'calls.jsonl'),'utf8').trim().split(/\r?\n/).map(JSON.parse);
   assert.deepEqual(calls().map(c=>c.Instrument),instruments);
-  for(const c of calls()){assert.equal(c.Profile,'Store');assert.equal(c.BuildType,'Release');assert.equal(c.Format,'Both');assert.equal(c.VersionCode,9);assert.equal(c.VersionName,'1.1.0')}
+  for(const c of calls()){assert.equal(c.Profile,'Store');assert.equal(c.BuildType,'Release');assert.equal(c.VersionCode,9);assert.equal(c.VersionName,'1.1.0')}
   fs.unlinkSync(path.join(dir,'calls.jsonl'));write(dir,'fail-bass','');result=run('build-all.ps1',args);
   assert.notEqual(result.status,0);assert.deepEqual(calls().map(c=>c.Instrument),['guitar','bass-4']);
 });

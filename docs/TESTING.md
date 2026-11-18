@@ -2,7 +2,7 @@
 
 ## What a green run means
 
-`Tests` runs Node tests on Windows, Chromium/Firefox journeys on Linux and
+`Deploy` runs Node tests on Windows, Chromium/Firefox journeys on Linux and
 WebKit journeys on macOS (the closest Playwright platform to Safari). The browser
 suite loads the actual HTML, CSS, scripts, fonts and artwork from `web/`.
 It fails on uncaught JavaScript errors, failed HTTP resource loads, unusable
@@ -14,7 +14,7 @@ fretboard dimensions, missing drawing content or broken interactions.
 | Quiz unit tests | Twelve roots, thirds/fifths, combo scoring, fret progression and every instrument rank boundary | Does not render the quiz |
 | Browser journeys | Learn/Map/Circle in free and premium access for all instruments; Quiz drawing, scoring, orientation, exit and replay; all Routine steps and completion; Tuner denied permission; French language, instrument persistence and Privacy navigation | Device profiles emulate screen/touch characteristics; they are not physical devices |
 | Browser billing journeys | Actual modal, success and automatic reload, pending/cancelled results, verification update, restore, error panel/details and retry | Native billing bridge is simulated; no real transaction occurs |
-| Android PR build | Native inset tests on APIs 28, 29, 35 and 36, purchase cache, optimized release APK/AAB, package identity, access configuration, permissions and R8 mapping validation | Robolectric is not a device; CI uses a disposable signing key and never publishes this package |
+| Android deployment check | Native inset tests on APIs 28, 29, 35 and 36, purchase cache, optimized release AAB, package identity, access configuration, permissions and R8 mapping validation | Robolectric is not a device; CI uses a disposable signing key and never publishes this package |
 
 ## Browser matrix
 
@@ -63,10 +63,8 @@ traces and failure screenshots when a test fails. Open a downloaded
 trace with `npx playwright show-trace path/to/trace.zip` from `tests/browser`.
 No store credentials or live purchase tokens are used in browser fixtures.
 
-The shared test workflow runs on relevant PR changes. Cloudflare deployment and
-Android packaging depend on the same workflow succeeding for their exact checkout.
-A failed prerequisite prevents the deploy/build job from running. Repository rules
-can additionally require these checks before merging; this PR does not alter rules.
+On each push to `main`, the Cloudflare deployment waits for the Node, native
+Android and browser jobs to pass. A failed check blocks publication of that commit.
 
 ## Android window and release regressions
 

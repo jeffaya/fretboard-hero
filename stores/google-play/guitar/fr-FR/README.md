@@ -103,7 +103,6 @@ node stores/tools/export-feature.cjs stores/google-play/guitar/fr-FR
 node stores/tools/validate.cjs stores/google-play/guitar/fr-FR
 ```
 
-Le workflow manuel **Google Play visual export**, avec la langue `fr-FR`, fournit aussi une archive des exports. Il ne publie rien dans Google Play.
 
 ## Android XR et vidéos
 

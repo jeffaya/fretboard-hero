@@ -27,7 +27,7 @@ fretoboard-hero/
 │   ├── instruments.json                    # instrument presentation profiles.
 │   └── capacitor.config.json               # Regenerated per-build by build-instrument.ps1. Don't hand-edit for a release.
 ├── scripts/          # Build orchestration (PowerShell), run from repo root.
-├── dist/             # Gitignored. Output APKs land here: fretboard-hero-<instrument>-debug.apk
+├── dist/             # Gitignored. Android bundles and release mappings.
 ├── tools/            # Ad hoc dev/debug scripts, NOT part of the shipped product.
 └── docs/             # This file + the original Android-wrapper design/plan docs.
 ```
@@ -80,7 +80,7 @@ Known product identities (see `web/README.md` for full changelog):
 - Built with [Capacitor](https://capacitorjs.com/); the Java package for
   `MainActivity` is fixed at `com.guitar.fretboardhero` **regardless of
   instrument** — only the Gradle `applicationId` changes per build. This is
-  what allows all three APKs to install side-by-side on the same device
+  what allows all three apps to install side-by-side on the same device
   (Android treats `applicationId` as the identity, not the Java package
   path).
 - `app/android/app/src/main/java/com/guitar/fretboardhero/MainActivity.java`
@@ -149,7 +149,7 @@ Full orchestration for one instrument:
    parser fails on a leading BOM (`Unexpected character: '\uFEFF'`
    / similar). Already hit and fixed once.
 4. Runs `npx cap sync android` (copies `app/www` + config into the native
-   project) and `gradlew.bat assembleDebug` inside `app/android`.
+   project) and `gradlew.bat bundleDebug` inside `app/android`.
    **Critical gotcha — stderr vs terminating errors**: this script runs
    under `$ErrorActionPreference = "Stop"` globally, but native CLI tools
    (`npx`, `gradlew`) routinely write harmless notices to stderr (e.g. Java
@@ -161,8 +161,8 @@ Full orchestration for one instrument:
    in a `finally` block. Do not remove this pattern or the script will
    intermittently fail on successful builds.
 5. Copies the built
-   `app/android/app/build/outputs/apk/debug/app-debug.apk` to
-   `dist/fretboard-hero-<instrument>-<profile>-debug.apk`.
+   `app/android/app/build/outputs/bundle/debug/app-debug.aab` to
+   `dist/fretboard-hero-<instrument>-<profile>-debug.aab`.
 
 Note: `sdkmanager`/`avdmanager`/`sdkmanager --licenses` commands frequently
 return a non-zero exit code even when they succeeded (e.g. license
@@ -220,13 +220,11 @@ Used to provision a build+test machine without the Android Studio GUI:
 
 ### 6.1 Installing the three apps and their previews
 
-Store and Preview use separate IDs and may coexist. All three instruments are
-inside each package. Updating an installed APK requires a compatible signing key.
-
-```sh
-adb install -r dist/fretboard-hero-guitar-store-debug.apk
-adb install -r dist/fretboard-hero-guitar-preview-debug.apk
-```
+Store and Preview use separate IDs and may coexist. Each app includes all three
+instruments. For a Store release, upload the signed AAB to the matching Google
+Play internal test track and install it from the tester link. For a local debug
+session, run the build script for the desired instrument and profile, then open
+`app/android` in Android Studio and run the debug variant on the emulator.
 
 Launch with `adb shell monkey -p com.guitar.fretboardhero -c android.intent.category.LAUNCHER 1`
 (or the `.preview` ID for Preview).
@@ -313,10 +311,8 @@ version number, it does not duplicate the changelog.
 
 ## 9. Things intentionally NOT automated / open items
 
-- Pull requests run regression tests automatically. Android distribution builds
-  run only on manual request, for the selected instruments and package formats,
-  to preserve the GitHub Actions minute allowance. Preview and iOS builds remain
-  available through the local scripts, without dedicated Actions workflows.
+- Regression suites run during deployment. Android distribution builds run on
+  manual request for the selected instruments. Preview and iOS builds are available locally.
   Real store payments, device microphone behavior and production provisioning
   still require the documented device/store tests.
 - `tools/verify-webview-navigation.py` is a manual diagnostic tool, not
@@ -371,24 +367,22 @@ V10.9.3: eliminate duplicate tuning/open-note badges; label 0 aligns with the sh
 Pentatonic visual priority: position bands use 40 SVG units in portrait and 26 in landscape at 94% opacity. Pentatonic note discs and their legend pills share a white surface and a degree-specific darker ink palette for readable lettering. Other note surfaces retain the shared glass treatment. Optical text centering is shared across both surfaces. Preview: `docs/previews/pentatonic-phone.jpg`.
 
 
-## Android distribution: APK + AAB
+## Android distribution
 
-The existing Windows PowerShell scripts now accept `-Format Apk`, `Aab`, or
-`Both`. Omitting the option preserves the debug APK build. Use Release for
-store submissions; debug packages are for local testing only.
-
-Both formats use an explicit `-Profile Store` (default) or `-Profile Preview`.
+The Windows PowerShell scripts produce Android App Bundles. Use Release for
+store submissions and Debug for local testing. Select `-Profile Store` (default)
+or `-Profile Preview`.
 Store starts in demo with native billing; Preview is fully unlocked, uses a
 separate `.preview` package ID and never initializes payments. The archive gate
 validates the final config against the requested profile. See
 [Google Play billing](GOOGLE_PLAY_BILLING.md) for the full access contract.
 
 ```powershell
-# Three applications, each containing all instruments: signed APKs + AABs.
-.\scripts\build-all.ps1 -Profile Store -BuildType Release -Format Both -VersionCode 7 -VersionName 1.1.0
+# Three applications, each containing all instruments: signed AABs.
+.\scripts\build-all.ps1 -Profile Store -BuildType Release -VersionCode 7 -VersionName 1.1.0
 
 # Fully unlocked Bass app preview, with its own installation identity.
-.\scripts\build-instrument.ps1 -Instrument bass-4 -Profile Preview -BuildType Debug -Format Apk -VersionCode 7 -VersionName 1.1.0
+.\scripts\build-instrument.ps1 -Instrument bass-4 -Profile Preview -BuildType Debug -VersionCode 7 -VersionName 1.1.0
 ```
 
 Choose a VersionCode above the last uploaded code for each app. `app/instruments.json`
@@ -396,9 +390,9 @@ owns the three stable IDs, names and icons. `-Instrument` selects the app identi
 initial universe; the app can then switch instruments without changing identity.
 `build-all.ps1` builds all three sequentially in the shared native working tree.
 
-Outputs follow `dist/fretboard-hero-<instrument>-<profile>-<buildType>.<apk|aab>`;
+Outputs follow `dist/fretboard-hero-<instrument>-<profile>-<buildType>.aab`;
 for example, `dist/fretboard-hero-bass-4-store-release.aab` and
-`dist/fretboard-hero-bass-4-preview-debug.apk`.
+`dist/fretboard-hero-bass-4-preview-debug.aab`.
 The final archive gate checks its web access flags and native Capacitor app ID.
 Upload the signed Store AAB to Play Console. Builds do not create store products,
 listings, purchase credentials or publish a Play release.
@@ -417,19 +411,18 @@ can extract this mapping automatically; no separate upload is normally needed.
 `build-instrument.ps1` also saves a copy as
 `dist/fretboard-hero-<instrument>-<profile>-release-mapping.txt`, before the next
 instrument overwrites the shared Gradle output. Keep that sidecar with its
-APK/AAB and version code. Never use a mapping from another build.
+AAB and version code. Never use a mapping from another build.
 
 `scripts/validate-android-mapping.ps1` rejects missing/empty mappings, removed
 or renamed billing entry points, and AABs with missing, duplicate or mismatched
-embedded mappings. All requested formats must pass validation before any package
-is copied to `dist`. APK-only releases retain the sidecar separately.
+embedded mappings. The bundle must pass validation before it is copied to `dist`.
 
 The old `minifyEnabled false` builds had no R8 mapping to upload; their warning
 alone did not block publishing. To replace one, rebuild from this change using
 the existing signing key and a higher VersionCode, then upload the new AAB.
 Do not attach an empty file or a new build's mapping to the old version.
 
-The manual workflow **Build Android APK / AAB** includes these mapping and archive
+The manual workflow **Generate Android App** includes these mapping and archive
 checks in the signed release build for each selected instrument. A separate
 mapping compilation is not needed. These checks verify packaging and preserved
 billing method names, not a live purchase. Before production, test the minified
@@ -461,27 +454,16 @@ to run this script.
 
 ### GitHub Actions
 
-Native compilations are **manual only**: no PR, push or scheduled trigger.
-The automatic PR check retains all web/app/server regression tests, including
-the mapping fixtures, without installing an Android SDK or compiling packages.
-Its concurrency group is scoped to the workflow and PR (or branch for a manual
-run), so a newer commit cancels only that PR's superseded regression run.
+The repository workflow policy is in [AGENTS.md](../AGENTS.md).
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| Tests | Relevant PR changes; manual also available | Regression tests without native compilation |
-| Build Android APK / AAB | Manual | Generate the selected signed Store packages with the existing release key; validate archives, mappings and native purchase cache |
-| Deploy to Cloudflare Workers | Push to main | Deploy the website/Worker |
+| Deploy | Push to `main` | Run the regression suite, deploy the Worker, then export Google Play visuals as a run artifact |
+| Generate Android App | Manual | Build signed Store AABs and validate each bundle and its R8 mapping |
 
-The old Store/Preview, Release mapping and iOS simulator workflows have been
-removed. Preview and iOS scripts remain available locally. The single Android
-workflow runs the regression tests, mapping/archive validation and native
-purchase-cache tests before uploading any packages.
-
-Open **Actions → Build Android APK / AAB → Run workflow** on `main`:
+Open **Actions → Generate Android App → Run workflow** and enter the build settings.
 
 - `instrument`: **guitar** (default), **bass-4** (bass), **ukulele** or **all**.
-- `format`: **Apk**, **Aab** or **Both** (default).
 - `version_code`: an integer higher than the last Play upload for every selected app.
 - `version_name`: the public version, for example **1.1.0**.
 
@@ -494,12 +476,11 @@ build or separate mapping build. The existing four repository secrets are reused
 - `ANDROID_KEY_ALIAS`
 - `ANDROID_KEY_PASSWORD`
 
-Each run uploads the requested packages and their matching `*-mapping.txt`
-sidecars as `fretboard-hero-android-<instrument>-<format>-<version_code>`, and
-removes temporary signing files.
-Runs on `main` also update the existing `android` GitHub release; branch runs
-only upload artifacts. When requesting one instrument or one format, other
-attachments on the rolling release may be older: use that run's artifact for an exact set.
+The run title shows the instrument, version name and version code. Each run
+uploads the AABs and their matching `*-mapping.txt` files as
+`fretboard-hero-android-<instrument>-<version_name>-<version_code>`.
+Runs on `main` also update the rolling `android` GitHub release. Download the run
+artifact to get the exact files generated for that selection and version.
 No upload to Google Play is performed automatically.
 
 References: [Android command-line builds](https://developer.android.com/build/building-cmdline),

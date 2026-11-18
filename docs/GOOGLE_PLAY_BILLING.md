@@ -38,7 +38,7 @@ iOS and the Google verification Worker accept only this identifier. Keep the
 Google Play purchase option ID `buy`. Configure the product separately in each
 application you release; store catalogs and purchase ownership remain separate.
 
-Deploy the updated Worker and distribute a rebuilt Store AAB/APK together. Older
+Deploy the updated Worker and distribute a rebuilt Store AAB together. Older
 Android builds that request a different ID cannot use this product.
 The Cloudflare service-account secrets do not need to change for this rename.
 
@@ -71,11 +71,11 @@ Android destinations in `web/site.config.json` point to the corresponding three 
 ## Store and Preview builds
 
 ```powershell
-# Three signed APKs + three AABs, built sequentially.
-.\scripts\build-all.ps1 -Profile Store -BuildType Release -Format Both -VersionCode 7 -VersionName 1.1.0
+# Three signed AABs, built sequentially.
+.\scripts\build-all.ps1 -Profile Store -BuildType Release -VersionCode 7 -VersionName 1.1.0
 
 # One fully unlocked preview, with a separate installation identity.
-.\scripts\build-instrument.ps1 -Instrument guitar -Profile Preview -BuildType Debug -Format Apk -VersionCode 7 -VersionName 1.1.0
+.\scripts\build-instrument.ps1 -Instrument guitar -Profile Preview -BuildType Debug -VersionCode 7 -VersionName 1.1.0
 ```
 
 Use a version code above the last uploaded code for each app. Store is the default,
@@ -83,12 +83,11 @@ including Debug builds. Preview must be explicit and appends `.preview` to that 
 ID and ` Preview` to its name. Preview never enables billing. Both profiles remove
 `testKeyHash`; the URL testing key remains website-only.
 
-Output: `dist/fretboard-hero-<instrument>-<store|preview>-<debug|release>.<apk|aab>`.
+Output: `dist/fretboard-hero-<instrument>-<store|preview>-<debug|release>.aab`.
 For example: `dist/fretboard-hero-bass-4-store-release.aab`.
-Each build checks the final APK/AAB's web access configuration and native Capacitor
+Each build checks the final AAB's web access configuration and native Capacitor
 identity before exporting it. The archive must contain exactly one of each config,
 with matching app ID, default instrument and profile. A stale or mixed package fails.
-The native manifest identity and signatures are also checked in CI for each APK.
 Build sequentially within one checkout: all variants reuse the same native tree.
 
 ## Verification, offline use and restoration
@@ -165,7 +164,7 @@ Starting a new action or completing an explicit check clears the old error. Quie
 background checks preserve it until verified ownership changes. Pending payments,
 cancellations and a completed check finding no purchase use the ordinary status text.
 
-This diagnostic UI and the native codes require a newly built and installed AAB/APK;
+This diagnostic UI and the native codes require an app update built from a new AAB;
 a Worker-only deployment cannot add them to an existing installation. Automated tests
 do not establish which Google error occurred on the reported version-code-5 device.
 
@@ -173,8 +172,7 @@ do not establish which Google error occurred on the reported version-code-5 devi
 
 Automated checks run the real sync/preparation scripts for both profiles and all apps,
 verify final archive fixtures, exercise cross-app purchase boundaries and compile/test
-the native encrypted cache. CI builds Store APK/AAB and Preview APK for all three apps;
-iOS is compiled separately. Tests mock store responses: they do not prove live payments.
+the native encrypted cache. Deploy also builds a Store AAB for guitar using a temporary CI key. Tests mock store responses: they do not prove live payments.
 
 On internal testing, verify each app: fresh demo, price, successful purchase, cancellation,
 pending completion, interruption after payment, reinstall/restore, offline restart,

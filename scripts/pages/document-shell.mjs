@@ -5,7 +5,7 @@ const footer=home.match(/<footer class="home-footer">[\s\S]*?<\/footer>/)[0];
 const menus=[...home.matchAll(/<a class="hero-btn [^"]*"[^>]*data-go="[^"]+"[\s\S]*?<\/a>/g)].map(m=>m[0].replace(/ href="[^"]*"/g,'')).join('');
 export const stores=JSON.parse(readFileSync(new URL('../../web/site.config.json',import.meta.url),'utf8')).stores;
 export const documentStyles=['/footer.css?v=10.54.0','/premium.css?v=10.52.0'];
-export const documentScripts=['/core/instrument-selection.js?v=10.49.22','/core/document-branding.js?v=10.53.0','/core/i18n.js?v=10.52.0','/core/modal.js?v=10.52.0','/core/access.js?v=10.52.0','/core/footer.js?v=10.52.0','/core/document-shell.js?v=10.54.0'];
+export const documentScripts=['/core/instrument-selection.js?v=10.49.22','/core/document-branding.js?v=10.53.0','/core/i18n.js?v=10.56.0','/core/modal.js?v=10.52.0','/core/access.js?v=10.52.0','/core/footer.js?v=10.52.0','/core/document-shell.js?v=10.54.0'];
 export function renderDocumentFooter({locale,instrument,languages,ui,configId,localizedUI}){
  const links=languages.map(l=>renderLink({...l,attrs:{lang:l.locale,hreflang:l.locale,...(l.locale===locale?{'aria-current':'page'}:{}),...l.attrs}})).join(' · ');
  const state=JSON.stringify({locale,instrument,stores,languages,ui,localizedUI}).replace(/</g,'\\u003c');

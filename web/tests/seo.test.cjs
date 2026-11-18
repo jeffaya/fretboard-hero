@@ -14,6 +14,8 @@ test('Every app language has complete translated courses and UI, with no paragra
  const {lessonCopy}=await import('../../scripts/lessons/translations.mjs');
  for(const locale of routes.languages){const t=lessonCopy(locale);
   assert.equal(t.nav.length,7);assert.equal(t.tuning.length,3);assert.equal(t.bass.length,3);assert.equal(Object.keys(t.ui).length,40);
+  const catalog=JSON.parse(fs.readFileSync(`web/locales/${locale}.json`,'utf8'));
+  assert.equal(t.nav[0],catalog['Music theory'],locale);
   for(const topic of routes.topics){assert.equal(t[topic].length,5);for(const [i,p] of t[topic].entries()){assert.ok(p.trim().length>0);if(locale!=='en')assert.notEqual(p,lessonCopy('en')[topic][i],`${locale} ${topic} ${i}`);}}
  }
 });
@@ -36,6 +38,13 @@ test('Every lesson has initial HTML illustrations, correct product branding and 
   for(const other of routes.languages){const target=origin+routes.route(other,instrument,topic);assert.ok(html.includes(`hreflang="${other}" href="${target}"`));const counterpart=generated.get('web'+routes.route(other,instrument,topic)+'index.html');assert.ok(counterpart.includes(`hreflang="${locale}" href="${canonical}"`));}
   const graph=JSON.parse(html.match(/type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);assert.ok(graph['@graph'].some(n=>n.url===canonical&&n.inLanguage===locale));
   const header=html.match(/<header class="site-header">([\s\S]*?)<\/header>/)[1];assert.doesNotMatch(header,/language|<details/);
+  const home=new URL(decode(header.match(/class="brand" href="([^"]+)"/)[1]),origin);
+  assert.equal(home.pathname,'/');assert.equal(home.searchParams.get('instrument'),instrument);assert.equal(home.searchParams.get('lang'),locale);
+  const menus=[...html.matchAll(/<nav\b[^>]*>([\s\S]*?)<\/nav>/g)];
+  assert.equal(menus.length,1,route);
+  const links=[...menus[0][1].matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)];
+  assert.deepEqual(links.map(link=>link[1]),routes.topics.map(t=>routes.route(locale,instrument,t)));
+  assert.equal(links[0][2],copy[locale].nav[0]);
   for(const match of html.matchAll(/(?:href|src)="([^"]+)"/g)){
    const value=decode(match[1]);if(value.startsWith('#')||value.startsWith('mailto:'))continue;
    const url=new URL(value,origin);if(url.origin!==origin)continue;
