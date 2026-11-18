@@ -21,13 +21,14 @@
     }).sort((a,b)=>b.regex.source.length-a.regex.source.length);
   }
   // Canonical pitches never change; call only at musical presentation boundaries.
-  function note(input){
+  function formatNote(input,language,messages){
     const found=/^([A-Ga-g])([#♯♭b]{0,2})(m|°|7|maj7|m7)?$/.exec(input);
     if(!found)return input;
     const [,letter,accidental,suffix='']=found,base=letter.toUpperCase();
-    if(locale==='de'&&base==='B'&&(accidental==='♭'||accidental==='b'))return 'B'+suffix;
-    return (dictionary['Note name '+base]||base)+accidental+suffix;
+    if(language==='de'&&base==='B'&&(accidental==='♭'||accidental==='b'))return 'B'+suffix;
+    return (messages['Note name '+base]||base)+accidental+suffix;
   }
+  const note=input=>formatNote(input,locale,dictionary);
   function music(input){
     // Strings such as EAD are tuning sets, never the CAGED system name.
     return input.replace(/\b[A-G]{2,3}\b/g,set=>[...set].map(note).join('–'))
@@ -145,6 +146,7 @@
     document.documentElement.lang=locale;document.documentElement.dir='ltr';
     return locale;
   }
-  window.FretboardI18n={initialize,mount,text,note,music,detect,match,languages,get locale(){return locale}};
+  if(typeof module==='object'&&module.exports)module.exports={formatNote};
+  if(typeof window!=='undefined')window.FretboardI18n={initialize,mount,text,note,music,detect,match,languages,get locale(){return locale}};
 })();
 

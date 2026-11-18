@@ -37,3 +37,31 @@ test('Worked triads change only the third and G voicings contain only chord tone
   const chords=examples('chords',instrument);assert.deepEqual(pitch(chords[0]),[2,7,11]);if(instrument!=='bass-4')assert.deepEqual(pitch(chords[1]),[2,7,11]);else assert.deepEqual(pitch(chords[1]),[2,5,7]);
  }
 });
+
+test('Printed diagrams, tabs and accessible descriptions use the route’s note names',async()=>{
+ const {lessonCopy}=await import('../../scripts/lessons/translations.mjs');
+ const {illustration}=await import('../../scripts/lessons/render.mjs');
+ const {renderTab,tunings}=await import('../../scripts/lessons/tablature.mjs');
+ for(const locale of routes.languages){
+  const text=lessonCopy(locale),catalog=require(`../locales/${locale}.json`);
+  const note=letter=>catalog['Note name '+letter.toUpperCase()];
+  for(const instrument of routes.instruments){
+   const chords=illustration('chords',instrument,text);
+   assert.ok(chords.includes('id="chord-major">'+note('G')+' · '+text.ui.major));
+   assert.ok(chords.includes(text.ui.tones+': '+['G','B','D'].map(note).join(' · ')));
+   const triads=illustration('triads',instrument,text);
+   assert.ok(triads.includes('<title>'+note('A')+'m · '));
+   assert.ok(triads.includes('<desc>'+text.ui.string+' '));
+   const scale=illustration('penta',instrument,text);
+   assert.ok(scale.includes('<title>'+text.nav[2]+' · '+['A','C','D','E','G'].map(note).join(' ')+'</title>'));
+   const orientation=illustration('tabs',instrument,text);
+   const tab=renderTab('triads',instrument,{...text.ui,...text.pedagogy},text.notation);
+   for(const label of tunings[instrument].labels){
+    const localized=label===label.toLowerCase()?note(label).toLocaleLowerCase(locale):note(label);
+    assert.ok(tab.includes('class="tab-string">'+localized+'</text>'));
+    for(const drawing of orientation.matchAll(/<svg\b[^>]*>([\s\S]*?)<\/svg>/g))assert.ok(drawing[1].includes('>'+localized+'</text>'));
+   }
+   if(instrument!=='bass-4')assert.ok(tab.includes('class="tab-chord">'+note('A')+'m</text>'));
+  }
+ }
+});
