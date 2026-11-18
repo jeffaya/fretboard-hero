@@ -1,4 +1,5 @@
 import {escape as e} from '../pages/components.mjs';
+import {tunings} from './tablature.mjs';
 
 // One drawing and one note sequence are shared by all three views.
 export const orientationCopy={
@@ -15,12 +16,11 @@ export const orientationCopy={
  'zh-CN':{title:'从指板到指法谱',intro:'在三种视图中查看 1 弦。乐器没有改变，只是图转了方向。',steps:['正面看指板','将图转动 90°','阅读指法谱'],captions:['弦枕在上方，1 弦在右侧。','将图向左转：1 弦来到上方，弦枕来到左侧。','最上方的线是 1 弦。从左到右读 0、2、3：空弦、第 2 品、第 3 品。'],key:'青色是 1 弦，粉色是最后一根弦。数字表示品位，不是手指。只弹有数字的弦。'}
 };
 
-const tunings={guitar:['E','A','D','G','B','e'],'bass-4':['E','A','D','G'],ukulele:['g','C','E','A']};
 const text=(x,y,value,fill='#e8eef7',size=18)=>`<text x="${x}" y="${y}" text-anchor="middle" fill="${fill}" font-size="${size}" font-family="Arial,sans-serif" font-weight="700">${e(value)}</text>`;
 const color=(index,count)=>index===count-1?'#7ce5fa':index===0?'#ff73c7':'#c5c9d2';
 
 export function renderTabOrientation(instrument,lesson){
- const copy=lesson.orientation,labels=tunings[instrument],count=labels.length;
+ const copy=lesson.orientation,labels=tunings[instrument].labels.map(note=>lesson.notation[note]).reverse(),count=labels.length;
  const xs=labels.map((_,i)=>90+i*120/(count-1));
  const notes=[{fret:0,y:64},{fret:2,y:192},{fret:3,y:262}];
  let neck='<path d="M86 56L76 14Q74 6 88 6H212Q226 6 224 14L214 56Z" fill="#704a36" stroke="#b0885d" stroke-width="2"/>';
@@ -33,8 +33,8 @@ export function renderTabOrientation(instrument,lesson){
   neck+=`<rect x="${side-7}" y="${14+(i%(count/2))*13}" width="14" height="8" rx="3" fill="#aeb5c0"/>`;
   neck+=`<path data-string="${count-i}" d="M${x} 24V302" stroke="${color(i,count)}" stroke-width="${1.2+(count-1-i)*.35}"/>`;
  }
- const labelString=(i,x,y)=>text(x,y,labels[i],color(i,count))+text(x,y+16,count-i,'#aab9d0',11);
- const rowLabel=(i,x,y)=>text(x,y+6,labels[i],color(i,count))+text(x+16,y+4,count-i,'#aab9d0',11);
+ const labelString=(i,x,y)=>text(x,y,labels[i],color(i,count),14)+text(x,y+16,count-i,'#aab9d0',11);
+ const rowLabel=(i,x,y)=>text(x,y+6,labels[i],color(i,count),14)+text(x+22,y+4,count-i,'#aab9d0',11);
  const dot=(x,y,fret)=>`<g data-string="1" data-fret="${fret}"><circle cx="${x}" cy="${y}" r="13" fill="#10152c" stroke="#7ce5fa" stroke-width="2"/>${text(x,y+6,fret,'#7ce5fa')}</g>`;
  const front=neck+xs.map((x,i)=>labelString(i,x,328)).join('')+[1,2,3].map(f=>text(48,122+(f-1)*70,f,'#aab9d0',16)).join('')+notes.map(n=>dot(xs.at(-1),n.y,n.fret)).join('');
  const turned=`<g transform="translate(0 300) rotate(-90)">${neck}</g>`+xs.map((x,i)=>rowLabel(i,320,300-x)).join('')+[1,2,3].map(f=>text(111+(f-1)*70,252,f,'#aab9d0',16)).join('')+notes.map(n=>dot(n.y,300-xs.at(-1),n.fret)).join('');

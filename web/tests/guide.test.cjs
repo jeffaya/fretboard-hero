@@ -29,12 +29,14 @@ test('Guide footer preserves its shared download dialog and article language rou
 test('Chord families follow validated roots, legacy URLs and browser history on every instrument',async()=>{
  const library=require('../core/chord-library.js'),diagrams=require('../core/lesson-diagrams.js');
  const {lessonCopy}=await import('../../scripts/lessons/translations.mjs');
- const ui=lessonCopy('en').ui;
- for(const instrument of ['guitar','bass-4','ukulele']){
-  let current=new URL('https://fretboard-hero.com/en/guitar/chords/?root=9&quality=major&lang=en#chord-major');
+ const routes=require('../core/guide-routes.js');
+ for(const locale of routes.languages)for(const instrument of routes.instruments){
+  const {ui,notation}=lessonCopy(locale);
+  const route=routes.route(locale,instrument,'chords');
+  let current=new URL(route+'?root=9&quality=major&lang='+locale+'#chord-major','https://fretboard-hero.com');
   const events={},positions={},summary={};
   const buttons=Array.from({length:12},(_,root)=>({dataset:{chordRoot:String(root)},setAttribute(key,value){this[key]=value},addEventListener(event,fn){this[event]=fn}}));
-  const data={instrument,ui};
+  const data={instrument,ui,notation};
   const location={get href(){return current.href},get search(){return current.search}};
   const context={URL,URLSearchParams,console,location,history:{replaceState(_,__,url){current=new URL(url)}},document:{
    querySelector:s=>({'#guideConfig':{textContent:JSON.stringify(data)},'#chord-positions':positions,'#chord-summary':summary}[s]),
@@ -42,16 +44,16 @@ test('Chord families follow validated roots, legacy URLs and browser history on 
   },window:{FretboardDocumentBranding:{apply:async()=>{}},FretboardDocumentShell:{mount:async()=>{}},FretboardChords:library,FretboardLessonDiagrams:diagrams,addEventListener(event,fn){events[event]=fn}}};
   vm.runInNewContext(fs.readFileSync('web/guide.js','utf8'),context);
   function check(root){
-   assert.equal(summary.textContent,'Root note: '+library.roots[root]);
-   assert.equal(positions.innerHTML,diagrams.chordFamilies({instrument,root,ui}));
+   assert.equal(summary.textContent,ui.root+': '+notation[library.roots[root].replace('#','♯').replace('b','♭')]);
+   assert.equal(positions.innerHTML,diagrams.chordFamilies({instrument,root,ui,notation}));
    assert.equal((positions.innerHTML.match(/data-chord-family=/g)||[]).length,12);
    assert.equal(buttons[root]['aria-pressed'],'true');
    assert.equal(buttons.filter(b=>b['aria-pressed']==='true').length,1);
   }
-  check(9);assert.equal(current.search,'?root=9&lang=en');assert.equal(current.hash,'#chord-major');
+  check(9);assert.equal(current.search,'?root=9&lang='+locale);assert.equal(current.hash,'#chord-major');
   for(let root=0;root<12;root++){buttons[root].click();check(root);assert.equal(current.searchParams.get('root'),String(root));}
   for(const [query,root] of [['?root=3',3],['?root=12',7],['?root=-1',7],['?root=3.5',7],['?root=bad',7],['',7]]){
-   current=new URL('/en/guitar/chords/'+query,current);events.popstate();check(root);
+   current=new URL(route+query,current);events.popstate();check(root);
   }
  }
 });

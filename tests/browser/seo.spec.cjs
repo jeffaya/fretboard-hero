@@ -158,7 +158,8 @@ for(const [locale,label] of [['hi','हिन्दी'],['ja','日本語'],['ko
  await expect(page.locator('.brand svg')).toHaveAttribute('viewBox','1800 0 900 550');
  await expect(page.locator('[data-chord-root]')).toHaveCount(12);
  await page.locator('[data-chord-root="1"]').click();
- await expect(page.locator('[data-chord-family="m7"] h2')).toContainText('C#m7');
+ const sharpC={hi:'सी♯',ja:'ド♯',ko:'도♯','zh-CN':'C♯',es:'Do♯',de:'C♯',it:'Do♯',id:'Do♯','pt-BR':'Dó♯'};
+ await expect(page.locator('[data-chord-family="m7"] h2')).toContainText(sharpC[locale]+'m7');
  await expect(page.locator('[data-chord-family]')).toHaveCount(12);
  await expect(page.locator('[data-chord-family="m7"] figure')).toHaveCount(2);
  await expect(page.locator('.home-footer .language-trigger')).toContainText(label);
@@ -166,7 +167,7 @@ for(const [locale,label] of [['hi','हिन्दी'],['ja','日本語'],['ko
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await page.locator('.home-footer .language-trigger').click();await page.getByRole('menuitemradio',{name:'Français',exact:true}).click();
  await expect(page).toHaveURL(/\/fr\/ukulele\/accords\/\?root=1$/);
- await expect(page.locator('[data-chord-family="m7"] h2')).toContainText('C#m7');
+ await expect(page.locator('[data-chord-family="m7"] h2')).toContainText('Do♯m7');
 });
 
 test('Root selection shows every chord family, preserves links and has no outer border',async({page},testInfo)=>{
@@ -191,9 +192,9 @@ test('Root selection shows every chord family, preserves links and has no outer 
  await expect(major.locator('.fret-code')).toHaveText(['3 · 2 · 0 · 0 · 0 · 3','3 · 2 · 0 · 0 · 3 · 3','3 · 5 · 5 · 4 · 3 · 3','× · 10 · 12 · 12 · 12 · 10']);
  await page.locator('[data-chord-root="10"]').focus();await page.keyboard.press('Enter');
  await expect(page.locator('[data-chord-root="10"]')).toHaveAttribute('aria-pressed','true');
- await expect(page.locator('#chord-summary')).toContainText('Bb');
- await expect(page.locator('[data-chord-family="dim"] h2')).toContainText('Bbdim');
- await page.reload();await expect(page.locator('[data-chord-family="dim"] h2')).toContainText('Bbdim');
+ await expect(page.locator('#chord-summary')).toContainText('Si♭');
+ await expect(page.locator('[data-chord-family="dim"] h2')).toContainText('Si♭dim');
+ await page.reload();await expect(page.locator('[data-chord-family="dim"] h2')).toContainText('Si♭dim');
  await expect(page.locator('nav a[href*="/basse/"]')).toHaveCount(0);
  await page.locator('.site-header .brand').click();await ready(page);
  await page.locator('[data-home-instrument="bass-4"]').click();
@@ -206,7 +207,7 @@ test('Root selection shows every chord family, preserves links and has no outer 
  await expect(page.locator('.brand')).toHaveAttribute('aria-label','Bass Fretboard Hero');
  await expect(page.locator('[data-chord-family]')).toHaveCount(12);
  await expect(page.locator('#chord-positions .neck-diagram')).toHaveCount(24);
- await expect(page.locator('[data-chord-family="dim"] h2')).toContainText('Bbdim');
+ await expect(page.locator('[data-chord-family="dim"] h2')).toContainText('Si♭dim');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 

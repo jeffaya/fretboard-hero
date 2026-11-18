@@ -6,12 +6,12 @@
  window.FretboardDocumentBranding.apply(data.instrument,'/').catch(error=>console.error('Guide branding unavailable',error));
  window.FretboardDocumentShell.mount(data).catch(error=>console.error('Guide controls unavailable',error));
  const positions=document.querySelector('#chord-positions');if(!positions)return;
- const library=window.FretboardChords,buttons=[...document.querySelectorAll('[data-chord-root]')];
+ const diagrams=window.FretboardLessonDiagrams,buttons=[...document.querySelectorAll('[data-chord-root]')];
  let root=7;
  function render(updateURL){
   buttons.forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.chordRoot)===root)));
-  document.querySelector('#chord-summary').textContent=data.ui.root+': '+library.roots[root];
-  positions.innerHTML=window.FretboardLessonDiagrams.chordFamilies({instrument:data.instrument,root,ui:data.ui});
+  document.querySelector('#chord-summary').textContent=data.ui.root+': '+diagrams.rootName(root,data.notation);
+  positions.innerHTML=diagrams.chordFamilies({instrument:data.instrument,root,ui:data.ui,notation:data.notation});
   const url=new URL(location.href);
   if(updateURL||url.searchParams.has('quality')){url.searchParams.set('root',root);url.searchParams.delete('quality');history.replaceState(null,'',url);}
  }

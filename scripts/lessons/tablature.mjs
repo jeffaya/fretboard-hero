@@ -26,9 +26,11 @@ export function examples(topic,instrument){
  if(topic==='tabs')return [[note(1,0),note(1,2),note(1,3),rest()],[note(1,0,.5),note(1,2,.5),note(1,3),note(1,0,2)]];
  throw Error('Unknown tablature topic: '+topic);
 }
-export function renderTab(topic,instrument,ui){
+export function renderTab(topic,instrument,ui,names){
  const tuning=tunings[instrument],bars=examples(topic,instrument),pitchNames=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
- const pitch=([s,f])=>pitchNames[(tuning.midi[s-1]+f)%12];
+ const labels=tuning.labels.map(label=>names[label]);
+ const pitch=([s,f])=>names[pitchNames[(tuning.midi[s-1]+f)%12]];
+ const chordLabel=chord=>names[chord[0]]+chord.slice(1);
  const top=68,gap=24,bottom=top+(tuning.labels.length-1)*gap,height=bottom+48;
  const renderBar=(bar,index)=>{
   let cursor=0;
@@ -36,10 +38,10 @@ export function renderTab(topic,instrument,ui){
    const x=72+cursor*64,onset=cursor;cursor+=event.beats;
    const y=event.notes.length?top+(event.notes[0][0]-1)*gap:top+gap;
    const notation=event.notes.length?event.notes.map(([s,f])=>`<rect x="${x-12}" y="${top+(s-1)*gap-10}" width="24" height="20" rx="4" fill="#071629"/><text x="${x}" y="${top+(s-1)*gap+6}" class="tab-fret">${f}</text>`).join(''):`<text x="${x}" y="${y+5}" class="tab-rest">R</text>`;
-   return `<g data-tab-beat="${onset}" data-duration="${event.beats}">${event.chord?`<text x="${x}" y="47" class="tab-chord">${e(event.chord)}</text>`:''}${notation}<text x="${x}" y="${bottom+28}" class="tab-duration">${event.beats===.5?'½':event.beats}</text></g>`;
+   return `<g data-tab-beat="${onset}" data-duration="${event.beats}">${event.chord?`<text x="${x}" y="47" class="tab-chord">${e(chordLabel(event.chord))}</text>`:''}${notation}<text x="${x}" y="${bottom+28}" class="tab-duration">${event.beats===.5?'½':event.beats}</text></g>`;
   }).join('');
-  return `<figure class="tab-bar"><figcaption>${e(ui.bar)} ${index+1} · 4/4</figcaption><svg class="tab-diagram" viewBox="0 0 330 ${height}" role="img" aria-label="${e(ui.example+' · '+ui.bar+' '+(index+1))}" xmlns="http://www.w3.org/2000/svg"><title>${e(ui.example+' · '+ui.bar+' '+(index+1))}</title>${tuning.labels.map((label,i)=>`<text x="15" y="${top+i*gap+5}" class="tab-string">${label}</text><line x1="38" x2="318" y1="${top+i*gap}" y2="${top+i*gap}" class="tab-line"/>`).join('')}<line x1="38" x2="38" y1="${top}" y2="${bottom}" class="tab-line"/><line x1="318" x2="318" y1="${top}" y2="${bottom}" class="tab-line"/>${[1,2,3,4].map((b,i)=>`<text x="${72+i*64}" y="28" class="tab-beat">${b}</text>`).join('')}${events}</svg></figure>`;
+  return `<figure class="tab-bar"><figcaption>${e(ui.bar)} ${index+1} · 4/4</figcaption><svg class="tab-diagram" viewBox="0 0 330 ${height}" role="img" aria-label="${e(ui.example+' · '+ui.bar+' '+(index+1))}" xmlns="http://www.w3.org/2000/svg"><title>${e(ui.example+' · '+ui.bar+' '+(index+1))}</title>${labels.map((label,i)=>`<text x="18" y="${top+i*gap+5}" class="tab-string">${e(label)}</text><line x1="38" x2="318" y1="${top+i*gap}" y2="${top+i*gap}" class="tab-line"/>`).join('')}<line x1="38" x2="38" y1="${top}" y2="${bottom}" class="tab-line"/><line x1="318" x2="318" y1="${top}" y2="${bottom}" class="tab-line"/>${[1,2,3,4].map((b,i)=>`<text x="${72+i*64}" y="28" class="tab-beat">${b}</text>`).join('')}${events}</svg></figure>`;
  };
- const transcript=bars.map((bar,i)=>`<li>${e(ui.bar)} ${i+1}<ol>${bar.map(event=>`<li>${event.notes.length?event.notes.map(([s,f])=>`${e(ui.string)} ${s} (${tuning.labels[s-1]}), ${e(ui.fret)} ${f}, ${e(pitch([s,f]))}`).join(' + '):e(ui.rest)} · ${event.beats===.5?'½':event.beats} ${e(ui.beats)}</li>`).join('')}</ol></li>`).join('');
+ const transcript=bars.map((bar,i)=>`<li>${e(ui.bar)} ${i+1}<ol>${bar.map(event=>`<li>${event.chord?e(chordLabel(event.chord))+' · ':''}${event.notes.length?event.notes.map(([s,f])=>`${e(ui.string)} ${s} (${e(labels[s-1])}), ${e(ui.fret)} ${f}, ${e(pitch([s,f]))}`).join(' + '):e(ui.rest)} · ${event.beats===.5?'½':event.beats} ${e(ui.beats)}</li>`).join('')}</ol></li>`).join('');
  return `<div class="tab-example"><p class="tab-reading">${e(ui.tabKey)}</p><div class="tab-grid">${bars.map(renderBar).join('')}</div><details class="tab-transcript"><summary>${e(ui.textVersion)}</summary><ol>${transcript}</ol></details></div>`;
 }
