@@ -27,7 +27,7 @@ Android's Capacitor WebView audio request requires both `RECORD_AUDIO` and
 `MODIFY_AUDIO_SETTINGS` in the manifest. Missing either makes the native bridge
 deny `getUserMedia`, so the microphone switches off immediately, even when the
 user has granted recording access. `scripts/validate-android-microphone.ps1`
-blocks local APK/AAB builds with missing or SDK-limited declarations. The CI
+blocks local AAB builds with missing or SDK-limited declarations. The CI
 tests check this contract against the installed Capacitor source and exercise
 denial followed by an explicit retry. Do not override the WebView permission
 callback to grant requests unconditionally; user consent remains required.

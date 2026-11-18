@@ -164,12 +164,12 @@ Quiz.
 
 | | Web | Native app (Capacitor) |
 |---|---|---|
-| Hosting | Cloudflare | 3 separately installable APKs (one per instrument) |
+| Hosting | Cloudflare | 3 Google Play apps (one per instrument) |
 | Connectivity | Needs network on first load | 100% offline (bundled assets) |
 | Back button | -- | Hardware/gesture Back: goes to Home, then exits the app from Home |
 | Zoom/overscroll | Standard browser | Pinch-zoom and overscroll bounce disabled (app-like feel) |
 | Icon/splash | Browser favicon | Native icon + splash on dark `#05070b` background |
-| Updates | Instant (web deploy) | Requires a rebuild + APK reinstall |
+| Updates | Instant (web deploy) | Delivered through Google Play |
 
 ## Current state
 
@@ -203,7 +203,7 @@ separately in [`docs/APP-RELEASE-NOTES.md`](docs/APP-RELEASE-NOTES.md).
   per-instrument app IDs). `app/www/` is **disposable and gitignored** --
   it's regenerated from `web/` on every build, never hand-edited.
 - **`scripts/`** -- build orchestration, runnable from the repo root.
-- **`dist/`** -- gitignored output folder for the built debug APKs.
+- **`dist/`** -- gitignored output folder for Android bundles and release mappings.
 - **`docs/`** -- technical reference and release notes for the Android app.
 - **`tools/`** -- ad hoc dev/debug scripts (not part of the shipped product).
 
@@ -222,7 +222,7 @@ normal content/feature update.
 .\scripts\build-all.ps1
 ```
 
-Output APKs land in `dist/fretboard-hero-<instrument>-debug.apk`.
+By default, each build writes `dist/fretboard-hero-<instrument>-store-debug.aab`.
 
 ### Prerequisites
 
@@ -272,7 +272,7 @@ Native sync removes `testKeyHash` and selects an explicit access profile:
 | Store (Android/iOS, default) | `false` | `true` | Free demo, verified purchase/restore |
 | Preview (explicit) | `true` | `false` | Fully unlocked, separate `.preview` installation |
 
-The Android build validates the actual APK/AAB against the expected app identity, instrument and profile
+The Android build validates the final AAB against the expected app identity, instrument and profile
 before copying it to `dist/`. Both platforms keep verified paid access offline;
 a temporary store outage must not revoke access. Never edit `app/www` by hand.
 
@@ -288,7 +288,7 @@ This client-side preview gate is not a payment system or secure access control.
 Validation: `node --test web/tests/*.test.cjs app/tests/*.test.cjs` from the repo
 root (Node 22+ and PowerShell 7 on PATH; `PWSH` can select its executable).
 The distribution tests run the real sync script for both profiles/platforms
-and all initial instruments, then validate APK/AAB archive fixtures. PR and Android release workflows run these checks.
+and all initial instruments, then validate APK/AAB archive fixtures. The Deploy workflow runs these checks before publishing to Cloudflare.
 
 The unlock dialog uses the shared `ui-modal` neon outline and the existing home
 SVG icons. On phones and portrait touch tablets the two store buttons stack;
@@ -300,19 +300,16 @@ needs QR codes. Empty store URLs leave buttons disabled without â€œComing soonâ€
 copy and omit QR codes; fill `stores` before releasing.
 
 
-### Build signed APKs and Google Play bundles
+### Build signed Google Play bundles
 
 ```powershell
-.\scripts\build-all.ps1 -BuildType Release -Format Both -VersionCode 2 -VersionName 1.1.0
+.\scripts\build-all.ps1 -BuildType Release -VersionCode 2 -VersionName 1.1.0
 ```
 
-This produces one APK and one AAB per instrument in `dist/`. Set the version
-code above your last Play upload (the command uses an example). The existing
-APK-only debug command still works. The manual **Build Android APK / AAB**
-GitHub workflow lets you choose guitar, bass, ukulele or all applications,
-then APK, AAB or both. Only the selected packages are compiled. Signing setup
-and workflow instructions are documented in
-[Android distribution](docs/TECHNICAL.md#android-distribution-apk--aab).
+This produces one signed AAB per instrument in `dist/`. Choose a version code
+above the last Play upload for each selected app. In GitHub Actions, run
+**Generate Android App** and enter the instrument, version code and version name.
+See the [Android distribution guide](docs/TECHNICAL.md#android-distribution) for signing and release instructions.
 
 ### Interface languages
 

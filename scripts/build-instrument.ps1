@@ -14,8 +14,6 @@
 .PARAMETER BuildType
     "Debug" (default, debug-signed, for local testing) or "Release" (signed, requires
     app/android/keystore.properties -- see docs/TECHNICAL.md).
-.PARAMETER Format
-    Apk (default, preserves existing builds), Aab, or Both.
 
 .PARAMETER VersionCode
     Android integer version code. Increase for each Google Play upload.
@@ -35,9 +33,6 @@ param(
     [ValidateSet("Debug", "Release")]
     [string]$BuildType = "Debug",
 
-    [ValidateSet("Apk", "Aab", "Both")]
-    [string]$Format = "Apk",
-
     [ValidateRange(1, 2100000000)]
     [int]$VersionCode = 1,
 
@@ -55,13 +50,10 @@ if ($BuildType -eq "Release" -and -not (Test-Path (Join-Path $appRoot "android/k
 $BuildType = if ($BuildType -eq "Release") { "Release" } else { "Debug" }
 $buildTypeLower = $BuildType.ToLower()
 $profileLower = $Profile.ToLower()
-$extensions = if ($Format -eq "Both") { @("apk", "aab") } else { @($Format.ToLower()) }
+$output = Join-Path $distDir "fretboard-hero-$Instrument-$profileLower-$buildTypeLower.aab"
 $mappingOutput = Join-Path $distDir "fretboard-hero-$Instrument-$profileLower-$buildTypeLower-mapping.txt"
-Remove-Item $mappingOutput -Force -ErrorAction SilentlyContinue
-# Do not leave a stale package that could be mistaken for this build's output.
-foreach ($extension in $extensions) {
-    Remove-Item (Join-Path $distDir "fretboard-hero-$Instrument-$profileLower-$buildTypeLower.$extension") -Force -ErrorAction SilentlyContinue
-}
+# Clear this instrument's previous outputs before attempting a new build.
+Remove-Item $output, $mappingOutput -Force -ErrorAction SilentlyContinue
 $instrumentsPath = Join-Path $appRoot "instruments.json"
 $instruments = Get-Content $instrumentsPath -Raw | ConvertFrom-Json
 if (-not $instruments.$Instrument) { throw "Unknown instrument '$Instrument'." }
@@ -175,13 +167,10 @@ try {
         throw "npx cap sync android failed with exit code $LASTEXITCODE"
     }
 
-    # 5. Build both requested formats in the same Gradle invocation.
-    $gradleTasks = @()
-    if ($extensions -contains "apk") { $gradleTasks += "assemble$BuildType" }
-    if ($extensions -contains "aab") { $gradleTasks += "bundle$BuildType" }
+    # 5. Build the Android App Bundle for the selected variant.
     Push-Location (Join-Path $appRoot "android")
     try {
-        & .\gradlew.bat --no-scan @gradleTasks "-PappVersionCode=$VersionCode" "-PappVersionName=$VersionName"
+        & .\gradlew.bat --no-scan "bundle$BuildType" "-PappVersionCode=$VersionCode" "-PappVersionName=$VersionName"
         if ($LASTEXITCODE -ne 0) {
             throw "Gradle build failed with exit code $LASTEXITCODE"
         }
@@ -190,32 +179,19 @@ try {
         $ErrorActionPreference = $previousEap
     }
 
-    # 6. Validate every requested package before publishing any of them to dist.
-    # AGP embeds this same R8 mapping in an AAB; APK-only builds need the sidecar.
-    $mappingPath = Join-Path $appRoot "android/app/build/outputs/mapping/release/mapping.txt"
-    foreach ($extension in $extensions) {
-        $outputKind = if ($extension -eq "apk") { "apk" } else { "bundle" }
-        $built = Join-Path $appRoot "android/app/build/outputs/$outputKind/$buildTypeLower/app-$buildTypeLower.$extension"
-        if (-not (Test-Path $built)) {
-            throw "Build did not produce the expected $extension at $built"
-        }
-        # Inspect the actual archive, not only the source config: stale native
-        # assets must never mix Store and Preview access.
-        & (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $built -Instrument $Instrument -Profile $Profile -RepoPath $RepoPath
-        if ($BuildType -eq "Release") {
-            & (Join-Path $PSScriptRoot "validate-android-mapping.ps1") -Path $built -MappingPath $mappingPath
-        }
+    # 6. Validate the bundle and its embedded release mapping before export.
+    $built = Join-Path $appRoot "android/app/build/outputs/bundle/$buildTypeLower/app-$buildTypeLower.aab"
+    if (-not (Test-Path $built)) {
+        throw "Build did not produce the expected AAB at $built"
     }
+    & (Join-Path $PSScriptRoot "validate-android-access.ps1") -Path $built -Instrument $Instrument -Profile $Profile -RepoPath $RepoPath
     if ($BuildType -eq "Release") {
+        $mappingPath = Join-Path $appRoot "android/app/build/outputs/mapping/release/mapping.txt"
+        & (Join-Path $PSScriptRoot "validate-android-mapping.ps1") -Path $built -MappingPath $mappingPath
         Copy-Item -Path $mappingPath -Destination $mappingOutput -Force
     }
-    foreach ($extension in $extensions) {
-        $outputKind = if ($extension -eq "apk") { "apk" } else { "bundle" }
-        $built = Join-Path $appRoot "android/app/build/outputs/$outputKind/$buildTypeLower/app-$buildTypeLower.$extension"
-        $output = Join-Path $distDir "fretboard-hero-$Instrument-$profileLower-$buildTypeLower.$extension"
-        Copy-Item -Path $built -Destination $output -Force
-        Write-Host "Built $output (version $VersionName, code $VersionCode)" -ForegroundColor Green
-    }
+    Copy-Item -Path $built -Destination $output -Force
+    Write-Host "Built $output (version $VersionName, code $VersionCode)" -ForegroundColor Green
 } finally {
     Pop-Location
 }

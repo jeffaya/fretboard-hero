@@ -31,7 +31,7 @@ node stores/tools/export-icon.cjs
 node stores/tools/validate.cjs
 ```
 
-For French exports, set `STORE_LOCALE=fr-FR` when running `capture.cjs`, `render.cjs` and `export-icon.cjs`, and pass `stores/google-play/guitar/fr-FR` to `export-feature.cjs` and `validate.cjs`. Set `STORE_INSTRUMENT=bass` or `STORE_INSTRUMENT=ukulele` with `STORE_LOCALE=en-US` to rebuild the corresponding English series. The manual **Google Play visual export** workflow accepts an instrument and locale and produces the same files as a downloadable artifact. Bass and ukulele currently have English artwork only.
+For French exports, set `STORE_LOCALE=fr-FR` when running `capture.cjs`, `render.cjs` and `export-icon.cjs`, and pass `stores/google-play/guitar/fr-FR` to `export-feature.cjs` and `validate.cjs`. Set `STORE_INSTRUMENT=bass` or `STORE_INSTRUMENT=ukulele` with `STORE_LOCALE=en-US` to rebuild the corresponding English series. Bass and ukulele currently have English artwork only.
 
 The tools require Node.js and the dependencies in `tools/package.json`. `PLAYWRIGHT_CHROMIUM_EXECUTABLE` can select an existing Chromium executable; otherwise Playwright uses its installed browser. `STORE_DEVICE=phone` (or `tablet-7`, `tablet-10`, `desktop`, `android-xr-console`) limits a capture run.
 
