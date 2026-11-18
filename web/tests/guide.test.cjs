@@ -32,13 +32,13 @@ test('Chord families follow validated roots, legacy URLs and browser history on 
  const ui=lessonCopy('en').ui;
  for(const instrument of ['guitar','bass-4','ukulele']){
   let current=new URL('https://fretboard-hero.com/en/guitar/chords/?root=9&quality=major&lang=en#chord-major');
-  const events={},positions={},summary={},links=[{href:'https://fretboard-hero.com/fr/guitare/accords/?quality=m7'}];
+  const events={},positions={},summary={};
   const buttons=Array.from({length:12},(_,root)=>({dataset:{chordRoot:String(root)},setAttribute(key,value){this[key]=value},addEventListener(event,fn){this[event]=fn}}));
   const data={instrument,ui};
   const location={get href(){return current.href},get search(){return current.search}};
   const context={URL,URLSearchParams,console,location,history:{replaceState(_,__,url){current=new URL(url)}},document:{
    querySelector:s=>({'#guideConfig':{textContent:JSON.stringify(data)},'#chord-positions':positions,'#chord-summary':summary}[s]),
-   querySelectorAll:s=>s==='[data-chord-root]'?buttons:links
+   querySelectorAll:s=>s==='[data-chord-root]'?buttons:[]
   },window:{FretboardDocumentBranding:{apply:async()=>{}},FretboardDocumentShell:{mount:async()=>{}},FretboardChords:library,FretboardLessonDiagrams:diagrams,addEventListener(event,fn){events[event]=fn}}};
   vm.runInNewContext(fs.readFileSync('web/guide.js','utf8'),context);
   function check(root){
@@ -47,8 +47,6 @@ test('Chord families follow validated roots, legacy URLs and browser history on 
    assert.equal((positions.innerHTML.match(/data-chord-family=/g)||[]).length,12);
    assert.equal(buttons[root]['aria-pressed'],'true');
    assert.equal(buttons.filter(b=>b['aria-pressed']==='true').length,1);
-   assert.equal(new URL(links[0].href).searchParams.get('root'),String(root));
-   assert.equal(new URL(links[0].href).searchParams.has('quality'),false);
   }
   check(9);assert.equal(current.search,'?root=9&lang=en');assert.equal(current.hash,'#chord-major');
   for(let root=0;root<12;root++){buttons[root].click();check(root);assert.equal(current.searchParams.get('root'),String(root));}

@@ -55,15 +55,14 @@ ${pageLanguages.map(lang=>`<link rel="alternate" hreflang="${lang.locale}" href=
 <link rel="icon" href="/assets/instruments/${family(instrument)}/favicon.ico">
 <script type="application/ld+json">${json(graph)}</script>`;
  const related=renderRelated(text.ui.choose,routes.topics.filter(t=>t!=='home'&&t!==topic).map(t=>({label:text.nav[routes.topics.indexOf(t)],description:text[t][1],href:routes.route(locale,instrument,t)})));
- const body=`<section class="page-hero"><p class="eyebrow">${escape(name)} / ${escape(isAbout?aboutPage.label:text.nav[routes.topics.indexOf(topic)])}</p><h1>${escape(heading)}</h1><p class="page-intro">${escape(intro)}</p><div class="actions"><a class="button ui-primary" data-exercise-link href="${escape(appURL)}">${escape(text.ui.try)} <span aria-hidden="true">↗</span></a></div></section>
+ const body=`<section class="page-hero"><p class="eyebrow">${escape(isAbout?aboutPage.label:text.nav[routes.topics.indexOf(topic)])}</p><h1>${escape(heading)}</h1><p class="page-intro">${escape(intro)}</p><div class="actions"><a class="button ui-primary" data-exercise-link href="${escape(appURL)}">${escape(text.ui.try)} <span aria-hidden="true">↗</span></a></div></section>
 ${topic==='home'&&!isAbout?related:''}
 ${isAbout?`<article class="lesson-body">${aboutPage.sections.map(renderSection).join('\n')}</article>`:lessonBody(topic,instrument,text)}
 ${topic!=='home'&&!isAbout?related:''}`;
- const nav=`<nav class="instrument-nav" aria-label="${escape(text.ui.instrument)}">${routes.instruments.map((inst,i)=>`<a data-guide-route href="${routes.route(locale,inst,topic)}"${inst===instrument?' aria-current="true"':''}>${escape(text.instruments[i])}</a>`).join('')}</nav>
-<nav class="page-nav" aria-label="${escape(text.nav[0])}">${routes.topics.map((t,i)=>`<a href="${routes.route(locale,instrument,t)}"${!isAbout&&t===topic?' aria-current="page"':''}>${escape(text.nav[i])}</a>`).join('')}</nav>`;
+ const nav=`<nav class="page-nav" aria-label="${escape(text.nav[0])}">${routes.topics.map((t,i)=>`<a href="${routes.route(locale,instrument,t)}"${!isAbout&&t===topic?' aria-current="page"':''}>${escape(text.nav[i])}</a>`).join('')}</nav>`;
  return renderPage({locale,head,body,skipLabel:text.ui.skip,header:{home,branding:brand},navigation:nav,
   styles:documentStyles,
-  scripts:[...documentScripts,'/core/chord-library.js?v=10.53.0','/core/lesson-diagrams.js?v=10.55.0','/guide.js?v=10.55.0'],
+  scripts:[...documentScripts,'/core/chord-library.js?v=10.53.0','/core/lesson-diagrams.js?v=10.55.0','/guide.js?v=10.56.0'],
   footerHTML:renderDocumentFooter({locale,instrument,languages:pageLanguages,ui:text.ui,configId:'guideConfig'})
  });
 }

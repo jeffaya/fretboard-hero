@@ -3,9 +3,10 @@ const {test,expect,visibleDrawing,ready,installStore}=require('./fixtures.cjs');
 for(const [locale,route,description,learn,heading,triads,penta] of [
  ['fr','/fr/guitare/','Explications, schémas et conseils','Pratiquez sur le manche interactif','Comprends le manche. Joue ce que tu vois.','triades/','pentatonique/'],
  ['en','/en/guitar/','Explanations, diagrams and tips','Practice on the interactive fretboard','Understand the neck. Play what you see.','triads/','pentatonic-scales/']
-])test(`Home Guide opens the topic index and links between articles (${locale})`,async({page})=>{
+])test(`Home Music theory card opens the topic index and links between articles (${locale})`,async({page})=>{
  await page.goto(`/?instrument=guitar&lang=${locale}`);await ready(page);
  const guide=page.locator('#home .guide-card');await expect(guide).toBeVisible();
+ await expect(guide.locator('strong')).toHaveText(locale==='fr'?'Théorie musicale':'Music theory');
  await expect(guide.locator('small')).toHaveText(description);
  await expect(page.locator('#home .learn-card small')).toHaveText(learn);
  await expect(guide).toHaveAttribute('href',route);
@@ -193,7 +194,14 @@ test('Root selection shows every chord family, preserves links and has no outer 
  await expect(page.locator('#chord-summary')).toContainText('Bb');
  await expect(page.locator('[data-chord-family="dim"] h2')).toContainText('Bbdim');
  await page.reload();await expect(page.locator('[data-chord-family="dim"] h2')).toContainText('Bbdim');
- await page.locator('.instrument-nav a[href*="/basse/"]').click();
+ await expect(page.locator('nav a[href*="/basse/"]')).toHaveCount(0);
+ await page.locator('.site-header .brand').click();await ready(page);
+ await page.locator('[data-home-instrument="bass-4"]').click();
+ await expect(page.locator('.guide-card')).toHaveAttribute('href','/fr/basse/');
+ await page.locator('.guide-card').click();
+ await page.locator('.page-nav a[href="/fr/basse/accords/"]').click();
+ await expect(page.locator('.brand')).toHaveAttribute('aria-label','Bass Fretboard Hero');
+ await page.goto('/fr/basse/accords/?root=10');
  await expect(page).toHaveURL(/\/fr\/basse\/accords\/\?root=10$/);
  await expect(page.locator('.brand')).toHaveAttribute('aria-label','Bass Fretboard Hero');
  await expect(page.locator('[data-chord-family]')).toHaveCount(12);
