@@ -7,19 +7,21 @@ Dedicated distribution-listing assets. These files are separate from the shipped
 | Path | Purpose |
 | --- | --- |
 | `google-play/guitar/` | Guitar Fretboard Hero listing copy and alt text in all 11 app languages; visuals in `en-US/` and `fr-FR/` |
-| `google-play/bass/` | Bass Fretboard Hero listing copy and alt text in all 11 app languages; English visuals in `en-US/` |
-| `google-play/ukulele/` | Ukulele Fretboard Hero listing copy and alt text in all 11 app languages; English visuals in `en-US/` |
+| `google-play/bass/` | Bass Fretboard Hero listing copy and alt text in all 11 app languages; visuals in `en-US/` and `fr-FR/` |
+| `google-play/ukulele/` | Ukulele Fretboard Hero listing copy and alt text in all 11 app languages; visuals in `en-US/` and `fr-FR/` |
 | `tools/` | Capture, render and validation scripts |
 
 Future Apple listings belong in `apple-app-store/<instrument>/<locale>/`. That directory is intentionally not populated in this first Google Play draft.
 
-Every locale for guitar, bass and ukulele has `README.md` with copyable listing fields and `alt-text.json`. The guitar `en-US/` and `fr-FR/`, bass `en-US/`, and ukulele `en-US/` listings additionally contain `icon/`, `phone/`, `tablet-7/`, `tablet-10/`, `desktop/`, and `android-xr/`. The other nine guitar languages currently contain text only; their localized images are pending. Bass and ukulele now have complete English series with instrument-specific four-string captures and checked English alt text. Their other ten locales still have text only; those draft alt texts must be checked against future localized images. Upload files from the device folders in numeric order. `source/` contains editable artwork and capture evidence; it is not an upload folder.
+Every locale for guitar, bass and ukulele has `README.md` with copyable listing fields and `alt-text.json`. The English and French listings for all three instruments have visual sources. The remaining locales contain listing text and draft alt text. Upload files from the device folders in numeric order. `source/` contains editable artwork and capture evidence; it is not an upload folder.
 
 Start with [the Android format reference](google-play/README.md), then the language index for [guitar](google-play/guitar/README.md), [bass](google-play/bass/README.md) or [ukulele](google-play/ukulele/README.md). The [English](google-play/guitar/en-US/README.md) and [French](google-play/guitar/fr-FR/README.md) guitar upload guides cover their visuals; Android XR remains a 2D draft because it has not been captured in an XR runtime.
 
 ## Rebuild
 
-From the repository root:
+After publishing the Worker, **Deploy** renders and validates the English and French visuals for guitar, bass and ukulele. Download the **google-play-visuals** artifact from the deployment run within seven days. Uploading the files to Play Console is a separate manual step.
+
+To rebuild the English guitar listing locally, run these commands from the repository root.
 
 ```sh
 npm --prefix stores/tools ci
@@ -31,7 +33,7 @@ node stores/tools/export-icon.cjs
 node stores/tools/validate.cjs
 ```
 
-For French exports, set `STORE_LOCALE=fr-FR` when running `capture.cjs`, `render.cjs` and `export-icon.cjs`, and pass `stores/google-play/guitar/fr-FR` to `export-feature.cjs` and `validate.cjs`. Set `STORE_INSTRUMENT=bass` or `STORE_INSTRUMENT=ukulele` with `STORE_LOCALE=en-US` to rebuild the corresponding English series. Bass and ukulele currently have English artwork only.
+For another listing, set `STORE_INSTRUMENT` to `guitar`, `bass` or `ukulele` and `STORE_LOCALE` to `en-US` or `fr-FR`. Pass the matching listing directory to both `export-feature.cjs` and `validate.cjs`.
 
 The tools require Node.js and the dependencies in `tools/package.json`. `PLAYWRIGHT_CHROMIUM_EXECUTABLE` can select an existing Chromium executable; otherwise Playwright uses its installed browser. `STORE_DEVICE=phone` (or `tablet-7`, `tablet-10`, `desktop`, `android-xr-console`) limits a capture run.
 

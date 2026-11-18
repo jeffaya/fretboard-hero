@@ -458,7 +458,7 @@ The repository workflow policy is in [AGENTS.md](../AGENTS.md).
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| Deploy | Push to `main` | Run the regression suite and deploy the Worker once all checks pass |
+| Deploy | Push to `main` | Run the regression suite, deploy the Worker, then export Google Play visuals as a run artifact |
 | Generate Android App | Manual | Build signed Store AABs and validate each bundle and its R8 mapping |
 
 Open **Actions → Generate Android App → Run workflow** and enter the build settings.

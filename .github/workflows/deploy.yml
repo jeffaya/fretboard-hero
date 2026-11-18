@@ -145,3 +145,42 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: "4"
+
+      - name: Set up Node.js for the store visuals
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: stores/tools/package-lock.json
+
+      - name: Install store tools and Chromium
+        working-directory: stores/tools
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Export and validate Google Play visuals
+        shell: bash
+        run: |
+          for instrument in guitar bass ukulele; do
+            for locale in en-US fr-FR; do
+              export STORE_INSTRUMENT="$instrument" STORE_LOCALE="$locale"
+              listing="stores/google-play/$instrument/$locale"
+              node stores/tools/capture.cjs
+              node stores/tools/render.cjs
+              node stores/tools/export-feature.cjs "$listing"
+              node stores/tools/export-icon.cjs
+              node stores/tools/validate.cjs "$listing"
+            done
+          done
+
+      - name: Upload Google Play visuals
+        uses: actions/upload-artifact@v7
+        with:
+          name: google-play-visuals
+          path: |
+            stores/google-play/*/en-US/**
+            stores/google-play/*/fr-FR/**
+            !stores/google-play/*/*/source/**
+          if-no-files-found: error
+          retention-days: 7
