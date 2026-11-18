@@ -173,6 +173,9 @@ jobs:
               node stores/tools/validate.cjs "$listing"
             done
           done
+          for copy in stores/google-play/guitar/*/source/copy.json; do
+            node stores/tools/validate.cjs "${copy%/source/copy.json}"
+          done
 
       - name: Upload Google Play visuals
         uses: actions/upload-artifact@v7
@@ -181,6 +184,7 @@ jobs:
           path: |
             stores/google-play/*/en-US/**
             stores/google-play/*/fr-FR/**
+            stores/google-play/guitar/**
             !stores/google-play/*/*/source/**
           if-no-files-found: error
           retention-days: 7
