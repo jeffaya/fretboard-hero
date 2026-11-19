@@ -17,7 +17,7 @@ const variants = [
 ];
 const jpeg = !['en-US','fr-FR'].includes(locale);
 const names = ['01-routine','02-triads','03-pentatonic','04-feedback','05-quiz','06-tuner','07-map','08-circle'];
-const evidence = {sourceCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),locale,instrument,capture:'Chromium rendering of local web source; viewport emulation, not physical-device certification',access:'Local capture-only unlocked configuration; production config unchanged',audio:'Synthetic microphone input processed by the real detector',variants:[]};
+const evidence = {sourceCommit:execFileSync('git',['log','-1','--format=%H','--','web'],{cwd:repo,encoding:'utf8'}).trim(),locale,instrument,capture:'Chromium rendering of local web source; viewport emulation, not physical-device certification',access:'Local capture-only unlocked configuration; production config unchanged',audio:'Synthetic microphone input processed by the real detector',variants:[]};
 const types = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.woff2':'font/woff2'};
 const server = http.createServer((req,res)=>{
   const requested=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
@@ -50,7 +50,7 @@ async function save(page,v,name){
   const encoded=await (jpeg?rgb.jpeg({quality:91}):rgb.png({compressionLevel:9})).toBuffer();
   fs.writeFileSync(file+'.tmp',encoded);fs.renameSync(file+'.tmp',file);
   const visibleText=await page.locator(name==='06-tuner'?'.tuner-dialog[open]':'.screen.active').innerText();
-  return {file:path.relative(out,file).split(path.sep).join('/'),language:actualLanguage,instrument:actualInstrument,screen:await page.locator('body').getAttribute('data-screen'),title:await page.locator('.screen.active h2, .screen.active .section-heading').first().innerText().catch(()=>''),mic:await page.locator('#routineMicStatus').innerText(),visibleText,sizeBytes:fs.statSync(file).size};
+  return {file:path.relative(out,file).split(path.sep).join('/'),language:actualLanguage,instrument:actualInstrument,screen:await page.locator('body').getAttribute('data-screen'),title:await page.locator('.screen.active h2, .screen.active .section-heading').evaluateAll(nodes=>nodes[0]?.textContent.trim()||''),mic:await page.locator('#routineMicStatus').innerText(),visibleText,sizeBytes:fs.statSync(file).size};
 }
 async function capture(browser,v,base){
   const context=await browser.newContext({viewport:{width:v.width,height:v.height},deviceScaleFactor:v.dpr,locale,hasTouch:v.touch,reducedMotion:'reduce'});

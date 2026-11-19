@@ -12,7 +12,7 @@ const instrument = process.env.STORE_INSTRUMENT || 'guitar';
 if (!Object.hasOwn(instruments, instrument)) {
   throw new Error(`Unsupported store instrument: ${instrument}`);
 }
-if (instrument === 'guitar' || instrument === 'bass') Object.assign(languages, additionalLanguages);
+Object.assign(languages, additionalLanguages, {ar:'ar', 'bn-BD':'bn', 'ru-RU':'ru'});
 if (!Object.hasOwn(languages, locale)) {
   throw new Error(`Unsupported store locale: ${locale}. Expected ${Object.keys(languages).join(', ')}`);
 }
