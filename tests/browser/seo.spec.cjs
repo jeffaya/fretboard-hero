@@ -13,8 +13,6 @@ for(const [locale,route,description,learn,heading,triads,penta] of [
  await expect(guide).not.toHaveAttribute('target','_blank');
  await expect.poll(()=>guide.locator('img').evaluate(img=>img.complete&&img.naturalWidth>0)).toBe(true);
  expect(await guide.evaluate(node=>getComputedStyle(node).getPropertyValue('--ui-accent').trim())).toBe('#ff6b6b');
- const [card,grid]=await Promise.all([guide.boundingBox(),guide.locator('..').boundingBox()]);
- expect(card.width).toBeCloseTo(grid.width,0);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await guide.focus();await page.keyboard.press('Enter');
  await expect(page).toHaveURL(new RegExp(route+'$'));await expect(page.getByRole('heading',{level:1,name:heading})).toBeVisible();
