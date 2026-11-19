@@ -31,7 +31,7 @@ export default {
       .on('title', { element(el) { el.setInnerContent(title); } })
       .on('link[rel="canonical"]', attr('href', canonical))
       .on('meta[property="og:url"]', attr('content', canonical))
-      .on('meta[property="og:locale"]', attr('content', localized ? {ar:'ar_SA',bn:'bn_BD',}[language] : 'en_US'))
+      .on('meta[property="og:locale"]', attr('content', localized ? {ar:'ar_SA',bn:'bn_BD',ru:'ru_RU'}[language] : 'en_US'))
       .on('meta[property="og:title"], meta[name="twitter:title"]', attr('content', title))
       .on('meta[name="description"], meta[property="og:description"], meta[name="twitter:description"]', attr('content', description))
       .on('meta[property="og:image"], meta[name="twitter:image"]', attr('content', image))

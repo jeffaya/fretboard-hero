@@ -24,6 +24,10 @@
 
 @font-face{font-family:"Hero bn";font-style:normal;font-weight:800;font-display:swap;src:url("./assets/fonts/noto-bn-800.woff?v=10.58.0") format("woff")}
 
+@font-face{font-family:"Hero ru";font-style:normal;font-weight:500;font-display:swap;src:url("./assets/fonts/noto-ru-500.woff?v=10.58.0") format("woff")}
+
+@font-face{font-family:"Hero ru";font-style:normal;font-weight:800;font-display:swap;src:url("./assets/fonts/noto-ru-800.woff?v=10.58.0") format("woff")}
+
 html:lang(ja) { --ui-font: "Hero ja","Hero Condensed",system-ui,sans-serif; --localized-font: var(--ui-font); }
 
 html:lang(ko) { --ui-font: "Hero ko","Hero Condensed",system-ui,sans-serif; --localized-font: var(--ui-font); }
@@ -36,9 +40,11 @@ html:lang(ar) { --ui-font: "Hero ar","Hero Condensed",system-ui,sans-serif; --lo
 
 html:lang(bn) { --ui-font: "Hero bn","Hero Condensed",system-ui,sans-serif; --localized-font: var(--ui-font); }
 
+html:lang(ru) { --ui-font: "Hero ru","Hero Condensed",system-ui,sans-serif; --localized-font: var(--ui-font); }
+
 .language-picker {
   min-width: 0;
-  --language-font: var(--ui-font),"Hero ja","Hero ko","Hero zh-CN","Hero hi","Hero ar","Hero bn",system-ui,sans-serif;
+  --language-font: var(--ui-font),"Hero ja","Hero ko","Hero zh-CN","Hero hi","Hero ar","Hero bn","Hero ru",system-ui,sans-serif;
 }
 
 .language-trigger {
@@ -142,6 +148,7 @@ html:lang(ko) body,
 html:lang(zh) body,
 html:lang(ar) body,
 html:lang(bn) body,
+html:lang(ru) body,
 html:lang(hi) body { font-family: var(--localized-font); line-height: 1.5; }
 
 html:lang(ja) button,
@@ -149,6 +156,7 @@ html:lang(ko) button,
 html:lang(zh) button,
 html:lang(ar) button,
 html:lang(bn) button,
+html:lang(ru) button,
 html:lang(hi) button {
   font-family: var(--localized-font);
   letter-spacing: normal;
@@ -164,6 +172,7 @@ body :is(#app,.public-shell) .language-picker :is(a,button,span) {
   font-family: var(--language-font) !important;
 }
 
+
 /* Read Arabic instructions RTL while preserving pitch, string and time axes. */
 html[dir="rtl"] #home :is(.home-section-label,.hero-btn),
 html[dir="rtl"] .public-shell :is(p,li,th,td) { text-align: start; }
@@ -173,4 +182,4 @@ html[dir="rtl"] :is(.tab-grid,.tab-diagram,.orientation-diagram,.fret-code,.rout
 html[dir="rtl"] .tab-bar figcaption { direction: rtl; }
 html[dir="rtl"] #home :is(.tagline,.home-section-label) { letter-spacing: normal; }
 
-html:is(:lang(ar),:lang(bn)) :is(.diagram,.tab-orientation,.tab-diagram,#routineTab,#learnFretboard,#mapFretboard,#quizFretboard) text { font-family: var(--ui-font); }
+html:is(:lang(ar),:lang(bn),:lang(ru)) :is(.diagram,.tab-orientation,.tab-diagram,#routineTab,#learnFretboard,#mapFretboard,#quizFretboard) text { font-family: var(--ui-font); }

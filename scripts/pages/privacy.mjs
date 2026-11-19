@@ -7,7 +7,7 @@ import {lessonCopy} from '../lessons/translations.mjs';
 const content = readFileSync(new URL('./privacy-content.html',import.meta.url),'utf8');
 const languages = [
   ['fr','Français'],['en','English'],['es','Español'],['de','Deutsch'],['it','Italiano'],
-  ['pt-BR','Português (Brasil)'],['ja','日本語'],['ko','한국어'],['zh-CN','简体中文'],['hi','हिन्दी'],['id','Bahasa Indonesia'],['ar','العربية'],['bn','বাংলা']
+  ['pt-BR','Português (Brasil)'],['ja','日本語'],['ko','한국어'],['zh-CN','简体中文'],['hi','हिन्दी'],['id','Bahasa Indonesia'],['ar','العربية'],['bn','বাংলা'],['ru','Русский']
 ].map(([locale,label]) => ({locale,label,href:'#'+locale,attrs:{'data-policy-language':locale}}));
 
 export function renderPrivacy() {
