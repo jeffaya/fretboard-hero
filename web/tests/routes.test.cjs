@@ -40,7 +40,8 @@ async function navigation({native=false,start='https://fretboard-hero.com/?instr
  const node=()=>({content:'Home description',setAttribute(k,v){this[k]=v}});
  const location=new URL(start);
  const {routeLocales}=await import('../core/route-locales.js');
- const context={...routes,routeLocales,URL,location,history:{pushState(_state,_title,url){writes.push(['push',url.href]);location.href=url.href},replaceState(_state,_title,url){writes.push(['replace',url.href]);location.href=url.href}},
+ const seo=await import('../core/route-seo.js');
+ const context={...routes,...seo,routeLocales,URL,location,history:{pushState(_state,_title,url){writes.push(['push',url.href]);location.href=url.href},replaceState(_state,_title,url){writes.push(['replace',url.href]);location.href=url.href}},
   document:{title:'Bass Fretboard Hero',querySelector(selector){if(selector==='#productStructuredData')return null;if(!nodes.has(selector))nodes.set(selector,node());return nodes.get(selector)},querySelectorAll:()=>[]},
   Capacitor:{getPlatform:()=>native?'ios':'web'},FRETBOARD_SITE_CONFIG:{instrument:'bass-4'},FRETBOARD_ACTIVE_PRODUCT:{name:'Bass Fretboard Hero'},FretboardI18n:{locale:'fr',text:s=>s},addEventListener:(name,fn)=>events[name]=fn};
  context.window=context;vm.createContext(context);
@@ -52,7 +53,8 @@ async function navigation({native=false,start='https://fretboard-hero.com/?instr
 test('Navigation writes history, restores back/forward state and keeps instrument canonical metadata',async()=>{
  const {nav,location,events,writes,nodes}=await navigation();
  nav.write('routine');assert.equal(location.pathname,'/practice/daily-routine');assert.equal(nav.read(),'routine');
- assert.equal(nodes.get('link[rel="canonical"]').href,'https://fretboard-hero.com/practice/daily-routine?instrument=bass-4');
+ assert.equal(nodes.get('link[rel="canonical"]').href,'https://fretboard-hero.com/practice/daily-routine?instrument=bass-4&lang=fr');
+ assert.equal(nodes.get('link[rel="alternate"][hreflang="ru"]').href,'https://fretboard-hero.com/practice/daily-routine?instrument=bass-4&lang=ru');
  nav.write('learn');assert.equal(writes.length,2);
  const screens=[];nav.subscribe(screen=>screens.push(screen));
  location.pathname='/practice/daily-routine';events.popstate();assert.equal(nav.read(),'routine');assert.deepEqual(screens,['routine']);assert.equal(writes.length,2,'popstate never pushes another history entry');

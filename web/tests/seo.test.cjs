@@ -61,3 +61,23 @@ test('Sitemap contains every course once, preserving older canonical routes',asy
  for(const route of ['/fr/guitare/pentatonique/','/en/guitar/triads/','/fr/a-propos/','/en/about/'])assert.ok(urls.includes(origin+route));
  assert.equal(routes.route('hi','bass-4','chords'),'/hi/bass/chords/');
 });
+
+test('Public document descriptions, breadcrumb targets and modification dates match the published pages',async()=>{
+ const files=await content(),sitemap=files.get('web/sitemap.xml');
+ const descriptions=new Set();
+ const {escape}=await import('../../scripts/pages/components.mjs');
+ for(const [file,html] of files){
+  if(!file.endsWith('/index.html'))continue;
+  const canonical=html.match(/rel="canonical" href="([^"]+)"/)[1];
+  const graph=JSON.parse(html.match(/type="application\/ld\+json">([^<]+)</)[1])['@graph'];
+  const page=graph[0],breadcrumb=graph[1].itemListElement.at(-1);
+  assert.equal(breadcrumb.item,canonical);
+  assert.ok(!descriptions.has(page.description),file);descriptions.add(page.description);
+  for(const key of ['name="description"','property="og:description"','name="twitter:description"']){
+   const encoded=html.match(new RegExp('<meta '+key+' content="([^"]+)"'))[1];
+   assert.equal(encoded,escape(page.description));
+  }
+  assert.ok(sitemap.includes('<loc>'+canonical+'</loc><lastmod>'+page.dateModified+'</lastmod>'),file);
+  if(['/ar/','/bn/','/ru/'].some(prefix=>canonical.startsWith(origin+prefix)))assert.ok(page.dateModified>='2026-11-19');
+ }
+});

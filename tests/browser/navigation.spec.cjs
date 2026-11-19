@@ -77,8 +77,31 @@ for(const instrument of ['guitar','bass-4','ukulele'])test(`${instrument}: every
   const surface=screen==='tuner'?'.tuner-dialog':`#${screen}`;
   await expect(page.locator(surface)).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-instrument',instrument);
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href',`https://fretboard-hero.com${path}${instrument==='guitar'?'':'?instrument='+instrument}`);
+  const prefix = 'https://fretboard-hero.com'+path+(instrument==='guitar'?'?':'?instrument='+instrument+'&');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href',prefix+'lang=fr');
+  await expect(page.locator('link[rel="alternate"][hreflang="ru"]')).toHaveAttribute('href',prefix+'lang=ru');
   await page.reload();await loaded(page);await expect(page.locator(surface)).toBeVisible();
+ }
+});
+
+test('Translated metadata follows the active screen and instrument when using browser history',async({page})=>{
+ for(const [lang,instrument] of [['ar','guitar'],['bn','bass-4'],['ru','ukulele']]){
+  await page.goto('/?instrument='+instrument+'&lang='+lang);await ready(page);
+  const query=instrument==='guitar'?'?lang='+lang:'?instrument='+instrument+'&lang='+lang;
+  const home='https://fretboard-hero.com/'+query;
+  const canonical=page.locator('link[rel="canonical"]');
+  await expect(canonical).toHaveAttribute('href',home);
+  await openMenu(page,'fretmap');
+  const map=home.replace('/?', '/explore/fretboard-map?');
+  await expect(canonical).toHaveAttribute('href',map);
+  await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(15);
+  await expect(page.locator('link[rel="alternate"][hreflang="'+lang+'"]')).toHaveAttribute('href',map);
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content',map);
+  const data=JSON.parse(await page.locator('#productStructuredData').textContent());
+  expect(data.url).toBe(map);expect(data.inLanguage).toBe(lang);
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content',data.description);
+  await page.goBack();
+  await expect(canonical).toHaveAttribute('href',home);
  }
 });
 

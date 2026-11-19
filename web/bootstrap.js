@@ -39,7 +39,7 @@
       window.FRETBOARD_ACTIVE_PRODUCT={...product,instrument:entry.instrumentKey};window.FRETBOARD_ACTIVE_INSTRUMENT=instrument;
       document.documentElement.dataset.instrument=config.instrument;
       window.ProductShell.apply(product,instrument);
-      await load('./core/navigation.js?v=10.58.0','module');
+      await load('./core/navigation.js?v=10.58.1','module');
       await load('./core/footer.js?v=10.52.0');
       await load('./core/guide-routes.js?v=10.58.0');
       await load('./home.js?v=10.53.0');
@@ -47,7 +47,6 @@
       await load('./app.js?v=10.50.0');
       FretboardBilling.attach();
       FretboardI18n.mount();
-      FretboardNavigation.refresh();
       FretboardNavigation.write(FretboardNavigation.read(),{replace:true});
       await load('./tuner.js?v=10.50.0');
       if(!await artworkReady){
