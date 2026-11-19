@@ -21,7 +21,7 @@
  }
  const locale=requested()||preferred(),policy=policies.get(locale);
  articles.forEach(a=>{a.hidden=a!==policy.article});
- document.documentElement.lang=locale;
+ document.documentElement.lang=locale;document.documentElement.dir=locale==='ar'?'rtl':'ltr';
  document.querySelector('meta[name="description"]').content=policy.intro;
  document.querySelector('.skip-link').textContent=policy.article.dataset.skipLabel;
  function updateNavigation(){

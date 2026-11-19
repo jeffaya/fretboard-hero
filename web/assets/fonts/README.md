@@ -1,11 +1,5 @@
 # Local interface fonts
 
-Noto Sans JP, KR, SC and Devanagari, weights 500 and 800, are distributed under
-the accompanying SIL Open Font License files. These are WOFF subsets containing
-the non-ASCII characters used by the corresponding JSON translation catalog.
-Latin text continues to use the existing Barlow Condensed theme font.
-Unsupported/new glyphs use system fallback fonts.
+The app bundles Noto subsets for its supported scripts at weights 500 and 800. Each subset has a corresponding SIL Open Font License in this directory. Latin text uses the existing Barlow Condensed theme font.
 
-Sources: Google Fonts (`https://fonts.googleapis.com/css2` with a `text` subset),
-Noto project. Bundled locally: there are no font-provider requests at runtime.
-Regenerate subsets after adding translations with scripts/subset-locale-fonts.py.
+After editing translations, regenerate public pages with `node scripts/build-seo.mjs`, then run `python scripts/subset-locale-fonts.py` with the desired language codes. Without arguments it rebuilds all subsets. Font sources are downloaded from the Google Fonts repository during generation. The application serves the resulting fonts locally.

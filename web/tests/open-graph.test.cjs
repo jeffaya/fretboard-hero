@@ -21,14 +21,16 @@ async function worker(source){
    // Exercise the worker's actual element handlers without a Cloudflare runtime.
    const attributes=new Map();
    for(const [selector,handler] of this.handlers)for(const part of selector.split(', ')){
-    const values={};handler.element({setAttribute:(name,value)=>values[name]=value,setInnerContent:value=>values.textContent=value});attributes.set(part,values);
+    const values={};handler.element({setAttribute:(name,value)=>values[name]=value,setInnerContent:value=>values.textContent=value,append:markup=>values.appended=markup});attributes.set(part,values);
    }
    return {response,attributes};
   }
  }
  source=source.replace(/^import .*;\r?\n/gm,'').replace('export default','globalThis.worker =');
- const {appRoutes,matchRoute}=await import('../core/routes.js');
- const c=vm.createContext({URL,Request,appRoutes,matchRoute,HTMLRewriter:Rewriter});vm.runInContext(source,c);return c.worker;
+ const routes=await import('../core/routes.js');
+ const seo=await import('../core/route-seo.js');
+ const {routeLocales}=await import('../core/route-locales.js');
+ const c=vm.createContext({URL,Request,...routes,...seo,routeLocales,HTMLRewriter:Rewriter});vm.runInContext(source,c);return c.worker;
 }
 for(const [format,newline] of [['LF','\n'],['CRLF','\r\n']])test(`Worker supplies instrument JPEG metadata before client JavaScript, including shared query URLs (${format})`,async()=>{
  const source=fs.readFileSync('worker.js','utf8').replace(/\r?\n/g,newline);
@@ -42,7 +44,8 @@ for(const [format,newline] of [['LF','\n'],['CRLF','\r\n']])test(`Worker supplie
   assert.equal(structured['@type'],'WebApplication');
   assert.equal(structured.url,attributes.get('link[rel="canonical"]').href);
   assert.equal(structured.image,imageUrl(key));
-  assert.match(structured.description,/free demo in A/);
+  assert.equal(structured.inLanguage,'fr');
+  assert.equal(structured.description,require('../locales/fr.json')['Learn notes, scales, triads and chords. Build a daily routine and test your fretboard knowledge.']);
   assert.equal(structured.name,attributes.get('#home .hero-name').textContent);
  }
  const image=new Response('image',{headers:{'content-type':'image/jpeg'}});
@@ -75,4 +78,46 @@ test('Worker serves every deep link from the app shell with route-specific canon
  }
  const missing=new Response('Not found',{status:404});
  assert.equal(await app.fetch(new Request('https://fretboard-hero.com/practice/unknown'),{ASSETS:{fetch:async()=>missing}}),missing);
+});
+
+test('Every published interactive variant agrees with the sitemap before JavaScript', async () => {
+ const {appRoutes} = await import('../core/routes.js');
+ const {languages, instruments} = require('../core/guide-routes.js');
+ const app = await worker(fs.readFileSync('worker.js', 'utf8'));
+ const xml = fs.readFileSync('web/sitemap.xml', 'utf8').replaceAll('&amp;', '&');
+ const entries = new Map([...xml.matchAll(/<url><loc>([^<]+)<\/loc>(.*?)<\/url>/g)].map(([,url,body]) => [url,body]));
+ const response = new Response(html, {headers:{'content-type':'text/html'}});
+ const assets = {ASSETS:{fetch:async () => response}};
+ for (const route of Object.values(appRoutes)) for (const instrument of instruments) {
+  const group = new Map();
+  for (const lang of [...languages, 'x-default']) {
+   const url = new URL(route.path, 'https://fretboard-hero.com');
+   if (instrument !== 'guitar') url.searchParams.set('instrument',instrument);
+   if (lang !== 'x-default') url.searchParams.set('lang',lang);
+   group.set(lang,url.href);
+  }
+  for (const [lang,url] of group) {
+   const {attributes} = await app.fetch(new Request(url), assets);
+   const head = attributes.get('head').appended.replaceAll('&amp;', '&');
+   const entry = entries.get(url);
+   assert.ok(entry, url);
+   for (const [other,href] of group) {
+    const alternate = `hreflang="${other}" href="${href}"`;
+    assert.ok(head.includes(alternate),url+' HTML '+other);
+    assert.ok(entry.includes(alternate),url+' sitemap '+other);
+   }
+   assert.equal(attributes.get('link[rel="canonical"]').href, url);
+   assert.equal(attributes.get('meta[property="og:url"]').content,url);
+   assert.equal(attributes.get('html').lang,lang==='x-default'?'en':lang);
+   assert.equal(attributes.get('html').dir,lang==='ar'?'rtl':'ltr');
+   const data = JSON.parse(attributes.get('#productStructuredData').textContent);
+   assert.equal(data.url, url);
+   assert.equal(data.inLanguage, attributes.get('html').lang);
+   assert.equal(data.description, attributes.get('meta[name="description"]').content);
+  }
+ }
+ for (const [query,expected] of [['lang=pt_BR&screen=quiz','/practice/quiz?lang=pt-BR'],['lang=RU-ru&screen=tuner&mode=extra','/tuner?lang=ru'],['lang=unknown&instrument=bad','/']]) {
+  const {attributes} = await app.fetch(new Request('https://fretboard-hero.com/?'+query),assets);
+  assert.equal(attributes.get('link[rel="canonical"]').href,'https://fretboard-hero.com'+expected);
+ }
 });

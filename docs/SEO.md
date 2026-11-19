@@ -6,7 +6,7 @@ the initial G chord families; it does not gate the lessons behind app access.
 
 ## Sources and shared components
 
-- `scripts/lessons/translations.mjs`: full copy for all 11 app languages. Every
+- `scripts/lessons/translations.mjs`: full copy for all 14 app languages. Every
   language has seven topics: overview, notes, pentatonic, triads, chords, routine and reading tablature.
 - `web/core/guide-routes.js`: one route registry for Home and the page generator,
   covering guitar, four-string bass and high-G ukulele. Existing English/French
@@ -23,8 +23,8 @@ the initial G chord families; it does not gate the lessons behind app access.
 - `scripts/pages/components.mjs` and `web/core/document-branding.js`: common
   public header and product-branding logic for guides and Privacy. The static
   guide already has the correct product wordmark and favicon before scripts run.
-- `scripts/seo/content.mjs`: the existing English and French About pages only.
-- `scripts/pages/privacy-content.html`: unchanged legal text in 11 languages.
+- `scripts/seo/content.mjs`: About pages in English, French, Arabic, Bengali and Russian.
+- `scripts/pages/privacy-content.html`: legal text in 14 languages.
 
 - `scripts/pages/document-shell.mjs` and `web/core/document-shell.js`: one shared
   footer, language picker and app dialog for guides and Privacy. Language is never
@@ -34,7 +34,7 @@ the initial G chord families; it does not gate the lessons behind app access.
 - `scripts/lessons/tablature.mjs`: original, rhythmically explicit SVG examples
   with a text equivalent, separate bars on mobile and instrument-specific tuning.
 - `scripts/lessons/tab-orientation.mjs`: a three-step neck-to-tab illustration,
-  translated in all 11 languages. The same geometry rotates 90° counterclockwise,
+  translated in all 14 languages. The same geometry rotates 90° counterclockwise,
   preserving string order; the open string and frets 2/3 match the reading exercise.
 - `scripts/lessons/sources.mjs`: three public references per instrument/topic.
   See `GUIDE-RESEARCH.md` for search methodology and source limitations.
@@ -47,11 +47,18 @@ node scripts/build-seo.mjs --check
 node --test web/tests/lesson-tablature.test.cjs web/tests/seo.test.cjs web/tests/chord-library.test.cjs web/tests/guide.test.cjs web/tests/privacy.test.cjs web/tests/home-purchases.test.cjs
 ```
 
-The generator produces 231 lesson pages, two existing About pages, Privacy and
-the sitemap. Each lesson has reciprocal `hreflang` links for all 11 languages,
+The generator produces 294 lesson pages, five About pages, Privacy, the interactive route
+translations and the sitemap. Each lesson has reciprocal `hreflang` links for all 14 languages,
 a unique canonical, localized metadata, structured data and instrument-aware
 exercise/Privacy links. There is no author byline or promotional sidebar. The
 Try action remains in the hero; the only download entry is the common footer.
+
+Each interactive screen has a canonical URL for each instrument and language.
+For example, the Russian bass tuner uses `/tuner?instrument=bass-4&lang=ru`.
+The same screen without `lang` is its `x-default` and supports automatic language
+selection. The Worker, browser navigation and sitemap share the URL builder in
+`web/core/route-seo.js`. Lesson and About entries use the same modification date
+in the sitemap and their structured data.
 
 The page route is authoritative for its language and instrument. Saved app
 preferences cannot change the content/branding of a directly opened lesson.

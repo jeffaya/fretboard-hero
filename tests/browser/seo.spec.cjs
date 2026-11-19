@@ -55,7 +55,7 @@ test.describe('Public guides without JavaScript',()=>{
  });
  test('Privacy retains every translation and anchor navigation without JavaScript',async({page})=>{
   await page.goto('/privacy');
-  await expect(page.locator('article[lang]')).toHaveCount(11);
+  await expect(page.locator('article[lang]')).toHaveCount(14);
   for(const article of await page.locator('article[lang]').all())await expect(article).toBeVisible();
   await page.locator('.home-footer').getByRole('link',{name:'English',exact:true}).click();
   await expect(page).toHaveURL(/\/privacy#en$/);
@@ -146,7 +146,7 @@ test('Guide retains the shared footer dialog without a promotional hero button',
  await expect(page.locator('html')).toHaveAttribute('lang','en');
 });
 
-for(const [locale,label] of [['hi','हिन्दी'],['ja','日本語'],['ko','한국어'],['zh-CN','简体中文'],['es','Español'],['de','Deutsch'],['it','Italiano'],['id','Bahasa Indonesia'],['pt-BR','Português (Brasil)']])test(`Translated lessons and chord selection retain instrument and language: ${locale}`,async({page})=>{
+for(const [locale,label] of [['ar','العربية'],['bn','বাংলা'],['ru','Русский'],['hi','हिन्दी'],['ja','日本語'],['ko','한국어'],['zh-CN','简体中文'],['es','Español'],['de','Deutsch'],['it','Italiano'],['id','Bahasa Indonesia'],['pt-BR','Português (Brasil)']])test(`Translated lessons and chord selection retain instrument and language: ${locale}`,async({page})=>{
  await page.goto(`/?instrument=ukulele&lang=${locale}`);await ready(page);
  await expect(page.locator('.guide-card')).toHaveAttribute('href',`/${locale}/ukulele/`);
  await page.locator('.guide-card').click();
@@ -156,7 +156,7 @@ for(const [locale,label] of [['hi','हिन्दी'],['ja','日本語'],['ko
  await expect(page.locator('.brand svg')).toHaveAttribute('viewBox','1800 0 900 550');
  await expect(page.locator('[data-chord-root]')).toHaveCount(12);
  await page.locator('[data-chord-root="1"]').click();
- const sharpC={hi:'सी♯',ja:'ド♯',ko:'도♯','zh-CN':'C♯',es:'Do♯',de:'C♯',it:'Do♯',id:'Do♯','pt-BR':'Dó♯'};
+ const sharpC={ar:'دو♯',bn:'সি♯',ru:'До♯',hi:'सी♯',ja:'ド♯',ko:'도♯','zh-CN':'C♯',es:'Do♯',de:'C♯',it:'Do♯',id:'Do♯','pt-BR':'Dó♯'};
  await expect(page.locator('[data-chord-family="m7"] h2')).toContainText(sharpC[locale]+'m7');
  await expect(page.locator('[data-chord-family]')).toHaveCount(12);
  await expect(page.locator('[data-chord-family="m7"] figure')).toHaveCount(2);
@@ -209,8 +209,8 @@ test('Root selection shows every chord family, preserves links and has no outer 
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
-for(const [instrument,frSlug,strings]of [['guitar','guitare',6],['bass','basse',4],['ukulele','ukulele',4]])test(`Tablature lessons are readable in all 11 languages: ${instrument}`,async({page},testInfo)=>{
- for(const locale of ['en','fr','es','de','it','pt-BR','hi','id','ja','ko','zh-CN']){
+for(const [instrument,frSlug,strings]of [['guitar','guitare',6],['bass','basse',4],['ukulele','ukulele',4]])test(`Tablature lessons are readable in all supported languages: ${instrument}`,async({page},testInfo)=>{
+ for(const locale of ['en','fr','es','de','it','pt-BR','hi','id','ja','ko','zh-CN','ar','bn','ru']){
   const route=locale==='fr'?`/fr/${frSlug}/lire-les-tablatures/`:`/${locale}/${instrument}/reading-tablature/`;
   await page.goto(route);await page.evaluate(()=>document.fonts.ready);
   await expect(page.locator('html')).toHaveAttribute('lang',locale);
@@ -255,3 +255,25 @@ test('Privacy shares guide footer language and download controls',async({page},t
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  await page.locator('.home-footer').screenshot({path:testInfo.outputPath('privacy-footer-ja.png')});
 });
+
+for (const [lang, name] of [['ar','العربية'],['bn','বাংলা'],['ru','Русский']]) {
+ test(`Localized practice, tabs and privacy stay in ${lang}`, async ({page}) => {
+  const messages = require(`../../web/locales/${lang}.json`);
+  await page.goto('/?lang=en&instrument=bass-4');
+  await ready(page);
+  await page.locator('.language-trigger').click();
+  await page.getByRole('menuitemradio', {name, exact:true}).click();
+  await ready(page);
+  await expect(page.locator('html')).toHaveAttribute('lang',lang);
+  await expect(page.locator('html')).toHaveAttribute('dir',lang === 'ar' ? 'rtl' : 'ltr');
+  await expect(page.locator('#homePracticeLabel')).toHaveText(messages.Practice);
+  await page.locator('.guide-card').click();
+  await page.locator(`.page-nav a[href="/${lang}/bass/reading-tablature/"]`).click();
+  await expect(page.locator('.tab-diagram')).toHaveCount(2);
+  if (lang === 'ar') await expect(page.locator('.tab-diagram').first()).toHaveCSS('direction','ltr');
+  const link = page.locator('.home-footer a[href*="privacy"]');
+  await page.goto(await link.getAttribute('href').then(href=>new URL(href).pathname+new URL(href).search));
+  await expect(page.locator('article[lang]:visible h1')).toHaveText(messages['Privacy policy']);
+  await expect(page.locator('html')).toHaveAttribute('data-instrument','bass-4');
+ });
+}
