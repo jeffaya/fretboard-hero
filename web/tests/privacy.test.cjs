@@ -45,7 +45,7 @@ test('Selection respects URL, legacy anchor, storage and browser preferences',as
 test('Every footer language navigates with the instrument and translated labels',async()=>{
  for(const instrument of ['guitar','bass-4','ukulele'])for(const policy of policies){const locale=policy.attrs.lang;
   const s=setup({url:'https://fretboard-hero.com/privacy?lang='+locale+'&instrument='+instrument,saved:'en',storageBlocked:true});await s.ready();
-  assert.equal(s.calls.shell.locale,locale);assert.equal(s.calls.shell.instrument,instrument);assert.equal(s.calls.shell.languages.length,11);
+  assert.equal(s.calls.shell.locale,locale);assert.equal(s.calls.shell.instrument,instrument);assert.equal(s.calls.shell.languages.length,policies.length);
   assert.ok(s.calls.shell.ui.privacy);assert.ok(s.calls.shell.ui.contact);if(locale!=='en')assert.notEqual(s.calls.shell.ui.privacy,'Privacy policy');
   assert.equal(s.logo.attrs.viewBox,s.product.assets.heroLogoViewport);assert.equal(s.home[0].attrs['aria-label'],s.product.branding.name);
   assert.ok(s.document.title.endsWith(s.product.branding.name));assert.equal(s.description.content,s.articles.find(a=>a.lang===locale).querySelector('.policy-intro').textContent);

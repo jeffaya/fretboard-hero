@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const languages=[['en','English'],['es','Español'],['fr','Français'],['de','Deutsch'],['it','Italiano'],['ja','日本語'],['ko','한국어'],['zh-CN','简体中文'],['pt-BR','Português (Brasil)'],['hi','हिन्दी'],['id','Bahasa Indonesia']];
+  const languages=[['en','English'],['es','Español'],['fr','Français'],['de','Deutsch'],['it','Italiano'],['ja','日本語'],['ko','한국어'],['zh-CN','简体中文'],['pt-BR','Português (Brasil)'],['hi','हिन्दी'],['id','Bahasa Indonesia'],['ar','العربية'],['bn','বাংলা'],['ru','Русский']];
   const supported=new Set(languages.map(x=>x[0])),storageKey='fretboard-language';
   function match(value){
     if(typeof value!=='string')return null;
@@ -69,8 +69,8 @@
     document.title=(window.FRETBOARD_ACTIVE_PRODUCT?.name||'Fretboard Hero')+' — '+text('Learn the fretboard');
     for(const selector of ['meta[name="description"]','meta[property="og:description"]','meta[name="twitter:description"]'])document.querySelector(selector)?.setAttribute('content',description);
     for(const selector of ['meta[property="og:title"]','meta[name="twitter:title"]'])document.querySelector(selector)?.setAttribute('content',document.title);
-    document.querySelector('meta[property="og:image:alt"]')?.setAttribute('content',document.title);
-    document.querySelector('meta[property="og:locale"]')?.setAttribute('content',({'en':'en_US','zh-CN':'zh_CN','pt-BR':'pt_BR'})[locale]||locale+'_'+({'es':'ES','fr':'FR','de':'DE','it':'IT','ja':'JP','ko':'KR','hi':'IN','id':'ID'})[locale]);
+    for(const selector of ['meta[property="og:image:alt"]','meta[name="twitter:image:alt"]'])document.querySelector(selector)?.setAttribute('content',document.title);
+    document.querySelector('meta[property="og:locale"]')?.setAttribute('content',({'en':'en_US','zh-CN':'zh_CN','pt-BR':'pt_BR'})[locale]||locale+'_'+({'es':'ES','fr':'FR','de':'DE','it':'IT','ja':'JP','ko':'KR','hi':'IN','id':'ID','ar':'SA','bn':'BD','ru':'RU'})[locale]);
     const structured=document.querySelector('#productStructuredData');if(structured){try{const data=JSON.parse(structured.textContent);data.inLanguage=locale;data.description=description;data.featureList=['Learn','Daily Routine','Fretboard Map','Circle of Fifths','Quiz'].map(value=>text(value));structured.textContent=JSON.stringify(data)}catch{}}
   }
   function mount({choices,selected,navigate,roots=[document.body],updateMetadata=true,scrollRoot=document.querySelector('#home')||window}={}){
@@ -138,12 +138,12 @@
   async function initialize(pageLocale){
     let saved;try{saved=localStorage.getItem(storageKey)}catch{}
     const requested=new URL(location.href).searchParams.get('lang');
-    locale=supported.has(pageLocale)?pageLocale:supported.has(requested)?requested:supported.has(saved)?saved:detect(navigator.languages?.length?navigator.languages:[navigator.language]);
+    locale=supported.has(pageLocale)?pageLocale:match(requested)||match(saved)||detect(navigator.languages?.length?navigator.languages:[navigator.language]);
     if(locale!=='en'){
-      try{const response=await fetch('/locales/'+locale+'.json?v=10.56.0');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale=supported.has(pageLocale)?pageLocale:'en';install({})}
+      try{const response=await fetch('/locales/'+locale+'.json?v=10.58.0');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale=supported.has(pageLocale)?pageLocale:'en';install({})}
     }
     document.querySelector('a[href^="https://fretboard-hero.com/privacy"]')?.setAttribute('href','https://fretboard-hero.com/privacy?lang='+locale);
-    document.documentElement.lang=locale;document.documentElement.dir='ltr';
+    document.documentElement.lang=locale;document.documentElement.dir=locale==='ar'?'rtl':'ltr';
     return locale;
   }
   if(typeof module==='object'&&module.exports)module.exports={formatNote};
