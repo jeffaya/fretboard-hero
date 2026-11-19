@@ -15,19 +15,58 @@ async function closeButton(page,panel){
  await button.click();
 }
 
-test('Home links share one full-width row layout on small and large screens',async({page})=>{
- for(const lang of ['en','fr']){
-  await page.goto('/?lang='+lang);await ready(page);
-  for(const viewport of [{width:320,height:740},{width:390,height:844},{width:844,height:390},{width:1440,height:900}]){
-   await page.setViewportSize(viewport);
-   const cards=await page.locator('#home .hero-btn').evaluateAll(nodes=>nodes.map(node=>{
-    const box=node.getBoundingClientRect(),title=node.querySelector('strong'),style=getComputedStyle(title);
-    return {tag:node.tagName,x:box.x,width:box.width,height:box.height,font:style.fontSize,columns:getComputedStyle(node).gridTemplateColumns};
-   }));
-   expect(cards).toHaveLength(7);
-   for(const card of cards){expect(card.tag).toBe('A');expect(card.x).toBeCloseTo(cards[0].x,0);expect(card.width).toBeCloseTo(cards[0].width,0);expect(card.height).toBeCloseTo(cards[0].height,0);expect(card.font).toBe(cards[0].font);expect(card.columns).toBe(cards[0].columns)}
+test('Home keeps the phone menu and arranges desktop activities in two groups', async ({page}) => {
+  const sizes = [[320, 740], [390, 844], [844, 390], [768, 1024], [1440, 900]];
+  for (const lang of ['en', 'fr']) {
+    await page.goto('/?lang=' + lang);
+    await ready(page);
+    for (const [width, height] of sizes) {
+      await page.setViewportSize({width, height});
+      const {touch, logo, instruments, tuner, cards, overflows} = await page.locator('#home').evaluate(home => {
+        function bounds(node) {
+          const {x, y, right, bottom, width} = node.getBoundingClientRect();
+          return {x, y, right, bottom, width};
+        }
+        return {
+          touch: matchMedia('(pointer: coarse)').matches,
+          logo: bounds(home.querySelector('.hero-logo')),
+          instruments: bounds(home.querySelector('.home-instruments')),
+          tuner: bounds(home.querySelector('#homeTuner')),
+          cards: Array.from(home.querySelectorAll('.home-actions a.hero-btn'), bounds),
+          overflows: home.scrollWidth > home.clientWidth
+        };
+      });
+      expect(cards).toHaveLength(6);
+      expect(overflows).toBe(false);
+      if (width < 600 || (touch && width === 844)) {
+        let previous = tuner;
+        for (const card of cards) {
+          expect(card.x).toBeCloseTo(tuner.x, 0);
+          expect(card.width).toBeCloseTo(tuner.width, 0);
+          expect(card.y).toBeGreaterThanOrEqual(previous.bottom);
+          previous = card;
+        }
+      } else {
+        expect(instruments.x).toBeGreaterThan(logo.right);
+        expect(tuner.x).toBeCloseTo(instruments.x, 0);
+        expect(tuner.width).toBeCloseTo(instruments.width, 0);
+        expect(tuner.y).toBeGreaterThan(instruments.bottom);
+        expect(cards[0].y).toBeGreaterThan(tuner.bottom);
+        if (width < 800) {
+          expect(cards[3].x).toBeGreaterThan(cards[0].right);
+          expect(cards[3].y).toBeCloseTo(cards[0].y, 0);
+          for (const i of [1, 2, 4, 5]) expect(cards[i].y).toBeGreaterThan(cards[i - 1].bottom);
+        } else {
+          for (const i of [1, 2, 4, 5]) {
+            expect(cards[i].x).toBeGreaterThan(cards[i - 1].right);
+            expect(cards[i].y).toBeCloseTo(cards[i - 1].y, 0);
+          }
+          expect(cards[3].y).toBeGreaterThan(cards[0].bottom);
+          for (let i = 0; i < 3; i++) expect(cards[i].x).toBeCloseTo(cards[i + 3].x, 0);
+        }
+      }
+    }
   }
- }
 });
 
 for(const instrument of ['guitar','bass-4','ukulele'])test(`${instrument}: every section opens directly and survives reload`,async({page})=>{

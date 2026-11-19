@@ -277,3 +277,87 @@ body #app #home .home-instruments button[aria-pressed="true"]::after {
   #home .home-instruments button { flex-direction: column; padding-block: 5px; }
 }
 
+#home .home-identity { display: contents; }
+
+/* Phones in landscape keep the same layout as the native and mobile home. */
+@media not ((width < 600px) or ((pointer: coarse) and (orientation: landscape) and (width <= 1000px) and (height <= 600px))) {
+  html body[data-screen="home"] { --ui-scene-shade: .42; }
+
+  #home.home-screen { padding: clamp(22px, 4vh, 52px) max(24px, 5vw); }
+
+  #home .home-content {
+    width: min(100%, 1120px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, .94fr);
+    grid-template-areas: "brand setup" "brand tuner" "actions actions" "footer footer";
+    gap: 0 clamp(36px, 7vw, 110px);
+    --home-row-gap: clamp(22px, 3.2vh, 36px);
+  }
+
+  #home .home-brand, #home .home-menu { display: contents; }
+  #home .home-identity { grid-area: brand; display: block; place-self: center start; }
+  #home .hero-logo { width: clamp(260px, 25vw, 360px); max-width: 100%; margin: 0 auto; }
+  #home .tagline {
+    margin-top: 2px;
+    color: #e0daef;
+    font: 800 .875rem/1.35 var(--ui-font);
+    letter-spacing: .14em;
+    text-shadow: 0 1px 6px #0a031c;
+  }
+
+  #home .home-setup { grid-area: setup; align-self: end; display: grid; gap: 9px; width: 100%; margin: 0; padding: 0; }
+  #home .home-setup > .home-section-label { margin: 0; }
+  #home .tuner-card { grid-area: tuner; align-self: start; margin-top: 14px; }
+  #home .home-actions { grid-area: actions; gap: clamp(18px, 2.8vh, 28px); margin-top: var(--home-row-gap); }
+  #home .home-action-group > .home-section-label {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 10px;
+    text-shadow: 0 1px 8px #090716;
+  }
+  #home .home-action-group > .home-section-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, #cec5ed62, #cdc4ff15);
+  }
+  #home .home-action-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 1vw, 14px); }
+
+  #home .hero-btn {
+    grid-template-columns: clamp(46px, 4.3vw, 66px) minmax(0, 1fr) 12px;
+    gap: clamp(9px, 1vw, 16px);
+    min-height: 78px;
+    padding-right: 14px;
+  }
+  #home .hero-btn .hero-icon {
+    min-height: 0;
+    border-right-color: color-mix(in srgb, var(--ui-accent) 26%, transparent);
+    background: radial-gradient(ellipse, color-mix(in srgb, var(--ui-accent) 13%, transparent), transparent 78%);
+  }
+  #home .hero-icon img, #home .tuner-card .tuner-launch-icon { width: 36px; height: 36px; }
+  #home .home-card-copy { display: grid; padding-block: 12px; }
+  #home .hero-btn strong {
+    color: #faf6ff;
+    font: 800 clamp(1.15rem, 1.58vw, 1.45rem)/1.08 var(--ui-font);
+    letter-spacing: normal;
+  }
+  #home .hero-btn small { color: #d1cbdc; font-size: 1rem; overflow-wrap: anywhere; }
+  #home .home-chevron { font-size: 30px; text-shadow: none; }
+
+  #home .home-footer {
+    grid-area: footer;
+    margin-top: var(--home-row-gap);
+    padding: 8px 0 0;
+    border-top: 1px solid #bfb8dd33;
+    gap: 0 16px;
+  }
+  body #app #home .home-footer-link { color: #d4d1df; font-size: .9375rem; text-shadow: 0 1px 5px #020410; }
+  body #app #home .home-footer-link:hover { color: white; }
+
+  @media (max-width: 799px) {
+    #home .home-content { column-gap: 24px; }
+    #home .hero-logo { width: min(230px, 100%); }
+    #home .home-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    #home .home-action-grid { grid-template-columns: 1fr; grid-auto-rows: 1fr; }
+  }
+}
