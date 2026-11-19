@@ -23,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		BD17000000000000000000B0 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		BD17000000000000000000B1 /* bn */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bn; path = bn.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
 		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		504EC3041FED79650016851F /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,6 +135,7 @@
 				en,
 				Base,
 				ar,
+				bn,
 			);
 			mainGroup = 504EC2FB1FED79650016851F;
 			packageReferences = (
@@ -184,6 +186,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				BD17000000000000000000B0 /* ar */,
+				BD17000000000000000000B1 /* bn */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

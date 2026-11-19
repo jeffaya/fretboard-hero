@@ -1,4 +1,5 @@
 import ar from './locales/ar.mjs';
+import bn from './locales/bn.mjs';
 import {lessonNotation} from './notation.mjs';
 import {curriculum} from './curriculum.mjs';
 import {tunings} from './tablature.mjs';
@@ -7,6 +8,7 @@ import {orientationCopy} from './tab-orientation.mjs';
 // Each lesson: heading, introduction, explanation, exercise, listening/check tip.
 export const copy = {
  ar: ar.copy,
+ bn: bn.copy,
 
  en: {
   label:'English', instruments:['Guitar','Bass','Ukulele'], nav:['Music theory','Fretboard notes','Pentatonic','Triads','Chords','Daily routine'],
@@ -157,7 +159,7 @@ export function lessonCopy(locale){
  const data=copy[locale],extra=curriculum[locale];if(!data||!extra)throw new Error(`Missing lesson language: ${locale}`);
  const uiKeys=['try','understand','play','listen','choose','instrument','skip','root','tones','open','barre','compact','shape','fret','string','fingers','legend','down','up','rest','rhythmTip','noScript','arpeggio','oneAtATime','privacy','contact','back','minor','major','7','m7','maj7','6','m6','sus2','sus4','dim','aug','add9'];
  if(data.ui.length!==uiKeys.length)throw new Error(`Incomplete UI: ${locale}`);
- const omittedFifth={ar:ar.omittedFifth,en:'The fifth is omitted in this voicing.',fr:'La quinte est omise dans cette position.',es:'En esta posición se omite la quinta.',de:'Bei diesem Griff entfällt die Quinte.',it:'In questa posizione si omette la quinta.','pt-BR':'A quinta é omitida nesta posição.',hi:'इस स्थिति में पाँचवाँ स्वर नहीं बजाया जाता।',id:'Kuint tidak dimainkan dalam bentuk ini.',ja:'このフォームでは五度を省略しています。',ko:'이 운지에서는 5도를 생략합니다.','zh-CN':'此指型省略五音。'}[locale];
+ const omittedFifth={ar:ar.omittedFifth,bn:bn.omittedFifth,en:'The fifth is omitted in this voicing.',fr:'La quinte est omise dans cette position.',es:'En esta posición se omite la quinta.',de:'Bei diesem Griff entfällt die Quinte.',it:'In questa posizione si omette la quinta.','pt-BR':'A quinta é omitida nesta posição.',hi:'इस स्थिति में पाँचवाँ स्वर नहीं बजाया जाता।',id:'Kuint tidak dimainkan dalam bentuk ini.',ja:'このフォームでは五度を省略しています。',ko:'이 운지에서는 5도를 생략합니다.','zh-CN':'此指型省略五音。'}[locale];
  const notation=lessonNotation(locale);
  const coach=['guitar','bass-4','ukulele'].map((instrument,index)=>
   extra.coach[index].replace('{strings}',tunings[instrument].labels.map(note=>notation[note]).join(' ')));

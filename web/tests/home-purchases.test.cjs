@@ -8,7 +8,7 @@ function setup({native=false,unlocked=false,blocked=false,locale='fr',platform='
  return {buttons,stored,rows,footer,guide,get destination(){return destination},get opens(){return opens}};
 }
 test('Guide navigation uses the resolved language, a supported fallback and external native URLs',()=>{
- for(const instrument of ['guitar','bass-4','ukulele'])for(const locale of ['fr','en','es','de','it','ja','ko','zh-CN','pt-BR','hi','id','ar'])for(const platform of ['web','android','ios']){
+ for(const instrument of ['guitar','bass-4','ukulele'])for(const locale of ['fr','en','es','de','it','ja','ko','zh-CN','pt-BR','hi','id','ar','bn'])for(const platform of ['web','android','ios']){
   const {guide,opens}=setup({locale,platform,instrument,blocked:true,native:platform!=='web'});
   const family=instrument==='bass-4'?'bass':instrument;
   const name=locale==='fr'?({guitar:'guitare',bass:'basse',ukulele:'ukulele'})[family]:family;

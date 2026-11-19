@@ -1,8 +1,10 @@
 import ar from './locales/ar.mjs';
+import bn from './locales/bn.mjs';
 // Original teaching text and exercises; public references are listed separately.
 // course rows: deeper explanation, guided reading, common error, success check.
 export const curriculum={
  ar: ar.curriculum,
+ bn: bn.curriculum,
 
  en:{
  nav:'Reading tablature',

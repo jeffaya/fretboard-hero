@@ -1,10 +1,12 @@
 import ar from './locales/ar.mjs';
+import bn from './locales/bn.mjs';
 import {escape as e} from '../pages/components.mjs';
 import {tunings} from './tablature.mjs';
 
 // One drawing and one note sequence are shared by all three views.
 export const orientationCopy={
  ar: ar.orientation,
+ bn: bn.orientation,
 
  en:{title:'From the neck to the tab',intro:'Follow string 1 through the three views. The instrument stays the same; only the drawing turns.',steps:['Look at the neck','Turn the view 90°','Read the tab'],captions:['The nut is at the top. String 1 is on the right.','Turn the drawing to the left: string 1 is now on top, with the nut on the left.','The top line is string 1. Read 0, 2, 3 from left to right: open string, fret 2, fret 3.'],key:'Cyan: string 1. Pink: the last string. The numbers are frets, not fingers. Only the numbered string is played.'},
  fr:{title:'Du manche à la tablature',intro:'Suis la corde 1 dans les trois vues. L’instrument reste le même : seul le dessin tourne.',steps:['Observe le manche','Tourne la vue de 90°','Lis la tablature'],captions:['Le sillet est en haut. La corde 1 est à droite.','Tourne le dessin vers la gauche : la corde 1 passe en haut et le sillet à gauche.','La ligne du haut est la corde 1. Lis 0, 2, 3 de gauche à droite : corde à vide, case 2, case 3.'],key:'Cyan : corde 1. Rose : dernière corde. Les chiffres sont les cases, pas les doigts. Seule la corde portant les chiffres se joue.'},

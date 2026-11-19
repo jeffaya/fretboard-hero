@@ -46,7 +46,7 @@ ${pageLanguages.map(lang=>`<link rel="alternate" hreflang="${lang.locale}" href=
 <meta property="og:title" content="${escape(title)}">
 <meta property="og:description" content="${escape(intro)}">
 <meta property="og:url" content="${url}">
-<meta property="og:locale" content="${({en:'en_US',fr:'fr_FR',es:'es_ES',de:'de_DE',it:'it_IT','pt-BR':'pt_BR',hi:'hi_IN',id:'id_ID',ja:'ja_JP',ko:'ko_KR','zh-CN':'zh_CN',ar:'ar_SA',})[locale]}">
+<meta property="og:locale" content="${({en:'en_US',fr:'fr_FR',es:'es_ES',de:'de_DE',it:'it_IT','pt-BR':'pt_BR',hi:'hi_IN',id:'id_ID',ja:'ja_JP',ko:'ko_KR','zh-CN':'zh_CN',ar:'ar_SA',bn:'bn_BD',})[locale]}">
 <meta property="og:image" content="${image}">
 <meta property="og:image:width" content="1024"><meta property="og:image:height" content="500">
 <meta property="og:image:alt" content="${escape(brand.name)}">
@@ -75,7 +75,7 @@ export function generatedFiles(){
   fretmap: ['Fretboard Map','Explore the neck'], circle: ['Circle of Fifths','Visualize & practice']
  };
  const metadata = {};
- for(const locale of ['ar']){
+ for(const locale of ['ar','bn']){
   const catalog=require(`../web/locales/${locale}.json`);
   metadata[locale]=Object.fromEntries(Object.entries(summaries).map(([screen,keys])=>[screen,keys.map(key=>catalog[key])]));
  }
