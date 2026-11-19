@@ -1,3 +1,4 @@
+import {routeLocales} from './route-locales.js?v=10.58.0';
 import {appRoutes, entryScreen, routeURL} from './routes.js';
 
 export function createNavigation() {
@@ -9,6 +10,8 @@ export function createNavigation() {
 
   function metadata() {
     const route = appRoutes[screen];
+    const summary = routeLocales[window.FretboardI18n?.locale]?.[screen];
+    const description = summary?.[1] || route.description || baseDescription;
     const title = screen === 'home' ? baseTitle : `${window.FretboardI18n?.text(route.title) || route.title} · ${window.FRETBOARD_ACTIVE_PRODUCT.name}`;
     const canonical = new URL(route.path, 'https://fretboard-hero.com');
     if (window.FRETBOARD_SITE_CONFIG.instrument !== 'guitar') canonical.searchParams.set('instrument', window.FRETBOARD_SITE_CONFIG.instrument);
@@ -16,10 +19,10 @@ export function createNavigation() {
     document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonical.href);
     document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonical.href);
     for (const selector of ['meta[property="og:title"]','meta[name="twitter:title"]']) document.querySelector(selector)?.setAttribute('content', title);
-    for (const selector of ['meta[name="description"]','meta[property="og:description"]','meta[name="twitter:description"]']) document.querySelector(selector)?.setAttribute('content', route.description || baseDescription);
+    for (const selector of ['meta[name="description"]','meta[property="og:description"]','meta[name="twitter:description"]']) document.querySelector(selector)?.setAttribute('content', description);
     const structured = document.querySelector('#productStructuredData');
     if (structured) {
-      const data = JSON.parse(structured.textContent); data.url = canonical.href;
+      const data = JSON.parse(structured.textContent); data.url = canonical.href; data.description = description;
       structured.textContent = JSON.stringify(data);
     }
   }

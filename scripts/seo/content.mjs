@@ -1,6 +1,9 @@
+import ar from '../lessons/locales/ar.mjs';
 // Existing About pages. Instrument lessons live in ../lessons/translations.mjs.
 export const reviewed="2026-10-27";
 export const languages={
+ ar: ar.about,
+
   "en": {
     "about": "/en/about/",
     "pages": [

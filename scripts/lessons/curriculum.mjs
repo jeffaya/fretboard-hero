@@ -1,6 +1,9 @@
+import ar from './locales/ar.mjs';
 // Original teaching text and exercises; public references are listed separately.
 // course rows: deeper explanation, guided reading, common error, success check.
 export const curriculum={
+ ar: ar.curriculum,
+
  en:{
  nav:'Reading tablature',
  ui:{deeper:'Make the connection',example:'A worked example',avoid:'A mistake to avoid',checkpoint:'Ready for the next step?',sources:'Sources and further reading',symbols:'Common tablature symbols',symbol:'Symbol',action:'How to play it',bar:'Bar',beats:'beats',tabKey:'Read left to right. Counts above mark the beats; numbers on the lines are frets; numbers below give the duration in beats. R = rest. Stacked fret numbers sound together. Start at 60 BPM.',textVersion:'Read the example as text'},

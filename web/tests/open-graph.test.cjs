@@ -28,7 +28,8 @@ async function worker(source){
  }
  source=source.replace(/^import .*;\r?\n/gm,'').replace('export default','globalThis.worker =');
  const {appRoutes,matchRoute}=await import('../core/routes.js');
- const c=vm.createContext({URL,Request,appRoutes,matchRoute,HTMLRewriter:Rewriter});vm.runInContext(source,c);return c.worker;
+ const {routeLocales}=await import('../core/route-locales.js');
+ const c=vm.createContext({URL,Request,appRoutes,matchRoute,routeLocales,HTMLRewriter:Rewriter});vm.runInContext(source,c);return c.worker;
 }
 for(const [format,newline] of [['LF','\n'],['CRLF','\r\n']])test(`Worker supplies instrument JPEG metadata before client JavaScript, including shared query URLs (${format})`,async()=>{
  const source=fs.readFileSync('worker.js','utf8').replace(/\r?\n/g,newline);

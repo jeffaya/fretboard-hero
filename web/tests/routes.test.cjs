@@ -39,11 +39,12 @@ async function navigation({native=false,start='https://fretboard-hero.com/?instr
  const routes=await routeModule(),nodes=new Map(),events={},writes=[];
  const node=()=>({content:'Home description',setAttribute(k,v){this[k]=v}});
  const location=new URL(start);
- const context={...routes,URL,location,history:{pushState(_state,_title,url){writes.push(['push',url.href]);location.href=url.href},replaceState(_state,_title,url){writes.push(['replace',url.href]);location.href=url.href}},
+ const {routeLocales}=await import('../core/route-locales.js');
+ const context={...routes,routeLocales,URL,location,history:{pushState(_state,_title,url){writes.push(['push',url.href]);location.href=url.href},replaceState(_state,_title,url){writes.push(['replace',url.href]);location.href=url.href}},
   document:{title:'Bass Fretboard Hero',querySelector(selector){if(selector==='#productStructuredData')return null;if(!nodes.has(selector))nodes.set(selector,node());return nodes.get(selector)},querySelectorAll:()=>[]},
   Capacitor:{getPlatform:()=>native?'ios':'web'},FRETBOARD_SITE_CONFIG:{instrument:'bass-4'},FRETBOARD_ACTIVE_PRODUCT:{name:'Bass Fretboard Hero'},FretboardI18n:{locale:'fr',text:s=>s},addEventListener:(name,fn)=>events[name]=fn};
  context.window=context;vm.createContext(context);
- const source=fs.readFileSync('web/core/navigation.js','utf8').replace(/^import .*;\n/,'').replace('export function','function');
+ const source=fs.readFileSync('web/core/navigation.js','utf8').replace(/^import .*;\r?\n/gm,'').replace('export function','function');
  vm.runInContext(source,context);
  return {nav:context.FretboardNavigation,location,events,writes,nodes};
 }

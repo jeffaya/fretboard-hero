@@ -1,3 +1,4 @@
+import {routeLocales} from './web/core/route-locales.js';
 import {appRoutes, matchRoute} from './web/core/routes.js';
 import { handlePlayBilling } from './server/play-billing.mjs';
 // Social crawlers need instrument metadata in the initial HTML, before JavaScript.
@@ -18,15 +19,19 @@ export default {
     const requested = url.searchParams.get('instrument');
     const instrument = Object.hasOwn(products, requested) ? products[requested] : products.guitar;
     const canonical = `https://fretboard-hero.com${appRoutes[screen].path}${instrument.key === 'guitar' ? '' : `?instrument=${instrument.key === 'bass' ? 'bass-4' : instrument.key}`}`;
-    const title = `${appRoutes[screen].title ? appRoutes[screen].title + ' · ' : ''}${instrument.name} Fretboard Hero — Pentatonic Scales, Notes & Triads`;
-    const description = appRoutes[screen].description || `Practice ${instrument.name.toLowerCase()} with pentatonic positions, note maps, triads, ${instrument.shapes} and a guided daily routine. Start with the free demo in A.`;
+    const requestedLanguage = (url.searchParams.get('lang') || '').replace(/_/g,'-').toLowerCase().split('-')[0];
+    const language = requestedLanguage === 'zh' ? 'zh-CN' : requestedLanguage === 'pt' ? 'pt-BR' : requestedLanguage;
+    const localized = Object.hasOwn(routeLocales, language) ? routeLocales[language] : null;
+    const title = localized ? `${localized[screen][0]} · ${instrument.name} Fretboard Hero` : `${appRoutes[screen].title ? appRoutes[screen].title + ' · ' : ''}${instrument.name} Fretboard Hero — Pentatonic Scales, Notes & Triads`;
+    const description = localized?.[screen][1] || appRoutes[screen].description || `Practice ${instrument.name.toLowerCase()} with pentatonic positions, note maps, triads, ${instrument.shapes} and a guided daily routine. Start with the free demo in A.`;
     const image = `https://fretboard-hero.com/assets/instruments/${instrument.key}/og.jpg?v=20261020.1`;
-    const imageAlt = `${instrument.name} Fretboard Hero neon concert artwork with a ${instrument.neck} neck, Tuner, Daily Routine with live mic feedback, Learn, Fretboard Map, Circle of Fifths and Quiz`;
+    const imageAlt = localized ? title : `${instrument.name} Fretboard Hero neon concert artwork with a ${instrument.neck} neck, Tuner, Daily Routine with live mic feedback, Learn, Fretboard Map, Circle of Fifths and Quiz`;
     const attr = (name, value) => ({ element(el) { el.setAttribute(name, value); } });
     return new HTMLRewriter()
       .on('title', { element(el) { el.setInnerContent(title); } })
       .on('link[rel="canonical"]', attr('href', canonical))
       .on('meta[property="og:url"]', attr('content', canonical))
+      .on('meta[property="og:locale"]', attr('content', localized ? {ar:'ar_SA',}[language] : 'en_US'))
       .on('meta[property="og:title"], meta[name="twitter:title"]', attr('content', title))
       .on('meta[name="description"], meta[property="og:description"], meta[name="twitter:description"]', attr('content', description))
       .on('meta[property="og:image"], meta[name="twitter:image"]', attr('content', image))
@@ -40,9 +45,9 @@ export default {
           '@context':'https://schema.org', '@type':'WebApplication',
           name:`${instrument.name} Fretboard Hero`, url:canonical, description,
           applicationCategory:'EducationalApplication', operatingSystem:'Web browser',
-          isAccessibleForFree:true, inLanguage:'en', image,
+          isAccessibleForFree:true, inLanguage:localized ? language : 'en', image,
           author:{'@type':'Person',name:'Jean-François Seignemorte'},
-          featureList:['Pentatonic positions','Fretboard note map','Triads','Daily Routine','Tuner','Circle of Fifths','Quiz']
+          featureList:localized ? Object.entries(localized).filter(([name])=>name!=='home').map(([,pair])=>pair[0]) : ['Pentatonic positions','Fretboard note map','Triads','Daily Routine','Tuner','Circle of Fifths','Quiz']
         }).replace(/</g, '\\u003c'), {html:true});
       } })
       .transform(response);
