@@ -1,0 +1,71 @@
+{
+  "tagline": "Kenali fretboard gitarmu",
+  "menu": [
+    [
+      "Tuner",
+      "Stem gitarmu"
+    ],
+    [
+      "Latihan harian",
+      "Berlatih dengan mikrofon"
+    ],
+    [
+      "Belajar",
+      "Nada, triad, dan tangga nada"
+    ],
+    [
+      "Peta fretboard",
+      "Jelajahi keenam senar"
+    ],
+    [
+      "Lingkaran kuint",
+      "Kenali hubungan antarnada dasar"
+    ],
+    [
+      "Kuis",
+      "Uji pengetahuanmu"
+    ]
+  ],
+  "cards": [
+    [
+      "Main gitar",
+      "setiap hari.",
+      "Latih tangga nada A minor dengan tab, nama nada, dan derajat nada."
+    ],
+    [
+      "Tiga nada,",
+      "satu akor.",
+      "Hubungkan triad A minor di beberapa senar."
+    ],
+    [
+      "Lima posisi,",
+      "satu pentatonik.",
+      "Lihat bagaimana pola pentatonik A minor saling terhubung."
+    ],
+    [
+      "Mainkan nadanya.",
+      "Mikrofon menyimak.",
+      "Ikuti nada yang disorot dan temukan A berikutnya di fretboard."
+    ],
+    [
+      "Di mana",
+      "nada itu?",
+      "Temukan nada yang diminta sebelum waktu habis."
+    ],
+    [
+      "Stem dulu,",
+      "baru main.",
+      "Petik senar A dan lihat kapan nadanya sudah tepat."
+    ],
+    [
+      "Setiap nada",
+      "ada tempatnya.",
+      "Temukan letak nada pada keenam senar gitar."
+    ],
+    [
+      "Putar",
+      "lingkaran kuint.",
+      "Jelajahi G mayor, E minor, dan akor yang menyertainya."
+    ]
+  ]
+}

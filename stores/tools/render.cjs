@@ -3,7 +3,11 @@ const path=require('node:path');
 const {pathToFileURL}=require('node:url');
 const {chromium}=require('playwright');
 const sharp=require('sharp');
-const { out }=require('./listing.cjs');
+const { out, locale }=require('./listing.cjs');
+if(fs.existsSync(path.join(out,'source/copy.json'))){
+  require('node:child_process').execFileSync('python3',[path.join(__dirname,'render-localized-guitar.py'),locale],{stdio:'inherit'});
+  return;
+}
 const ids=['01-routine','02-triads','03-pentatonic','04-feedback','05-quiz','06-tuner','07-map','08-circle'];
 (async()=>{
   const browser=await chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE||undefined,args:['--no-sandbox','--disable-dev-shm-usage']});

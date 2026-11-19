@@ -59,10 +59,10 @@ Guitar Fretboard Hero
 
 ## Visuels et validation
 
-Cette langue contient les textes uniquement. Ses captures et visuels localisés ne sont pas encore fournis. Les images existantes sont dans [en-US](../en-US/README.md) et restent en anglais. Lors de la création des visuels de cette langue, traduire aussi les captures intégrées, puis relire les textes alternatifs face aux images finales.
+[Aperçu des huit visuels téléphone](overview-phone.jpg) · [Bannière Google Play](icon/feature-graphic-1024x500.png) · [Rapport de validation](validation.json)
 
-Le [guide Android](../../README.md) décrit les tailles et les règles communes. Les rubriques françaises de ce README sont conservées pour le validateur existant ; elles ne font pas partie du texte à publier. Les compteurs portent sur les caractères Unicode, espaces et sauts de ligne compris.
+Les huit scènes utilisent l’interface guitare dans cette langue. Les dossiers `phone/`, `tablet-7/`, `tablet-10/` et `desktop/` contiennent les images à examiner pour la fiche. L’icône est commune à toutes les langues. Les images de `android-xr/` sont des brouillons 2D au format console, sans essai sur casque.
 
-Ne générer le rapport complet `validation.json` qu'après l'ajout des images : le validateur vérifie les fichiers réellement présents et signalera les éléments obligatoires absents.
+La copie de la bannière et des cartes est dans [source/copy.json](source/copy.json), les captures téléphone dans [source/screens-phone](source/screens-phone/). Depuis la racine du dépôt, exécuter `python stores/tools/render-localized-guitar.py hi-IN` pour régénérer la bannière et les huit cartes, puis `node stores/tools/validate.cjs stores/google-play/guitar/hi-IN` pour contrôler les fichiers.
 
 [Retour aux 11 langues de la fiche guitare](../README.md).

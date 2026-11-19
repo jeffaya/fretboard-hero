@@ -4,19 +4,19 @@ Les **11 langues de l'application** disposent chacune d'un `README.md` avec les 
 
 ## Langues
 
-| Langue | Code dans l'application | Dossier Google Play | Textes alternatifs |
-| --- | --- | --- | --- |
-| English (United States) | `en` | [en-US/README.md](en-US/README.md) | [alt-text.json](en-US/alt-text.json) |
-| Español | `es` | [es-ES/README.md](es-ES/README.md) | [alt-text.json](es-ES/alt-text.json) |
-| Français | `fr` | [fr-FR/README.md](fr-FR/README.md) | [alt-text.json](fr-FR/alt-text.json) |
-| Deutsch | `de` | [de-DE/README.md](de-DE/README.md) | [alt-text.json](de-DE/alt-text.json) |
-| Italiano | `it` | [it-IT/README.md](it-IT/README.md) | [alt-text.json](it-IT/alt-text.json) |
-| 日本語 | `ja` | [ja-JP/README.md](ja-JP/README.md) | [alt-text.json](ja-JP/alt-text.json) |
-| 한국어 | `ko` | [ko-KR/README.md](ko-KR/README.md) | [alt-text.json](ko-KR/alt-text.json) |
-| 简体中文 | `zh-CN` | [zh-CN/README.md](zh-CN/README.md) | [alt-text.json](zh-CN/alt-text.json) |
-| Português (Brasil) | `pt-BR` | [pt-BR/README.md](pt-BR/README.md) | [alt-text.json](pt-BR/alt-text.json) |
-| हिन्दी | `hi` | [hi-IN/README.md](hi-IN/README.md) | [alt-text.json](hi-IN/alt-text.json) |
-| Bahasa Indonesia | `id` | [id/README.md](id/README.md) | [alt-text.json](id/alt-text.json) |
+| Langue | Code dans l'application | Dossier Google Play | Textes alternatifs | Aperçu téléphone |
+| --- | --- | --- | --- | --- |
+| English (United States) | `en` | [en-US/README.md](en-US/README.md) | [alt-text.json](en-US/alt-text.json) | [8 visuels](en-US/overview-phone.png) |
+| Español | `es` | [es-ES/README.md](es-ES/README.md) | [alt-text.json](es-ES/alt-text.json) | [8 visuels](es-ES/overview-phone.jpg) |
+| Français | `fr` | [fr-FR/README.md](fr-FR/README.md) | [alt-text.json](fr-FR/alt-text.json) | [8 visuels](fr-FR/overview-phone.png) |
+| Deutsch | `de` | [de-DE/README.md](de-DE/README.md) | [alt-text.json](de-DE/alt-text.json) | [8 visuels](de-DE/overview-phone.jpg) |
+| Italiano | `it` | [it-IT/README.md](it-IT/README.md) | [alt-text.json](it-IT/alt-text.json) | [8 visuels](it-IT/overview-phone.jpg) |
+| 日本語 | `ja` | [ja-JP/README.md](ja-JP/README.md) | [alt-text.json](ja-JP/alt-text.json) | [8 visuels](ja-JP/overview-phone.jpg) |
+| 한국어 | `ko` | [ko-KR/README.md](ko-KR/README.md) | [alt-text.json](ko-KR/alt-text.json) | [8 visuels](ko-KR/overview-phone.jpg) |
+| 简体中文 | `zh-CN` | [zh-CN/README.md](zh-CN/README.md) | [alt-text.json](zh-CN/alt-text.json) | [8 visuels](zh-CN/overview-phone.jpg) |
+| Português (Brasil) | `pt-BR` | [pt-BR/README.md](pt-BR/README.md) | [alt-text.json](pt-BR/alt-text.json) | [8 visuels](pt-BR/overview-phone.jpg) |
+| हिन्दी | `hi` | [hi-IN/README.md](hi-IN/README.md) | [alt-text.json](hi-IN/alt-text.json) | [8 visuels](hi-IN/overview-phone.jpg) |
+| Bahasa Indonesia | `id` | [id/README.md](id/README.md) | [alt-text.json](id/alt-text.json) | [8 visuels](id/overview-phone.jpg) |
 
 La liste de l'application provient de [web/core/i18n.js](../../../web/core/i18n.js) et de [web/locales](../../../web/locales). Les dossiers reprennent les [codes de traduction des fiches Google Play](https://support.google.com/googleplay/android-developer/answer/9844778?hl=en), vérifiés le 17 octobre 2026. Par exemple, `fr` devient `fr-FR`, `ja` devient `ja-JP` et l'indonésien reste `id`.
 
@@ -56,12 +56,14 @@ Les identifiants du JSON sont stables dans toutes les langues :
 
 Les clés 01 à 08 correspondent aux préfixes des captures dans les différents formats d'écran. Les noms de notes sont adaptés aux conventions de l'application.
 
-## État des images
+## Visuels par langue
 
-- **en-US** : visuels existants et guide d'import ; Android XR reste un brouillon 2D.
-- **fr-FR** : bannière et huit visuels téléphone en français, captures localisées pour tablettes et ordinateur ; Android XR reste un brouillon 2D.
-- **Les neuf autres langues** : README et textes alternatifs uniquement. Les images localisées restent à produire avec l'interface et les accroches dans la même langue.
+![Bannières des neuf nouvelles langues](overview-localized-banners.jpg)
 
-Ne pas présenter une image anglaise comme une capture traduite. Lors de l'ajout des visuels, vérifier que chaque texte alternatif décrit toujours l'état visible, puis lancer `stores/tools/validate.cjs` sur le dossier complet. Le rapport généré `validation.json` ne certifie pas des images absentes.
+Chaque fiche contient une bannière localisée, l’icône guitare et huit scènes pour chacun des formats téléphone, tablette 7 pouces, tablette 10 pouces et ordinateur. Le rapport `validation.json` de chaque langue donne les dimensions, le poids et le résultat des contrôles.
 
-Les dimensions et les consignes communes restent dans le [README Google Play](../README.md).
+Les images du dossier `android-xr/` sont des brouillons 2D. Leur format 16:9 correspond au profil de console du projet. Une vérification sur casque reste nécessaire.
+
+Pour les neuf traductions ajoutées après les fiches anglaise et française, les accroches figurent dans `source/copy.json`. Le moteur de rendu utilise Pillow avec RAQM, les polices fournies dans le dépôt et, pour le hindi et les langues CJK, les polices système Noto Sans (paquets Debian `fonts-noto-core` et `fonts-noto-cjk`).
+
+Les dimensions et les consignes communes figurent dans le [README Google Play](../README.md).
