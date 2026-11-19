@@ -11,7 +11,7 @@ Dedicated distribution-listing assets. These files are separate from the shipped
 | `google-play/ukulele/` | Ukulele Fretboard Hero listing copy and alt text in all 11 app languages; visuals in `en-US/` and `fr-FR/` |
 | `tools/` | Capture, render and validation scripts |
 
-Future Apple listings belong in `apple-app-store/<instrument>/<locale>/`. That directory is intentionally not populated in this first Google Play draft.
+The [App Store Connect listings](apple-app-store/README.md) contain copyable fields for guitar, bass and ukulele in Arabic, Bengali and Russian.
 
 Every locale for guitar, bass and ukulele has `README.md` with copyable listing fields and `alt-text.json`. The English and French listings for all three instruments have visual sources. The remaining locales contain listing text and draft alt text. Upload files from the device folders in numeric order. `source/` contains editable artwork and capture evidence; it is not an upload folder.
 
