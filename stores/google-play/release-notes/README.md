@@ -12,6 +12,18 @@ Dans **Actions → Generate Android App → Run workflow**, choisir la branche `
 
 Ajouter dans ce dossier un fichier nommé exactement `<version_name>.json` avant de lancer la publication. [1.1.0.json](1.1.0.json) est la fiche pour la version 1.1.0. Le bloc `common` associe chaque langue Google Play à la note destinée aux utilisateurs. Pour adapter une traduction à un instrument, ajouter au même niveau un objet `guitar`, `bass-4` ou `ukulele` avec les langues concernées. Les autres langues héritent de `common`. Les 14 notes de chaque application sélectionnée sont vérifiées avant le build, avec un maximum de 500 caractères Unicode par langue. Le mode `build-only` accepte aussi les versions sans fichier de notes.
 
+## Configuration groupée avec Cloud Shell
+
+Ouvrir un terminal [Google Cloud Shell](https://shell.cloud.google.com/) dans le compte administrateur du projet des achats. Depuis le dépôt contenant [le script de configuration](../../../scripts/google-play/setup-cloud.sh), lancer :
+
+```sh
+bash scripts/google-play/setup-cloud.sh
+```
+
+Coller l’adresse du compte de service des achats quand le script la demande. Il en déduit le projet, vérifie que le compte existe et crée un compte de publication distinct. Il configure les API, la fédération GitHub et les deux variables Actions du dépôt. GitHub CLI peut demander une connexion. Si la CLI est absente, le script affiche les deux valeurs à reporter. Le script peut être relancé après une interruption.
+
+Dans **Play Console → Utilisateurs et autorisations**, inviter en une seule fois le compte de publication affiché à la fin. Sélectionner les trois applications et leurs droits de lecture, de test et de production (étape 2 ci-dessous).
+
 ## Configurer Google Cloud et GitHub une fois
 
 1. Dans le projet Google Cloud de ton choix, activer **Google Play Android Developer API**, **IAM Service Account Credentials API**, **Security Token Service API** et **Identity and Access Management API**. Créer un compte de service de publication, commun aux trois applications ou distinct par instrument.
