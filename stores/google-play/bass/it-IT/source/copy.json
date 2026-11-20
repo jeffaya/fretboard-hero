@@ -1,0 +1,71 @@
+{
+  "tagline": "Conosci la tastiera del tuo basso",
+  "menu": [
+    [
+      "Accordatore",
+      "Accorda il basso"
+    ],
+    [
+      "Routine quotidiana",
+      "Esercitati con il microfono"
+    ],
+    [
+      "Impara",
+      "Note, triadi e scale"
+    ],
+    [
+      "Mappa della tastiera",
+      "Esplora le quattro corde"
+    ],
+    [
+      "Circolo delle quinte",
+      "Scopri le tonalità vicine"
+    ],
+    [
+      "Quiz",
+      "Metti alla prova la memoria"
+    ]
+  ],
+  "cards": [
+    [
+      "Suona il basso",
+      "ogni giorno.",
+      "Segui la tablatura e suona la scala di la minore sul basso."
+    ],
+    [
+      "Tre note,",
+      "un accordo.",
+      "Collega le triadi di la minore su corde diverse."
+    ],
+    [
+      "Cinque posizioni,",
+      "una pentatonica.",
+      "Scopri come si collegano le forme della pentatonica di la minore."
+    ],
+    [
+      "Suona la nota.",
+      "Il microfono ti segue.",
+      "Segui la nota evidenziata e trova il la successivo sulla tastiera."
+    ],
+    [
+      "Dov’è",
+      "quella nota?",
+      "Trova la nota richiesta prima che scada il tempo."
+    ],
+    [
+      "Prima accorda,",
+      "poi suona.",
+      "Pizzica la corda di la a vuoto e accordala a 55 Hz."
+    ],
+    [
+      "Ogni nota",
+      "al suo posto.",
+      "Trova le note su tutte e quattro le corde del basso."
+    ],
+    [
+      "Esplora il circolo",
+      "delle quinte.",
+      "Scopri sol maggiore, mi minore e gli accordi della tonalità."
+    ]
+  ]
+}

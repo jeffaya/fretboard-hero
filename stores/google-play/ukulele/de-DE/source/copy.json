@@ -1,0 +1,71 @@
+{
+  "tagline": "Dein Ukulelengriffbrett im Griff",
+  "menu": [
+    [
+      "Stimmgerät",
+      "Stimme deine Ukulele"
+    ],
+    [
+      "Tägliche Routine",
+      "Übe mit Mikrofon-Feedback"
+    ],
+    [
+      "Lernen",
+      "Noten, Dreiklänge und Skalen"
+    ],
+    [
+      "Griffbrettkarte",
+      "Erkunde die vier Saiten"
+    ],
+    [
+      "Quintenzirkel",
+      "Entdecke verwandte Tonarten"
+    ],
+    [
+      "Quiz",
+      "Teste dein Wissen"
+    ]
+  ],
+  "cards": [
+    [
+      "Jeden Tag",
+      "Ukulele spielen.",
+      "Übe die a-Moll-Tonleiter mit Tabulatur, Notennamen und Tonstufen."
+    ],
+    [
+      "Drei Töne,",
+      "ein Akkord.",
+      "Verbinde a-Moll-Dreiklänge über mehrere Saiten."
+    ],
+    [
+      "Fünf Lagen,",
+      "eine Pentatonik.",
+      "Sieh, wo sich die fünf Muster der a-Moll-Pentatonik treffen."
+    ],
+    [
+      "Spiel den Ton.",
+      "Das Mikro hört mit.",
+      "Folge der Markierung und finde das nächste A auf dem Griffbrett."
+    ],
+    [
+      "Findest du",
+      "die Note?",
+      "Finde den gesuchten Ton, bevor die Zeit abläuft."
+    ],
+    [
+      "Erst stimmen,",
+      "dann spielen.",
+      "Schlage die A-Saite an und sieh, wann sie genau stimmt."
+    ],
+    [
+      "Jede Note",
+      "auf einen Blick.",
+      "Finde die Noten auf den vier Saiten deiner Ukulele."
+    ],
+    [
+      "Dreh am",
+      "Quintenzirkel.",
+      "Entdecke G-Dur, e-Moll und die passenden Akkorde."
+    ]
+  ]
+}

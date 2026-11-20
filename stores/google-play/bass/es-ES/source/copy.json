@@ -1,0 +1,71 @@
+{
+  "tagline": "Domina el mástil de tu bajo",
+  "menu": [
+    [
+      "Afinador",
+      "Afina tu bajo"
+    ],
+    [
+      "Rutina diaria",
+      "Practica con el micrófono"
+    ],
+    [
+      "Aprender",
+      "Notas, tríadas y escalas"
+    ],
+    [
+      "Mapa del mástil",
+      "Explora las cuatro cuerdas"
+    ],
+    [
+      "Círculo de quintas",
+      "Relaciona las tonalidades"
+    ],
+    [
+      "Quiz",
+      "Pon a prueba tu memoria"
+    ]
+  ],
+  "cards": [
+    [
+      "Un rato de bajo",
+      "cada día.",
+      "Practica la escala de la menor en el bajo siguiendo la tablatura."
+    ],
+    [
+      "Tres notas,",
+      "un acorde.",
+      "Enlaza tríadas de la menor a través de las cuerdas."
+    ],
+    [
+      "Cinco posiciones,",
+      "una pentatónica.",
+      "Descubre cómo encajan los patrones de la pentatónica de la menor."
+    ],
+    [
+      "Toca una nota.",
+      "El micro te sigue.",
+      "Sigue la nota resaltada y encuentra el siguiente la en el mástil."
+    ],
+    [
+      "¿Dónde está",
+      "esa nota?",
+      "Encuentra la nota indicada antes de que se acabe el tiempo."
+    ],
+    [
+      "Afina y",
+      "empieza a tocar.",
+      "Toca la cuerda de la al aire y afínala a 55 Hz."
+    ],
+    [
+      "Cada nota",
+      "en su sitio.",
+      "Localiza las notas en las cuatro cuerdas del bajo."
+    ],
+    [
+      "Gira el círculo",
+      "de quintas.",
+      "Explora sol mayor, mi menor y sus acordes."
+    ]
+  ]
+}

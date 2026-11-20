@@ -1,0 +1,71 @@
+{
+  "tagline": "Domine o braço do ukulele",
+  "menu": [
+    [
+      "Afinador",
+      "Afine seu ukulele"
+    ],
+    [
+      "Rotina diária",
+      "Pratique com o microfone"
+    ],
+    [
+      "Aprender",
+      "Notas, tríades e escalas"
+    ],
+    [
+      "Mapa do braço",
+      "Explore as quatro cordas"
+    ],
+    [
+      "Ciclo das quintas",
+      "Descubra tons vizinhos"
+    ],
+    [
+      "Quiz",
+      "Teste seus conhecimentos"
+    ]
+  ],
+  "cards": [
+    [
+      "Toque um pouco",
+      "todo dia.",
+      "Pratique a escala de lá menor com tablatura, notas e graus."
+    ],
+    [
+      "Três notas,",
+      "um acorde.",
+      "Conecte tríades de lá menor em cordas diferentes."
+    ],
+    [
+      "Cinco posições,",
+      "uma pentatônica.",
+      "Veja como os desenhos da pentatônica de lá menor se conectam."
+    ],
+    [
+      "Toque a nota.",
+      "O microfone escuta.",
+      "Siga a nota destacada e encontre o próximo lá no braço."
+    ],
+    [
+      "Onde está",
+      "essa nota?",
+      "Encontre a nota pedida antes que o tempo acabe."
+    ],
+    [
+      "Afine e",
+      "comece a tocar.",
+      "Toque a corda lá e veja quando ela estiver afinada."
+    ],
+    [
+      "Cada nota",
+      "no seu lugar.",
+      "Localize as notas nas quatro cordas do ukulele."
+    ],
+    [
+      "Explore o ciclo",
+      "das quintas.",
+      "Descubra sol maior, mi menor e seus acordes."
+    ]
+  ]
+}
