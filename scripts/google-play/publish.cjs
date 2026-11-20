@@ -40,7 +40,9 @@ async function publish({ appId, track, version, code, sha, bundle, notes, reques
   if (!/^[1-9]\d*$/.test(code) || Number(code) > 2100000000) throw Error('Invalid version code');
   if (!/^[0-9a-f]{40}$/.test(sha)) throw Error('Missing build commit');
   const base = prefix + encodeURIComponent(appId);
-  const name = version + ' (' + code + ') ' + sha;
+  // Keep the Play Console label short even for long prerelease version names.
+  const buildId = createHash('sha256').update([sha, version, code].join('/')).digest('hex').slice(0, 20);
+  const name = (version + ' (' + code + ')').slice(0, 28) + ' @' + buildId;
   const digest = createHash('sha256').update(bundle).digest('hex');
   const hasCode = release => release.versionCodes?.some(c => String(c) === code);
   const matchesBundle = item => String(item?.versionCode) === code && item.sha256 === digest;
@@ -69,7 +71,7 @@ async function publish({ appId, track, version, code, sha, bundle, notes, reques
     const { bundles = [] } = await request('GET', editPath + '/bundles');
     const existing = bundles.find(b => String(b.versionCode) === code);
     // Signed rebuilds can differ byte-for-byte. A previous release made by this
-    // workflow records the exact source commit, version name and code in its name.
+    // workflow identifies the source commit, version name and code in its label.
     const sameBuild = tracks.some(t => t.releases?.some(r => r.name === name && hasCode(r)));
     if (existing && !matchesBundle(existing) && !sameBuild) {
       throw Error('This version code belongs to another build. Choose a higher code or use the original signed bundle.');
