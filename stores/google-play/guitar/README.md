@@ -1,6 +1,6 @@
 # Guitar Fretboard Hero — fiches Google Play
 
-Les **11 langues de l'application** disposent chacune d'un `README.md` avec les trois champs à copier-coller et d'un `alt-text.json` avec les dix descriptions des visuels. La fiche anglaise existante sert de référence.
+Les **14 langues de l'application** disposent chacune d'un `README.md` avec les trois champs à copier-coller et d'un `alt-text.json` avec les dix descriptions des visuels. La fiche anglaise existante sert de référence.
 
 ## Langues
 
@@ -17,6 +17,9 @@ Les **11 langues de l'application** disposent chacune d'un `README.md` avec les 
 | Português (Brasil) | `pt-BR` | [pt-BR/README.md](pt-BR/README.md) | [alt-text.json](pt-BR/alt-text.json) | [8 visuels](pt-BR/overview-phone.jpg) |
 | हिन्दी | `hi` | [hi-IN/README.md](hi-IN/README.md) | [alt-text.json](hi-IN/alt-text.json) | [8 visuels](hi-IN/overview-phone.jpg) |
 | Bahasa Indonesia | `id` | [id/README.md](id/README.md) | [alt-text.json](id/alt-text.json) | [8 visuels](id/overview-phone.jpg) |
+| العربية | `ar` | [ar/README.md](ar/README.md) | [alt-text.json](ar/alt-text.json) | À produire |
+| বাংলা | `bn` | [bn-BD/README.md](bn-BD/README.md) | [alt-text.json](bn-BD/alt-text.json) | À produire |
+| Русский | `ru` | [ru-RU/README.md](ru-RU/README.md) | [alt-text.json](ru-RU/alt-text.json) | À produire |
 
 La liste de l'application provient de [web/core/i18n.js](../../../web/core/i18n.js) et de [web/locales](../../../web/locales). Les dossiers reprennent les [codes de traduction des fiches Google Play](https://support.google.com/googleplay/android-developer/answer/9844778?hl=en), vérifiés le 17 octobre 2026. Par exemple, `fr` devient `fr-FR`, `ja` devient `ja-JP` et l'indonésien reste `id`.
 
@@ -60,7 +63,7 @@ Les clés 01 à 08 correspondent aux préfixes des captures dans les différents
 
 ![Bannières des neuf nouvelles langues](overview-localized-banners.jpg)
 
-Chaque fiche contient une bannière localisée, l’icône guitare et huit scènes pour chacun des formats téléphone, tablette 7 pouces, tablette 10 pouces et ordinateur. Le rapport `validation.json` de chaque langue donne les dimensions, le poids et le résultat des contrôles.
+Les onze fiches avec aperçu téléphone contiennent chacune une bannière localisée, l’icône guitare et huit scènes pour chacun des formats téléphone, tablette 7 pouces, tablette 10 pouces et ordinateur. Leur rapport `validation.json` donne les dimensions, le poids et le résultat des contrôles.
 
 Les images du dossier `android-xr/` sont des brouillons 2D. Leur format 16:9 correspond au profil de console du projet. Une vérification sur casque reste nécessaire.
 
