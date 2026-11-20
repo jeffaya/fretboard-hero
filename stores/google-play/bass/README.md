@@ -1,6 +1,6 @@
 # Bass Fretboard Hero — fiches Google Play
 
-Les **11 langues de l’application** disposent chacune d’un `README.md` avec les trois champs à copier-coller et d’un `alt-text.json` avec dix propositions de textes alternatifs. Les descriptions sont adaptées à l’édition basse ; la [fiche anglaise](en-US/README.md) sert de référence.
+Les **14 langues de l’application** disposent chacune d’un `README.md` avec les trois champs à copier-coller et d’un `alt-text.json` avec dix propositions de textes alternatifs. Les descriptions sont adaptées à l’édition basse ; la [fiche anglaise](en-US/README.md) sert de référence.
 
 ## Informations de l’application
 
@@ -35,8 +35,11 @@ Ces informations suivent [les variantes Android](../../../app/instruments.json),
 | Português (Brasil) | `pt-BR` | [pt-BR/README.md](pt-BR/README.md) | [alt-text.json](pt-BR/alt-text.json) |
 | हिन्दी | `hi` | [hi-IN/README.md](hi-IN/README.md) | [alt-text.json](hi-IN/alt-text.json) |
 | Bahasa Indonesia | `id` | [id/README.md](id/README.md) | [alt-text.json](id/alt-text.json) |
+| العربية | `ar` | [ar/README.md](ar/README.md) | [alt-text.json](ar/alt-text.json) |
+| বাংলা | `bn` | [bn-BD/README.md](bn-BD/README.md) | [alt-text.json](bn-BD/alt-text.json) |
+| Русский | `ru` | [ru-RU/README.md](ru-RU/README.md) | [alt-text.json](ru-RU/alt-text.json) |
 
-Les dossiers reprennent les codes déjà utilisés par la [fiche guitare](../guitar/README.md) et couvrent les 11 langues de [l’application](../../../web/core/i18n.js).
+Les dossiers reprennent les codes déjà utilisés par la [fiche guitare](../guitar/README.md) et couvrent les 14 langues de [l’application](../../../web/core/i18n.js).
 
 ## Copier les textes
 
@@ -74,6 +77,6 @@ Les clés sont stables dans toutes les langues. Les descriptions restent génér
 
 La [série anglaise](en-US/README.md) contient désormais les huit visuels téléphone, les captures tablette 7 pouces, tablette 10 pouces et ordinateur, l’icône et l’image de présentation. Les captures utilisent le profil de cet instrument, en anglais et avec quatre cordes. Les fichiers `android-xr/` restent des brouillons 2D, sans validation dans un environnement XR.
 
-Les dix autres langues contiennent uniquement les textes ; leurs visuels restent à produire. Le rapport `en-US/validation.json` mesure les fichiers anglais livrés et `en-US/overview-phone.png` permet de relire les huit visuels téléphone ensemble.
+Les fiches arabe, bengalie et russe contiennent les textes à copier et les descriptions des visuels à produire. Le rapport `en-US/validation.json` mesure les fichiers anglais livrés et `en-US/overview-phone.png` permet de relire les huit visuels téléphone ensemble.
 
 Voir [le guide Google Play commun](../README.md). Les images de présentation partagées se régénèrent avec `node stores/tools/export-og.cjs`.
