@@ -1,0 +1,71 @@
+{
+  "tagline": "Conosci la tastiera del tuo ukulele",
+  "menu": [
+    [
+      "Accordatore",
+      "Accorda l’ukulele"
+    ],
+    [
+      "Routine quotidiana",
+      "Esercitati con il microfono"
+    ],
+    [
+      "Impara",
+      "Note, triadi e scale"
+    ],
+    [
+      "Mappa della tastiera",
+      "Esplora le quattro corde"
+    ],
+    [
+      "Circolo delle quinte",
+      "Scopri le tonalità vicine"
+    ],
+    [
+      "Quiz",
+      "Metti alla prova la memoria"
+    ]
+  ],
+  "cards": [
+    [
+      "Suona un po’",
+      "ogni giorno.",
+      "Esercitati con la scala di la minore seguendo tablatura, note e gradi."
+    ],
+    [
+      "Tre note,",
+      "un accordo.",
+      "Collega le triadi di la minore su corde diverse."
+    ],
+    [
+      "Cinque posizioni,",
+      "una pentatonica.",
+      "Scopri come si collegano le forme della pentatonica di la minore."
+    ],
+    [
+      "Suona la nota.",
+      "Il microfono ti segue.",
+      "Segui la nota evidenziata e trova il la successivo sulla tastiera."
+    ],
+    [
+      "Dov’è",
+      "quella nota?",
+      "Trova la nota richiesta prima che scada il tempo."
+    ],
+    [
+      "Prima accorda,",
+      "poi suona.",
+      "Pizzica la corda del la e controlla l’intonazione."
+    ],
+    [
+      "Ogni nota",
+      "al suo posto.",
+      "Trova le note su tutte e sei le corde dell’ukulele."
+    ],
+    [
+      "Esplora il circolo",
+      "delle quinte.",
+      "Scopri sol maggiore, mi minore e gli accordi della tonalità."
+    ]
+  ]
+}
