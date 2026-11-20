@@ -309,6 +309,7 @@ copy and omit QR codes; fill `stores` before releasing.
 This produces one signed AAB per instrument in `dist/`. Choose a version code
 above the last Play upload for each selected app. In GitHub Actions, run
 **Generate Android App** and enter the instrument, version code and version name.
+Choose `build-only`, `internal` or `production`. See the [Google Play publication guide](stores/google-play/release-notes/README.md) for account setup and localized release notes.
 See the [Android distribution guide](docs/TECHNICAL.md#android-distribution) for signing and release instructions.
 
 ### Interface languages

@@ -1,5 +1,5 @@
 name: Generate Android App
-run-name: "Generate Android App · ${{ inputs.instrument }} · versionName ${{ inputs.version_name }} · versionCode ${{ inputs.version_code }}"
+run-name: "Generate Android App · ${{ inputs.instrument }} · versionName ${{ inputs.version_name }} · versionCode ${{ inputs.version_code }} · ${{ inputs.publish }}"
 
 on:
   workflow_dispatch:
@@ -10,6 +10,12 @@ on:
         default: guitar
         type: choice
         options: [guitar, bass-4, ukulele, all]
+      publish:
+        description: "Google Play destination (build-only keeps the signed downloads)"
+        type: choice
+        required: true
+        default: build-only
+        options: [build-only, internal, production]
       version_code:
         description: "Android versionCode (integer, higher than the last Play upload)"
         required: true
@@ -31,6 +37,8 @@ env:
 jobs:
   build:
     runs-on: windows-latest
+    outputs:
+      play-matrix: ${{ steps.release-notes.outputs.matrix }}
     permissions:
       contents: write
     steps:
@@ -58,6 +66,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+
+      - name: Validate Play destination and localized release notes
+        id: release-notes
+        if: inputs.publish != 'build-only'
+        shell: pwsh
+        env:
+          PLAY_TRACK: ${{ inputs.publish }}
+          VERSION_NAME: ${{ inputs.version_name }}
+          BUILD_INSTRUMENT: ${{ inputs.instrument }}
+        run: |
+          if ($env:GITHUB_REF -ne 'refs/heads/main') { throw 'Select main to publish to Google Play.' }
+          if ($env:PLAY_TRACK -notin @('internal', 'production')) { throw 'Invalid Play track.' }
+          node scripts/google-play/notes.cjs
 
       - name: Set up JDK 21
         uses: actions/setup-java@v6
@@ -173,3 +194,53 @@ jobs:
           files: |
             dist/*.aab
             dist/*-mapping.txt
+
+  publish-play:
+    name: "Play · ${{ matrix.instrument }} · ${{ inputs.publish }}"
+    needs: build
+    if: inputs.publish != 'build-only' && github.ref == 'refs/heads/main'
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.build.outputs.play-matrix) }}
+    runs-on: ubuntu-latest
+    environment: ${{ matrix.environment }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download the signed bundles from this run
+        uses: actions/download-artifact@v7
+        with:
+          name: fretboard-hero-android-${{ inputs.instrument }}-${{ inputs.version_name }}-${{ inputs.version_code }}
+          path: dist
+      - name: Check Google Play configuration
+        env:
+          PROVIDER: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          SERVICE_ACCOUNT: ${{ vars.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+        run: |
+          : "${PROVIDER:?Set the GCP_WORKLOAD_IDENTITY_PROVIDER Actions variable}"
+          : "${SERVICE_ACCOUNT:?Set the GOOGLE_PLAY_SERVICE_ACCOUNT Actions variable}"
+      - name: Authenticate to Google Play
+        id: google
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/androidpublisher
+          create_credentials_file: false
+          export_environment_variables: false
+      - name: Submit release and read Google Play status
+        env:
+          PLAY_ACCESS_TOKEN: ${{ steps.google.outputs.access_token }}
+          BUILD_INSTRUMENT: ${{ matrix.instrument }}
+          PLAY_TRACK: ${{ inputs.publish }}
+          VERSION_NAME: ${{ inputs.version_name }}
+          VERSION_CODE: ${{ inputs.version_code }}
+        run: node scripts/google-play/publish.cjs
