@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "7c59a31d6ce089834b130a7aa4af761d2dbbaca3",
+  "locale": "de-DE",
+  "instrument": "ukulele",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "phone",
+      "width": 432,
+      "height": 768,
+      "dpr": 2.5,
+      "touch": true,
+      "folder": "source/screens-phone",
+      "outputs": [
+        {
+          "file": "source/screens-phone/01-routine-1080x1920.jpg",
+          "language": {
+            "html": "de",
+            "app": "de"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "TÄGLICHE ROUTINE",
+          "mic": "Mikrofon aus",
+          "visibleText": "←\nTÄGLICHE ROUTINE\nROUTINE-EINSTELLUNGEN\n×\nNOTE\nA\nA#\nH\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nTONART\nDUR\nMOLL\nStimmgerät\nGrundton\nTonleiter\nDreiklänge\nAkkorde\nPenta\nSpiele die Tonleiter A Moll\n\nEine Oktave · Bünde 9–12 · Aufwärts\n\nBeginne auf A, spiele bis zur Oktave und zurück zum Grundton.\n\nMikrofon aus\n\nG\nC\nE\nA\nA\n1\n9\nH\n2\n11\nC\n♭3\n12\nD\n4\n10\nE\n5\n9\nF\n♭6\n10\nG\n♭7\n12\nA\n1\n12\n\nCyan = Grundton · Zahlen oben = Stufen · 1 = Grundton\n\nZurück →",
+          "sizeBytes": 187623
+        },
+        {
+          "file": "source/screens-phone/02-triads-1080x1920.jpg",
+          "language": {
+            "html": "de",
+            "app": "de"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "TÄGLICHE ROUTINE",
+          "mic": "Mikrofon aus",
+          "visibleText": "←\nTÄGLICHE ROUTINE\nROUTINE-EINSTELLUNGEN\n×\nNOTE\nA\nA#\nH\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nTONART\nDUR\nMOLL\nStimmgerät\nGrundton\nTonleiter\nDreiklänge\nAkkorde\nPenta\nVerbinde die Dreiklänge in A Moll\n\nSpiele jeden Dreiklang zusammen, dann Ton für Ton.\n\nMikrofon aus\n\nG\nC\nE\nA\n1. Umkehrung\n2\n0\n0\n2. Umkehrung\n5\n4\n5\nGrundstellung\n9\n9\n8\n\nCyan = Grundton\n\nWeiter →",
+          "sizeBytes": 171559
+        },
+        {
+          "file": "source/screens-phone/03-pentatonic-1080x1920.jpg",
+          "language": {
+            "html": "de",
+            "app": "de"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "learn",
+          "title": "A MOLLPENTATONIK",
+          "mic": "Mikrofon aus",
+          "visibleText": "←\nA MOLL\nPENTATONIK\nLERNEINSTELLUNGEN\n×\nNOTE\nA\nA#\nH\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nTONART\nDUR\nMOLL\nMODUS\nPENTATONIK\nDREIKLÄNGE\nAKKORDE\nARPEGGIEN\nPOSITIONEN\nALLE\n1\n2\n3\n4\n5\nGRIFFBRETT\n12 Bünde\n15 Bünde\n17 Bünde\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nP1\nP2\nP3\nP4\nP5\nP1\nG\nA\nC\nD\nE\nG\nC\nD\nE\nG\nA\nC\nE\nG\nA\nC\nD\nE\nA\nC\nD\nE\nG\nA\nA\nGrundton\nC\nTerz\nD\nQuarte\nE\nQuinte\nG\nSeptime",
+          "sizeBytes": 287363
+        },
+        {
+          "file": "source/screens-phone/04-feedback-1080x1920.jpg",
+          "language": {
+            "html": "de",
+            "app": "de"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "TÄGLICHE ROUTINE",
+          "mic": "Hört zu…",
+          "visibleText": "←\nTÄGLICHE ROUTINE\nROUTINE-EINSTELLUNGEN\n×\nNOTE\nA\nA#\nH\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nTONART\nDUR\nMOLL\nStimmgerät\nGrundton\nTonleiter\nDreiklänge\nAkkorde\nPenta\nFinde den Grundton A\n\nSpiele die hervorgehobene Note.\n\nHört zu…\n\n2 / 6\nG\nC\nE\nA\n2\n14\n9\n5\n0\n12\n\nHervorgehoben = Ziel · Grün = gespielt\n\nWeiter →",
+          "sizeBytes": 162869
+        },
+        {
+          "file": "source/screens-phone/05-quiz-1080x1920.jpg",
+          "language": {
+            "html": "de",
+            "app": "de"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "quiz",
+          "title": "GRIFFBRETT-QUIZKENNE DAS GRIFFBRETT • BEHERRSCHE ES",
+          "mic": "Mikrofon aus",
+          "visibleText": "←\nGRIFFBRETT-QUIZ\nKENNE DAS GRIFFBRETT • BEHERRSCHE ES\nPUNKTE\n1.650\n+800\nSERIE\n×5\nRANG\n🎸 LIVE-MUSIKER\nRESTZEIT\n55.5s\nA#\n\nFinde den Ton QUINTE\n\nBünde 0–5 • Tippe eine richtige Position an.\n0\n1\n2\n3\n4\n5\nG\nC\nE\nA",
+          "sizeBytes": 211189
+        },
+        {
+          "file": "source/screens-phone/06-tuner-1080x1920.jpg",
+          "language": {
+            "html": "de",
+            "app": "de"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "home",
+          "title": "Üben",
+          "mic": "Mikrofon aus",
+          "visibleText": "Stimmgerät · Ukulele\nAutomatisch\nA\n440.1 Hz · +1 cents\n−50\n0\n+50\n\nRichtig gestimmt\n\nG\nC\nE\nA\nMikrofon\n\nDer Ton bleibt auf deinem Gerät. Es wird nichts aufgenommen.",
+          "sizeBytes": 181063
+        },
+        {
+          "file": "source/screens-phone/07-map-1080x1920.jpg",
+          "language": {
+            "html": "de",
+            "app": "de"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "fretmap",
+          "title": "GRIFFBRETTKARTEJEDE NOTE • EIN GRIFFBRETT",
+          "mic": "Mikrofon aus",
+          "visibleText": "←\nGRIFFBRETTKARTE\nJEDE NOTE • EIN GRIFFBRETT\nGRIFFBRETTKARTE\n×\nNOTE\nALLE\nA\nA#\nH\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nGRIFFBRETT\n12 Bünde\n15 Bünde\n17 Bünde\n21 Bünde\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nG\nG#\nA\nA#\nH\nC\nC#\nD\nD#\nE\nF\nF#\nG\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nA\nA#\nH\nC\nE\nF\nF#\nG\nG#\nA\nA#\nH\nC\nC#\nD\nD#\nE\nA\nA#\nH\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nA",
+          "sizeBytes": 302510
+        },
+        {
+          "file": "source/screens-phone/08-circle-1080x1920.jpg",
+          "language": {
+            "html": "de",
+            "app": "de"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "circle",
+          "title": "QUINTENZIRKELTONARTEN • AKKORDE • HARMONIE",
+          "mic": "Mikrofon aus",
+          "visibleText": "←\nQUINTENZIRKEL\nTONARTEN • AKKORDE • HARMONIE\nIV\nii\nI\nvi\nV\niii\nvii°\nC\nAm\nH°\nG\nEm\nF♯°\nD\nHm\nC♯°\nA\nF♯m\nG♯°\nE\nC♯m\nD♯°\nH\nG♯m\nA♯°\nF♯\nD♯m\nE♯°\nD♭\nBm\nC°\nA♭\nFm\nG°\nE♭\nCm\nD°\nB\nGm\nA°\nF\nDm\nE°\nQUINTENZIRKEL\nG\nEm · Parallele Molltonart\n←\n\nZum Drehen ziehen · Quarten ← → Quinten\n\n→\nDIATONISCHE AKKORDE · FESTES FENSTER\nG DUR\nParallele Molltonart • Em\n\n1 Kreuz • F♯\n\nDas markierte Fenster zeigt die sieben Akkorde der Tonart. Großbuchstaben stehen für Dur, Kleinbuchstaben für Moll und ° für vermindert.\n\nHÄUFIGE AKKORDFOLGEN\nI\nG\n→\nV\nD\n→\nvi\nEm\n→\nIV\nC\nI\nG\n→\nIV\nC\n→\nV\nD\n→\nI\nG\nvi\nEm\n→\nIV\nC\n→\nI\nG\n→\nV\nD\n\nLies die Stufen über den Akkorden. Drehe den Kreis, um jede Folge zu transponieren.",
+          "sizeBytes": 218785
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
