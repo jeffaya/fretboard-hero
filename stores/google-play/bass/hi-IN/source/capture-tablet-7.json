@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "7c59a31d6ce089834b130a7aa4af761d2dbbaca3",
+  "locale": "hi-IN",
+  "instrument": "bass",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "tablet-7",
+      "width": 720,
+      "height": 1280,
+      "dpr": 1.5,
+      "touch": true,
+      "folder": "tablet-7",
+      "outputs": [
+        {
+          "file": "tablet-7/01-routine-1080x1920.jpg",
+          "language": {
+            "html": "hi",
+            "app": "hi"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "दैनिक अभ्यास",
+          "mic": "माइक्रोफ़ोन बंद है",
+          "visibleText": "←\nदैनिक अभ्यास\nअभ्यास सेटिंग\n×\nस्वर\nए\nए#\nबी\nसी\nसी#\nडी\nडी#\nई\nएफ\nएफ#\nजी\nजी#\nटोनैलिटी\nमेजर\nमाइनर\nट्यूनर\nमूल स्वर\nस्केल\nत्रिस्वर कॉर्ड\nआर्पेजियो\nपेंटा\nए माइनर स्केल बजाएँ\n\nएक सप्तक · फ्रेट 5–8 · आरोह\n\nए से शुरू करें, एक सप्तक ऊपर जाएँ, फिर मूल स्वर पर लौटें।\n\nमाइक्रोफ़ोन बंद है\n\nई\nए\nडी\nजी\nए\n1\n5\nबी\n2\n7\nसी\n♭3\n8\nडी\n4\n5\nई\n5\n7\nएफ\n♭6\n8\nजी\n♭7\n5\nए\n1\n7\n\nसियान = मूल स्वर · ऊपर के अंक = स्वरक्रम · 1 = मूल स्वर\n\nवापसी →",
+          "sizeBytes": 142616
+        },
+        {
+          "file": "tablet-7/02-triads-1080x1920.jpg",
+          "language": {
+            "html": "hi",
+            "app": "hi"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "दैनिक अभ्यास",
+          "mic": "माइक्रोफ़ोन बंद है",
+          "visibleText": "←\nदैनिक अभ्यास\nअभ्यास सेटिंग\n×\nस्वर\nए\nए#\nबी\nसी\nसी#\nडी\nडी#\nई\nएफ\nएफ#\nजी\nजी#\nटोनैलिटी\nमेजर\nमाइनर\nट्यूनर\nमूल स्वर\nस्केल\nत्रिस्वर कॉर्ड\nआर्पेजियो\nपेंटा\nए माइनर त्रिस्वर कॉर्ड जोड़ें\n\nहर त्रिस्वर एक साथ बजाएँ, फिर एक-एक सुर बजाएँ।\n\nमाइक्रोफ़ोन बंद है\n\nई\nए\nडी\nजी\nपहला इन्वर्ज़न\n3\n2\n2\nदूसरा इन्वर्ज़न\n7\n7\n5\nमूल स्थिति\n12\n10\n9\n\nसियान = मूल स्वर\n\nअगला →",
+          "sizeBytes": 137069
+        },
+        {
+          "file": "tablet-7/03-pentatonic-1080x1920.jpg",
+          "language": {
+            "html": "hi",
+            "app": "hi"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "learn",
+          "title": "ए माइनरपेंटाटोनिक",
+          "mic": "माइक्रोफ़ोन बंद है",
+          "visibleText": "←\nए माइनर\nपेंटाटोनिक\nसीखने की सेटिंग\n×\nस्वर\nए\nए#\nबी\nसी\nसी#\nडी\nडी#\nई\nएफ\nएफ#\nजी\nजी#\nटोनैलिटी\nमेजर\nमाइनर\nमोड\nपेंटाटोनिक\nत्रिस्वर कॉर्ड\nआर्पेजियो\nपोज़िशन\nसभी\n1\n2\n3\n4\n5\nफ्रेटबोर्ड\n12 फ्रेट\n15 फ्रेट\n17 फ्रेट\n21 फ्रेट\n24 फ्रेट\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nP4\nP5\nP1\nP2\nP3\nP4\nई\nजी\nए\nसी\nडी\nई\nए\nसी\nडी\nई\nजी\nए\nडी\nई\nजी\nए\nसी\nडी\nजी\nए\nसी\nडी\nई\nजी\nए\nमूल स्वर\nसी\nतृतीय\nडी\nचतुर्थ\nई\nपंचम\nजी\nसप्तम",
+          "sizeBytes": 315220
+        },
+        {
+          "file": "tablet-7/04-feedback-1080x1920.jpg",
+          "language": {
+            "html": "hi",
+            "app": "hi"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "दैनिक अभ्यास",
+          "mic": "सुन रहा है…",
+          "visibleText": "←\nदैनिक अभ्यास\nअभ्यास सेटिंग\n×\nस्वर\nए\nए#\nबी\nसी\nसी#\nडी\nडी#\nई\nएफ\nएफ#\nजी\nजी#\nटोनैलिटी\nमेजर\nमाइनर\nट्यूनर\nमूल स्वर\nस्केल\nत्रिस्वर कॉर्ड\nआर्पेजियो\nपेंटा\nमूल स्वर खोजें ए\n\nहाइलाइट किया गया स्वर बजाएँ।\n\nसुन रहा है…\n\n2 / 6\nई\nए\nडी\nजी\n5\n0\n12\n7\n2\n14\n\nहाइलाइट = अगला स्वर · हरा = बजाया गया\n\nअगला →",
+          "sizeBytes": 131457
+        },
+        {
+          "file": "tablet-7/05-quiz-1080x1920.jpg",
+          "language": {
+            "html": "hi",
+            "app": "hi"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "quiz",
+          "title": "फ्रेटबोर्ड क्विज़फ्रेटबोर्ड जानें • महारत पाएँ",
+          "mic": "माइक्रोफ़ोन बंद है",
+          "visibleText": "←\nफ्रेटबोर्ड क्विज़\nफ्रेटबोर्ड जानें • महारत पाएँ\nस्कोर\n1,650\n+800\nलगातार सही\n×5\nरैंक\n🎸 लाइव कलाकार\nशेष समय\n55.7s\nएफ#\n\nखोजें मूल स्वर\n\nफ्रेट 0–5 • कोई सही स्थान छुएँ।\n0\n1\n2\n3\n4\n5\nई\nए\nडी\nजी",
+          "sizeBytes": 226080
+        },
+        {
+          "file": "tablet-7/06-tuner-1080x1920.jpg",
+          "language": {
+            "html": "hi",
+            "app": "hi"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "home",
+          "title": "अभ्यास करें",
+          "mic": "माइक्रोफ़ोन बंद है",
+          "visibleText": "ट्यूनर · बास 4\nस्वचालित\nए\n55.0 Hz · +0 cents\n−50\n0\n+50\n\nसही सुर\n\nई\nए\nडी\nजी\nमाइक्रोफ़ोन\n\nऑडियो आपके डिवाइस पर रहता है। कुछ भी रिकॉर्ड नहीं होता।",
+          "sizeBytes": 108618
+        },
+        {
+          "file": "tablet-7/07-map-1080x1920.jpg",
+          "language": {
+            "html": "hi",
+            "app": "hi"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "fretmap",
+          "title": "फ्रेटबोर्ड मानचित्रहर स्वर • एक फ्रेटबोर्ड",
+          "mic": "माइक्रोफ़ोन बंद है",
+          "visibleText": "←\nफ्रेटबोर्ड मानचित्र\nहर स्वर • एक फ्रेटबोर्ड\nफ्रेटबोर्ड मानचित्र\n×\nस्वर\nसभी\nए\nए#\nबी\nसी\nसी#\nडी\nडी#\nई\nएफ\nएफ#\nजी\nजी#\nफ्रेटबोर्ड\n12 फ्रेट\n15 फ्रेट\n17 फ्रेट\n21 फ्रेट\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nई\nएफ\nएफ#\nजी\nजी#\nए\nए#\nबी\nसी\nसी#\nडी\nडी#\nई\nए\nए#\nबी\nसी\nसी#\nडी\nडी#\nई\nएफ\nएफ#\nजी\nजी#\nए\nडी\nडी#\nई\nएफ\nएफ#\nजी\nजी#\nए\nए#\nबी\nसी\nसी#\nडी\nजी\nजी#\nए\nए#\nबी\nसी\nसी#\nडी\nडी#\nई\nएफ\nएफ#\nजी",
+          "sizeBytes": 334150
+        },
+        {
+          "file": "tablet-7/08-circle-1080x1920.jpg",
+          "language": {
+            "html": "hi",
+            "app": "hi"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "circle",
+          "title": "पंचम चक्रटोनैलिटी • कॉर्ड • हार्मनी",
+          "mic": "माइक्रोफ़ोन बंद है",
+          "visibleText": "←\nपंचम चक्र\nटोनैलिटी • कॉर्ड • हार्मनी\nIV\nii\nI\nvi\nV\niii\nvii°\nसी\nएm\nबी°\nजी\nईm\nएफ♯°\nडी\nबीm\nसी♯°\nए\nएफ♯m\nजी♯°\nई\nसी♯m\nडी♯°\nबी\nजी♯m\nए♯°\nएफ♯\nडी♯m\nई♯°\nडी♭\nबी♭m\nसी°\nए♭\nएफm\nजी°\nई♭\nसीm\nडी°\nबी♭\nजीm\nए°\nएफ\nडीm\nई°\nपंचम चक्र\nजी\nईm · सापेक्ष माइनर\n←\n\nघुमाने के लिए खींचें · चतुर्थ ← → पंचम\n\n→\nडायटोनिक कॉर्ड • स्थिर विंडो\nजी मेजर\nसापेक्ष माइनर • ईm\n\n1 शार्प • एफ♯\n\nउजला हिस्सा इस टोनैलिटी के सात कॉर्ड दिखाता है। बड़े अक्षर मेजर, छोटे माइनर और ° डिमिनिश्ड बताते हैं।\n\nआम कॉर्ड प्रोग्रेशन\nI\nजी\n→\nV\nडी\n→\nvi\nईm\n→\nIV\nसी\nI\nजी\n→\nIV\nसी\n→\nV\nडी\n→\nI\nजी\nvi\nईm\n→\nIV\nसी\n→\nI\nजी\n→\nV\nडी\n\nहर कॉर्ड के ऊपर की डिग्री पढ़ें। चक्र घुमाकर प्रोग्रेशन की टोनैलिटी बदलें।",
+          "sizeBytes": 225994
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
