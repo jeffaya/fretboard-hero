@@ -55,14 +55,19 @@ Para quem toca ukulele e quer conhecer as notas, conectar acordes e praticar com
 
 ## Textes alternatifs
 
-[alt-text.json](alt-text.json) contient dix propositions en **Português (Brasil)** : icône, image de présentation et huit thèmes de captures. Les clés correspondent au format de la fiche guitare. Ces textes sont préparatoires : vérifier chacun face au visuel final avant de l’utiliser. Chaque valeur est limitée à 140 caractères.
+[alt-text.json](alt-text.json) contient dix propositions en **Português (Brasil)** : icône, image de présentation et huit thèmes de captures. Les clés correspondent au format de la fiche guitare. Chaque valeur est limitée à 140 caractères.
 
 ## Visuels et validation
 
-Cette fiche complète les textes uniquement. Les visuels localisés restent à préparer. L’image de présentation anglaise existante reste dans `../en-US/icon/` et ne constitue pas une image traduite. Aucun visuel n’est créé ou modifié avec ces textes.
+[Aperçu des huit scènes téléphone](overview-phone.jpg) · [Bannière Google Play](icon/feature-graphic-1024x500.png) · [Rapport de validation](validation.json)
 
-Le [guide Google Play](../../README.md) décrit les formats communs. Les rubriques françaises de ce README assurent la compatibilité avec le validateur du dépôt ; elles ne font pas partie du texte public. Les compteurs portent sur les points de code Unicode, espaces et sauts de ligne compris.
+Les dossiers `phone/`, `tablet-7/`, `tablet-10/` et `desktop/` contiennent huit visuels chacun. La routine et l’accordeur utilisent un signal de test traité par l’application. Les huit captures du dossier `android-xr/` sont des brouillons 2D à vérifier sur casque.
 
-Ne générer le rapport complet `validation.json` qu’après l’ajout des visuels : la vérification des textes ne certifie pas les images absentes.
+Les [accroches localisées](source/copy.json) et les [captures téléphone](source/screens-phone/) permettent de régénérer les cartes et la bannière.
 
-[Retour aux 11 langues de la fiche ukulélé](../README.md).
+```sh
+python3 stores/tools/localized_visuals.py ukulele pt-BR
+node stores/tools/validate.cjs stores/google-play/ukulele/pt-BR
+```
+
+[Toutes les langues de cet instrument](../README.md).
