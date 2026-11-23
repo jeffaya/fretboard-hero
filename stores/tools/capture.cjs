@@ -15,7 +15,7 @@ const variants = [
   {id:'desktop', width:1920, height:1080, dpr:1, touch:false, folder:'desktop'},
   {id:'android-xr-console', width:1600, height:900, dpr:1.6, touch:false, folder:'android-xr'}
 ];
-const jpeg = instrument === 'guitar' && !['en-US','fr-FR'].includes(locale);
+const jpeg = !['en-US','fr-FR'].includes(locale);
 const names = ['01-routine','02-triads','03-pentatonic','04-feedback','05-quiz','06-tuner','07-map','08-circle'];
 const evidence = {sourceCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),locale,instrument,capture:'Chromium rendering of local web source; viewport emulation, not physical-device certification',access:'Local capture-only unlocked configuration; production config unchanged',audio:'Synthetic microphone input processed by the real detector',variants:[]};
 const types = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.woff2':'font/woff2'};

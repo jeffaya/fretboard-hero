@@ -8,8 +8,8 @@ const locale = path.basename(out);
 const file = 'icon/feature-graphic-1024x500.png';
 (async () => {
   if (!['guitar', 'bass', 'ukulele'].includes(instrument)) throw new Error(`No shared OG asset for instrument: ${instrument}`);
-  if (instrument === 'guitar' && fs.existsSync(path.join(out, 'source/copy.json'))) {
-    require('node:child_process').execFileSync('python3', [path.join(__dirname, 'render-localized-guitar.py'), locale, '--banner'], { stdio: 'inherit' });
+  if (fs.existsSync(path.join(out, 'source/copy.json'))) {
+    require('node:child_process').execFileSync('python3', [path.join(__dirname, 'localized_visuals.py'), instrument, locale, '--banner'], { stdio: 'inherit' });
     return;
   }
   const localizedMaster = path.join(out, 'source/feature-master-fr.png');

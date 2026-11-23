@@ -1,0 +1,71 @@
+{
+  "tagline": "Lerne dein Bassgriffbrett kennen",
+  "menu": [
+    [
+      "Stimmgerät",
+      "Stimme deinen Bass"
+    ],
+    [
+      "Tägliche Routine",
+      "Übe mit Mikrofon-Feedback"
+    ],
+    [
+      "Lernen",
+      "Noten, Dreiklänge und Skalen"
+    ],
+    [
+      "Griffbrettkarte",
+      "Erkunde die vier Saiten"
+    ],
+    [
+      "Quintenzirkel",
+      "Entdecke verwandte Tonarten"
+    ],
+    [
+      "Quiz",
+      "Teste dein Wissen"
+    ]
+  ],
+  "cards": [
+    [
+      "Jeden Tag",
+      "Bass spielen.",
+      "Spiele die a-Moll-Tonleiter auf dem Bass. Die Tabulatur zeigt dir jeden Griff."
+    ],
+    [
+      "Drei Töne,",
+      "ein Akkord.",
+      "Verbinde a-Moll-Dreiklänge über mehrere Saiten."
+    ],
+    [
+      "Fünf Lagen,",
+      "eine Pentatonik.",
+      "Sieh, wo sich die fünf Muster der a-Moll-Pentatonik treffen."
+    ],
+    [
+      "Spiel den Ton.",
+      "Das Mikro hört mit.",
+      "Folge der Markierung und finde das nächste A auf dem Griffbrett."
+    ],
+    [
+      "Findest du",
+      "die Note?",
+      "Finde den gesuchten Ton, bevor die Zeit abläuft."
+    ],
+    [
+      "Erst stimmen,",
+      "dann spielen.",
+      "Schlage die leere A-Saite an und stimme sie auf 55 Hz."
+    ],
+    [
+      "Jede Note",
+      "auf einen Blick.",
+      "Entdecke die Töne auf allen vier Basssaiten."
+    ],
+    [
+      "Dreh am",
+      "Quintenzirkel.",
+      "Entdecke G-Dur, e-Moll und die passenden Akkorde."
+    ]
+  ]
+}
