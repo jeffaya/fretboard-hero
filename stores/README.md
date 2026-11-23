@@ -6,14 +6,12 @@ Dedicated distribution-listing assets. These files are separate from the shipped
 
 | Path | Purpose |
 | --- | --- |
-| `google-play/guitar/` | Guitar Fretboard Hero listing copy and alt text in all 11 app languages; visuals in `en-US/` and `fr-FR/` |
-| `google-play/bass/` | Bass Fretboard Hero listing copy and alt text in all 11 app languages; visuals in `en-US/` and `fr-FR/` |
-| `google-play/ukulele/` | Ukulele Fretboard Hero listing copy and alt text in all 11 app languages; visuals in `en-US/` and `fr-FR/` |
+| `google-play/guitar/` | Guitar Fretboard Hero listing copy and alt text in all 14 app languages |
+| `google-play/bass/` | Bass Fretboard Hero listing copy and alt text in all 14 app languages; visuals in `en-US/` and `fr-FR/` |
+| `google-play/ukulele/` | Ukulele Fretboard Hero listing copy and alt text in all 14 app languages; visuals in `en-US/` and `fr-FR/` |
 | `tools/` | Capture, render and validation scripts |
 
-The [App Store Connect listings](apple-app-store/README.md) contain copyable fields for guitar, bass and ukulele in Arabic, Bengali and Russian.
-
-Every locale for guitar, bass and ukulele has `README.md` with copyable listing fields and `alt-text.json`. The English and French listings for all three instruments have visual sources. The remaining locales contain listing text and draft alt text. Upload files from the device folders in numeric order. `source/` contains editable artwork and capture evidence; it is not an upload folder.
+Every locale for guitar, bass and ukulele has `README.md` with copyable listing fields and `alt-text.json`. The English and French listings for all three instruments have visual sources. The Arabic, Bangla and Russian listings contain copy and draft alt text for the planned visuals. Upload files from the device folders in numeric order. `source/` contains editable artwork and capture evidence; it is not an upload folder.
 
 Start with [the Android format reference](google-play/README.md), then the language index for [guitar](google-play/guitar/README.md), [bass](google-play/bass/README.md) or [ukulele](google-play/ukulele/README.md). The [English](google-play/guitar/en-US/README.md) and [French](google-play/guitar/fr-FR/README.md) guitar upload guides cover their visuals; Android XR remains a 2D draft because it has not been captured in an XR runtime.
 
