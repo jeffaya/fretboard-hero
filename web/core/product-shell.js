@@ -20,7 +20,6 @@
       favicon48:`${iconBase}favicon-48.png`,
       icon192:`${iconBase}icon-192.png`,
       icon512:`${iconBase}icon-512.png`,
-      appleTouchIcon:`${iconBase}apple-touch-icon.png`,
       ...(product.assets||{})
     };
     const name=branding.name||product.name||'Fretboard Hero';
@@ -62,13 +61,8 @@
 
     setAttr('#home .hero-logo svg','viewBox',assets.heroLogoViewport);
     setText('#home .hero-name',name);
-    setAria('#home .hero-logo svg',name);
     setAria('#home',`${name} home`);
     setText('.tagline',`MASTER THE ${(branding.instrumentName||instrument?.label||'INSTRUMENT').toUpperCase()} NECK`);
-    setText('#home .learn-card small','Practice on the interactive fretboard');
-    setText('#home .map-card small','Explore the neck');
-    setText('#home .circle-card small','Visualize & practice');
-    setText('#home .quiz-card small','Test your knowledge');
 
     const instrumentLabel=(instrument?.label||branding.instrumentName||'instrument').toLowerCase();
     setAria('#learnFretboard',`Interactive ${instrumentLabel} fretboard`);
@@ -78,7 +72,6 @@
     const iconMap={
       'link[rel="icon"][sizes="16x16 32x32 48x48"]':assets.faviconIco,
       'link[rel="shortcut icon"]':assets.faviconIco,
-      'link[rel="icon"][type="image/svg+xml"]':assets.faviconSvg,
       'link[rel="icon"][sizes="16x16"]':assets.favicon16,
       'link[rel="icon"][sizes="32x32"]':assets.favicon32,
       'link[rel="icon"][sizes="48x48"]':assets.favicon48,

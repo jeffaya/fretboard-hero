@@ -3,11 +3,11 @@ import {renderPage} from './components.mjs';
 import {documentStyles,documentScripts,renderDocumentFooter} from './document-shell.mjs';
 import {lessonCopy} from '../lessons/translations.mjs';
 
-// Legal copy is kept intact, in eleven languages, separately from the shared shell.
+// Legal copy is kept intact, separately from the shared shell.
 const content = readFileSync(new URL('./privacy-content.html',import.meta.url),'utf8');
 const languages = [
   ['fr','Français'],['en','English'],['es','Español'],['de','Deutsch'],['it','Italiano'],
-  ['pt-BR','Português (Brasil)'],['ja','日本語'],['ko','한국어'],['zh-CN','简体中文'],['hi','हिन्दी'],['id','Bahasa Indonesia']
+  ['pt-BR','Português (Brasil)'],['ja','日本語'],['ko','한국어'],['zh-CN','简体中文'],['hi','हिन्दी'],['id','Bahasa Indonesia'],['ar','العربية'],['bn','বাংলা'],['ru','Русский']
 ].map(([locale,label]) => ({locale,label,href:'#'+locale,attrs:{'data-policy-language':locale}}));
 
 export function renderPrivacy() {
@@ -19,7 +19,7 @@ export function renderPrivacy() {
 <link rel="canonical" href="https://fretboard-hero.com/privacy">
 <link rel="icon" href="./assets/instruments/guitar/favicon.ico">`,
     styles:documentStyles,
-    scripts:[...documentScripts,'./privacy.js?v=10.54.0'],
+    scripts:[...documentScripts,'./privacy.js?v=10.58.0'],
     header:{home},
     footerHTML:renderDocumentFooter({locale:'fr',instrument:'guitar',languages,ui:lessonCopy('fr').ui,configId:'policyConfig',localizedUI:Object.fromEntries(languages.map(({locale})=>{const {privacy,contact}=lessonCopy(locale).ui;return [locale,{privacy,contact}]}))}),
     body:content

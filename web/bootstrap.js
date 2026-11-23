@@ -12,13 +12,13 @@
     artwork.addEventListener('error',()=>resolve(false),{once:true});
     artwork.setAttribute('href','/assets/home/product-wordmarks.webp');
   });
-  const CORE=['music-theory','circle-of-fifths','circle-renderer','microphone','pitch-detector','chord-detector','routine-guide','routine-melody','routine-patterns','routine-exercises','routine-renderer','routine-rhythm','routine-echo','routine-rhythm-audio','routine-strumming','routine-encouragement','routine-session','tuning','fretboard-engine','fretboard-layout','fretboard-appearance','fretboard-map','pentatonic-renderer','triad-engine','arpeggio-engine','chord-engine','quiz-engine','controls','mode-registry','product-shell'].map(n=>`./core/${n}.js?v=${['routine-session','routine-exercises','routine-renderer'].includes(n)?'10.51.0':['fretboard-appearance','product-shell'].includes(n)?'10.50.1':['routine-guide','routine-melody'].includes(n)?'10.49.21':n==='microphone'?'10.49.18':'10.49.13'}`);
+  const CORE=['music-theory','circle-of-fifths','circle-renderer','microphone','pitch-detector','chord-detector','routine-guide','routine-melody','routine-patterns','routine-exercises','routine-renderer','routine-rhythm','routine-echo','routine-rhythm-audio','routine-strumming','routine-encouragement','routine-session','tuning','fretboard-engine','fretboard-layout','fretboard-appearance','fretboard-map','pentatonic-renderer','triad-engine','arpeggio-engine','chord-engine','quiz-engine','controls','mode-registry','product-shell'].map(n=>`./core/${n}.js?v=${['routine-session','routine-exercises','routine-renderer'].includes(n)?'10.51.0':n==='product-shell'?'10.57.0':n==='fretboard-appearance'?'10.50.1':['routine-guide','routine-melody'].includes(n)?'10.49.21':n==='microphone'?'10.49.18':'10.49.13'}`);
   const MODES=['pentatonic','triads','chords','arpeggios'].map(n=>`./modes/${n}.js?v=10.26.4`);
   const load=(src,type='text/javascript')=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.async=false;s.type=type;s.src=src.replace(/^\./,'');s.onload=resolve;s.onerror=()=>reject(new Error(`Unable to load ${src}`));document.head.appendChild(s);});
   const fail=err=>{document.body.setAttribute('aria-busy','false');console.error(err);document.body.innerHTML=`<main style="min-height:100vh;display:grid;place-items:center;background:#05080b;color:#f8fbff;font-family:system-ui;padding:24px"><div><h1 style="color:#ff3ec9">CONFIGURATION ERROR</h1><p>${String(err.message||err)}</p><p>Check <code>site.config.json</code> and README.md.</p></div></main>`;};
   (async()=>{
     try{
-      await load('./core/i18n.js?v=10.56.0');
+      await load('./core/i18n.js?v=10.58.0');
       await FretboardI18n.initialize();
       const response=await fetch('/site.config.json',{cache:'no-store'});if(!response.ok)throw new Error(`site.config.json returned HTTP ${response.status}`);
       const config=await response.json();
@@ -39,15 +39,14 @@
       window.FRETBOARD_ACTIVE_PRODUCT={...product,instrument:entry.instrumentKey};window.FRETBOARD_ACTIVE_INSTRUMENT=instrument;
       document.documentElement.dataset.instrument=config.instrument;
       window.ProductShell.apply(product,instrument);
-      await load('./core/navigation.js?v=10.50.2','module');
+      await load('./core/navigation.js?v=10.58.1','module');
       await load('./core/footer.js?v=10.52.0');
-      await load('./core/guide-routes.js?v=10.53.0');
+      await load('./core/guide-routes.js?v=10.58.0');
       await load('./home.js?v=10.53.0');
       await document.fonts.load('800 26px "Hero Condensed"').catch(()=>[]);
       await load('./app.js?v=10.50.0');
       FretboardBilling.attach();
       FretboardI18n.mount();
-      FretboardNavigation.refresh();
       FretboardNavigation.write(FretboardNavigation.read(),{replace:true});
       await load('./tuner.js?v=10.50.0');
       if(!await artworkReady){

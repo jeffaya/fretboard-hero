@@ -1,6 +1,6 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.FretboardGuideRoutes=api;})(typeof window==='undefined'?globalThis:window,()=>{
   'use strict';
-  const languages=['en','fr','es','de','it','pt-BR','hi','id','ja','ko','zh-CN'];
+  const languages=['en','fr','es','de','it','pt-BR','hi','id','ja','ko','zh-CN','ar','bn','ru'];
   const instruments=['guitar','bass-4','ukulele'];
   const topics=['home','notes','penta','triads','chords','routine','tabs'];
   function route(locale,instrument='guitar',topic='home'){

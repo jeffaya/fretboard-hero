@@ -1,25 +1,41 @@
-import {appRoutes, entryScreen, routeURL} from './routes.js';
+import {routeLocales} from './route-locales.js?v=10.58.1';
+import {appAlternates, appCanonical, appSummary, ogLocales, requestedLocale} from './route-seo.js';
+import {entryScreen, routeURL} from './routes.js';
 
 export function createNavigation() {
   const native = ['android','ios'].includes(window.Capacitor?.getPlatform?.());
   const listeners = new Set();
   let screen = entryScreen(new URL(location.href));
-  let baseTitle = document.title;
-  let baseDescription = document.querySelector('meta[name="description"]')?.content;
 
   function metadata() {
-    const route = appRoutes[screen];
-    const title = screen === 'home' ? baseTitle : `${window.FretboardI18n?.text(route.title) || route.title} · ${window.FRETBOARD_ACTIVE_PRODUCT.name}`;
-    const canonical = new URL(route.path, 'https://fretboard-hero.com');
-    if (window.FRETBOARD_SITE_CONFIG.instrument !== 'guitar') canonical.searchParams.set('instrument', window.FRETBOARD_SITE_CONFIG.instrument);
+    const explicit = requestedLocale(new URL(location.href));
+    const locale = window.FretboardI18n.locale;
+    const instrument = window.FRETBOARD_SITE_CONFIG.instrument;
+    const {title, description} = appSummary(screen, instrument, window.FRETBOARD_ACTIVE_PRODUCT.name, locale === 'en' ? null : routeLocales[locale]);
+    const canonical = appCanonical(screen, instrument, explicit);
+    for (const {lang, href} of appAlternates(screen, instrument)) {
+      let link = document.querySelector(`link[rel="alternate"][hreflang="${lang}"]`);
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'alternate';
+        link.hreflang = lang;
+        document.head.append(link);
+      }
+      link.href = href;
+    }
+    document.querySelector('meta[property="og:locale"]')?.setAttribute('content', ogLocales[locale]);
     document.title = title;
-    document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonical.href);
-    document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonical.href);
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonical);
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonical);
     for (const selector of ['meta[property="og:title"]','meta[name="twitter:title"]']) document.querySelector(selector)?.setAttribute('content', title);
-    for (const selector of ['meta[name="description"]','meta[property="og:description"]','meta[name="twitter:description"]']) document.querySelector(selector)?.setAttribute('content', route.description || baseDescription);
+    for (const selector of ['meta[name="description"]','meta[property="og:description"]','meta[name="twitter:description"]']) document.querySelector(selector)?.setAttribute('content', description);
+    if (locale !== 'en') {
+      for (const selector of ['meta[property="og:image:alt"]','meta[name="twitter:image:alt"]']) document.querySelector(selector)?.setAttribute('content', title);
+    }
     const structured = document.querySelector('#productStructuredData');
     if (structured) {
-      const data = JSON.parse(structured.textContent); data.url = canonical.href;
+      const data = JSON.parse(structured.textContent); data.inLanguage = locale; data.url = canonical; data.description = description;
+      if (locale !== 'en') data.featureList = Object.entries(routeLocales[locale]).filter(([name]) => name !== 'home').map(([,pair]) => pair[0]);
       structured.textContent = JSON.stringify(data);
     }
   }
@@ -49,7 +65,7 @@ export function createNavigation() {
     metadata();
     listeners.forEach(listener => listener(screen));
   });
-  return {read: () => screen, write, canHandle, refresh: () => {baseTitle = document.title; baseDescription = document.querySelector('meta[name="description"]')?.content;}, subscribe: listener => listeners.add(listener)};
+  return {read: () => screen, write, canHandle, subscribe: listener => listeners.add(listener)};
 }
 
 window.FretboardNavigation = createNavigation();
