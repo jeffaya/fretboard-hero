@@ -7,15 +7,15 @@ function setup({native=false,unlocked=false,blocked=false,locale='fr',platform='
  vm.createContext(c);for(const file of ['web/core/footer.js','web/core/guide-routes.js','web/home.js'])vm.runInContext(fs.readFileSync(file,'utf8'),c);
  return {buttons,stored,rows,footer,guide,get destination(){return destination},get opens(){return opens}};
 }
-test('Guide navigation uses the resolved language, a supported fallback and external native URLs',()=>{
+test('Music theory opens in place for every language and instrument on web, Android and iOS',()=>{
  for(const instrument of ['guitar','bass-4','ukulele'])for(const locale of ['fr','en','es','de','it','ja','ko','zh-CN','pt-BR','hi','id','ar','bn','ru'])for(const platform of ['web','android','ios']){
   const {guide,opens}=setup({locale,platform,instrument,blocked:true,native:platform!=='web'});
   const family=instrument==='bass-4'?'bass':instrument;
   const name=locale==='fr'?({guitar:'guitare',bass:'basse',ukulele:'ukulele'})[family]:family;
   const route=`/${locale}/${name}/`;
-  assert.equal(guide.href,platform==='web'?route:'https://fretboard-hero.com'+route);
-  assert.equal(guide.target,platform==='web'?undefined:'_blank');
-  assert.equal(guide.rel,platform==='web'?undefined:'noopener noreferrer');
+  assert.equal(guide.href,platform==='web'?route:route+'index.html');
+  assert.equal(guide.target,undefined);
+  if(platform!=='web')assert.ok(fs.existsSync('web'+guide.href));
   assert.equal(opens,0);
  }
 });

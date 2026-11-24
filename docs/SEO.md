@@ -64,7 +64,8 @@ The page route is authoritative for its language and instrument. Saved app
 preferences cannot change the content/branding of a directly opened lesson.
 The Music theory card on Home opens the section for the selected language and instrument.
 The lesson header links back to Home, where readers can switch instruments.
-Native apps open the same public guide in the external browser.
+Android and iOS open the bundled lesson files inside the app. Their links use
+explicit `index.html` paths because Capacitor routes extensionless paths to the app home.
 
 Chord selection is bookmarkable with validated `root=0..11`. All 12 chord
 families are displayed together, with localized names, tones and positions.
