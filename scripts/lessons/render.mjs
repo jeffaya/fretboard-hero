@@ -1,6 +1,5 @@
 import {renderTab} from './tablature.mjs';
 import {renderTabOrientation} from './tab-orientation.mjs';
-import {sources} from './sources.mjs';
 import {createRequire} from 'node:module';
 import {escape as e} from '../pages/components.mjs';
 const require=createRequire(import.meta.url);
@@ -45,6 +44,5 @@ export function lessonBody(topic,instrument,text){
  ${section(pedagogy.avoid,more[2])}
  ${section(ui.listen,tip)}
  ${section(pedagogy.checkpoint,more[3])}
- <section class="content-section lesson-sources"><h2>${e(pedagogy.sources)}</h2><ol>${sources[instrument+'.'+topic].map(source=>`<li><a href="${e(source.url)}" lang="en">${e(source.title)}</a></li>`).join('')}</ol></section>
  </article>`.replace(/^[ \t]+$/gm,'');
 }

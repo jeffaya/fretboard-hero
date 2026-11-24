@@ -95,8 +95,6 @@
 .symbol-table th,.symbol-table td { padding: 12px 8px; text-align: start; border-bottom: 1px solid var(--page-border); vertical-align: top; }
 .symbol-table th:first-child { width: 90px; }
 .symbol-table code { color: #7ce5fa; white-space: nowrap; font-size: 14px; }
-.lesson-sources { font-size: 15px; }
-.lesson-sources a { overflow-wrap: anywhere; }
 @media (max-width: 700px) { .tab-grid { grid-template-columns: minmax(0,1fr); } }
 .skip-link { position: absolute; top: 8px; left: 16px; z-index: 3; transform: translateY(-180%); padding: 10px 16px; background: var(--ui-bg); border-radius: 8px; }
 .skip-link:focus { transform: none; }

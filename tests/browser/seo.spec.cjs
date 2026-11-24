@@ -222,7 +222,7 @@ for(const [instrument,frSlug,strings]of [['guitar','guitare',6],['bass','basse',
   }
   await expect(page.locator('.tab-diagram').first().locator('.tab-string')).toHaveCount(strings);
   await expect(page.locator('.symbol-table tbody tr')).toHaveCount(10);
-  await expect(page.locator('.lesson-sources a')).toHaveCount(3);
+  await expect(page.locator('.lesson-sources')).toHaveCount(0);
   await expect(page.locator('.home-footer .language-trigger')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   const svg=await page.locator('.tab-diagram').first().boundingBox();expect(svg.width).toBeGreaterThan(240);

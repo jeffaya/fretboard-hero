@@ -36,8 +36,8 @@ the initial G chord families; it does not gate the lessons behind app access.
 - `scripts/lessons/tab-orientation.mjs`: a three-step neck-to-tab illustration,
   translated in all 14 languages. The same geometry rotates 90° counterclockwise,
   preserving string order; the open string and frets 2/3 match the reading exercise.
-- `scripts/lessons/sources.mjs`: three public references per instrument/topic.
-  See `GUIDE-RESEARCH.md` for search methodology and source limitations.
+- [Guide research](GUIDE-RESEARCH.md) records the three references for each
+  instrument and topic, the search method and the limitations of the sources.
 
 ## Generation and verification
 

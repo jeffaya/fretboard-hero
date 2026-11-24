@@ -25,9 +25,9 @@ test('Every lesson has initial HTML illustrations, correct product branding and 
  for(const locale of routes.languages)for(const instrument of routes.instruments)for(const topic of routes.topics){
   const route=routes.route(locale,instrument,topic),html=generated.get('web'+route+'index.html');
   assert.match(html,new RegExp(`<html lang="${locale}"${locale==='ar'?' dir="rtl"':''}>`));assert.equal((html.match(/<h1>/g)||[]).length,1);
-  assert.equal((html.match(/class="content-section(?: lesson-sources)?"/g)||[]).length,topic==='tabs'?8:7);assert.match(html,/class="tab-diagram/);
+  assert.equal((html.match(/class="content-section"/g)||[]).length,topic==='tabs'?7:6);assert.match(html,/class="tab-diagram/);
   assert.ok(html.includes((await import('../../scripts/lessons/translations.mjs')).lessonCopy(locale)[topic][0]));assert.match(html,/data-exercise-link/);
-  assert.doesNotMatch(html,/class="byline"|class="page-aside"|data-get-app|Written by|Start with the free demo/);
+  assert.doesNotMatch(html,/lesson-sources|class="byline"|class="page-aside"|data-get-app|Written by|Start with the free demo/);
   const canonical=html.match(/rel="canonical" href="([^"]+)"/)[1];assert.equal(canonical,origin+route);assert.ok(!canonicals.has(canonical));canonicals.add(canonical);
   const expectedViewport={guitar:'0 0 900 550','bass-4':'900 0 900 550',ukulele:'1800 0 900 550'}[instrument];
   assert.ok(html.includes(`viewBox="${expectedViewport}"`));
