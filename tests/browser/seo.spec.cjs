@@ -25,14 +25,33 @@ for(const [locale,route,description,learn,heading,triads,penta] of [
  await expect(page.locator('.diagram').first()).toBeVisible();
 });
 
-test('Native Guide points to the public site without requiring a purchase',async({page})=>{
- await installStore(page,{platform:'android',owned:false});
- await page.goto('/?instrument=guitar&lang=fr');await ready(page);
- const guide=page.locator('.guide-card');await expect(guide).toBeVisible();
- await expect(guide).toHaveAttribute('href','https://fretboard-hero.com/fr/guitare/');
- await expect(guide).toHaveAttribute('target','_blank');
- await expect(guide).toHaveAttribute('rel','noopener noreferrer');
+for (const platform of ['android','ios']) test(`Native music theory stays inside the app on ${platform}`,async({page,context})=>{
+ await installStore(page,{platform,owned:false});
+ await page.goto('/?instrument=bass-4&lang=fr');await ready(page);
  await expect(page.locator('body')).toHaveAttribute('data-access','demo');
+ const origin=new URL(page.url()).origin;
+ await page.locator('.guide-card').click();
+ await expect(page).toHaveURL(origin+'/fr/basse/index.html');
+ await page.locator('.related-pages .card[href*="triades"]').click();
+ await expect(page).toHaveURL(origin+'/fr/basse/triades/index.html');
+ await page.locator('.page-nav a[href*="accords"]').click();
+ await page.locator('[data-chord-root="9"]').click();
+ await page.locator('.home-footer .language-trigger').click();
+ await page.getByRole('menuitemradio',{name:'English',exact:true}).click();
+ await expect(page).toHaveURL(origin+'/en/bass/chords/index.html?root=9');
+ await expect(page.locator('[data-chord-root="9"]')).toHaveAttribute('aria-pressed','true');
+ await page.goBack();
+ await expect(page).toHaveURL(origin+'/fr/basse/accords/index.html?root=9');
+ await page.locator('[data-exercise-link]').click();
+ await expect(page.locator('#learn')).toBeVisible();
+ await expect(page.locator('html')).toHaveAttribute('data-instrument','bass-4');
+ await expect(page.locator('html')).toHaveAttribute('lang','fr');
+ await page.goBack();
+ await page.locator('.site-header .brand').click();
+ await ready(page);
+ await expect(page.locator('.guide-card')).toHaveAttribute('href','/fr/basse/index.html');
+ expect(new URL(page.url()).origin).toBe(origin);
+ expect(context.pages()).toHaveLength(1);
 });
 
 test.describe('Public guides without JavaScript',()=>{
@@ -51,7 +70,7 @@ test.describe('Public guides without JavaScript',()=>{
   await page.goto('/fr/guitare/pentatonique/');
   await page.getByRole('link',{name:'English',exact:true}).click();
   await expect(page).toHaveURL(/\/en\/guitar\/pentatonic-scales\/$/);
-  await expect(page.locator('.lesson-body .content-section')).toHaveCount(7);
+  await expect(page.locator('.lesson-body .content-section')).toHaveCount(6);
  });
  test('Privacy retains every translation and anchor navigation without JavaScript',async({page})=>{
   await page.goto('/privacy');
@@ -222,7 +241,7 @@ for(const [instrument,frSlug,strings]of [['guitar','guitare',6],['bass','basse',
   }
   await expect(page.locator('.tab-diagram').first().locator('.tab-string')).toHaveCount(strings);
   await expect(page.locator('.symbol-table tbody tr')).toHaveCount(10);
-  await expect(page.locator('.lesson-sources a')).toHaveCount(3);
+  await expect(page.locator('.lesson-sources')).toHaveCount(0);
   await expect(page.locator('.home-footer .language-trigger')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   const svg=await page.locator('.tab-diagram').first().boundingBox();expect(svg.width).toBeGreaterThan(240);

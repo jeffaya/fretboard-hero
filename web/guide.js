@@ -1,6 +1,13 @@
 (() => {
  'use strict';
  const data=JSON.parse(document.querySelector('#guideConfig').textContent);
+ // Open the bundled HTML files when Capacitor serves this lesson.
+ if (['android','ios'].includes(window.Capacitor?.getPlatform?.())) {
+  for (const link of document.querySelectorAll('.page-nav a, .related-pages a, .language-picker a')) {
+   link.setAttribute('href', link.getAttribute('href') + 'index.html');
+  }
+  for (const language of data.languages) language.href += 'index.html';
+ }
  // The document route is authoritative; a remembered instrument must never
  // relabel a guitar lesson as bass or display the wrong number of strings.
  window.FretboardDocumentBranding.apply(data.instrument,'/').catch(error=>console.error('Guide branding unavailable',error));
