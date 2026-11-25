@@ -3,12 +3,11 @@
   function create({root=document,engine,refreshControls,random=Math.random,encouragementRandom=Math.random}){
     const $=s=>root.querySelector(s),access=window.FRETBOARD_ACCESS||{unlocked:true},premium=window.FRETBOARD_PREMIUM;
     const t=value=>window.FretboardI18n?.text(value)||value;
-    const state={root:'A',quality:'minor',index:0,diagonal:0},completed=new Set(),gate=RoutineGuide.createGate(),strumGate=RoutineGuide.createStrumGate();
+    const state={root:'A',quality:'minor',index:0},completed=new Set(),gate=RoutineGuide.createGate(),strumGate=RoutineGuide.createStrumGate();
     let storage;try{storage=localStorage}catch{}
     const rhythmPractice=RoutinePatterns.practice(storage);let patterns=RoutinePatterns.defaults();
-    function beginRoutine(){
+    function chooseRhythmPatterns(){
       if(engine.profile.family==='guitar')patterns=rhythmPractice.choose();
-      state.diagonal=Math.floor(random()*2);
     }
     const detector=FretboardChordDetector.create({minMidi:Math.min(...engine.courses.map(c=>c.midi)),maxMidi:Math.max(...engine.courses.map(c=>c.midi))+15});
     const encouragements=RoutineEncouragement.createDeck(encouragementRandom);
@@ -16,7 +15,7 @@
     const micPreference=FretboardMicrophone.preference('routine');
     const microphone=FretboardMicrophone.create({fftSize:16384,interval:80,onFrame:listen,onState:audioState});
     const strumming=RoutineStrumming.create({root,
-      onProgress(index,progress){if(current()){current().index=index;current().rhythm=progress}},onComplete:advance,onRepeat:(id,success)=>rhythmPractice.record(id,success),onAudioReset:()=>{strumGate.reset();settleUntil=performance.now()+120}
+      onProgress(index,progress){if(current()){current().index=index;current().rhythm=progress;renderNext()}},onComplete:advance,onRepeat:(id,success)=>rhythmPractice.record(id,success),onAudioReset:()=>{strumGate.reset();settleUntil=performance.now()+120}
     });
     function resetGates(repeat=false){gate.reset(repeat);strumGate.reset()}
     // A short CSS celebration, created once and replayed only on completion.
@@ -39,8 +38,9 @@
     function draw(animate=false){
       if(!exercises.length||state.index>=5||transition)return;
       const guided=microphone.state==='on',exercise=exercises[state.index],section=currentSection();
-      if(exercise.melody)$('#routineContext').textContent=t(`${exercise.detail} · ${section.label}`);
-      if(exercise.rootJourney)$('#routineContext').textContent=t(`${section.label} · ${section.recall?'From memory':'Guided round trip'}`);
+      const detail=section?.diagonal?`Diagonal ${section.diagonal} · ${section.frets}`:exercise.detail;
+      if(exercise.melody)$('#routineContext').textContent=t(`${detail} · ${section.label}`);
+      if(exercise.rootJourney)$('#routineContext').textContent=t(`${exercise.detail} · ${section.recall?'From memory':'Ascending'}`);
       const rootRecall=Boolean(exercise.rootJourney&&section.recall&&!current().rootRevealed);
       $('#routineRootReveal').hidden=!rootRecall;
       $('#routineTabScroll').hidden=Boolean(exercise.strumming);
@@ -55,11 +55,11 @@
       microphone.setEchoCancellation?.(false);
       if(!exercise.strumming){
         $('#routineLegend').textContent=t(guided?'Highlight = target · Green = played':'Cyan = root note');
-        if(exercise.melody)$('#routineLegend').textContent+=' · '+t(exercise.diagonal?'P1–P5 = boxes · / = slide · 1 = root':'Numbers above = degrees · 1 = root');
-        if(exercise.diagonal)$('#routineLegend').textContent+=' · '+t('~ = let the root ring; light vibrato optional');
-        if(exercise.rootJourney)$('#routineLegend').textContent+=' · '+t(rootRecall?'? = find the fret':`Outward: +${section.steps[0]}, then +${section.steps[1]} frets`);
+        if(exercise.melody)$('#routineLegend').textContent+=' · '+t(section.diagonal?'P1–P5 = boxes · / = slide · 1 = root':'Numbers above = degrees · 1 = root');
+        if(section?.diagonal)$('#routineLegend').textContent+=' · '+t('~ = let the root ring; light vibrato optional');
+        if(rootRecall)$('#routineLegend').textContent+=' · '+t('? = find the fret');
       }
-      const visible=section?{...exercise,rootRecall,columns:exercise.columns.slice(section.start,section.end)}:exercise;
+      const visible=section?{...exercise,detail,rootRecall,columns:exercise.columns.slice(section.start,section.end)}:exercise;
       if(!exercise.strumming)RoutineRenderer.render($('#routineTab'),visible,engine,guided?{index:current().index-(section?.start||0),animate}:null);
       strumming.update(active?exercise:null,current().index,guided,current().rhythm);
       if(guided){
@@ -109,15 +109,15 @@
     }
     function renderInstruction(){
       if(state.index>=5)return;
-      const e=exercises[state.index];
-      if(e.rootJourney){
-        $('#routineInstruction').textContent=t(currentSection().recall&&!current().rootRevealed?
-          'Use the first root to find the hidden frets on the indicated strings. Return along the same path.':e.instruction);
+      const e=exercises[state.index],section=currentSection();
+      if(e.rootJourney&&section.recall){
+        $('#routineInstruction').textContent=t(current().rootRevealed?
+          `Play each note and say “${e.root}” aloud.`:'Use the first root to find the hidden frets on the indicated strings. Return along the same path.');
         return;
       }
-      const instruction=e.melody&&current().section===1?(e.diagonal?'Play the same motif back through the three blocks.':`Return to ${state.root}, reading from left to right.`):microphone.state==='on'&&e.id==='root'?'Play the highlighted note.':microphone.state==='on'&&e.id==='triads'&&!e.sections?'Play each triad together.':e.instruction;
+      const instruction=e.melody&&section.label==='Returning'?(section.diagonal?'Play the same motif back through the three blocks.':`Return to ${state.root}, reading from left to right.`):microphone.state==='on'&&e.id==='triads'&&!e.sections?'Play each triad together.':e.instruction;
       $('#routineInstruction').textContent=t(instruction);
-      if(e.diagonal)$('#routineInstruction').textContent+=' '+t('Let the root ring. Light vibrato is optional.');
+      if(section?.diagonal)$('#routineInstruction').textContent+=' '+t('Let the root ring. Light vibrato is optional.');
     }
     function listen({samples,spectrum,sampleRate,fftSize,now}){
       if(!active||state.index>=5||transition||now<settleUntil)return;
@@ -161,12 +161,24 @@
       $('#routineTransition').hidden=true;$('#routineNext').disabled=false;
       $('#routineExercise').classList.toggle('is-transitioning',false);
     }
+    function renderNext(){
+      const exercise=exercises[state.index];
+      if(!exercise)return;
+      const nextSection=exercise.sections?.[current().section+1];
+      let label='Next →';
+      if(nextSection?.label==='Returning')label='Return →';
+      else if(nextSection?.diagonal)label=`${t(`Diagonal ${nextSection.diagonal}`)} →`;
+      else if(nextSection)label=exercise.rootJourney?'Try from memory →':'Next strings →';
+      else if((!exercise.strumming||current().index===exercise.patterns.length-1)&&
+        exercises.every((_,i)=>i===state.index||completed.has(i)))label='Done';
+      $('#routineNext').textContent=t(label);
+    }
     function render(){
       const done=state.index===5,exercise=exercises[Math.min(state.index,4)];
       $('#routineSteps').replaceChildren();
       exercises.forEach((item,i)=>{
         const step=document.createElement('li'),button=document.createElement('button');
-        button.type='button';button.className='ui-step';button.textContent=t(item.step);button.dataset.step=String(i+1);
+        button.type='button';button.className='ui-step';button.textContent=t(item.step);button.dataset.step=String(i+1);button.dataset.exercise=item.id;
         button.addEventListener('click',()=>{
           strumming.stop();cancelTransition();state.index=i;
           if(completed.has(i)||(!exercises[state.index].strumming&&current().index===exercises[state.index].columns.length)){current().index=0;current().section=0;current().rhythm=null;current().rootRevealed=false}
@@ -191,7 +203,7 @@
         after.textContent=at<0?'':label.slice(at+target.length);
         title.replaceChildren();title.append(before,badge,after);title.setAttribute('data-no-i18n','');
       }
-      $('#routineContext').hidden=!done&&!exercise.melody&&!exercise.rootJourney&&exercise.id!=='penta';
+      $('#routineContext').hidden=!done&&!exercise.melody&&exercise.id!=='root'&&exercise.id!=='penta';
       $('#routineContext').textContent=t(done?`${state.root} ${state.quality} · Five exercises completed`:exercise.detail);
       if(done)$('#routineInstruction').textContent=t('Five exercises. One key. You did it! Keep building your skills in Learn, or put your knowledge to the test in Quiz.');else renderInstruction();
       $('#routineCelebration').hidden=!done;$('#routineExercise').classList.toggle('is-complete',done);
@@ -199,7 +211,7 @@
       if(done)strumming.update(null);
       $('#routineNext').hidden=done;$('#routineFinish').hidden=!done;
       $('#routineRootReveal').hidden=true;
-      $('#routineNext').textContent=t(exercise.sections&&current()?.section<exercise.sections.length-1?(exercise.rootJourney?(currentSection().recall?'Next diagonal →':'Try from memory →'):exercise.melody?'Return →':'Next strings →'):state.index===4&&[0,1,2,3].every(i=>completed.has(i))?'Done':'Next →');
+      renderNext();
       $('#routineMic').disabled=done;
       $('#routineListening').hidden=!active||done;
       draw();
@@ -238,7 +250,7 @@
     window.FretboardModal?.addClose($('#routineTransition'),completeTransition);
     function reset(){
       strumming.stop();cancelTransition();completed.clear();state.index=0;encouragements.reset();lastPitches=[];
-      exercises=RoutineExercises.create({engine,root:state.root,quality:state.quality,random,diagonal:state.diagonal,patterns});
+      exercises=RoutineExercises.create({engine,root:state.root,quality:state.quality,random,patterns});
       guides=exercises.map(()=>({index:0,section:0}));
       resetGates();settleUntil=performance.now()+400;render();
     }
@@ -270,13 +282,13 @@
       const roots=MusicTheory.NOTES.filter(note=>note!==state.root);
       state.root=access.unlocked?roots[Math.floor(random()*roots.length)]:'A';
       if(!access.unlocked)state.quality='minor';
-      beginRoutine();reset();if(micPreference.enabled)microphone.start();$('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
+      chooseRhythmPatterns();reset();if(micPreference.enabled)microphone.start();$('#routineTitle').focus({preventScroll:true});$('#routineSteps').scrollIntoView({block:'nearest',behavior:'auto'});
     });
     if(window.ResizeObserver)new window.ResizeObserver(()=>{draw();showTarget()}).observe($('#routineTabScroll'));
     return {
       resize(){draw();showTarget()},
       leave(){active=false;cancelTransition();microphone.stop();strumming.stop()},
-      enter(){active=true;microphone.stop();state.root=access.unlocked?MusicTheory.NOTES[Math.floor(random()*MusicTheory.NOTES.length)]:'A';state.quality='minor';beginRoutine();reset();if(micPreference.enabled)microphone.start()}
+      enter(){active=true;microphone.stop();state.root=access.unlocked?MusicTheory.NOTES[Math.floor(random()*MusicTheory.NOTES.length)]:'A';state.quality='minor';chooseRhythmPatterns();reset();if(micPreference.enabled)microphone.start()}
     };
   }
   window.RoutineSession=Object.freeze({create});

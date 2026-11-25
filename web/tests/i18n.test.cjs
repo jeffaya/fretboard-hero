@@ -100,11 +100,10 @@ test('Native recovery errors use the current action and localize in every langua
 });
 
 
-test('Root octave guidance and memory prompts translate in all interface languages',async()=>{
- const phrases=['Connect the root notes','Connect the root notes: A','Skip one string each time. Play the octave path, then retrace it.','From memory','Guided round trip','Use the first root to find the hidden frets on the indicated strings. Return along the same path.','? = find the fret','Outward: +2, then +3 frets','Try from memory →','Next diagonal →','Show frets','Find the fret on string 4'];
+test('Root fret order and memory prompts translate in all interface languages',async()=>{
+ const phrases=['Connect the root notes','Connect the root notes: A','Start nearest the nut and play each root in order of fret number.','From memory','Frets 0–12 · Ascending','Use the first root to find the hidden frets on the indicated strings. Return along the same path.','? = find the fret','Try from memory →','Show frets','Find the fret on string 4'];
  for(const locale of locales){const i=await create({languages:[locale]});for(const phrase of phrases){const text=i.text(phrase);if(locale!=='en')assert.notEqual(text,phrase,locale+' '+phrase);assert.equal(i.text(text),text)}}
  const fr=await create({languages:['fr']});assert.equal(fr.text('Connect the root notes: A'),'Relie les fondamentales : La');
- assert.equal(fr.text('Outward: +2, then +3 frets'),'Aller : +2, puis +3 cases');
 });
 
 test('A public guide keeps its content language despite browser preferences, saved settings or query parameters',async()=>{

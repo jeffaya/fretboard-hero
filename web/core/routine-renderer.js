@@ -21,11 +21,14 @@
     const groups=[];
     exercise.columns.forEach((column,index)=>{
       let group=groups.at(-1);
-      if(!group||group.block!==column.block||(column.block&&index===exercise.sections?.[1]?.start)){group={block:column.block,items:[]};groups.push(group)}
+      if(!group||group.block!==column.block){group={block:column.block,items:[]};groups.push(group)}
       group.items.push({column,index});
     });
-    const perLine=exercise.diagonal?Math.max(1,Math.floor(available/210)):1,lines=[];
-    if(exercise.diagonal){for(let i=0;i<groups.length;i+=perLine)lines.push(groups.slice(i,i+perLine))}
+    const lines=[];
+    if(exercise.id==='penta'){
+      const perLine=Math.max(1,Math.floor(available/210));
+      for(let i=0;i<groups.length;i+=perLine)lines.push(groups.slice(i,i+perLine));
+    }
     else{
       // Eight notes fit on a phone; on very narrow screens use two even staves.
       const capacity=Math.max(1,Math.floor(available/34)),count=Math.ceil(exercise.columns.length/Math.ceil(exercise.columns.length/capacity));

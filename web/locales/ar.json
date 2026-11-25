@@ -433,14 +433,11 @@
   "Practice on the interactive fretboard": "تدرّب على لوحة الأصابع التفاعلية",
   "Connect the root notes": "صِل بين نغمات الأساس",
   "Connect the root notes: {note}": "صِل بين نغمات الأساس: {note}",
-  "Skip one string each time. Play the octave path, then retrace it.": "تخطَّ وترًا في كل مرة. اعزف مسار الأوكتافات ثم عُد عبره.",
+  "Start nearest the nut and play each root in order of fret number.": "ابدأ بالنغمة الأساسية الأقرب إلى أنف الآلة، ثم اعزف بقية النغمات الأساسية بترتيب أرقام الدساتين من الأصغر إلى الأكبر.",
   "From memory": "من الذاكرة",
-  "Guided round trip": "ذهاب وإياب مع إرشاد",
   "Use the first root to find the hidden frets on the indicated strings. Return along the same path.": "انطلق من أول نغمة أساس لتجد الدساتين المخفية على الأوتار المحدّدة. عُد عبر المسار نفسه.",
   "? = find the fret": "؟ = اعثر على الدستان",
-  "Outward: +{a}, then +{b} frets": "في الذهاب: تقدّم {a} ثم {b} دساتين",
   "Try from memory →": "جرّب من الذاكرة ←",
-  "Next diagonal →": "القطر التالي ←",
   "Show frets": "أظهر الدساتين",
   "Find the fret on string {string}": "اعثر على الدستان على الوتر {string}"
 }

@@ -56,11 +56,24 @@ for(const [instrument,strings] of instruments){
   test(`${instrument}: all Routine exercises render and manual completion can replay`,async({page})=>{
     await page.addInitScript(()=>{localStorage.setItem('fretboard-routine-microphone','off')});
     await page.goto(`/?instrument=${instrument}&lang=en`);await ready(page);await page.clock.install();await openMenu(page,'routine');
+    const steps=page.locator('#routineSteps button');
+    const lastStep={guitar:'Rhythm','bass-4':'Arpeggios',ukulele:'Chords'}[instrument];
+    await expect(steps).toHaveText(['Root','Scale','Penta','Triads',lastStep]);
     for(let i=0;i<5;i++){
-      await page.locator('#routineSteps button').nth(i).click();
+      await steps.nth(i).click();
       const rhythm=await page.locator('#routineStrumming').isVisible();
       await visibleDrawing(page,rhythm?'#routineRhythmTab':'#routineTab',{notes:false,minHeight:40});
       await expect(page.locator('#routineNext')).toBeEnabled();
+      if(instrument==='guitar'&&i===2){
+        for(const [context,count] of [['Diagonal 1 · Frets 3–12 · Ascending',15],['Diagonal 1 · Frets 3–12 · Returning',14],
+          ['Diagonal 2 · Frets 8–17 · Ascending',15],['Diagonal 2 · Frets 8–17 · Returning',14]]){
+          await expect(page.locator('#routineContext')).toHaveText(context);
+          await expect(page.locator('#routineTab .routine-note-number')).toHaveCount(count);
+          await expect(steps.nth(2)).toHaveAttribute('aria-current','step');
+          await page.locator('#routineNext').click();await page.clock.fastForward(2800);
+        }
+        await expect(steps.nth(3)).toHaveAttribute('aria-current','step');
+      }
     }
     for(let step=0;step<40&&!(await page.locator('#routineFinish').isVisible());step++){
       await page.locator('#routineNext').click();await page.clock.fastForward(2800);

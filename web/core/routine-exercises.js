@@ -7,26 +7,6 @@
   const roundTrip=notes=>single(notes.concat(notes.slice(0,-1).reverse()));
   const range=notes=>`Frets ${Math.min(...notes.map(n=>n.fret))}–${Math.max(...notes.map(n=>n.fret))}`;
 
-  function rootJourney(engine,rootPC){
-    const columns=[],sections=[];
-    for(const [index,strings] of engine.profile.rootPaths.entries()){
-      // The first fretted root keeps the shape movable, including E and A.
-      const first=MusicTheory.mod(rootPC-engine.courses[strings[0]].pc)||12;
-      const pitch=engine.midiAt(strings[0],first);
-      const notes=strings.map((string,octave)=>({string,fret:pitch+12*octave-engine.midiAt(string,0)}));
-      // Keep complete octave shapes; never wrap an out-of-range note to fret 0.
-      if(notes.some(n=>n.fret<1||n.fret>engine.maxFret))continue;
-      const trip=roundTrip(notes);
-      for(const recall of [false,true]){
-        const start=columns.length;
-        columns.push(...trip);
-        sections.push({start,end:columns.length,recall,label:`Diagonal ${index+1}`,
-          steps:notes.slice(1).map((note,i)=>note.fret-notes[i].fret)});
-      }
-    }
-    return {rootJourney:true,columns,sections};
-  }
-
   // Work in MIDI for melodic order: a high-G ukulele is not tuned low to high.
   function sequences(engine,rootPC,intervals,maxFret){
     const candidates=[];
@@ -90,21 +70,25 @@
     return {columns,sections};
   }
 
-  function create({engine,root,quality,random=Math.random,diagonal=0,patterns=RoutinePatterns.defaults()}){
+  function create({engine,root,quality,random=Math.random,patterns=RoutinePatterns.defaults()}){
     const rootPC=MusicTheory.PC[root],maxFret=Math.min(15,engine.maxFret),key=`${root} ${quality}`;
     const shared={root,rootPC,quality};
     const make=(id,step,title,detail,instruction,columns)=>({...shared,id,step,title,detail,instruction,columns});
-    let rootExercise;
-    if(engine.profile.rootPaths){
-      const journey=rootJourney(engine,rootPC);
-      if(!journey.columns.length)throw new Error('No complete root octave path for this tuning');
-      rootExercise={...make('root','Root',`Connect the root notes: ${root}`,key,
-        'Skip one string each time. Play the octave path, then retrace it.',[]),...journey};
-    }else{
-      const roots=[];
-      engine.courses.forEach((_,string)=>{for(let fret=0;fret<=maxFret;fret++)if(engine.noteAt(string,fret)===rootPC)roots.push({string,fret})});
-      rootExercise=make('root','Root',`Find every ${root} on the fretboard`,`${key} · Frets 0–${maxFret}`,
-        `Play each note and say “${root}” aloud.`,single(roots));
+    const roots=[];
+    for(let fret=0;fret<=Math.min(12,engine.maxFret);fret++){
+      for(let string=0;string<engine.stringCount;string++){
+        if(engine.noteAt(string,fret)===rootPC)roots.push({string,fret});
+      }
+    }
+    const rootExercise=make('root','Root',`Find every ${root} on the fretboard`,`${key} · ${range(roots)}`,
+      'Start nearest the nut and play each root in order of fret number.',single(roots));
+    if(engine.profile.family==='guitar'){
+      // The memory pass starts where the outward pass ended.
+      const count=roots.length;
+      rootExercise.title=`Connect the root notes: ${root}`;
+      rootExercise.rootJourney=true;
+      rootExercise.columns.push(...single(roots.slice().reverse()));
+      rootExercise.sections=[{start:0,end:count,recall:false},{start:count,end:2*count,recall:true}];
     }
 
     const intervals=quality==='major'?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10];
@@ -165,10 +149,17 @@
 
     let pentaExercise;
     if(engine.profile.family==='guitar'){
-      const journey=RoutineMelody.diagonal(engine,root,rootPC,quality,diagonal);
-      const notes=journey.columns.flatMap(column=>column.notes);
-      pentaExercise={...make('penta','Penta',`Connect the ${key} pentatonic boxes`,`Diagonal ${journey.diagonal} · ${range(notes)}`,
-        'Repeat the same five notes one octave higher in each block. Sliding is optional.',[]),...journey};
+      const columns=[],sections=[];
+      for(const diagonal of [1,2]){
+        const path=RoutineMelody.diagonal(engine,root,rootPC,quality,diagonal);
+        const offset=columns.length,frets=range(path.columns.map(column=>column.notes[0]));
+        for(const {start,end,label} of path.sections){
+          sections.push({start:offset+start,end:offset+end,label,diagonal,frets});
+        }
+        columns.push(...path.columns);
+      }
+      pentaExercise={...make('penta','Penta',`Connect the ${key} pentatonic boxes`,key,
+        'Repeat the same five notes one octave higher in each block. Sliding is optional.',columns),melody:true,sections};
     }else{
       const anchorCourse=engine.profile.pentatonic.anchorCourse;
       const anchor=MusicTheory.mod(rootPC-(quality==='major'?3:0)-engine.courses[anchorCourse].pc);
@@ -181,7 +172,7 @@
       pentaExercise=make('penta','Penta',`Play the ${key} pentatonic`,`${key} · Position ${box.id} · ${range(penta)}`,
         `Play two notes per string, then reverse. ${engine.profile.reentrant?'The high G string makes this a fingering pattern, not an ascending pitch sequence.':''}`,roundTrip(penta));
     }
-    return [rootExercise,scaleExercise,triadExercise,chordExercise,pentaExercise];
+    return [rootExercise,scaleExercise,pentaExercise,triadExercise,chordExercise];
   }
   window.RoutineExercises=Object.freeze({create});
 })();

@@ -29,10 +29,10 @@ const server = http.createServer((req,res)=>{
 async function pause(page, ms=300){await page.waitForTimeout(ms);}
 async function nativeClick(page, selector){await page.locator(selector).evaluate(el=>el.click());await pause(page);}
 async function home(page){if(await page.locator('.tuner-dialog[open]').count())await page.keyboard.press('Escape');await nativeClick(page,'.screen.active [data-go="home"]');}
-async function routine(page,step){
+async function routine(page,exercise){
   await page.click('#home [data-go="routine"]');
   await nativeClick(page,'#routineRootControls [data-value="A"]');
-  await page.click(`#routineSteps [data-step="${step}"]`);
+  await page.click(`#routineSteps [data-exercise="${exercise}"]`);
   if(await page.locator('#routineMic').getAttribute('aria-checked')==='true')await page.click('#routineMic');
   await pause(page);
 }
@@ -73,10 +73,10 @@ async function capture(browser,v,base){
   await page.goto(base+`/?lang=${language}&instrument=${appInstrument}`);await page.waitForSelector('#home.active');await page.evaluate(()=>document.fonts.ready);
   await page.waitForFunction(expected=>document.documentElement.lang===expected&&window.FretboardI18n?.locale===expected,language);
   const record={...v,outputs:[],errors};
-  await routine(page,2);record.outputs.push(await save(page,v,names[0]));
-  await page.click('#routineSteps [data-step="3"]');record.outputs.push(await save(page,v,names[1]));
+  await routine(page,'scale');record.outputs.push(await save(page,v,names[0]));
+  await page.click('#routineSteps [data-exercise="triads"]');record.outputs.push(await save(page,v,names[1]));
   await home(page);await page.click('#home [data-go="learn"]');record.outputs.push(await save(page,v,names[2]));
-  await home(page);await routine(page,1);await page.click('#routineMic');await page.waitForFunction(()=>document.querySelector('#routineMicStatus').textContent.includes(FretboardI18n.text('Listening…')));
+  await home(page);await routine(page,'root');await page.click('#routineMic');await page.waitForFunction(()=>document.querySelector('#routineMicStatus').textContent.includes(FretboardI18n.text('Listening…')));
   const firstRoot=await page.evaluate(()=>{const course=FRETBOARD_ACTIVE_INSTRUMENT.courses[0];return course.midi+MusicTheory.mod(MusicTheory.PC.A-course.pc)});
   await pause(page,600);await tone(page,[firstRoot]);
   await page.waitForSelector('#routineTab .is-played');await tone(page,[]);await pause(page,350);

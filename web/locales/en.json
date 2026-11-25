@@ -433,14 +433,11 @@
   "Practice on the interactive fretboard": "Practice on the interactive fretboard",
   "Connect the root notes": "Connect the root notes",
   "Connect the root notes: {note}": "Connect the root notes: {note}",
-  "Skip one string each time. Play the octave path, then retrace it.": "Skip one string each time. Play the octave path, then retrace it.",
+  "Start nearest the nut and play each root in order of fret number.": "Start nearest the nut and play each root in order of fret number.",
   "From memory": "From memory",
-  "Guided round trip": "Guided round trip",
   "Use the first root to find the hidden frets on the indicated strings. Return along the same path.": "Use the first root to find the hidden frets on the indicated strings. Return along the same path.",
   "? = find the fret": "? = find the fret",
-  "Outward: +{a}, then +{b} frets": "Outward: +{a}, then +{b} frets",
   "Try from memory →": "Try from memory →",
-  "Next diagonal →": "Next diagonal →",
   "Show frets": "Show frets",
   "Find the fret on string {string}": "Find the fret on string {string}"
 }

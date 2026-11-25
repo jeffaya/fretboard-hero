@@ -433,14 +433,11 @@
   "Practice on the interactive fretboard": "ইন্টারঅ্যাকটিভ ফ্রেটবোর্ডে অনুশীলন করুন",
   "Connect the root notes": "মূল স্বরগুলোর মধ্যে সংযোগ করুন",
   "Connect the root notes: {note}": "মূল স্বরগুলো যুক্ত করুন: {note}",
-  "Skip one string each time. Play the octave path, then retrace it.": "প্রতিবার একটি তার এড়িয়ে অক্টেভের পথ ধরে বাজান। তারপর একই পথে ফিরুন।",
+  "Start nearest the nut and play each root in order of fret number.": "নাটের সবচেয়ে কাছের মূল স্বরটি দিয়ে শুরু করুন, তারপর ফ্রেট নম্বরের ছোট থেকে বড় ক্রমে প্রতিটি মূল স্বর বাজান।",
   "From memory": "মনে করে",
-  "Guided round trip": "নির্দেশনা মেনে যাওয়া-আসা",
   "Use the first root to find the hidden frets on the indicated strings. Return along the same path.": "প্রথম মূল স্বর দেখে নির্দেশিত তারগুলোর লুকানো ফ্রেট খুঁজুন। একই পথে ফিরে আসুন।",
   "? = find the fret": "? = ফ্রেট খুঁজুন",
-  "Outward: +{a}, then +{b} frets": "যাওয়ার পথে: +{a}, তারপর +{b} ফ্রেট",
   "Try from memory →": "মনে করে চেষ্টা করুন →",
-  "Next diagonal →": "পরের তির্যক পথ →",
   "Show frets": "ফ্রেট দেখান",
   "Find the fret on string {string}": "{string} নম্বর তারে ফ্রেটটি খুঁজুন"
 }
