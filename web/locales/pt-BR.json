@@ -433,14 +433,11 @@
   "Practice on the interactive fretboard": "Pratique no braço interativo",
   "Connect the root notes": "Conecte as tônicas",
   "Connect the root notes: {note}": "Conecte as tônicas: {note}",
-  "Skip one string each time. Play the octave path, then retrace it.": "Pule uma corda a cada vez. Toque o percurso por oitavas e volte pelo mesmo caminho.",
+  "Start nearest the nut and play each root in order of fret number.": "Comece pela tônica mais próxima da pestana e toque as demais em ordem crescente de casa.",
   "From memory": "De memória",
-  "Guided round trip": "Ida e volta guiada",
   "Use the first root to find the hidden frets on the indicated strings. Return along the same path.": "Use a primeira tônica para encontrar as casas ocultas nas cordas indicadas. Volte pelo mesmo caminho.",
   "? = find the fret": "? = encontre a casa",
-  "Outward: +{a}, then +{b} frets": "Ida: +{a}, depois +{b} casas",
   "Try from memory →": "Tente de memória →",
-  "Next diagonal →": "Próxima diagonal →",
   "Show frets": "Mostrar casas",
   "Find the fret on string {string}": "Encontre a casa na corda {string}"
 }

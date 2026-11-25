@@ -433,14 +433,11 @@
   "Practice on the interactive fretboard": "Занимайтесь на интерактивном грифе",
   "Connect the root notes": "Соедините тоники",
   "Connect the root notes: {note}": "Соедините тоники: {note}",
-  "Skip one string each time. Play the octave path, then retrace it.": "Каждый раз пропускайте одну струну. Сыграйте октавный ход и вернитесь по тому же пути.",
+  "Start nearest the nut and play each root in order of fret number.": "Начни с тоники, ближайшей к верхнему порожку, и сыграй остальные тоники в порядке возрастания номера лада.",
   "From memory": "По памяти",
-  "Guided round trip": "Туда и обратно с подсказками",
   "Use the first root to find the hidden frets on the indicated strings. Return along the same path.": "От первой тоники найдите скрытые лады на указанных струнах. Вернитесь по тому же пути.",
   "? = find the fret": "? — найдите лад",
-  "Outward: +{a}, then +{b} frets": "Вперёд: +{a}, затем +{b} ладов",
   "Try from memory →": "Попробовать по памяти →",
-  "Next diagonal →": "Следующая диагональ →",
   "Show frets": "Показать лады",
   "Find the fret on string {string}": "Найдите лад на струне {string}"
 }

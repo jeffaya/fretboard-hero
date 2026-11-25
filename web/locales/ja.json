@@ -433,14 +433,11 @@
   "Practice on the interactive fretboard": "操作できる指板で練習しましょう",
   "Connect the root notes": "ルート音をつなげよう",
   "Connect the root notes: {note}": "ルート音をつなげよう：{note}",
-  "Skip one string each time. Play the octave path, then retrace it.": "毎回、弦を1本飛ばします。オクターブの経路を弾いてから、同じ経路を戻りましょう。",
+  "Start nearest the nut and play each root in order of fret number.": "ナットに最も近いルート音から始めて、フレット番号の小さい順にルート音を弾きましょう。",
   "From memory": "記憶で挑戦",
-  "Guided round trip": "ガイド付き往復",
   "Use the first root to find the hidden frets on the indicated strings. Return along the same path.": "最初のルート音を手がかりに、指定された弦の隠れたフレットを見つけましょう。同じ経路を戻ります。",
   "? = find the fret": "? = フレットを探す",
-  "Outward: +{a}, then +{b} frets": "往路：+{a}、次に+{b}フレット",
   "Try from memory →": "記憶で挑戦 →",
-  "Next diagonal →": "次の斜めの経路 →",
   "Show frets": "フレットを表示",
   "Find the fret on string {string}": "{string}弦のフレットを探す"
 }

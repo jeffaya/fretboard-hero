@@ -10,10 +10,8 @@ test('All keys, qualities and instruments have five playable and musically corre
   const engine=c.FretboardEngine.createInstrumentEngine(profile),rootPC=c.MusicTheory.PC[root],label=`${profile.id} ${root} ${quality} seed ${seed}`;
   let exercises;assert.doesNotThrow(()=>exercises=c.RoutineExercises.create({engine,root,quality,random:rng(seed)}),label);
   assert.equal(exercises.length,5);
-  for(const e of exercises){assert.equal(e.root,root);assert.equal(e.quality,quality);assert.ok(e.strumming||e.columns.length,label);for(const n of flatten(e)){assert.ok(n.string>=0&&n.string<engine.stringCount,label);assert.ok(n.fret>=0&&n.fret<=(e.diagonal||e.rootJourney?engine.maxFret:15),label)}}
-  const expected=[];engine.courses.forEach((_,string)=>{for(let fret=0;fret<=15;fret++)if(engine.noteAt(string,fret)===rootPC)expected.push(`${string}:${fret}`)});
-  if(!profile.rootPaths)assert.equal(JSON.stringify(flatten(exercises[0]).map(n=>`${n.string}:${n.fret}`)),JSON.stringify(expected));
-  else for(const note of flatten(exercises[0]))assert.equal(engine.noteAt(note.string,note.fret),rootPC);
+  for(const e of exercises){assert.equal(e.root,root);assert.equal(e.quality,quality);assert.ok(e.strumming||e.columns.length,label);for(const n of flatten(e)){assert.ok(n.string>=0&&n.string<engine.stringCount,label);assert.ok(n.fret>=0&&n.fret<=(e.diagonal?engine.maxFret:15),label)}}
+  for(const n of flatten(exercises[0]))assert.equal(engine.noteAt(n.string,n.fret),rootPC,label);
   const scale=flatten(exercises[1]),intervals=quality==='major'?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10],first=engine.midiAt(scale[0].string,scale[0].fret);
   assert.equal(engine.noteAt(scale[0].string,scale[0].fret),rootPC);assert.equal((scale.length-1)%7,0);assert.ok(scale.length>=8);
   scale.slice(0,(scale.length+1)/2).forEach((n,i)=>assert.equal(engine.midiAt(n.string,n.fret)-first,Math.floor(i/7)*12+intervals[i%7],label));
@@ -305,7 +303,7 @@ test('A complete routine uses distinct localized inspirations, keeps each credit
   seen.push(message);r.flush();assert.equal(r.nodes.get('#routineTransition').hidden,true);
  }
  assert.equal(r.nodes.get('#routineFinish').hidden,false);
- assert.equal(seen.length,12);assert.equal(new Set(seen.slice(0,10)).size,10);assert.notEqual(seen[9],seen[10]);
+ assert.equal(seen.length,10);assert.equal(new Set(seen).size,10);
  r.nodes.get('#routineReplay').click();r.nodes.get('#routineNext').click();
  assert.equal(r.nodes.get('#routineEncouragementDetail').textContent,seen[0]);
  r.session.leave();r.flush();assert.equal(r.nodes.get('#routineTransition').hidden,true);
@@ -654,45 +652,43 @@ test('Flow capture restores the original rhythm and scale analysis settings on n
  }
 });
 
-test('Root octave paths transpose to all 12 notes without open strings or octave wrapping',()=>{
- const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar);
- for(const root of c.MusicTheory.NOTES){
-  const major=c.RoutineExercises.create({engine,root,quality:'major'})[0],minor=c.RoutineExercises.create({engine,root,quality:'minor'})[0];
-  assert.equal(JSON.stringify(major.columns),JSON.stringify(minor.columns),'quality does not change the tonic');
-  assert.equal(minor.sections.length,4);assert.equal(minor.columns.length,20);
-  for(const [i,section] of minor.sections.entries()){
-   assert.equal(section.recall,i%2===1);assert.equal(section.start,i*5);assert.equal(section.end,(i+1)*5);
-   const notes=flatten({columns:minor.columns.slice(section.start,section.end)});
-   assert.equal(notes.map(n=>n.string).join(','),i<2?'0,2,4,2,0':'1,3,5,3,1');
-   assert.ok(notes.every(n=>n.fret>=1&&n.fret<=17&&engine.noteAt(n.string,n.fret)===c.MusicTheory.PC[root]),root);
-   assert.deepEqual(Array.from(notes,n=>engine.midiAt(n.string,n.fret)-engine.midiAt(notes[0].string,notes[0].fret)),[0,12,24,12,0]);
-   assert.equal(notes.slice(1).map((n,j)=>n.fret-notes[j].fret).join(','),'2,3,-3,-2');
+test('Every root position through fret 12 is played in fret order for every instrument, key and quality',()=>{
+ const c=runtime();
+ for(const profile of Object.values(c.FRETBOARD_INSTRUMENTS)){
+  const engine=c.FretboardEngine.createInstrumentEngine(profile);
+  for(const root of c.MusicTheory.NOTES)for(const quality of ['major','minor']){
+   const exercise=c.RoutineExercises.create({engine,root,quality})[0];
+   const expected=[];
+   engine.courses.forEach((course,string)=>{
+    const fret=c.MusicTheory.mod(c.MusicTheory.PC[root]-course.pc);
+    expected.push({string,fret});
+    if(fret===0)expected.push({string,fret:12});
+   });
+   expected.sort((a,b)=>a.fret-b.fret||a.string-b.string);
+   const outward=Array.from(flatten(exercise).slice(0,expected.length),n=>({string:n.string,fret:n.fret}));
+   assert.deepEqual(outward,expected,`${profile.id} ${root} ${quality}`);
+   if(profile.family==='guitar'){
+    assert.deepEqual(Array.from(exercise.sections,s=>[s.start,s.end,s.recall]),[[0,expected.length,false],[expected.length,2*expected.length,true]]);
+    assert.deepEqual(Array.from(flatten(exercise).slice(expected.length),n=>({string:n.string,fret:n.fret})),expected.reverse());
+   }else{
+    assert.equal(exercise.columns.length,expected.length);
+   }
   }
  }
- for(const [root,paths] of [['A',[[5,7,10,7,5],[12,14,17,14,12]]],['C',[[8,10,13,10,8],[3,5,8,5,3]]],['E',[[12,14,17,14,12],[7,9,12,9,7]]]]){
-  const e=c.RoutineExercises.create({engine,root,quality:'minor'})[0];
-  assert.equal(flatten(e).map(n=>n.fret).join(','),paths.flatMap(p=>p.concat(p)).join(','));
- }
-});
-
-test('Root paths keep complete shapes within the available fret range',()=>{
- const c=runtime(),engine=c.FretboardEngine.createInstrumentEngine({...c.FRETBOARD_INSTRUMENTS.guitar,maxFret:12});
- const e=c.RoutineExercises.create({engine,root:'A',quality:'minor',diagonal:0})[0];
- assert.equal(e.sections.length,2);assert.ok(flatten(e).every(n=>n.fret<=12));
- assert.equal(flatten(e).map(n=>n.fret).join(','),'5,7,10,7,5,5,7,10,7,5');
 });
 
 test('Memory tabs reveal only the anchor and played notes, including their accessible description',()=>{
  const c=runtime();c.document={createElementNS:()=>new Node()};vm.runInContext(fs.readFileSync(path.join(base,'core/routine-renderer.js'),'utf8'),c);
  const engine=c.FretboardEngine.createInstrumentEngine(c.FRETBOARD_INSTRUMENTS.guitar),e=c.RoutineExercises.create({engine,root:'A',quality:'minor'})[0];
- const visible={...e,rootRecall:true,columns:e.columns.slice(5,10)};
- for(const width of [280,390,1100])for(const index of [null,0,1,2,3,5]){
+ const recall=e.sections[1],visible={...e,rootRecall:true,columns:e.columns.slice(recall.start,recall.end)};
+ const frets=['12','10','7','5','5','2','0'];
+ for(const width of [280,390,1100])for(const index of [null,0,1,2,3,7]){
   const svg=new Node();svg.parentElement={clientWidth:width};c.window.RoutineRenderer.render(svg,visible,engine,index===null?null:{index});
   const columns=svg.children.filter(n=>'data-column' in n.attrs),numbers=columns.map(n=>n.children.find(c=>c.attrs.class==='routine-note-number').textContent);
-  assert.deepEqual(numbers,['5',index>1?'7':'?',index>2?'10':'?',index>3?'7':'?',index>4?'5':'?']);
+  assert.deepEqual(numbers,frets.map((fret,i)=>i===0||i<index?fret:'?'));
   assert.equal(svg.children.filter(n=>n.attrs.stroke==='#899bb3').length,6);
   assert.equal((svg.children[0].textContent.match(/Find the fret on string/g)||[]).length,numbers.filter(n=>n==='?').length);
-  if(index<3)assert.doesNotMatch(svg.children[0].textContent,/fret 10/,'SVG title must not reveal the answer');
+  if(index<2)assert.doesNotMatch(svg.children[0].textContent,/fret 10/,'SVG title must not reveal the answer');
  }
 });
 
@@ -700,20 +696,19 @@ test('Root memory stages support manual reveal and preserve it through resize, m
  const r=sessionRuntime(true,false);r.session.enter();
  assert.equal(r.nodes.get('#routineNext').textContent,'Try from memory →');assert.equal(r.nodes.get('#routineRootReveal').hidden,true);
  r.nextGroup();assert.equal(r.c.lastExercise.rootRecall,true);assert.equal(r.nodes.get('#routineRootReveal').hidden,false);
- assert.equal(r.nodes.get('#routineNext').textContent,'Next diagonal →');
+ assert.equal(r.nodes.get('#routineNext').textContent,'Next →');
+ assert.equal(r.c.lastExercise.columns[0].notes[0].fret,12);
  r.session.resize();assert.equal(r.c.lastExercise.rootRecall,true);
  r.nodes.get('#routineMic').click();assert.equal(r.c.lastExercise.rootRecall,true);
  r.nodes.get('#routineMic').click();assert.equal(r.c.lastExercise.rootRecall,true);
  r.nodes.get('#routineRootReveal').click();assert.equal(r.c.lastExercise.rootRecall,false);assert.equal(r.nodes.get('#routineRootReveal').hidden,true);
  r.nodes.get('#routineSteps').children[1].children[0].click();r.nodes.get('#routineSteps').children[0].children[0].click();
  assert.equal(r.c.lastExercise.rootRecall,false);
- r.nextGroup();assert.equal(r.c.lastExercise.columns[0].notes[0].fret,12);assert.equal(r.c.lastExercise.rootRecall,false);
- r.nextGroup();assert.equal(r.c.lastExercise.rootRecall,true);assert.equal(r.nodes.get('#routineRootReveal').hidden,false);
  r.nextGroup();assert.equal(r.c.lastExercise.id,'scale');assert.equal(r.nodes.get('#routineRootReveal').hidden,true);
- r.nodes.get('#routineSteps').children[0].children[0].click();assert.equal(r.c.lastExercise.columns[0].notes[0].fret,5);assert.equal(r.c.lastExercise.rootRecall,false);
+ r.nodes.get('#routineSteps').children[0].children[0].click();assert.equal(r.c.lastExercise.columns[0].notes[0].fret,0);assert.equal(r.c.lastExercise.rootRecall,false);
 });
 
-test('Microphone completes both root paths and memory passes; a wrong octave cannot advance',()=>{
+test('Microphone completes the root positions outward and from memory, rejecting the wrong octave',()=>{
  const {samples,N}=require('./audio-fixtures.cjs'),r=sessionRuntime(true);r.session.enter();
  const engine=r.c.FretboardEngine.createInstrumentEngine(r.c.FRETBOARD_INSTRUMENTS.guitar);
  let now=1500;
@@ -722,14 +717,14 @@ test('Microphone completes both root paths and memory passes; a wrong octave can
   for(let offset=0;offset<=400;offset+=80)r.c.audio.onFrame({samples:pcm,spectrum:new Float32Array(N/2),sampleRate:48000,fftSize:N,now:now+offset});
   now+=1000;
  };
- for(let section=0;section<4;section++){
+ for(let section=0;section<2;section++){
   assert.equal(r.c.lastExercise.rootRecall,section%2===1);
   const notes=flatten(r.c.lastExercise);
   for(let i=0;i<notes.length;i++){
    const midi=engine.midiAt(notes[i].string,notes[i].fret),before=r.nodes.get('#routineNoteProgress').textContent;
    play(midi===45?midi+12:midi-12);assert.equal(r.nodes.get('#routineNoteProgress').textContent,before);
    play(null);play(midi);
-   if(i<notes.length-1)assert.equal(r.nodes.get('#routineNoteProgress').textContent,`${i+2} / 5`);
+   if(i<notes.length-1)assert.equal(r.nodes.get('#routineNoteProgress').textContent,`${i+2} / ${notes.length}`);
   }
   assert.equal(r.nodes.get('#routineTransition').hidden,false);r.c.now=now;r.flush();now+=500;
  }

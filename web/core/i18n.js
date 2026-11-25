@@ -140,7 +140,7 @@
     const requested=new URL(location.href).searchParams.get('lang');
     locale=supported.has(pageLocale)?pageLocale:match(requested)||match(saved)||detect(navigator.languages?.length?navigator.languages:[navigator.language]);
     if(locale!=='en'){
-      try{const response=await fetch('/locales/'+locale+'.json?v=10.58.0');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale=supported.has(pageLocale)?pageLocale:'en';install({})}
+      try{const response=await fetch('/locales/'+locale+'.json?v=10.58.2');if(!response.ok)throw Error('Locale unavailable');install(await response.json())}catch{locale=supported.has(pageLocale)?pageLocale:'en';install({})}
     }
     document.querySelector('a[href^="https://fretboard-hero.com/privacy"]')?.setAttribute('href','https://fretboard-hero.com/privacy?lang='+locale);
     document.documentElement.lang=locale;document.documentElement.dir=locale==='ar'?'rtl':'ltr';
