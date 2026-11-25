@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "7c59a31d6ce089834b130a7aa4af761d2dbbaca3",
+  "locale": "ko-KR",
+  "instrument": "ukulele",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "desktop",
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "touch": false,
+      "folder": "desktop",
+      "outputs": [
+        {
+          "file": "desktop/01-routine-1920x1080.jpg",
+          "language": {
+            "html": "ko",
+            "app": "ko"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "매일 연습",
+          "mic": "마이크 꺼짐",
+          "visibleText": "←\n매일 연습\n라\n단조\n튜너\n근음\n음계\n트라이어드\n코드\n펜타\n라 단조 음계를 연주하세요\n\n한 옥타브 · 프렛 9–12 · 올라가기\n\n라에서 한 옥타브 올라간 뒤 으뜸음으로 돌아오세요.\n\n마이크 꺼짐\n\n솔\n도\n미\n라\n라\n1\n9\n시\n2\n11\n도\n♭3\n12\n레\n4\n10\n미\n5\n9\n파\n♭6\n10\n솔\n♭7\n12\n라\n1\n12\n\n청록색 = 근음 · 위 숫자 = 음계 도수 · 1 = 으뜸음\n\n돌아오기 →",
+          "sizeBytes": 191471
+        },
+        {
+          "file": "desktop/02-triads-1920x1080.jpg",
+          "language": {
+            "html": "ko",
+            "app": "ko"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "매일 연습",
+          "mic": "마이크 꺼짐",
+          "visibleText": "←\n매일 연습\n라\n단조\n튜너\n근음\n음계\n트라이어드\n코드\n펜타\n라 단조 트라이어드를 연결하세요\n\n각 트라이어드를 함께 연주한 뒤 한 음씩 연주하세요.\n\n마이크 꺼짐\n\n솔\n도\n미\n라\n제1전위\n2\n0\n0\n제2전위\n5\n4\n5\n기본위치\n9\n9\n8\n\n청록색 = 근음\n\n다음 →",
+          "sizeBytes": 188464
+        },
+        {
+          "file": "desktop/03-pentatonic-1920x1080.jpg",
+          "language": {
+            "html": "ko",
+            "app": "ko"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "learn",
+          "title": "라 단조펜타토닉",
+          "mic": "마이크 꺼짐",
+          "visibleText": "←\n라 단조\n펜타토닉\n음\n라\n라#\n시\n도\n도#\n레\n레#\n미\n파\n파#\n솔\n솔#\n조성\n장조\n단조\n모드\n펜타토닉\n트라이어드\n코드\n아르페지오\n포지션\n전체\n1\n2\n3\n4\n5\n12프렛\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\nP1\nP2\nP3\nP4\nP5\nP1\nP2\nP3\n솔\n라\n도\n레\n미\n솔\n라\n도\n도\n레\n미\n솔\n라\n도\n레\n미\n미\n솔\n라\n도\n레\n미\n솔\n라\n라\n도\n레\n미\n솔\n라\n도\n레\n연결된 모든 포지션이 표시됩니다. 하나를 선택해 따로 보세요.\n라\n근음\n도\n3도\n레\n4도\n미\n5도\n솔\n7도",
+          "sizeBytes": 406287
+        },
+        {
+          "file": "desktop/04-feedback-1920x1080.jpg",
+          "language": {
+            "html": "ko",
+            "app": "ko"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "매일 연습",
+          "mic": "듣는 중…",
+          "visibleText": "←\n매일 연습\n라\n단조\n튜너\n근음\n음계\n트라이어드\n코드\n펜타\n근음을 찾아보세요 라\n\n강조된 음을 연주하세요.\n\n듣는 중…\n\n2 / 6\n솔\n도\n미\n라\n2\n14\n9\n5\n0\n12\n\n강조 표시 = 목표 · 초록 = 연주 완료\n\n다음 →",
+          "sizeBytes": 179765
+        },
+        {
+          "file": "desktop/05-quiz-1920x1080.jpg",
+          "language": {
+            "html": "ko",
+            "app": "ko"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "quiz",
+          "title": "지판 퀴즈지판을 알고 자유롭게 연주하세요",
+          "mic": "마이크 꺼짐",
+          "visibleText": "←\n지판 퀴즈\n지판을 알고 자유롭게 연주하세요\n점수\n1,650\n+800\n연속 정답\n×5\n등급\n🎸 공연 연주자\n남은 시간\n55.8s\n도# 장조\n\n찾아보세요: 3도\n\n프렛 0–5 • 맞는 위치를 누르세요.\n0\n1\n2\n3\n4\n5\n솔\n도\n미\n라",
+          "sizeBytes": 268775
+        },
+        {
+          "file": "desktop/06-tuner-1920x1080.jpg",
+          "language": {
+            "html": "ko",
+            "app": "ko"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "home",
+          "title": "연습",
+          "mic": "마이크 꺼짐",
+          "visibleText": "튜너 · 우쿨렐레\n자동\n라\n440.1 Hz · +1 cents\n−50\n0\n+50\n\n정확한 음정\n\n솔\n도\n미\n라\n마이크\n\n오디오는 기기에서만 처리되며 녹음되지 않습니다.",
+          "sizeBytes": 97234
+        },
+        {
+          "file": "desktop/07-map-1920x1080.jpg",
+          "language": {
+            "html": "ko",
+            "app": "ko"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "fretmap",
+          "title": "지판 지도모든 음 · 하나의 지판",
+          "mic": "마이크 꺼짐",
+          "visibleText": "←\n지판 지도\n모든 음 · 하나의 지판\n음\n전체\n라\n라#\n시\n도\n도#\n레\n레#\n미\n파\n파#\n솔\n솔#\n지판\n12프렛\n15프렛\n17프렛\n21프렛\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n솔\n솔#\n라\n라#\n시\n도\n도#\n레\n레#\n미\n파\n파#\n솔\n솔#\n라\n라#\n시\n도\n도\n도#\n레\n레#\n미\n파\n파#\n솔\n솔#\n라\n라#\n시\n도\n도#\n레\n레#\n미\n파\n미\n파\n파#\n솔\n솔#\n라\n라#\n시\n도\n도#\n레\n레#\n미\n파\n파#\n솔\n솔#\n라\n라\n라#\n시\n도\n도#\n레\n레#\n미\n파\n파#\n솔\n솔#\n라\n라#\n시\n도\n도#\n레",
+          "sizeBytes": 411538
+        },
+        {
+          "file": "desktop/08-circle-1920x1080.jpg",
+          "language": {
+            "html": "ko",
+            "app": "ko"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "circle",
+          "title": "5도권조성 · 코드 · 화성",
+          "mic": "마이크 꺼짐",
+          "visibleText": "←\n5도권\n조성 · 코드 · 화성\nIV\nii\nI\nvi\nV\niii\nvii°\n도\n라m\n시°\n솔\n미m\n파♯°\n레\n시m\n도♯°\n라\n파♯m\n솔♯°\n미\n도♯m\n레♯°\n시\n솔♯m\n라♯°\n파♯\n레♯m\n미♯°\n레♭\n시♭m\n도°\n라♭\n파m\n솔°\n미♭\n도m\n레°\n시♭\n솔m\n라°\n파\n레m\n미°\n5도권\n솔\n미m · 나란한 단조\n←\n\n드래그하여 회전 · 4도 ← → 5도\n\n→\n다이어토닉 코드 · 고정 창\n솔 장조\n나란한 단조 • 미m\n\n올림표 1개 • 파♯\n\n강조된 창은 조성의 일곱 코드를 보여줍니다. 대문자는 메이저, 소문자는 마이너, °는 디미니시드입니다.\n\n자주 쓰는 코드 진행\nI\n솔\n→\nV\n레\n→\nvi\n미m\n→\nIV\n도\nI\n솔\n→\nIV\n도\n→\nV\n레\n→\nI\n솔\nvi\n미m\n→\nIV\n도\n→\nI\n솔\n→\nV\n레\n\n코드 위의 도수를 읽으세요. 원을 돌려 모든 진행을 이조하세요.",
+          "sizeBytes": 208704
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
