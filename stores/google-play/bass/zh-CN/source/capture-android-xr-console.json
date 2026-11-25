@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "7c59a31d6ce089834b130a7aa4af761d2dbbaca3",
+  "locale": "zh-CN",
+  "instrument": "bass",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "android-xr-console",
+      "width": 1600,
+      "height": 900,
+      "dpr": 1.6,
+      "touch": false,
+      "folder": "android-xr",
+      "outputs": [
+        {
+          "file": "android-xr/01-routine-2560x1440.jpg",
+          "language": {
+            "html": "zh-CN",
+            "app": "zh-CN"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "每日练习",
+          "mic": "麦克风已关闭",
+          "visibleText": "←\n每日练习\nA\n小调\n调音器\n根音\n音阶\n三和弦\n琶音\n五声音阶\n弹奏A 小调音阶\n\n一个八度 · 品位 5–8 · 上行\n\n从A开始，上行一个八度，再回到主音。\n\n麦克风已关闭\n\nE\nA\nD\nG\nA\n1\n5\nB\n2\n7\nC\n♭3\n8\nD\n4\n5\nE\n5\n7\nF\n♭6\n8\nG\n♭7\n5\nA\n1\n7\n\n青色 = 根音 · 上方数字 = 音级 · 1 = 主音\n\n返回 →",
+          "sizeBytes": 287341
+        },
+        {
+          "file": "android-xr/02-triads-2560x1440.jpg",
+          "language": {
+            "html": "zh-CN",
+            "app": "zh-CN"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "每日练习",
+          "mic": "麦克风已关闭",
+          "visibleText": "←\n每日练习\nA\n小调\n调音器\n根音\n音阶\n三和弦\n琶音\n五声音阶\n连接A 小调三和弦\n\n先同时弹奏每个三和弦，再逐音弹奏。\n\n麦克风已关闭\n\nE\nA\nD\nG\n原位\n5\n3\n2\n第一转位\n8\n7\n7\n第二转位\n12\n12\n10\n\n青色 = 根音\n\n下一项 →",
+          "sizeBytes": 285056
+        },
+        {
+          "file": "android-xr/03-pentatonic-2560x1440.jpg",
+          "language": {
+            "html": "zh-CN",
+            "app": "zh-CN"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "learn",
+          "title": "A 小调五声音阶",
+          "mic": "麦克风已关闭",
+          "visibleText": "←\nA 小调\n五声音阶\nA\n调性\n大调\n小调\n模式\n五声音阶\n三和弦\n琶音\n把位\n全部\n1\n2\n3\n4\n5\n21品\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\nP4\nP5\nP1\nP2\nP3\nP4\nP5\nP1\nP2\nP3\nE\nG\nA\nC\nD\nE\nG\nA\nC\nA\nC\nD\nE\nG\nA\nC\nD\nE\nD\nE\nG\nA\nC\nD\nE\nG\nA\nG\nA\nC\nD\nE\nG\nA\nC\nD\nE\n已显示所有相连把位，选择一个即可单独查看。\nA\n根音\nC\n三度\nD\n四度\nE\n五度\nG\n七度",
+          "sizeBytes": 651720
+        },
+        {
+          "file": "android-xr/04-feedback-2560x1440.jpg",
+          "language": {
+            "html": "zh-CN",
+            "app": "zh-CN"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "每日练习",
+          "mic": "正在聆听…",
+          "visibleText": "←\n每日练习\nA\n小调\n调音器\n根音\n音阶\n三和弦\n琶音\n五声音阶\n找到根音 A\n\n请弹奏高亮的音符。\n\n正在聆听…\n\n2 / 6\nE\nA\nD\nG\n5\n0\n12\n7\n2\n14\n\n高亮 = 目标音 · 绿色 = 已弹奏\n\n下一项 →",
+          "sizeBytes": 276206
+        },
+        {
+          "file": "android-xr/05-quiz-2560x1440.jpg",
+          "language": {
+            "html": "zh-CN",
+            "app": "zh-CN"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "quiz",
+          "title": "指板测验了解指板 · 掌握指板",
+          "mic": "麦克风已关闭",
+          "visibleText": "←\n指板测验\n了解指板 · 掌握指板\n得分\n1,650\n+800\n连对\n×5\n等级\n🎸 现场乐手\n剩余时间\n54.6s\nE 小调\n\n找到 小三度\n\n品位 0–5 • 点击任意正确位置。\n0\n1\n2\n3\n4\n5\nE\nA\nD\nG",
+          "sizeBytes": 470489
+        },
+        {
+          "file": "android-xr/06-tuner-2560x1440.jpg",
+          "language": {
+            "html": "zh-CN",
+            "app": "zh-CN"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "home",
+          "title": "练习",
+          "mic": "麦克风已关闭",
+          "visibleText": "调音器 · 贝斯 4\n自动\nA\n55.0 Hz · +0 cents\n−50\n0\n+50\n\n音准正确\n\nE\nA\nD\nG\n麦克风\n\n音频仅在设备上处理，不会录音。",
+          "sizeBytes": 160227
+        },
+        {
+          "file": "android-xr/07-map-2560x1440.jpg",
+          "language": {
+            "html": "zh-CN",
+            "app": "zh-CN"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "fretmap",
+          "title": "指板图所有音符 · 一块指板",
+          "mic": "麦克风已关闭",
+          "visibleText": "←\n指板图\n所有音符 · 一块指板\n音符\n全部\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\n指板\n12品\n15品\n17品\n21品\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\nE\nF\nF#\nG\nG#\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nA\nA#\nB\nC\nC#\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nD\nD#\nE\nF\nF#\nG\nG#\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nA\nA#\nB\nG\nG#\nA\nA#\nB\nC\nC#\nD\nD#\nE\nF\nF#\nG\nG#\nA\nA#\nB\nC\nC#\nD\nD#\nE",
+          "sizeBytes": 658219
+        },
+        {
+          "file": "android-xr/08-circle-2560x1440.jpg",
+          "language": {
+            "html": "zh-CN",
+            "app": "zh-CN"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "circle",
+          "title": "五度圈调性 · 和弦 · 和声",
+          "mic": "麦克风已关闭",
+          "visibleText": "←\n五度圈\n调性 · 和弦 · 和声\nIV\nii\nI\nvi\nV\niii\nvii°\nC\nAm\nB°\nG\nEm\nF♯°\nD\nBm\nC♯°\nA\nF♯m\nG♯°\nE\nC♯m\nD♯°\nB\nG♯m\nA♯°\nF♯\nD♯m\nE♯°\nD♭\nB♭m\nC°\nA♭\nFm\nG°\nE♭\nCm\nD°\nB♭\nGm\nA°\nF\nDm\nE°\n五度圈\nG\nEm · 关系小调\n←\n\n拖动旋转 · 四度 ← → 五度\n\n→\n顺阶和弦 · 固定窗口\nG 大调\n关系小调 • Em\n\n1个升号 • F♯\n\n高亮区域显示该调的七个和弦。大写级数为大和弦，小写为小和弦，°表示减和弦。\n\n常见和弦进行\nI\nG\n→\nV\nD\n→\nvi\nEm\n→\nIV\nC\nI\nG\n→\nIV\nC\n→\nV\nD\n→\nI\nG\nvi\nEm\n→\nIV\nC\n→\nI\nG\n→\nV\nD\n\n阅读每个和弦上方的级数，旋转圆圈即可将所有进行移调。",
+          "sizeBytes": 316270
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
