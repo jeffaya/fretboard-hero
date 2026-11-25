@@ -70,7 +70,7 @@
     return {columns,sections};
   }
 
-  function create({engine,root,quality,random=Math.random,diagonal=0,patterns=RoutinePatterns.defaults()}){
+  function create({engine,root,quality,random=Math.random,patterns=RoutinePatterns.defaults()}){
     const rootPC=MusicTheory.PC[root],maxFret=Math.min(15,engine.maxFret),key=`${root} ${quality}`;
     const shared={root,rootPC,quality};
     const make=(id,step,title,detail,instruction,columns)=>({...shared,id,step,title,detail,instruction,columns});
@@ -149,10 +149,17 @@
 
     let pentaExercise;
     if(engine.profile.family==='guitar'){
-      const journey=RoutineMelody.diagonal(engine,root,rootPC,quality,diagonal);
-      const notes=journey.columns.flatMap(column=>column.notes);
-      pentaExercise={...make('penta','Penta',`Connect the ${key} pentatonic boxes`,`Diagonal ${journey.diagonal} · ${range(notes)}`,
-        'Repeat the same five notes one octave higher in each block. Sliding is optional.',[]),...journey};
+      const columns=[],sections=[];
+      for(const diagonal of [1,2]){
+        const path=RoutineMelody.diagonal(engine,root,rootPC,quality,diagonal);
+        const offset=columns.length,frets=range(path.columns.map(column=>column.notes[0]));
+        for(const {start,end,label} of path.sections){
+          sections.push({start:offset+start,end:offset+end,label,diagonal,frets});
+        }
+        columns.push(...path.columns);
+      }
+      pentaExercise={...make('penta','Penta',`Connect the ${key} pentatonic boxes`,key,
+        'Repeat the same five notes one octave higher in each block. Sliding is optional.',columns),melody:true,sections};
     }else{
       const anchorCourse=engine.profile.pentatonic.anchorCourse;
       const anchor=MusicTheory.mod(rootPC-(quality==='major'?3:0)-engine.courses[anchorCourse].pc);
@@ -165,7 +172,8 @@
       pentaExercise=make('penta','Penta',`Play the ${key} pentatonic`,`${key} · Position ${box.id} · ${range(penta)}`,
         `Play two notes per string, then reverse. ${engine.profile.reentrant?'The high G string makes this a fingering pattern, not an ascending pitch sequence.':''}`,roundTrip(penta));
     }
-    return [rootExercise,scaleExercise,triadExercise,chordExercise,pentaExercise];
+    const ending=engine.profile.family==='bass'?[chordExercise,triadExercise]:[triadExercise,chordExercise];
+    return [rootExercise,scaleExercise,pentaExercise,...ending];
   }
   window.RoutineExercises=Object.freeze({create});
 })();

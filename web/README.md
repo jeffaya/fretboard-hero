@@ -370,7 +370,7 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Daily Routine
 
-The joypad card opens five self-assessed exercises in one key: root notes, a complete major/natural minor scale, three triad inversions, chord shapes (CAGED for guitar, ukulele shapes, arpeggios for bass), and a pentatonic position. Each visit chooses a random root and new positions; the shared NOTE and KEY controls allow changes and restart the five steps. The demo provides all five exercises in A minor. Other keys use the existing unlock dialog. Next advances; Done shows completion. There is no microphone, automatic scoring, timer, or stored completion history.
+The first three exercises are Root, Scale and Penta. Guitar plays both pentatonic diagonals in order, ascending and returning on each, then finishes with Triads and Rhythm. Bass continues with Arpeggios and Triads. Ukulele continues with Triads and Chords. The demo provides all five exercises in A minor. Changing the root or quality restarts the routine. Players can follow the microphone guide or advance manually.
 
 `core/routine-exercises.js` composes the existing music engines, `routine-renderer.js` draws accessible tablature with root highlights and simultaneous chord columns, and `routine-session.js` manages the five steps. Tablature fits one staff when readable and wraps longer exercises without shrinking fret numbers. High-G ukulele scales use MIDI pitch order; pentatonic boxes follow string order. The shared drawer, selects, buttons and premium modal remain the source of UI components; `routine.css` owns composition only.
 

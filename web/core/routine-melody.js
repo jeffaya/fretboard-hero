@@ -23,11 +23,11 @@
   function scale(notes,engine,root,rootPC){
     return journey(notes.slice(0,8).map(note=>describe(note,engine,root,rootPC)));
   }
-  function diagonal(engine,root,rootPC,quality,variant){
+  function diagonal(engine,root,rootPC,quality,diagonalNumber){
     // Preserve the two reference fingerings when transposing: in A minor,
     // G–A–C–D–E starts at fret 3 and C–D–E–G–A starts at fret 8.
     const minorRoot=mod(rootPC-(quality==='major'?3:0));
-    const scale=[0,3,5,7,10],lowerCount=variant===1?3:2,rotation=variant===1?1:4;
+    const scale=[0,3,5,7,10],lowerCount=diagonalNumber===2?3:2,rotation=diagonalNumber===2?1:4;
     const offsets=scale.map((_,i)=>scale[(rotation+i)%5]+12*Math.floor((rotation+i)/5));
     const firstFret=mod(minorRoot+offsets[0]-engine.courses[0].pc);
     const firstMidi=engine.midiAt(0,firstFret),anchor=mod(minorRoot-engine.courses[0].pc);
@@ -47,7 +47,7 @@
         holdMs:engine.noteAt(note.string,note.fret)===rootPC?380:undefined,
         position:i<shift?before.id:after.id,slideFrom:i===shift?notes[i-1]:undefined,fromPosition:i===shift?before.id:undefined}));
     }
-    return {...journey(up),diagonal:variant+1};
+    return journey(up);
   }
   window.RoutineMelody=Object.freeze({scale,diagonal});
 })();
