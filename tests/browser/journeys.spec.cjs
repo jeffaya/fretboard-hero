@@ -57,8 +57,8 @@ for(const [instrument,strings] of instruments){
     await page.addInitScript(()=>{localStorage.setItem('fretboard-routine-microphone','off')});
     await page.goto(`/?instrument=${instrument}&lang=en`);await ready(page);await page.clock.install();await openMenu(page,'routine');
     const steps=page.locator('#routineSteps button');
-    const ending=instrument==='bass-4'?['Arpeggios','Triads']:['Triads',instrument==='guitar'?'Rhythm':'Chords'];
-    await expect(steps).toHaveText(['Root','Scale','Penta',...ending]);
+    const lastStep={guitar:'Rhythm','bass-4':'Arpeggios',ukulele:'Chords'}[instrument];
+    await expect(steps).toHaveText(['Root','Scale','Penta','Triads',lastStep]);
     for(let i=0;i<5;i++){
       await steps.nth(i).click();
       const rhythm=await page.locator('#routineStrumming').isVisible();

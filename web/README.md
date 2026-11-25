@@ -370,7 +370,7 @@ The product names remain Guitar Fretboard Hero, Bass Fretboard Hero and Ukulele 
 
 ## Daily Routine
 
-The first three exercises are Root, Scale and Penta. Guitar plays both pentatonic diagonals in order, ascending and returning on each, then finishes with Triads and Rhythm. Bass continues with Arpeggios and Triads. Ukulele continues with Triads and Chords. The demo provides all five exercises in A minor. Changing the root or quality restarts the routine. Players can follow the microphone guide or advance manually.
+The first three exercises are Root, Scale and Penta. Guitar plays both pentatonic diagonals in order, ascending and returning on each, then finishes with Triads and Rhythm. Bass continues with Triads and Arpeggios. Ukulele continues with Triads and Chords. The demo provides all five exercises in A minor. Changing the root or quality restarts the routine. Players can follow the microphone guide or advance manually.
 
 `core/routine-exercises.js` composes the existing music engines, `routine-renderer.js` draws accessible tablature with root highlights and simultaneous chord columns, and `routine-session.js` manages the five steps. Tablature fits one staff when readable and wraps longer exercises without shrinking fret numbers. High-G ukulele scales use MIDI pitch order; pentatonic boxes follow string order. The shared drawer, selects, buttons and premium modal remain the source of UI components; `routine.css` owns composition only.
 

@@ -9,8 +9,8 @@ test('All keys, qualities and instruments have five playable and musically corre
  for(const profile of Object.values(c.FRETBOARD_INSTRUMENTS))for(const root of c.MusicTheory.NOTES)for(const quality of ['major','minor'])for(let seed=1;seed<=8;seed++){
   const engine=c.FretboardEngine.createInstrumentEngine(profile),rootPC=c.MusicTheory.PC[root],label=`${profile.id} ${root} ${quality} seed ${seed}`;
   let exercises;assert.doesNotThrow(()=>exercises=c.RoutineExercises.create({engine,root,quality,random:rng(seed)}),label);
-  const ending=profile.family==='bass'?['Arpeggios','Triads']:['Triads',profile.family==='guitar'?'Rhythm':'Chords'];
-  assert.deepEqual(Array.from(exercises,e=>e.step),['Root','Scale','Penta',...ending]);
+  const lastStep={guitar:'Rhythm',bass:'Arpeggios',ukulele:'Chords'}[profile.family];
+  assert.deepEqual(Array.from(exercises,e=>e.step),['Root','Scale','Penta','Triads',lastStep]);
   const triads=exercises.find(e=>e.id==='triads'),chords=exercises.find(e=>e.id==='chords');
   for(const e of exercises){assert.equal(e.root,root);assert.equal(e.quality,quality);assert.ok(e.strumming||e.columns.length,label);for(const n of flatten(e)){assert.ok(n.string>=0&&n.string<engine.stringCount,label);assert.ok(n.fret>=0&&n.fret<=(e.id==='penta'&&profile.family==='guitar'?engine.maxFret:15),label)}}
   for(const n of flatten(exercises[0]))assert.equal(engine.noteAt(n.string,n.fret),rootPC,label);

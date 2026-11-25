@@ -172,8 +172,7 @@
       pentaExercise=make('penta','Penta',`Play the ${key} pentatonic`,`${key} · Position ${box.id} · ${range(penta)}`,
         `Play two notes per string, then reverse. ${engine.profile.reentrant?'The high G string makes this a fingering pattern, not an ascending pitch sequence.':''}`,roundTrip(penta));
     }
-    const ending=engine.profile.family==='bass'?[chordExercise,triadExercise]:[triadExercise,chordExercise];
-    return [rootExercise,scaleExercise,pentaExercise,...ending];
+    return [rootExercise,scaleExercise,pentaExercise,triadExercise,chordExercise];
   }
   window.RoutineExercises=Object.freeze({create});
 })();
