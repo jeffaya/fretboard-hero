@@ -20,7 +20,7 @@ Ouvrir un terminal [Google Cloud Shell](https://shell.cloud.google.com/) dans le
 bash scripts/google-play/setup-cloud.sh
 ```
 
-Coller l’adresse du compte de service des achats quand le script la demande. Il en déduit le projet, vérifie que le compte existe et crée un compte de publication distinct. Il configure les API, la fédération GitHub et les deux variables Actions du dépôt. GitHub CLI peut demander une connexion. Si la CLI est absente, le script affiche les deux valeurs à reporter. Le script peut être relancé après une interruption.
+Coller l’adresse du compte de service des achats quand le script la demande. Il en déduit le projet, vérifie que le compte existe et crée un compte de publication distinct. Il configure les API et la fédération GitHub, puis ajoute les secrets Actions manquants au dépôt. Les secrets déjà saisis sont conservés. GitHub CLI peut demander une connexion. Si la CLI est absente, le script affiche les deux valeurs à reporter. Le script peut être relancé après une interruption.
 
 Dans **Play Console → Utilisateurs et autorisations**, inviter en une seule fois le compte de publication affiché à la fin. Sélectionner les trois applications et leurs droits de lecture, de test et de production (étape 2 ci-dessous).
 
@@ -43,12 +43,12 @@ Dans **Play Console → Utilisateurs et autorisations**, inviter en une seule fo
    ```
 
 4. Accorder le rôle **Utilisateur de Workload Identity** (`roles/iam.workloadIdentityUser`) **sur le compte de service** à l’identité du pool. Pour un compte commun, le membre est `principalSet://iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/attribute.repository_id/1403065511`. Pour un compte par application, remplacer la fin `attribute.repository_id/1403065511` par `attribute.environment/google-play-guitar`, `attribute.environment/google-play-bass` ou `attribute.environment/google-play-ukulele` sur le compte correspondant. Utiliser le numéro numérique du projet qui héberge le pool.
-5. Dans GitHub, renseigner les **variables** suivantes. La signature utilise déjà les secrets Android du job de build. Le job de publication obtient un jeton temporaire auprès de Google.
+5. Dans GitHub, renseigner les deux **secrets Actions** suivants. Le job de publication les utilise pour obtenir un jeton temporaire auprès de Google.
 
-   | Variable | Valeur | Emplacement |
+   | Secret | Valeur | Emplacement |
    | --- | --- | --- |
-   | `GCP_WORKLOAD_IDENTITY_PROVIDER` | `projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID` | Settings → Secrets and variables → Actions → Variables |
-   | `GOOGLE_PLAY_SERVICE_ACCOUNT` | Adresse en `@PROJECT_ID.iam.gserviceaccount.com` | Au même endroit pour un compte commun, ou sous Settings → Environments → environnement de l’instrument → Environment variables pour des comptes distincts |
+   | `GCP_WORKLOAD_IDENTITY_PROVIDER` | `projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID` | Settings → Secrets and variables → Actions → Secrets → Repository secrets |
+   | `GOOGLE_PLAY_SERVICE_ACCOUNT` | Adresse en `@PROJECT_ID.iam.gserviceaccount.com` | Au même endroit pour un compte commun, ou sous Settings → Environments → environnement de l’instrument → Environment secrets pour des comptes distincts |
 
    | Instrument dans Actions | Environnement GitHub | Application Google Play |
    | --- | --- | --- |
