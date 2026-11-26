@@ -1,0 +1,34 @@
+{
+  "common": {
+    "en-US": "- Find root notes in fret order and practise both pentatonic diagonals on the way up and back down.\n- Music theory lessons now open inside the app.",
+    "fr-FR": "- Repérez les fondamentales dans l’ordre des cases et jouez chacune des deux diagonales pentatoniques en aller-retour.\n- Les leçons de théorie musicale s’ouvrent directement dans l’app.",
+    "es-ES": "- Localiza las fundamentales por orden de traste y recorre las dos diagonales pentatónicas de ida y vuelta.\n- Las lecciones de teoría musical se abren en la propia aplicación.",
+    "de-DE": "- Finde die Grundtöne in Bundreihenfolge und spiele beide Pentatonik-Diagonalen auf- und abwärts.\n- Die Musiktheorie-Lektionen öffnen sich direkt in der App.",
+    "it-IT": "- Trova le fondamentali in ordine di tasto e percorri entrambe le diagonali pentatoniche in salita e in discesa.\n- Le lezioni di teoria musicale si aprono direttamente nell’app.",
+    "ja-JP": "- フレット順にルート音を探し、ペンタトニックスケールを2つの斜めのパターンで往復練習できます。\n- 音楽理論のレッスンがアプリ内で開くようになりました。",
+    "ko-KR": "- 프렛 순서대로 근음을 찾고 두 가지 펜타토닉 대각선 패턴을 각각 오르내리며 연습하세요.\n- 음악 이론 수업이 앱 안에서 바로 열립니다.",
+    "zh-CN": "- 按品位顺序寻找根音，沿五声音阶的两条对角线分别进行上行和下行练习。\n- 乐理课程现在可直接在应用内打开。",
+    "pt-BR": "- Encontre as fundamentais na ordem das casas e percorra as duas diagonais da pentatônica na ida e na volta.\n- As lições de teoria musical abrem diretamente no app.",
+    "hi-IN": "- फ्रेट के क्रम में मूल स्वर खोजें और पेंटाटोनिक स्केल के दोनों तिरछे पैटर्न में ऊपर और नीचे बजाएँ।\n- संगीत सिद्धांत के पाठ अब सीधे ऐप में खुलते हैं।",
+    "id": "- Temukan nada dasar sesuai urutan fret dan mainkan kedua pola diagonal pentatonik naik dan turun.\n- Pelajaran teori musik kini terbuka langsung di aplikasi.",
+    "ar": "- اعثر على النغمات الأساسية حسب ترتيب مواضع الدساتين، وتدرّب على المسارين القطريين للسلم الخماسي صعودًا وهبوطًا.\n- تفتح دروس النظرية الموسيقية الآن داخل التطبيق مباشرة.",
+    "bn-BD": "- ফ্রেটের ক্রমে মূল স্বর খুঁজুন এবং পেন্টাটোনিক স্কেলের দুটি তির্যক পথে ওঠা-নামা করে বাজান।\n- সংগীততত্ত্বের পাঠ এখন সরাসরি অ্যাপে খোলে।",
+    "ru-RU": "- Находите основные тоны по порядку ладов и играйте обе диагонали пентатоники вверх и вниз.\n- Уроки теории музыки теперь открываются прямо в приложении."
+  },
+  "bass-4": {
+    "en-US": "- Find root notes in fret order and practise both pentatonic diagonals on the way up and back down.\n- Music theory lessons now open inside the app.\n- On bass, finish the routine with arpeggios after triads.",
+    "fr-FR": "- Repérez les fondamentales dans l’ordre des cases et jouez chacune des deux diagonales pentatoniques en aller-retour.\n- Les leçons de théorie musicale s’ouvrent directement dans l’app.\n- À la basse, terminez la routine par les arpèges après les triades.",
+    "es-ES": "- Localiza las fundamentales por orden de traste y recorre las dos diagonales pentatónicas de ida y vuelta.\n- Las lecciones de teoría musical se abren en la propia aplicación.\n- En el bajo, termina la rutina con arpegios después de las tríadas.",
+    "de-DE": "- Finde die Grundtöne in Bundreihenfolge und spiele beide Pentatonik-Diagonalen auf- und abwärts.\n- Die Musiktheorie-Lektionen öffnen sich direkt in der App.\n- Am Bass beendest du die Routine nach den Dreiklängen mit Arpeggios.",
+    "it-IT": "- Trova le fondamentali in ordine di tasto e percorri entrambe le diagonali pentatoniche in salita e in discesa.\n- Le lezioni di teoria musicale si aprono direttamente nell’app.\n- Al basso, chiudi la routine con gli arpeggi dopo le triadi.",
+    "ja-JP": "- フレット順にルート音を探し、ペンタトニックスケールを2つの斜めのパターンで往復練習できます。\n- 音楽理論のレッスンがアプリ内で開くようになりました。\n- ベースのルーティンは、トライアドに続くアルペジオで締めくくります。",
+    "ko-KR": "- 프렛 순서대로 근음을 찾고 두 가지 펜타토닉 대각선 패턴을 각각 오르내리며 연습하세요.\n- 음악 이론 수업이 앱 안에서 바로 열립니다.\n- 베이스 루틴은 트라이어드 다음에 아르페지오로 마무리합니다.",
+    "zh-CN": "- 按品位顺序寻找根音，沿五声音阶的两条对角线分别进行上行和下行练习。\n- 乐理课程现在可直接在应用内打开。\n- 贝斯练习在三和弦之后以琶音收尾。",
+    "pt-BR": "- Encontre as fundamentais na ordem das casas e percorra as duas diagonais da pentatônica na ida e na volta.\n- As lições de teoria musical abrem diretamente no app.\n- No baixo, termine a rotina com arpejos depois das tríades.",
+    "hi-IN": "- फ्रेट के क्रम में मूल स्वर खोजें और पेंटाटोनिक स्केल के दोनों तिरछे पैटर्न में ऊपर और नीचे बजाएँ।\n- संगीत सिद्धांत के पाठ अब सीधे ऐप में खुलते हैं।\n- बास की दिनचर्या में ट्रायड के बाद आर्पेजियो बजाकर अभ्यास पूरा करें।",
+    "id": "- Temukan nada dasar sesuai urutan fret dan mainkan kedua pola diagonal pentatonik naik dan turun.\n- Pelajaran teori musik kini terbuka langsung di aplikasi.\n- Pada bas, akhiri latihan dengan arpeggio setelah triad.",
+    "ar": "- اعثر على النغمات الأساسية حسب ترتيب مواضع الدساتين، وتدرّب على المسارين القطريين للسلم الخماسي صعودًا وهبوطًا.\n- تفتح دروس النظرية الموسيقية الآن داخل التطبيق مباشرة.\n- على الباص، اختتم التمرين بالعزف المتتابع لنغمات التآلف بعد التآلفات الثلاثية.",
+    "bn-BD": "- ফ্রেটের ক্রমে মূল স্বর খুঁজুন এবং পেন্টাটোনিক স্কেলের দুটি তির্যক পথে ওঠা-নামা করে বাজান।\n- সংগীততত্ত্বের পাঠ এখন সরাসরি অ্যাপে খোলে।\n- বেসে ট্রায়াডের পর আর্পেজিও বাজিয়ে অনুশীলন শেষ করুন।",
+    "ru-RU": "- Находите основные тоны по порядку ладов и играйте обе диагонали пентатоники вверх и вниз.\n- Уроки теории музыки теперь открываются прямо в приложении.\n- На басу завершайте занятие арпеджио после трезвучий."
+  }
+}

@@ -463,9 +463,10 @@ The repository workflow policy is in [AGENTS.md](../AGENTS.md).
 
 Open **Actions → Generate Android App → Run workflow** and enter the build settings.
 
-- `instrument`: **guitar** (default), **bass-4** (bass), **ukulele** or **all**.
-- `version_code`: an integer higher than the last Play upload for every selected app.
-- `version_name`: the public version, for example **1.1.0**.
+- `instrument`: **all** (default), **guitar**, **bass-4** (bass) or **ukulele**.
+- `publish`: **production** (default), **internal** or **build-only**.
+- `version_code`: optional. Defaults to the previous highest Android build code plus one.
+- `version_name`: optional. Derived from the code, e.g. **11 → 1.1.1**.
 
 Choosing one instrument compiles only that application. Choosing **all** builds
 the three applications sequentially in the same job. There is no extra Preview
@@ -476,12 +477,12 @@ build or separate mapping build. The existing four repository secrets are reused
 - `ANDROID_KEY_ALIAS`
 - `ANDROID_KEY_PASSWORD`
 
-The run title shows the instrument, version name and version code. Each run
+The run title shows explicit inputs or `auto`. The Build job title shows the resolved values. Each run
 uploads the AABs and their matching `*-mapping.txt` files as
 `fretboard-hero-android-<instrument>-<version_name>-<version_code>`.
 Runs on `main` also update the rolling `android` GitHub release. Download the run
 artifact to get the exact files generated for that selection and version.
-No upload to Google Play is performed automatically.
+The run also archives localized release notes for each app. Production and internal runs submit the bundles and these notes to Play.
 
 References: [Android command-line builds](https://developer.android.com/build/building-cmdline),
 [app versioning](https://developer.android.com/studio/publish/versioning),

@@ -1,5 +1,5 @@
 name: Generate Android App
-run-name: "Generate Android App · ${{ inputs.instrument }} · versionName ${{ inputs.version_name }} · versionCode ${{ inputs.version_code }} · ${{ inputs.publish }}"
+run-name: "Generate Android App · ${{ inputs.instrument }} · versionName ${{ inputs.version_name || 'auto' }} · versionCode ${{ inputs.version_code || 'auto' }} · ${{ inputs.publish }}"
 
 on:
   workflow_dispatch:
@@ -7,23 +7,22 @@ on:
       instrument:
         description: "Instrument (bass-4 = bass; all = all three applications)"
         required: true
-        default: guitar
+        default: all
         type: choice
         options: [guitar, bass-4, ukulele, all]
       publish:
         description: "Google Play destination (build-only keeps the signed downloads)"
         type: choice
         required: true
-        default: build-only
+        default: production
         options: [build-only, internal, production]
       version_code:
-        description: "Android versionCode (integer, higher than the last Play upload)"
-        required: true
+        description: "Android versionCode (blank = next build code)"
+        required: false
         type: string
       version_name:
-        description: "Public version name (e.g. 1.1.0)"
-        required: true
-        default: "1.0.0"
+        description: "Public version name (blank = derived from versionCode)"
+        required: false
         type: string
 
 # Avoid overlapping updates to the rolling Android release.
@@ -35,50 +34,38 @@ env:
   POWERSHELL_TELEMETRY_OPTOUT: 'true'
   DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
 jobs:
-  build:
-    runs-on: windows-latest
-    outputs:
-      play-matrix: ${{ steps.release-notes.outputs.matrix }}
+  version:
+    runs-on: ubuntu-latest
     permissions:
-      contents: write
+      actions: read
+      contents: read
+    outputs:
+      code: ${{ steps.resolve.outputs.code }}
+      name: ${{ steps.resolve.outputs.name }}
+      matrix: ${{ steps.resolve.outputs.matrix }}
+      history: ${{ steps.resolve.outputs.history }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Validate build inputs
-        shell: pwsh
+      - uses: actions/checkout@v7
+      - id: resolve
         env:
+          GH_TOKEN: ${{ github.token }}
           VERSION_CODE: ${{ inputs.version_code }}
           VERSION_NAME: ${{ inputs.version_name }}
           BUILD_INSTRUMENT: ${{ inputs.instrument }}
-        run: |
-          if ($env:BUILD_INSTRUMENT -notin @('guitar', 'bass-4', 'ukulele', 'all')) {
-            throw "instrument must be guitar, bass-4, ukulele or all"
-          }
-          if ($env:VERSION_CODE -notmatch '^[1-9][0-9]{0,9}$' -or [long]$env:VERSION_CODE -gt 2100000000) {
-            throw "version_code must be an integer between 1 and 2100000000"
-          }
-          if ($env:VERSION_NAME -notmatch '^[0-9]+\.[0-9]+(\.[0-9]+)?([.-][A-Za-z0-9]+)*$') {
-            throw "version_name must look like 1.0 or 1.0.0"
-          }
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Validate Play destination and localized release notes
-        id: release-notes
-        if: inputs.publish != 'build-only'
-        shell: pwsh
-        env:
           PLAY_TRACK: ${{ inputs.publish }}
-          VERSION_NAME: ${{ inputs.version_name }}
-          BUILD_INSTRUMENT: ${{ inputs.instrument }}
-        run: |
-          if ($env:GITHUB_REF -ne 'refs/heads/main') { throw 'Select main to publish to Google Play.' }
-          if ($env:PLAY_TRACK -notin @('internal', 'production')) { throw 'Invalid Play track.' }
-          node scripts/google-play/notes.cjs
+        run: node scripts/google-play/version.cjs
+
+  build:
+    name: "Build ${{ inputs.instrument }} · versionName ${{ needs.version.outputs.name }} · versionCode ${{ needs.version.outputs.code }}"
+    needs: version
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
       - name: Set up JDK 21
         uses: actions/setup-java@v6
@@ -146,8 +133,8 @@ jobs:
       - name: Build selected applications (release, signed)
         shell: pwsh
         env:
-          VERSION_CODE: ${{ inputs.version_code }}
-          VERSION_NAME: ${{ inputs.version_name }}
+          VERSION_CODE: ${{ needs.version.outputs.code }}
+          VERSION_NAME: ${{ needs.version.outputs.name }}
           BUILD_INSTRUMENT: ${{ inputs.instrument }}
         run: |
           $buildOptions = @{
@@ -171,11 +158,12 @@ jobs:
       - name: Upload signed bundles and R8 mappings
         uses: actions/upload-artifact@v7
         with:
-          name: fretboard-hero-android-${{ inputs.instrument }}-${{ inputs.version_name }}-${{ inputs.version_code }}
+          name: fretboard-hero-android-${{ inputs.instrument }}-${{ needs.version.outputs.name }}-${{ needs.version.outputs.code }}
           path: |
             dist/*.aab
             dist/*-mapping.txt
           if-no-files-found: error
+          overwrite: true
 
       - name: Publish rolling GitHub Release
         if: github.ref == 'refs/heads/main'
@@ -185,7 +173,7 @@ jobs:
           name: "Android App Bundles"
           body: |
             Signed Android App Bundles built from commit ${{ github.sha }}.
-            Version ${{ inputs.version_name }} (code ${{ inputs.version_code }}).
+            Version ${{ needs.version.outputs.name }} (code ${{ needs.version.outputs.code }}).
             Instrument selection: ${{ inputs.instrument }} (all = Guitar, Bass and Ukulele).
             For the exact files produced by this run, download its build artifact.
             Each application starts in demo; one purchase unlocks all instruments within the purchased application.
@@ -195,21 +183,21 @@ jobs:
             dist/*.aab
             dist/*-mapping.txt
 
-  publish-play:
-    name: "Play · ${{ matrix.instrument }} · ${{ inputs.publish }}"
-    needs: build
-    if: inputs.publish != 'build-only' && github.ref == 'refs/heads/main'
+  distribution:
+    name: "Notes & Play · ${{ matrix.instrument }} · ${{ inputs.publish }}"
+    needs: [version, build]
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.build.outputs.play-matrix) }}
+      matrix: ${{ fromJSON(needs.version.outputs.matrix) }}
     runs-on: ubuntu-latest
-    environment: ${{ matrix.environment }}
+    environment: ${{ github.ref == 'refs/heads/main' && matrix.environment || 'android-build-only' }}
     permissions:
       contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v7
         with:
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
@@ -217,16 +205,22 @@ jobs:
       - name: Download the signed bundles from this run
         uses: actions/download-artifact@v7
         with:
-          name: fretboard-hero-android-${{ inputs.instrument }}-${{ inputs.version_name }}-${{ inputs.version_code }}
+          name: fretboard-hero-android-${{ inputs.instrument }}-${{ needs.version.outputs.name }}-${{ needs.version.outputs.code }}
           path: dist
       - name: Check Google Play configuration
+        id: play-config
+        if: github.ref == 'refs/heads/main'
         env:
+          PLAY_TRACK: ${{ inputs.publish }}
           PROVIDER: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           SERVICE_ACCOUNT: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
         run: |
+          if [[ "$PLAY_TRACK" == build-only && ( -z "$PROVIDER" || -z "$SERVICE_ACCOUNT" ) ]]; then exit 0; fi
           : "${PROVIDER:?Set the GCP_WORKLOAD_IDENTITY_PROVIDER Actions secret}"
           : "${SERVICE_ACCOUNT:?Set the GOOGLE_PLAY_SERVICE_ACCOUNT Actions secret}"
+          echo "ready=true" >> "$GITHUB_OUTPUT"
       - name: Authenticate to Google Play
+        if: steps.play-config.outputs.ready == 'true'
         id: google
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
         with:
@@ -236,11 +230,26 @@ jobs:
           access_token_scopes: https://www.googleapis.com/auth/androidpublisher
           create_credentials_file: false
           export_environment_variables: false
+      - name: Prepare the release notes for the signed build
+        env:
+          PLAY_ACCESS_TOKEN: ${{ steps.google.outputs.access_token }}
+          BUILD_HISTORY: ${{ needs.version.outputs.history }}
+          BUILD_INSTRUMENT: ${{ matrix.instrument }}
+          VERSION_NAME: ${{ needs.version.outputs.name }}
+          VERSION_CODE: ${{ needs.version.outputs.code }}
+        run: node scripts/google-play/prepare-notes.cjs
+      - name: Upload localized release notes
+        uses: actions/upload-artifact@v7
+        with:
+          name: play-notes-${{ matrix.instrument }}-${{ needs.version.outputs.name }}-${{ needs.version.outputs.code }}-attempt-${{ github.run_attempt }}
+          path: dist/release-notes/*.json
+          if-no-files-found: error
       - name: Submit release and read Google Play status
+        if: inputs.publish != 'build-only'
         env:
           PLAY_ACCESS_TOKEN: ${{ steps.google.outputs.access_token }}
           BUILD_INSTRUMENT: ${{ matrix.instrument }}
           PLAY_TRACK: ${{ inputs.publish }}
-          VERSION_NAME: ${{ inputs.version_name }}
-          VERSION_CODE: ${{ inputs.version_code }}
+          VERSION_NAME: ${{ needs.version.outputs.name }}
+          VERSION_CODE: ${{ needs.version.outputs.code }}
         run: node scripts/google-play/publish.cjs
