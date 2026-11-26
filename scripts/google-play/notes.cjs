@@ -32,11 +32,4 @@ function readNotes(version, selection, directory = notesDir) {
   return applications;
 }
 
-if (require.main === module) {
-  const apps = readNotes(process.env.VERSION_NAME, process.env.BUILD_INSTRUMENT);
-  const include = Object.keys(apps).map(instrument => ({ instrument, environment: 'google-play-' + instruments[instrument].iconKey }));
-  fs.appendFileSync(process.env.GITHUB_OUTPUT, 'matrix=' + JSON.stringify({ include }) + '\n');
-  console.log('Validated ' + locales.length + ' release notes per application: ' + Object.keys(apps).join(', '));
-}
-
-module.exports = { readNotes };
+module.exports = { readNotes, locales, notesDir };

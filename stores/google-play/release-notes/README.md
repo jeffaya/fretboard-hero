@@ -1,16 +1,22 @@
 # Publier une mise à jour Android
 
-Dans **Actions → Generate Android App → Run workflow**, choisir la branche `main`, l’instrument (`all` pour les trois), le nom public de la version, son code Android et la destination. Utiliser un code supérieur au dernier code envoyé pour chaque application, sauf pour reprendre ou promouvoir exactement la même version.
+Dans **Actions → Generate Android App → Run workflow**, la sélection initiale est `all` et `production`. Lancer sur `main` construit puis soumet les trois applications. Choisir `build-only` pour télécharger uniquement les fichiers.
+
+Laisser les deux champs de version vides pour utiliser le plus grand code des builds Android terminés sur `main`, plus un, y compris si une publication ultérieure a échoué. Le nom public sépare les deux derniers chiffres en version mineure et correctif, avec une version majeure implicite de 1 pour les codes sous 100. Exemples : 10 → 1.1.0, 11 → 1.1.1, 20 → 1.2.0, 131 → 1.3.1. Les champs restent modifiables, notamment pour promouvoir le même build signé ou après un envoi manuel avec un code supérieur. Le nom du job **Build**, l’artefact et le résumé donnent les valeurs calculées.
 
 | Destination | Résultat |
 | --- | --- |
-| `build-only` (par défaut) | Génère les AAB signés et les fichiers de mapping téléchargeables. |
+| `build-only` | Génère les AAB signés et les fichiers de mapping téléchargeables. |
 | `internal` | Envoie chaque AAB et ses notes sur la piste de test interne. |
-| `production` | Soumet chaque mise à jour pour examen en vue d’un déploiement à 100 %. En publication standard, Google publie après approbation. En publication gérée, terminer dans la Play Console. |
+| `production` (par défaut) | Soumet chaque mise à jour pour examen en vue d’un déploiement à 100 %. En publication standard, Google publie après approbation. En publication gérée, terminer dans la Play Console. |
 
 ## Préparer les notes
 
-Ajouter dans ce dossier un fichier nommé exactement `<version_name>.json` avant de lancer la publication. [1.1.0.json](1.1.0.json) est la fiche pour la version 1.1.0. Le bloc `common` associe chaque langue Google Play à la note destinée aux utilisateurs. Pour adapter une traduction à un instrument, ajouter au même niveau un objet `guitar`, `bass-4` ou `ukulele` avec les langues concernées. Les autres langues héritent de `common`. Les 14 notes de chaque application sélectionnée sont vérifiées avant le build, avec un maximum de 500 caractères Unicode par langue. Le mode `build-only` accepte aussi les versions sans fichier de notes.
+Chaque instrument reçoit un artefact `play-notes-…` avec le JSON des 14 langues. Le job de publication lit exactement ce fichier. Le résumé de l’exécution affiche le texte français.
+
+Un fichier relu nommé `<version_name>.json` dans ce dossier est prioritaire. Les notes de [1.1.1](1.1.1.json) décrivent le changement de routine et les leçons intégrées, avec une précision sur les arpèges pour la basse. Le bloc `common` fournit le texte partagé. Un objet `guitar`, `bass-4` ou `ukulele` permet de remplacer certaines traductions.
+
+Pour une version sans fichier, le build identifie le dernier code effectivement publié en production pour chaque application et retrouve son commit dans l’historique des builds. Les notes listent dans la langue du lecteur les parties de l’application modifiées depuis ce commit. Si aucune fonctionnalité reconnue n’a changé, elles annoncent simplement la version. Sur une branche de prévisualisation ou en build seul sans accès Play, le point de comparaison est le dernier build de l’instrument sur `main`. Si une publication Play ne correspond à aucun commit identifiable, fournir une note relue pour cette version. Les 14 traductions doivent comporter de 1 à 500 caractères chacune.
 
 ## Configuration groupée avec Cloud Shell
 

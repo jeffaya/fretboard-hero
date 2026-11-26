@@ -1,0 +1,58 @@
+{
+  "en-US": {
+    "updated": "Updated in {version}",
+    "release": "Fretboard Hero {version} is available."
+  },
+  "fr-FR": {
+    "updated": "Mis à jour dans la version {version}",
+    "release": "Fretboard Hero {version} est disponible."
+  },
+  "es-ES": {
+    "updated": "Cambios en la versión {version}",
+    "release": "Ya está disponible Fretboard Hero {version}."
+  },
+  "de-DE": {
+    "updated": "Änderungen in Version {version}",
+    "release": "Fretboard Hero {version} ist verfügbar."
+  },
+  "it-IT": {
+    "updated": "Novità della versione {version}",
+    "release": "È disponibile Fretboard Hero {version}."
+  },
+  "ja-JP": {
+    "updated": "バージョン{version}の更新項目",
+    "release": "Fretboard Hero {version} をリリースしました。"
+  },
+  "ko-KR": {
+    "updated": "{version}에서 업데이트된 항목",
+    "release": "Fretboard Hero {version} 버전이 출시되었습니다."
+  },
+  "zh-CN": {
+    "updated": "{version} 版更新内容",
+    "release": "Fretboard Hero {version} 现已推出。"
+  },
+  "pt-BR": {
+    "updated": "Mudanças na versão {version}",
+    "release": "O Fretboard Hero {version} já está disponível."
+  },
+  "hi-IN": {
+    "updated": "संस्करण {version} में बदलाव",
+    "release": "Fretboard Hero {version} उपलब्ध है।"
+  },
+  "id": {
+    "updated": "Perubahan pada versi {version}",
+    "release": "Fretboard Hero {version} kini tersedia."
+  },
+  "ar": {
+    "updated": "التغييرات في الإصدار {version}",
+    "release": "يتوفر الآن الإصدار {version} من Fretboard Hero."
+  },
+  "bn-BD": {
+    "updated": "{version} সংস্করণে পরিবর্তন",
+    "release": "Fretboard Hero {version} এখন উপলব্ধ।"
+  },
+  "ru-RU": {
+    "updated": "Изменения в версии {version}",
+    "release": "Доступна версия Fretboard Hero {version}."
+  }
+}

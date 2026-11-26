@@ -35,14 +35,18 @@ function playClient(token) {
   };
 }
 
+function releaseName(sha, version, code) {
+  // Keep the Play Console label short even for long prerelease version names.
+  const buildId = createHash('sha256').update([sha, version, code].join('/')).digest('hex').slice(0, 20);
+  return (version + ' (' + code + ')').slice(0, 28) + ' @' + buildId;
+}
+
 async function publish({ appId, track, version, code, sha, bundle, notes, request, wait = delay }) {
   if (!['internal', 'production'].includes(track)) throw Error('Expected an internal or production track');
   if (!/^[1-9]\d*$/.test(code) || Number(code) > 2100000000) throw Error('Invalid version code');
   if (!/^[0-9a-f]{40}$/.test(sha)) throw Error('Missing build commit');
   const base = prefix + encodeURIComponent(appId);
-  // Keep the Play Console label short even for long prerelease version names.
-  const buildId = createHash('sha256').update([sha, version, code].join('/')).digest('hex').slice(0, 20);
-  const name = (version + ' (' + code + ')').slice(0, 28) + ' @' + buildId;
+  const name = releaseName(sha, version, code);
   const digest = createHash('sha256').update(bundle).digest('hex');
   const hasCode = release => release.versionCodes?.some(c => String(c) === code);
   const matchesBundle = item => String(item?.versionCode) === code && item.sha256 === digest;
@@ -125,7 +129,7 @@ async function main() {
   const instrument = env.BUILD_INSTRUMENT;
   if (!Object.hasOwn(instruments, instrument)) throw Error('Select one instrument to publish');
   const appId = instruments[instrument].appId;
-  const notes = readNotes(env.VERSION_NAME, instrument)[instrument];
+  const notes = readNotes(env.VERSION_NAME, instrument, path.join('dist', 'release-notes'))[instrument];
   let result;
   try {
     if (!env.PLAY_ACCESS_TOKEN) throw Error('Missing Google Play access token');
@@ -146,4 +150,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(e => { console.error(e.message); process.exitCode = 1; });
-module.exports = { publish };
+module.exports = { publish, playClient, releaseName };
