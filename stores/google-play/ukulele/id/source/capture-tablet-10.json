@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "7c59a31d6ce089834b130a7aa4af761d2dbbaca3",
+  "locale": "id",
+  "instrument": "ukulele",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "tablet-10",
+      "width": 1600,
+      "height": 900,
+      "dpr": 1.6,
+      "touch": true,
+      "folder": "tablet-10",
+      "outputs": [
+        {
+          "file": "tablet-10/01-routine-2560x1440.jpg",
+          "language": {
+            "html": "id",
+            "app": "id"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "LATIHAN HARIAN",
+          "mic": "Mikrofon mati",
+          "visibleText": "←\nLATIHAN HARIAN\nLa\nMINOR\nTuner\nNada dasar\nTangga nada\nTriad\nAkor\nPenta\nMainkan tangga nada La minor\n\nSatu oktaf · Fret 9–12 · Naik\n\nMulai dari La, naik satu oktaf, lalu kembali ke nada dasar.\n\nMikrofon mati\n\nSol\nDo\nMi\nLa\nLa\n1\n9\nSi\n2\n11\nDo\n♭3\n12\nRe\n4\n10\nMi\n5\n9\nFa\n♭6\n10\nSol\n♭7\n12\nLa\n1\n12\n\nSian = nada dasar · Angka di atas = derajat · 1 = nada dasar\n\nKembali →",
+          "sizeBytes": 291472
+        },
+        {
+          "file": "tablet-10/02-triads-2560x1440.jpg",
+          "language": {
+            "html": "id",
+            "app": "id"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "LATIHAN HARIAN",
+          "mic": "Mikrofon mati",
+          "visibleText": "←\nLATIHAN HARIAN\nLa\nMINOR\nTuner\nNada dasar\nTangga nada\nTriad\nAkor\nPenta\nHubungkan triad La minor\n\nMainkan setiap triad bersamaan, lalu satu nada demi satu.\n\nMikrofon mati\n\nSol\nDo\nMi\nLa\nInversi kedua\n4\n5\n3\nPosisi dasar\n9\n8\n7\nInversi pertama\n12\n12\n12\n\nSian = nada dasar\n\nBerikutnya →",
+          "sizeBytes": 282015
+        },
+        {
+          "file": "tablet-10/03-pentatonic-2560x1440.jpg",
+          "language": {
+            "html": "id",
+            "app": "id"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "learn",
+          "title": "La MINORPENTATONIK",
+          "mic": "Mikrofon mati",
+          "visibleText": "←\nLa MINOR\nPENTATONIK\nLa\nNADA DASAR\nMAYOR\nMINOR\nMODE\nPENTATONIK\nTRIAD\nAKOR\nARPEGGIO\nPOSISI\nSEMUA\n1\n2\n3\n4\n5\n12 fret\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\nP1\nP2\nP3\nP4\nP5\nP1\nP2\nP3\nSol\nLa\nDo\nRe\nMi\nSol\nLa\nDo\nDo\nRe\nMi\nSol\nLa\nDo\nRe\nMi\nMi\nSol\nLa\nDo\nRe\nMi\nSol\nLa\nLa\nDo\nRe\nMi\nSol\nLa\nDo\nRe\nSemua posisi terhubung ditampilkan. Pilih satu untuk melihatnya sendiri.\nLa\nNada dasar\nDo\nTerts\nRe\nKuart\nMi\nKuint\nSol\nSeptim",
+          "sizeBytes": 618024
+        },
+        {
+          "file": "tablet-10/04-feedback-2560x1440.jpg",
+          "language": {
+            "html": "id",
+            "app": "id"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "LATIHAN HARIAN",
+          "mic": "Mendengarkan…",
+          "visibleText": "←\nLATIHAN HARIAN\nLa\nMINOR\nTuner\nNada dasar\nTangga nada\nTriad\nAkor\nPenta\nTemukan nada dasar La\n\nMainkan nada yang disorot.\n\nMendengarkan…\n\n2 / 6\nSol\nDo\nMi\nLa\n2\n14\n9\n5\n0\n12\n\nSorotan = target · Hijau = sudah dimainkan\n\nBerikutnya →",
+          "sizeBytes": 277298
+        },
+        {
+          "file": "tablet-10/05-quiz-2560x1440.jpg",
+          "language": {
+            "html": "id",
+            "app": "id"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "quiz",
+          "title": "KUIS FRETBOARDKENALI FRETBOARD • KUASAI FRETBOARD",
+          "mic": "Mikrofon mati",
+          "visibleText": "←\nKUIS FRETBOARD\nKENALI FRETBOARD • KUASAI FRETBOARD\nSKOR\n1.650\n+800\nBERUNTUN\n×5\nPERINGKAT\n🎸 PEMAIN KONSER\nSISA WAKTU\n54.4s\nLa# MINOR\n\nTemukan TERTS MINOR\n\nFret 0–5 • Ketuk posisi yang benar.\n0\n1\n2\n3\n4\n5\nSol\nDo\nMi\nLa",
+          "sizeBytes": 442587
+        },
+        {
+          "file": "tablet-10/06-tuner-2560x1440.jpg",
+          "language": {
+            "html": "id",
+            "app": "id"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "home",
+          "title": "Berlatih",
+          "mic": "Mikrofon mati",
+          "visibleText": "Tuner · Ukulele\nOtomatis\nLa\n440.1 Hz · +1 cents\n−50\n0\n+50\n\nSudah selaras\n\nSol\nDo\nMi\nLa\nMikrofon\n\nAudio tetap di perangkat Anda. Tidak ada yang direkam.",
+          "sizeBytes": 159349
+        },
+        {
+          "file": "tablet-10/07-map-2560x1440.jpg",
+          "language": {
+            "html": "id",
+            "app": "id"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "fretmap",
+          "title": "PETA FRETBOARDSETIAP NADA • SATU FRETBOARD",
+          "mic": "Mikrofon mati",
+          "visibleText": "←\nPETA FRETBOARD\nSETIAP NADA • SATU FRETBOARD\nNADA\nSEMUA\nLa\nLa#\nSi\nDo\nDo#\nRe\nRe#\nMi\nFa\nFa#\nSol\nSol#\nFRETBOARD\n12 fret\n15 fret\n17 fret\n21 fret\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRe\nRe#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo\nDo#\nRe\nRe#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRe\nRe#\nMi\nFa\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRe\nRe#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa\nLa#\nSi\nDo\nDo#\nRe\nRe#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRe",
+          "sizeBytes": 645990
+        },
+        {
+          "file": "tablet-10/08-circle-2560x1440.jpg",
+          "language": {
+            "html": "id",
+            "app": "id"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "circle",
+          "title": "LINGKARAN KUINTNADA DASAR • AKOR • HARMONI",
+          "mic": "Mikrofon mati",
+          "visibleText": "←\nLINGKARAN KUINT\nNADA DASAR • AKOR • HARMONI\nIV\nii\nI\nvi\nV\niii\nvii°\nDo\nLam\nSi°\nSol\nMim\nFa♯°\nRe\nSim\nDo♯°\nLa\nFa♯m\nSol♯°\nMi\nDo♯m\nRe♯°\nSi\nSol♯m\nLa♯°\nFa♯\nRe♯m\nMi♯°\nRe♭\nSi♭m\nDo°\nLa♭\nFam\nSol°\nMi♭\nDom\nRe°\nSi♭\nSolm\nLa°\nFa\nRem\nMi°\nLINGKARAN KUINT\nSol\nMim · Minor relatif\n←\n\nGeser untuk memutar · Kuart ← → Kuint\n\n→\nAKOR DIATONIK · JENDELA TETAP\nSol MAYOR\nMinor relatif • Mim\n\n1 kres • Fa♯\n\nArea yang disorot menampilkan tujuh akor dalam nada dasar ini. Huruf besar berarti mayor, kecil berarti minor, dan ° berarti diminished.\n\nPROGRESI UMUM\nI\nSol\n→\nV\nRe\n→\nvi\nMim\n→\nIV\nDo\nI\nSol\n→\nIV\nDo\n→\nV\nRe\n→\nI\nSol\nvi\nMim\n→\nIV\nDo\n→\nI\nSol\n→\nV\nRe\n\nBaca derajat di atas akor. Putar lingkaran untuk mentransposisi semua progresi.",
+          "sizeBytes": 336220
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

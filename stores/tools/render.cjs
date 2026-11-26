@@ -3,9 +3,9 @@ const path=require('node:path');
 const {pathToFileURL}=require('node:url');
 const {chromium}=require('playwright');
 const sharp=require('sharp');
-const { out, locale }=require('./listing.cjs');
+const { out, locale, instrument }=require('./listing.cjs');
 if(fs.existsSync(path.join(out,'source/copy.json'))){
-  require('node:child_process').execFileSync('python3',[path.join(__dirname,'render-localized-guitar.py'),locale],{stdio:'inherit'});
+  require('node:child_process').execFileSync('python3',[path.join(__dirname,'localized_visuals.py'),instrument,locale],{stdio:'inherit'});
   return;
 }
 const ids=['01-routine','02-triads','03-pentatonic','04-feedback','05-quiz','06-tuner','07-map','08-circle'];

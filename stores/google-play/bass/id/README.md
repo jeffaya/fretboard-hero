@@ -55,14 +55,12 @@ Untuk pemain bas yang ingin mengenali nada, menghubungkan pola, dan berlatih leb
 
 ## Textes alternatifs
 
-[alt-text.json](alt-text.json) contient dix propositions en **Bahasa Indonesia** : icône, image de présentation et huit thèmes de captures. Les clés correspondent au format de la fiche guitare. Ces textes sont préparatoires : vérifier chacun face au visuel final avant de l’utiliser. Chaque valeur est limitée à 140 caractères.
+[alt-text.json](alt-text.json) contient les descriptions localisées de l’icône, de la bannière et des huit scènes.
 
 ## Visuels et validation
 
-Cette fiche complète les textes uniquement. Les visuels localisés restent à préparer. L’image de présentation anglaise existante reste dans `../en-US/icon/` et ne constitue pas une image traduite. Aucun visuel n’est créé ou modifié avec ces textes.
+[Aperçu des huit visuels téléphone](overview-phone.jpg) · [Bannière](icon/feature-graphic-1024x500.png) · [Rapport de validation](validation.json)
 
-Le [guide Google Play](../../README.md) décrit les formats communs. Les rubriques françaises de ce README assurent la compatibilité avec le validateur du dépôt ; elles ne font pas partie du texte public. Les compteurs portent sur les points de code Unicode, espaces et sauts de ligne compris.
+Les huit scènes sont disponibles pour téléphone, tablettes 7 et 10 pouces et ordinateur. Les exports Android XR sont des brouillons 2D à vérifier sur casque. Les [accroches localisées](source/copy.json) accompagnent les captures de l’application.
 
-Ne générer le rapport complet `validation.json` qu’après l’ajout des visuels : la vérification des textes ne certifie pas les images absentes.
-
-[Retour aux 11 langues de la fiche basse](../README.md).
+[Guide Google Play](../../README.md) · [Autres langues](../README.md)

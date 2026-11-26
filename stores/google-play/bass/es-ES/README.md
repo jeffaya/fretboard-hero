@@ -55,14 +55,19 @@ Para bajistas que quieren conocer las notas, conectar posiciones y practicar con
 
 ## Textes alternatifs
 
-[alt-text.json](alt-text.json) contient dix propositions en **Español** : icône, image de présentation et huit thèmes de captures. Les clés correspondent au format de la fiche guitare. Ces textes sont préparatoires : vérifier chacun face au visuel final avant de l’utiliser. Chaque valeur est limitée à 140 caractères.
+[alt-text.json](alt-text.json) contient dix propositions en **Español** : icône, image de présentation et huit thèmes de captures. Les clés correspondent au format de la fiche guitare. Chaque valeur est limitée à 140 caractères.
 
 ## Visuels et validation
 
-Cette fiche complète les textes uniquement. Les visuels localisés restent à préparer. L’image de présentation anglaise existante reste dans `../en-US/icon/` et ne constitue pas une image traduite. Aucun visuel n’est créé ou modifié avec ces textes.
+[Aperçu des huit scènes téléphone](overview-phone.jpg) · [Bannière Google Play](icon/feature-graphic-1024x500.png) · [Rapport de validation](validation.json)
 
-Le [guide Google Play](../../README.md) décrit les formats communs. Les rubriques françaises de ce README assurent la compatibilité avec le validateur du dépôt ; elles ne font pas partie du texte public. Les compteurs portent sur les points de code Unicode, espaces et sauts de ligne compris.
+Les scènes montrent Bass Fretboard Hero en accordage standard Mi–La–Ré–Sol. Les captures de la routine et de l’accordeur utilisent un signal de test. Les dossiers `phone/`, `tablet-7/`, `tablet-10/` et `desktop/` contiennent huit images chacun. Le dossier `android-xr/` reprend les vues 2D de tablette pour la revue sur casque.
 
-Ne générer le rapport complet `validation.json` qu’après l’ajout des visuels : la vérification des textes ne certifie pas les images absentes.
+Les accroches de la bannière et des cartes se trouvent dans [source/copy.json](source/copy.json). Depuis la racine du dépôt, régénérer la bannière et les cartes à partir des [captures téléphone](source/screens-phone/), puis vérifier les fichiers.
+
+```sh
+python3 stores/tools/localized_visuals.py bass es-ES
+node stores/tools/validate.cjs stores/google-play/bass/es-ES
+```
 
 [Retour aux 11 langues de la fiche basse](../README.md).

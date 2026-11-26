@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "7c59a31d6ce089834b130a7aa4af761d2dbbaca3",
+  "locale": "ja-JP",
+  "instrument": "ukulele",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "android-xr-console",
+      "width": 1600,
+      "height": 900,
+      "dpr": 1.6,
+      "touch": false,
+      "folder": "android-xr",
+      "outputs": [
+        {
+          "file": "android-xr/01-routine-2560x1440.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "毎日の練習",
+          "mic": "マイクはオフです",
+          "visibleText": "←\n毎日の練習\nラ\nマイナー\nチューナー\nルート\n音階\nトライアド\nコード\nペンタ\nラ マイナーの音階を弾こう\n\n1オクターブ · フレット 9–12 · 上行\n\nラから1オクターブ上がり、主音に戻ります。\n\nマイクはオフです\n\nソ\nド\nミ\nラ\nラ\n1\n9\nシ\n2\n11\nド\n♭3\n12\nレ\n4\n10\nミ\n5\n9\nファ\n♭6\n10\nソ\n♭7\n12\nラ\n1\n12\n\n水色＝ルート音 · 上の数字 = 度数 · 1 = 主音\n\n下行へ →",
+          "sizeBytes": 298916
+        },
+        {
+          "file": "android-xr/02-triads-2560x1440.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "毎日の練習",
+          "mic": "マイクはオフです",
+          "visibleText": "←\n毎日の練習\nラ\nマイナー\nチューナー\nルート\n音階\nトライアド\nコード\nペンタ\nラ マイナーのトライアドをつなごう\n\n各トライアドを同時に弾き、次に一音ずつ弾こう。\n\nマイクはオフです\n\nソ\nド\nミ\nラ\n第1転回形\n2\n0\n0\n第2転回形\n5\n4\n5\n基本形\n9\n9\n8\n\n水色＝ルート音\n\n次へ →",
+          "sizeBytes": 294984
+        },
+        {
+          "file": "android-xr/03-pentatonic-2560x1440.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "learn",
+          "title": "ラ マイナーペンタトニック",
+          "mic": "マイクはオフです",
+          "visibleText": "←\nラ マイナー\nペンタトニック\nラ\nキー\nメジャー\nマイナー\nモード\nペンタトニック\nトライアド\nコード\nアルペジオ\nポジション\nすべて\n1\n2\n3\n4\n5\n12フレット\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\nP1\nP2\nP3\nP4\nP5\nP1\nP2\nP3\nソ\nラ\nド\nレ\nミ\nソ\nラ\nド\nド\nレ\nミ\nソ\nラ\nド\nレ\nミ\nミ\nソ\nラ\nド\nレ\nミ\nソ\nラ\nラ\nド\nレ\nミ\nソ\nラ\nド\nレ\nつながる全ポジションを表示中。1つ選ぶと単独表示できます。\nラ\nルート\nド\n3度\nレ\n4度\nミ\n5度\nソ\n7度",
+          "sizeBytes": 620590
+        },
+        {
+          "file": "android-xr/04-feedback-2560x1440.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "毎日の練習",
+          "mic": "聴き取り中…",
+          "visibleText": "←\n毎日の練習\nラ\nマイナー\nチューナー\nルート\n音階\nトライアド\nコード\nペンタ\nルート音を見つけよう ラ\n\n強調表示された音を弾いてください。\n\n聴き取り中…\n\n2 / 6\nソ\nド\nミ\nラ\n2\n14\n9\n5\n0\n12\n\n強調表示 = 次に弾く音 · 緑 = 演奏済み\n\n次へ →",
+          "sizeBytes": 288416
+        },
+        {
+          "file": "android-xr/05-quiz-2560x1440.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "quiz",
+          "title": "指板クイズ指板を知り、使いこなそう",
+          "mic": "マイクはオフです",
+          "visibleText": "←\n指板クイズ\n指板を知り、使いこなそう\nスコア\n1,650\n+800\n連続正解\n×5\nランク\n🎸 ライブ奏者\n残り時間\n54.3s\nソ#\n\n見つけよう： ルート\n\nフレット 0–5 • 正しい位置をタップ。\n0\n1\n2\n3\n4\n5\nソ\nド\nミ\nラ",
+          "sizeBytes": 433167
+        },
+        {
+          "file": "android-xr/06-tuner-2560x1440.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "home",
+          "title": "練習する",
+          "mic": "マイクはオフです",
+          "visibleText": "チューナー · ウクレレ\n自動\nラ\n440.1 Hz · +1 cents\n−50\n0\n+50\n\n合っています\n\nソ\nド\nミ\nラ\nマイク\n\n音声は端末内で処理され、録音されません。",
+          "sizeBytes": 162190
+        },
+        {
+          "file": "android-xr/07-map-2560x1440.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "fretmap",
+          "title": "指板マップすべての音・1つの指板",
+          "mic": "マイクはオフです",
+          "visibleText": "←\n指板マップ\nすべての音・1つの指板\n音\nすべて\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\n指板\n12フレット\n15フレット\n17フレット\n21フレット\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\nソ\nソ#\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\nラ\nラ#\nシ\nド\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nミ\nファ\nファ#\nソ\nソ#\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\nラ\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\nラ\nラ#\nシ\nド\nド#\nレ",
+          "sizeBytes": 637595
+        },
+        {
+          "file": "android-xr/08-circle-2560x1440.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "circle",
+          "title": "五度圏キー・コード・ハーモニー",
+          "mic": "マイクはオフです",
+          "visibleText": "←\n五度圏\nキー・コード・ハーモニー\nIV\nii\nI\nvi\nV\niii\nvii°\nド\nラm\nシ°\nソ\nミm\nファ♯°\nレ\nシm\nド♯°\nラ\nファ♯m\nソ♯°\nミ\nド♯m\nレ♯°\nシ\nソ♯m\nラ♯°\nファ♯\nレ♯m\nミ♯°\nレ♭\nシ♭m\nド°\nラ♭\nファm\nソ°\nミ♭\nドm\nレ°\nシ♭\nソm\nラ°\nファ\nレm\nミ°\n五度圏\nソ\nミm · 平行短調\n←\n\nドラッグして回転・4度 ← → 5度\n\n→\nダイアトニックコード・固定ウィンドウ\nソ メジャー\n平行短調 • ミm\n\nシャープ1個 • ファ♯\n\n明るい枠にそのキーの7つのコードを表示します。大文字はメジャー、小文字はマイナー、°はディミニッシュです。\n\nよく使うコード進行\nI\nソ\n→\nV\nレ\n→\nvi\nミm\n→\nIV\nド\nI\nソ\n→\nIV\nド\n→\nV\nレ\n→\nI\nソ\nvi\nミm\n→\nIV\nド\n→\nI\nソ\n→\nV\nレ\n\nコードの上の度数を読みましょう。円を回すと各進行を移調できます。",
+          "sizeBytes": 334304
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

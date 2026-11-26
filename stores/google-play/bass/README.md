@@ -75,8 +75,6 @@ Les clés sont stables dans toutes les langues. Les descriptions restent génér
 
 ## État des visuels
 
-La [série anglaise](en-US/README.md) contient désormais les huit visuels téléphone, les captures tablette 7 pouces, tablette 10 pouces et ordinateur, l’icône et l’image de présentation. Les captures utilisent le profil de cet instrument, en anglais et avec quatre cordes. Les fichiers `android-xr/` restent des brouillons 2D, sans validation dans un environnement XR.
-
-Les fiches arabe, bengalie et russe contiennent les textes à copier et les descriptions des visuels à produire. Le rapport `en-US/validation.json` mesure les fichiers anglais livrés et `en-US/overview-phone.png` permet de relire les huit visuels téléphone ensemble.
+Chaque fiche localisée avec visuels contient un aperçu des huit scènes téléphone et un rapport de validation. Les dossiers `tablet-7/`, `tablet-10/` et `desktop/` contiennent les captures de l’application dans la même langue. Les fichiers `android-xr/` sont des brouillons 2D à vérifier sur casque.
 
 Voir [le guide Google Play commun](../README.md). Les images de présentation partagées se régénèrent avec `node stores/tools/export-og.cjs`.

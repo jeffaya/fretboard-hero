@@ -1,0 +1,71 @@
+{
+  "tagline": "Domina el mástil de tu ukelele",
+  "menu": [
+    [
+      "Afinador",
+      "Afina tu ukelele"
+    ],
+    [
+      "Rutina diaria",
+      "Practica con el micrófono"
+    ],
+    [
+      "Aprender",
+      "Notas, tríadas y escalas"
+    ],
+    [
+      "Mapa del mástil",
+      "Explora las cuatro cuerdas"
+    ],
+    [
+      "Círculo de quintas",
+      "Relaciona las tonalidades"
+    ],
+    [
+      "Quiz",
+      "Pon a prueba tu memoria"
+    ]
+  ],
+  "cards": [
+    [
+      "Un rato de ukelele",
+      "cada día.",
+      "Practica la escala de la menor con tablatura, notas y grados."
+    ],
+    [
+      "Tres notas,",
+      "un acorde.",
+      "Enlaza tríadas de la menor a través de las cuerdas."
+    ],
+    [
+      "Cinco posiciones,",
+      "una pentatónica.",
+      "Descubre cómo encajan los patrones de la pentatónica de la menor."
+    ],
+    [
+      "Toca una nota.",
+      "El micro te sigue.",
+      "Sigue la nota resaltada y encuentra el siguiente la en el mástil."
+    ],
+    [
+      "¿Dónde está",
+      "esa nota?",
+      "Encuentra la nota indicada antes de que se acabe el tiempo."
+    ],
+    [
+      "Afina y",
+      "empieza a tocar.",
+      "Pulsa la cuerda de la y comprueba cuándo está afinada."
+    ],
+    [
+      "Cada nota",
+      "en su sitio.",
+      "Localiza las notas en las cuatro cuerdas del ukelele."
+    ],
+    [
+      "Gira el círculo",
+      "de quintas.",
+      "Explora sol mayor, mi menor y sus acordes."
+    ]
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "7c59a31d6ce089834b130a7aa4af761d2dbbaca3",
+  "locale": "ja-JP",
+  "instrument": "bass",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "phone",
+      "width": 432,
+      "height": 768,
+      "dpr": 2.5,
+      "touch": true,
+      "folder": "source/screens-phone",
+      "outputs": [
+        {
+          "file": "source/screens-phone/01-routine-1080x1920.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "毎日の練習",
+          "mic": "マイクはオフです",
+          "visibleText": "←\n毎日の練習\n練習設定\n×\n音\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\nキー\nメジャー\nマイナー\nチューナー\nルート\n音階\nトライアド\nアルペジオ\nペンタ\nラ マイナーの音階を弾こう\n\n1オクターブ · フレット 5–8 · 上行\n\nラから1オクターブ上がり、主音に戻ります。\n\nマイクはオフです\n\nミ\nラ\nレ\nソ\nラ\n1\n5\nシ\n2\n7\nド\n♭3\n8\nレ\n4\n5\nミ\n5\n7\nファ\n♭6\n8\nソ\n♭7\n5\nラ\n1\n7\n\n水色＝ルート音 · 上の数字 = 度数 · 1 = 主音\n\n下行へ →",
+          "sizeBytes": 190163
+        },
+        {
+          "file": "source/screens-phone/02-triads-1080x1920.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "毎日の練習",
+          "mic": "マイクはオフです",
+          "visibleText": "←\n毎日の練習\n練習設定\n×\n音\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\nキー\nメジャー\nマイナー\nチューナー\nルート\n音階\nトライアド\nアルペジオ\nペンタ\nラ マイナーのトライアドをつなごう\n\n各トライアドを同時に弾き、次に一音ずつ弾こう。\n\nマイクはオフです\n\nミ\nラ\nレ\nソ\n基本形\n5\n3\n2\n第1転回形\n8\n7\n7\n第2転回形\n12\n12\n10\n\n水色＝ルート音\n\n次へ →",
+          "sizeBytes": 180979
+        },
+        {
+          "file": "source/screens-phone/03-pentatonic-1080x1920.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "learn",
+          "title": "ラ マイナーペンタトニック",
+          "mic": "マイクはオフです",
+          "visibleText": "←\nラ マイナー\nペンタトニック\n学習設定\n×\n音\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\nキー\nメジャー\nマイナー\nモード\nペンタトニック\nトライアド\nアルペジオ\nポジション\nすべて\n1\n2\n3\n4\n5\n指板\n12フレット\n15フレット\n17フレット\n21フレット\n24フレット\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nP4\nP5\nP1\nP2\nP3\nP4\nミ\nソ\nラ\nド\nレ\nミ\nラ\nド\nレ\nミ\nソ\nラ\nレ\nミ\nソ\nラ\nド\nレ\nソ\nラ\nド\nレ\nミ\nソ\nラ\nルート\nド\n3度\nレ\n4度\nミ\n5度\nソ\n7度",
+          "sizeBytes": 297248
+        },
+        {
+          "file": "source/screens-phone/04-feedback-1080x1920.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "routine",
+          "title": "毎日の練習",
+          "mic": "聴き取り中…",
+          "visibleText": "←\n毎日の練習\n練習設定\n×\n音\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\nキー\nメジャー\nマイナー\nチューナー\nルート\n音階\nトライアド\nアルペジオ\nペンタ\nルート音を見つけよう ラ\n\n強調表示された音を弾いてください。\n\n聴き取り中…\n\n2 / 6\nミ\nラ\nレ\nソ\n5\n0\n12\n7\n2\n14\n\n強調表示 = 次に弾く音 · 緑 = 演奏済み\n\n次へ →",
+          "sizeBytes": 176594
+        },
+        {
+          "file": "source/screens-phone/05-quiz-1080x1920.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "quiz",
+          "title": "指板クイズ指板を知り、使いこなそう",
+          "mic": "マイクはオフです",
+          "visibleText": "←\n指板クイズ\n指板を知り、使いこなそう\nスコア\n1,650\n+800\n連続正解\n×5\nランク\n🎸 ライブ奏者\n残り時間\n55.2s\nソ\n\n見つけよう： ルート\n\nフレット 0–5 • 正しい位置をタップ。\n0\n1\n2\n3\n4\n5\nミ\nラ\nレ\nソ",
+          "sizeBytes": 219051
+        },
+        {
+          "file": "source/screens-phone/06-tuner-1080x1920.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "home",
+          "title": "練習する",
+          "mic": "マイクはオフです",
+          "visibleText": "チューナー · ベース 4\n自動\nラ\n55.0 Hz · +0 cents\n−50\n0\n+50\n\n合っています\n\nミ\nラ\nレ\nソ\nマイク\n\n音声は端末内で処理され、録音されません。",
+          "sizeBytes": 180630
+        },
+        {
+          "file": "source/screens-phone/07-map-1080x1920.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "fretmap",
+          "title": "指板マップすべての音・1つの指板",
+          "mic": "マイクはオフです",
+          "visibleText": "←\n指板マップ\nすべての音・1つの指板\n指板マップ\n×\n音\nすべて\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\n指板\n12フレット\n15フレット\n17フレット\n21フレット\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\nミ\nファ\nファ#\nソ\nソ#\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\nラ\nレ\nレ#\nミ\nファ\nファ#\nソ\nソ#\nラ\nラ#\nシ\nド\nド#\nレ\nソ\nソ#\nラ\nラ#\nシ\nド\nド#\nレ\nレ#\nミ\nファ\nファ#\nソ",
+          "sizeBytes": 311034
+        },
+        {
+          "file": "source/screens-phone/08-circle-1080x1920.jpg",
+          "language": {
+            "html": "ja",
+            "app": "ja"
+          },
+          "instrument": {
+            "id": "bass-4",
+            "strings": 4,
+            "product": "Bass Fretboard Hero",
+            "tuning": [
+              "E",
+              "A",
+              "D",
+              "G"
+            ]
+          },
+          "screen": "circle",
+          "title": "五度圏キー・コード・ハーモニー",
+          "mic": "マイクはオフです",
+          "visibleText": "←\n五度圏\nキー・コード・ハーモニー\nIV\nii\nI\nvi\nV\niii\nvii°\nド\nラm\nシ°\nソ\nミm\nファ♯°\nレ\nシm\nド♯°\nラ\nファ♯m\nソ♯°\nミ\nド♯m\nレ♯°\nシ\nソ♯m\nラ♯°\nファ♯\nレ♯m\nミ♯°\nレ♭\nシ♭m\nド°\nラ♭\nファm\nソ°\nミ♭\nドm\nレ°\nシ♭\nソm\nラ°\nファ\nレm\nミ°\n五度圏\nソ\nミm · 平行短調\n←\n\nドラッグして回転・4度 ← → 5度\n\n→\nダイアトニックコード・固定ウィンドウ\nソ メジャー\n平行短調 • ミm\n\nシャープ1個 • ファ♯\n\n明るい枠にそのキーの7つのコードを表示します。大文字はメジャー、小文字はマイナー、°はディミニッシュです。\n\nよく使うコード進行\nI\nソ\n→\nV\nレ\n→\nvi\nミm\n→\nIV\nド\nI\nソ\n→\nIV\nド\n→\nV\nレ\n→\nI\nソ\nvi\nミm\n→\nIV\nド\n→\nI\nソ\n→\nV\nレ\n\nコードの上の度数を読みましょう。円を回すと各進行を移調できます。",
+          "sizeBytes": 215317
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

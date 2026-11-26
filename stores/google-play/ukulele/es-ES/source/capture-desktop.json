@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "7c59a31d6ce089834b130a7aa4af761d2dbbaca3",
+  "locale": "es-ES",
+  "instrument": "ukulele",
+  "capture": "Chromium rendering of local web source; viewport emulation, not physical-device certification",
+  "access": "Local capture-only unlocked configuration; production config unchanged",
+  "audio": "Synthetic microphone input processed by the real detector",
+  "variants": [
+    {
+      "id": "desktop",
+      "width": 1920,
+      "height": 1080,
+      "dpr": 1,
+      "touch": false,
+      "folder": "desktop",
+      "outputs": [
+        {
+          "file": "desktop/01-routine-1920x1080.jpg",
+          "language": {
+            "html": "es",
+            "app": "es"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "RUTINA DIARIA",
+          "mic": "Micrófono apagado",
+          "visibleText": "←\nRUTINA DIARIA\nLa\nMENOR\nAfinador\nFundamental\nEscala\nTríadas\nAcordes\nPenta\nToca la escala de La Menor\n\nUna octava · Trastes 9–12 · Ascenso\n\nEmpieza en La: sube hasta la octava y vuelve a la tónica.\n\nMicrófono apagado\n\nSol\nDo\nMi\nLa\nLa\n1\n9\nSi\n2\n11\nDo\n♭3\n12\nRe\n4\n10\nMi\n5\n9\nFa\n♭6\n10\nSol\n♭7\n12\nLa\n1\n12\n\nCian = fundamental · Números superiores = grados · 1 = tónica\n\nRegreso →",
+          "sizeBytes": 188795
+        },
+        {
+          "file": "desktop/02-triads-1920x1080.jpg",
+          "language": {
+            "html": "es",
+            "app": "es"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "RUTINA DIARIA",
+          "mic": "Micrófono apagado",
+          "visibleText": "←\nRUTINA DIARIA\nLa\nMENOR\nAfinador\nFundamental\nEscala\nTríadas\nAcordes\nPenta\nConecta las tríadas de La Menor\n\nToca cada tríada a la vez y luego nota por nota.\n\nMicrófono apagado\n\nSol\nDo\nMi\nLa\nPrimera inversión\n2\n0\n0\nSegunda inversión\n5\n4\n5\nPosición fundamental\n9\n9\n8\n\nCian = fundamental\n\nSiguiente →",
+          "sizeBytes": 189264
+        },
+        {
+          "file": "desktop/03-pentatonic-1920x1080.jpg",
+          "language": {
+            "html": "es",
+            "app": "es"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "learn",
+          "title": "La MENORPENTATÓNICA",
+          "mic": "Micrófono apagado",
+          "visibleText": "←\nLa MENOR\nPENTATÓNICA\nNOTA\nLa\nLa#\nSi\nDo\nDo#\nRe\nRe#\nMi\nFa\nFa#\nSol\nSol#\nTONALIDAD\nMAYOR\nMENOR\nMODO\nPENTATÓNICA\nTRÍADAS\nACORDES\nARPEGIOS\nPOSICIONES\nTODAS\n1\n2\n3\n4\n5\n12 trastes\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\nP1\nP2\nP3\nP4\nP5\nP1\nP2\nP3\nSol\nLa\nDo\nRe\nMi\nSol\nLa\nDo\nDo\nRe\nMi\nSol\nLa\nDo\nRe\nMi\nMi\nSol\nLa\nDo\nRe\nMi\nSol\nLa\nLa\nDo\nRe\nMi\nSol\nLa\nDo\nRe\nSe muestran todas las posiciones conectadas. Elige una para aislarla.\nLa\nFundamental\nDo\nTercera\nRe\nCuarta\nMi\nQuinta\nSol\nSéptima",
+          "sizeBytes": 409705
+        },
+        {
+          "file": "desktop/04-feedback-1920x1080.jpg",
+          "language": {
+            "html": "es",
+            "app": "es"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "routine",
+          "title": "RUTINA DIARIA",
+          "mic": "Escuchando…",
+          "visibleText": "←\nRUTINA DIARIA\nLa\nMENOR\nAfinador\nFundamental\nEscala\nTríadas\nAcordes\nPenta\nEncuentra la fundamental La\n\nToca la nota resaltada.\n\nEscuchando…\n\n2 / 6\nSol\nDo\nMi\nLa\n2\n14\n9\n5\n0\n12\n\nResaltado = objetivo · Verde = ya tocado\n\nSiguiente →",
+          "sizeBytes": 181038
+        },
+        {
+          "file": "desktop/05-quiz-1920x1080.jpg",
+          "language": {
+            "html": "es",
+            "app": "es"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "quiz",
+          "title": "CUESTIONARIO DEL DIAPASÓNCONOCE EL DIAPASÓN • DOMÍNALO",
+          "mic": "Micrófono apagado",
+          "visibleText": "←\nCUESTIONARIO DEL DIAPASÓN\nCONOCE EL DIAPASÓN • DOMÍNALO\nPUNTUACIÓN\n1650\n+800\nRACHA\n×5\nRANGO\n🎸 MÚSICO DE CONCIERTOS\nTIEMPO RESTANTE\n55.7s\nLa#\n\nEncuentra la QUINTA\n\nTrastes 0–5 • Toca cualquier posición correcta.\n0\n1\n2\n3\n4\n5\nSol\nDo\nMi\nLa",
+          "sizeBytes": 281549
+        },
+        {
+          "file": "desktop/06-tuner-1920x1080.jpg",
+          "language": {
+            "html": "es",
+            "app": "es"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "home",
+          "title": "Practicar",
+          "mic": "Micrófono apagado",
+          "visibleText": "Afinador · Ukelele\nAutomático\nLa\n440.1 Hz · +1 cents\n−50\n0\n+50\n\nAfinada\n\nSol\nDo\nMi\nLa\nMicrófono\n\nEl audio permanece en tu dispositivo. No se graba nada.",
+          "sizeBytes": 95461
+        },
+        {
+          "file": "desktop/07-map-1920x1080.jpg",
+          "language": {
+            "html": "es",
+            "app": "es"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "fretmap",
+          "title": "MAPA DEL DIAPASÓNCADA NOTA • UN DIAPASÓN",
+          "mic": "Micrófono apagado",
+          "visibleText": "←\nMAPA DEL DIAPASÓN\nCADA NOTA • UN DIAPASÓN\nNOTA\nTODAS\nLa\nLa#\nSi\nDo\nDo#\nRe\nRe#\nMi\nFa\nFa#\nSol\nSol#\nDIAPASÓN\n12 trastes\n15 trastes\n17 trastes\n21 trastes\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRe\nRe#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo\nDo#\nRe\nRe#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRe\nRe#\nMi\nFa\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRe\nRe#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa\nLa#\nSi\nDo\nDo#\nRe\nRe#\nMi\nFa\nFa#\nSol\nSol#\nLa\nLa#\nSi\nDo\nDo#\nRe",
+          "sizeBytes": 415179
+        },
+        {
+          "file": "desktop/08-circle-1920x1080.jpg",
+          "language": {
+            "html": "es",
+            "app": "es"
+          },
+          "instrument": {
+            "id": "ukulele",
+            "strings": 4,
+            "product": "Ukulele Fretboard Hero",
+            "tuning": [
+              "G",
+              "C",
+              "E",
+              "A"
+            ]
+          },
+          "screen": "circle",
+          "title": "CÍRCULO DE QUINTASTONALIDADES • ACORDES • ARMONÍA",
+          "mic": "Micrófono apagado",
+          "visibleText": "←\nCÍRCULO DE QUINTAS\nTONALIDADES • ACORDES • ARMONÍA\nIV\nii\nI\nvi\nV\niii\nvii°\nDo\nLam\nSi°\nSol\nMim\nFa♯°\nRe\nSim\nDo♯°\nLa\nFa♯m\nSol♯°\nMi\nDo♯m\nRe♯°\nSi\nSol♯m\nLa♯°\nFa♯\nRe♯m\nMi♯°\nRe♭\nSi♭m\nDo°\nLa♭\nFam\nSol°\nMi♭\nDom\nRe°\nSi♭\nSolm\nLa°\nFa\nRem\nMi°\nCÍRCULO DE QUINTAS\nSol\nMim · Menor relativo\n←\n\nArrastra para girar · Cuartas ← → Quintas\n\n→\nACORDES DIATÓNICOS · VENTANA FIJA\nSol MAYOR\nMenor relativo • Mim\n\n1 sostenido • Fa♯\n\nLa zona resaltada muestra los siete acordes de la tonalidad. Mayúsculas: mayores; minúsculas: menores; °: disminuidos.\n\nPROGRESIONES HABITUALES\nI\nSol\n→\nV\nRe\n→\nvi\nMim\n→\nIV\nDo\nI\nSol\n→\nIV\nDo\n→\nV\nRe\n→\nI\nSol\nvi\nMim\n→\nIV\nDo\n→\nI\nSol\n→\nV\nRe\n\nLee los grados sobre cada acorde. Gira el círculo para transponer las progresiones.",
+          "sizeBytes": 210785
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
