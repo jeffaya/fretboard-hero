@@ -70,26 +70,22 @@ gc iam service-accounts add-iam-policy-binding "$email" --role=roles/iam.workloa
   --member="principalSet://iam.googleapis.com/$pool_path/attribute.repository_id/$repo_id" --condition=None --format=none
 
 echo "Dans Play Console, inviter $email sur Guitare, Basse et Ukulélé : lecture des informations, versions de test et versions de production."
-echo "GCP_WORKLOAD_IDENTITY_PROVIDER=$provider_path"
-echo "GOOGLE_PLAY_SERVICE_ACCOUNT=$email"
 if ! command -v gh >/dev/null; then
-  echo "GitHub CLI est absent. Reporter les deux lignes ci-dessus dans les variables Actions du dépôt."
+  echo "GitHub CLI est absent. Ajouter les secrets Actions manquants dans le dépôt avec les valeurs suivantes."
+  echo "GCP_WORKLOAD_IDENTITY_PROVIDER=$provider_path"
+  echo "GOOGLE_PLAY_SERVICE_ACCOUNT=$email"
   exit 1
 fi
 if ! gh auth status --hostname github.com >/dev/null 2>&1; then
   gh auth login --hostname github.com --web --git-protocol https
 fi
-current=$(gh variable list --repo "$repo" --limit 1000 --json name,value)
+current=$(gh secret list --repo "$repo" --json name)
 keys=(GCP_WORKLOAD_IDENTITY_PROVIDER GOOGLE_PLAY_SERVICE_ACCOUNT)
 values=("$provider_path" "$email")
-for i in 0 1; do
-  if ! jq -e --arg k "${keys[i]}" --arg v "${values[i]}" 'all(.[]; .name != $k or .value == $v)' <<<"$current" >/dev/null; then
-    echo "La variable ${keys[i]} existe avec une autre valeur. Vérifier sa destination avant de la remplacer." >&2
-    exit 1
+for i in "${!keys[@]}"; do
+  if jq -e --arg name "${keys[i]}" 'any(.[]; .name == $name)' <<<"$current" >/dev/null; then
+    continue
   fi
+  printf '%s' "${values[i]}" | gh secret set "${keys[i]}" --repo "$repo"
 done
-for i in 0 1; do
-  gh variable set "${keys[i]}" --repo "$repo" --body "${values[i]}"
-  [[ $(gh variable get "${keys[i]}" --repo "$repo") == "${values[i]}" ]]
-done
-echo "Google Cloud et les deux variables GitHub sont configurés. Terminer l’invitation dans Play Console si nécessaire."
+echo "Les deux secrets Actions sont présents. Terminer l’invitation dans Play Console si nécessaire."
