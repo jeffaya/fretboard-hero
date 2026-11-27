@@ -55,12 +55,38 @@ async function publish({ appId, track, version, code, sha, bundle, notes, reques
     const { releases = [] } = await request('GET', base + '/tracks/' + track + '/releases');
     return releases.find(r => r.activeArtifacts?.some(a => String(a.versionCode) === code));
   };
-  const stateOf = summary => states[summary?.releaseLifecycleState?.replace(/^RELEASE_LIFECYCLE_STATE_/, '')];
+  const stateOf = summary => summary?.releaseLifecycleState?.replace(/^RELEASE_LIFECYCLE_STATE_/, '');
+  async function confirmStatus(operation, firstSummary) {
+    const intervalMs = 30_000;
+    const maxWaitMs = 15 * 60_000;
+    let lastReadError;
+    for (let elapsed = 0; elapsed <= maxWaitMs; elapsed += intervalMs) {
+      if (elapsed) await wait(intervalMs);
+      let summary;
+      try {
+        summary = elapsed === 0 && firstSummary ? firstSummary : await lifecycle();
+      } catch (error) {
+        lastReadError = error.message;
+        continue;
+      }
+      const state = stateOf(summary);
+      if (!states[state]) continue;
+      // Play can report NOT_SENT_FOR_REVIEW immediately after accepting the edit.
+      if (state === 'NOT_SENT_FOR_REVIEW' && elapsed < maxWaitMs) {
+        if (elapsed === 0) console.log('Waiting for Google Play to confirm review for ' + appId + ' (' + code + ').');
+        continue;
+      }
+      const [message, ok] = states[state];
+      return { message: operation + ' · ' + message, ok };
+    }
+    if (lastReadError) console.warn('Lifecycle lookup:', lastReadError);
+    return { message: operation + ' · Google has not confirmed the lifecycle yet. Check Publishing overview or rerun this instrument.', ok: false };
+  }
   // Pending edits may not appear in the editable track snapshot yet.
   const previous = await lifecycle();
   const previousState = stateOf(previous);
-  if (previous?.releaseName === name && previousState && !previous.releaseLifecycleState.endsWith('_DRAFT')) {
-    return { message: 'Already submitted · ' + previousState[0], ok: previousState[1] };
+  if (previous?.releaseName === name && states[previousState] && previousState !== 'DRAFT') {
+    return confirmStatus('Already submitted', previous);
   }
   const edit = await request('POST', base + '/edits', {});
   const editPath = base + '/edits/' + encodeURIComponent(edit.id);
@@ -108,20 +134,7 @@ async function publish({ appId, track, version, code, sha, bundle, notes, reques
     }
   }
 
-  // The commit response is an AppEdit, not a publication status. Read Google's
-  // lifecycle for this version code on this track. Approval may take days.
-  let lastReadError;
-  for (const pause of [0, 2000, 5000, 10000]) {
-    if (pause) await wait(pause);
-    try {
-      const state = stateOf(await lifecycle());
-      if (state) return { message: operation + ' · ' + state[0], ok: state[1] };
-    } catch (error) {
-      lastReadError = error.message;
-    }
-  }
-  if (lastReadError) console.warn('Lifecycle lookup:', lastReadError);
-  return { message: operation + ' · Google has not confirmed the lifecycle yet. Check Publishing overview or rerun this instrument.', ok: false };
+  return confirmStatus(operation);
 }
 
 async function main() {

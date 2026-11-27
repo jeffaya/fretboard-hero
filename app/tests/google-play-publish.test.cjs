@@ -51,10 +51,14 @@ function play({
   uploaded = artifact, commitError, track = 'production'
 } = {}) {
   const calls = [];
+  const waits = [];
   let statusReads = 0;
   const request = async (method, url, body) => {
     calls.push({ method, url, body });
-    if (url === base + '/tracks/' + track + '/releases') return { releases: statusReads++ ? after : before };
+    if (url === base + '/tracks/' + track + '/releases') {
+      if (statusReads++ === 0) return { releases: before };
+      return { releases: typeof after === 'function' ? after(statusReads - 1) : after };
+    }
     if (url === base + '/edits') return { id: 'abc' };
     if (url === edit + '/tracks') return { tracks };
     if (url === edit + '/bundles') return { bundles };
@@ -64,8 +68,8 @@ function play({
     if (url === commit || url === commit + '&changesNotSentForReview=true' || (method === 'DELETE' && url === edit)) return {};
     throw Error('Unexpected request ' + method + ' ' + url);
   };
-  const run = () => publish({ appId: 'com.bass.fretboardhero', track, version: '1.1.0', code: '11', sha, bundle, notes: notes['bass-4'], request, wait: async () => {} });
-  return { calls, run };
+  const run = () => publish({ appId: 'com.bass.fretboardhero', track, version: '1.1.0', code: '11', sha, bundle, notes: notes['bass-4'], request, wait: async ms => { waits.push(ms); } });
+  return { calls, waits, run };
 }
 
 test('submits a verified bundle and localized notes, then checks the target code and track', async () => {
@@ -84,6 +88,26 @@ test('an in-review retry performs no writes, and a partial run can resume per in
   const api = play({ before: [summary('IN_REVIEW')] });
   assert.equal((await api.run()).ok, true);
   assert.deepEqual(api.calls.map(c => c.method), ['GET']);
+});
+
+test('waits for review after the commit and on a retry of the same pending release', async () => {
+  const pending = [summary('NOT_SENT_FOR_REVIEW')];
+  const after = read => read < 8 ? pending : [summary('IN_REVIEW')];
+  for (const before of [[], pending]) {
+    const api = play({ before, after });
+    assert.deepEqual(await api.run(), {
+      ok: true, message: (before.length ? 'Already submitted' : 'Submitted') + ' · In review'
+    });
+    assert(api.waits.length >= 7);
+    if (before.length) assert(api.calls.every(c => c.method === 'GET'));
+    else assert.equal(api.calls.filter(c => c.url.includes(':commit')).length, 1);
+  }
+});
+
+test('reports a persistent manual action after the polling window', async () => {
+  const api = play({ after: [summary('NOT_SENT_FOR_REVIEW')] });
+  assert.deepEqual(await api.run(), { ok: false, message: 'Submitted · Action required — open Publishing overview and select Send for review' });
+  assert.equal(api.waits.reduce((total, ms) => total + ms, 0), 15 * 60_000);
 });
 
 test('promotes the original internal bundle without uploading a timestamped rebuild', async () => {
@@ -110,6 +134,7 @@ test('rejects code reuse, a newer target, and unexpected upload metadata before 
 test('reports manual review only when Play explicitly requests it, and keeps an ongoing review', async () => {
   const manual = play({ commitError: 'Please set the query parameter changesNotSentForReview to true.' });
   assert.deepEqual(await manual.run(), { ok: false, message: 'Saved — open Publishing overview and select Send for review' });
+  assert.equal(manual.waits.length, 0);
   assert(manual.calls.at(-1).url.endsWith('changesNotSentForReview=true'));
   const busy = play({ commitError: 'You already have changes in review.' });
   await assert.rejects(busy.run(), /already have changes/);

@@ -68,4 +68,6 @@ Dans **Play Console → Utilisateurs et autorisations**, inviter en une seule fo
 
 Chaque instrument a un résultat indépendant dans le résumé GitHub, avec le package, la piste, le code et l’état observé à la fin du job. La décision de Google peut arriver après cette exécution. L’état à jour se trouve dans **Play Console → Vue d’ensemble de la publication**.
 
+Après l’envoi, le job vérifie le statut de la version toutes les 30 secondes, pendant 15 minutes au maximum. Dès que Google confirme l’examen, le job réussit. Si Google demande toujours une action à la fin de ce délai, le résumé indique où envoyer les modifications pour examen. Une relance qui retrouve la même version en attente vérifie son statut sans renvoyer les fichiers.
+
 Pour reprendre un envoi interrompu, relancer le job en échec. Pour promouvoir du test interne vers la production, sélectionner la même version et le même code sur le même commit. Le workflow réutilise alors le bundle déjà envoyé à Google. Si les sources ont changé, choisir un nouveau code et vérifier les notes de cette version. Une version déjà présente sur la piste est vérifiée sans nouvel envoi. Un examen en cours pour une autre mise à jour est conservé. Si Google exige une soumission manuelle après un refus, le résumé invite à choisir **Envoyer pour examen** dans la console.
