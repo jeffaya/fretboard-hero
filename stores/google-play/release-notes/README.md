@@ -66,6 +66,8 @@ Dans **Play Console → Utilisateurs et autorisations**, inviter en une seule fo
 
 ## Vérifier ou reprendre un envoi
 
+Dans la Play Console, le nom de chaque nouvelle version suit le format `versionCode (versionName)`, par exemple `12 (1.1.2)`. Le workflow reconnaît aussi les anciennes versions dont le libellé contient une empreinte. Lors de la promotion d’un bundle recompilé, il peut vérifier l’empreinte du fichier signé d’origine dans les artefacts GitHub du même commit.
+
 Chaque instrument a un résultat indépendant dans le résumé GitHub, avec le package, la piste, le code et l’état observé à la fin du job. La décision de Google peut arriver après cette exécution. L’état à jour se trouve dans **Play Console → Vue d’ensemble de la publication**.
 
 Après l’envoi, le job vérifie le statut de la version toutes les 30 secondes, pendant 15 minutes au maximum. Dès que Google confirme l’examen, le job réussit. Si Google demande toujours une action à la fin de ce délai, le résumé indique où envoyer les modifications pour examen. Une relance qui retrouve la même version en attente vérifie son statut sans renvoyer les fichiers.
