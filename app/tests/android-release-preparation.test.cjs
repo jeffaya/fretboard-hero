@@ -5,7 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { buildHistory, resolveVersion } = require('../../scripts/google-play/version.cjs');
 const { prepare, generateNotes, productionBuild } = require('../../scripts/google-play/prepare-notes.cjs');
-const { releaseName } = require('../../scripts/google-play/publish.cjs');
+const { legacyReleaseName } = require('../../scripts/google-play/publish.cjs');
 const { readNotes } = require('../../scripts/google-play/notes.cjs');
 
 test('next build code and dotted names preserve explicit overrides and Play limits', () => {
@@ -53,7 +53,10 @@ test('baseline is a published build of the selected app, including legacy manual
   assert.throws(() => productionBuild([pending],historical,'bass-4'), /No published/);
   const another = {...baseline,sha:'b'.repeat(40)};
   assert.throws(() => productionBuild([release],[baseline,another],'bass-4'), /Cannot match/);
-  release.releaseName = releaseName(another.sha,another.name,another.code);
+  release.releaseName = '10 (1.1.0)';
+  assert.equal(productionBuild([release],[baseline,{...another,name:'1.0.9'}],'bass-4'),baseline.sha);
+  assert.throws(() => productionBuild([release],[baseline,another],'bass-4'), /Cannot match/);
+  release.releaseName = legacyReleaseName(another.sha,another.name,another.code);
   assert.equal(productionBuild([release],[baseline,another],'bass-4'),another.sha);
   assert.throws(() => productionBuild([release],[baseline],'bass-4'), /Cannot match/);
 });

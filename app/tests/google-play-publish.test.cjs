@@ -5,13 +5,14 @@ const os = require('node:os');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const { readNotes } = require('../../scripts/google-play/notes.cjs');
-const { publish } = require('../../scripts/google-play/publish.cjs');
+const { publish, matchesArchivedBundle } = require('../../scripts/google-play/publish.cjs');
 
 const sha = 'a'.repeat(40);
 const bundle = Buffer.from('signed bundle fixture');
 const artifact = { versionCode: 11, sha256: crypto.createHash('sha256').update(bundle).digest('hex') };
 const buildId = crypto.createHash('sha256').update(sha + '/1.1.0/11').digest('hex').slice(0, 20);
-const name = '1.1.0 (11) @' + buildId;
+const legacyName = '1.1.0 (11) @' + buildId;
+const name = '11 (1.1.0)';
 const notes = readNotes('1.1.0', 'all');
 const base = '/androidpublisher/v3/applications/com.bass.fretboardhero';
 const edit = base + '/edits/abc';
@@ -48,13 +49,17 @@ test('resolves instrument overrides, requires an exact version and validates eve
 
 function play({
   bundles = [], tracks = [], before = [], after = [summary('IN_REVIEW')],
-  uploaded = artifact, commitError, track = 'production'
+  uploaded = artifact, commitError, track = 'production', matchesArchive
 } = {}) {
   const calls = [];
+  const waits = [];
   let statusReads = 0;
   const request = async (method, url, body) => {
     calls.push({ method, url, body });
-    if (url === base + '/tracks/' + track + '/releases') return { releases: statusReads++ ? after : before };
+    if (url === base + '/tracks/' + track + '/releases') {
+      if (statusReads++ === 0) return { releases: before };
+      return { releases: typeof after === 'function' ? after(statusReads - 1) : after };
+    }
     if (url === base + '/edits') return { id: 'abc' };
     if (url === edit + '/tracks') return { tracks };
     if (url === edit + '/bundles') return { bundles };
@@ -64,8 +69,8 @@ function play({
     if (url === commit || url === commit + '&changesNotSentForReview=true' || (method === 'DELETE' && url === edit)) return {};
     throw Error('Unexpected request ' + method + ' ' + url);
   };
-  const run = () => publish({ appId: 'com.bass.fretboardhero', track, version: '1.1.0', code: '11', sha, bundle, notes: notes['bass-4'], request, wait: async () => {} });
-  return { calls, run };
+  const run = () => publish({ appId: 'com.bass.fretboardhero', track, version: '1.1.0', code: '11', sha, bundle, notes: notes['bass-4'], request, matchesArchive, wait: async ms => { waits.push(ms); } });
+  return { calls, waits, run };
 }
 
 test('submits a verified bundle and localized notes, then checks the target code and track', async () => {
@@ -80,18 +85,79 @@ test('submits a verified bundle and localized notes, then checks the target code
   }
 });
 
-test('an in-review retry performs no writes, and a partial run can resume per instrument', async () => {
-  const api = play({ before: [summary('IN_REVIEW')] });
+test('an in-review retry can recognise the old source-specific label from its summary', async () => {
+  const api = play({ before: [{ ...summary('IN_REVIEW'), releaseName: legacyName }] });
   assert.equal((await api.run()).ok, true);
   assert.deepEqual(api.calls.map(c => c.method), ['GET']);
 });
 
+test('waits for review after the commit and on a retry of the same pending release', async () => {
+  const pending = [summary('NOT_SENT_FOR_REVIEW')];
+  const after = read => read < 8 ? pending : [summary('IN_REVIEW')];
+  for (const before of [[], pending]) {
+    const api = play({ before, after, bundles: before.length ? [artifact] : [] });
+    assert.deepEqual(await api.run(), {
+      ok: true, message: (before.length ? 'Already submitted' : 'Submitted') + ' · In review'
+    });
+    assert(api.waits.length >= 7);
+    if (before.length) {
+      assert(!api.calls.some(c => c.method === 'PUT' || c.url.includes(':commit') || c.url.startsWith('/upload')));
+      assert(api.calls.some(c => c.method === 'DELETE'));
+    }
+    else assert.equal(api.calls.filter(c => c.url.includes(':commit')).length, 1);
+  }
+});
+
+test('reports a persistent manual action after the polling window', async () => {
+  const api = play({ after: [summary('NOT_SENT_FOR_REVIEW')] });
+  assert.deepEqual(await api.run(), { ok: false, message: 'Submitted · Action required — open Publishing overview and select Send for review' });
+  assert.equal(api.waits.reduce((total, ms) => total + ms, 0), 15 * 60_000);
+});
+
 test('promotes the original internal bundle without uploading a timestamped rebuild', async () => {
   const api = play({ bundles: [{ ...artifact, sha256: 'previous-build-hash' }], tracks: [
-    { track: 'internal', releases: [{ name, versionCodes: ['11'], status: 'completed' }] }
+    { track: 'internal', releases: [{ name: legacyName, versionCodes: ['11'], status: 'completed' }] }
   ] });
   assert.match((await api.run()).message, /existing Play bundle/);
   assert(!api.calls.some(c => c.url.startsWith('/upload')));
+});
+
+test('promotes a short-labelled rebuild only when the original signed archive matches Play', async () => {
+  const setup = { bundles: [{ ...artifact, sha256: 'original-checksum' }], tracks: [
+    { track: 'internal', releases: [{ name, versionCodes: ['11'], status: 'completed' }] }
+  ] };
+  const verified = play({ ...setup, matchesArchive: digest => digest === 'original-checksum' });
+  assert.match((await verified.run()).message, /existing Play bundle/);
+  assert(!verified.calls.some(c => c.url.startsWith('/upload')));
+  const collision = play({ ...setup, before: [summary('IN_REVIEW')] });
+  await assert.rejects(collision.run(), /another build/);
+  assert(!collision.calls.some(c => c.method === 'PUT' || c.url.includes(':commit')));
+});
+
+test('verifies the exact signed AAB from a matching earlier main run', () => {
+  const record = { main: true, run: '41', sha, name: '1.1.0', code: 11, instrument: 'all' };
+  const env = {
+    GITHUB_RUN_ID: '42', GITHUB_SHA: sha, GITHUB_REPOSITORY: 'jeffaya/fretboard-hero',
+    VERSION_CODE: '11', VERSION_NAME: '1.1.0', BUILD_INSTRUMENT: 'bass-4',
+    BUILD_HISTORY: JSON.stringify([{ ...record, sha: 'b'.repeat(40) }, { ...record, main: false },
+      { ...record, instrument: 'guitar' }, { ...record, run: '42' }, record])
+  };
+  const files = [];
+  const name = 'fretboard-hero-android-all-1.1.0-11';
+  const gh = args => {
+    if (args[0] === 'api') {
+      assert.equal(args[1], 'repos/jeffaya/fretboard-hero/actions/runs/41/artifacts?name=' + name);
+      return JSON.stringify({ artifacts: [{ name, expired: false }] });
+    }
+    assert.deepEqual(args.slice(0, -1), ['run', 'download', '41', '-R', env.GITHUB_REPOSITORY, '-n', name, '-D']);
+    const file = path.join(args.at(-1), 'fretboard-hero-bass-4-store-release.aab');
+    fs.writeFileSync(file, bundle);
+    files.push(file);
+  };
+  assert(matchesArchivedBundle(env, artifact.sha256, gh));
+  assert.equal(matchesArchivedBundle(env, 'different', gh), false);
+  assert.equal(files.length, 2);
+  assert(files.every(file => !fs.existsSync(file)));
 });
 
 test('rejects code reuse, a newer target, and unexpected upload metadata before committing', async () => {
@@ -110,6 +176,7 @@ test('rejects code reuse, a newer target, and unexpected upload metadata before 
 test('reports manual review only when Play explicitly requests it, and keeps an ongoing review', async () => {
   const manual = play({ commitError: 'Please set the query parameter changesNotSentForReview to true.' });
   assert.deepEqual(await manual.run(), { ok: false, message: 'Saved — open Publishing overview and select Send for review' });
+  assert.equal(manual.waits.length, 0);
   assert(manual.calls.at(-1).url.endsWith('changesNotSentForReview=true'));
   const busy = play({ commitError: 'You already have changes in review.' });
   await assert.rejects(busy.run(), /already have changes/);

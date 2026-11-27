@@ -3,7 +3,7 @@ const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const instruments = require('../../app/instruments.json');
 const { readNotes, locales, notesDir } = require('./notes.cjs');
-const { playClient, releaseName } = require('./publish.cjs');
+const { playClient, releaseName, legacyReleaseName } = require('./publish.cjs');
 const wording = require('./release-wording.json');
 
 function productionBuild(releases, history, instrument) {
@@ -12,10 +12,12 @@ function productionBuild(releases, history, instrument) {
   if (!Number.isFinite(code)) throw Error('No published production baseline. Supply reviewed notes for the first release.');
   const candidates = history.filter(b => b.main && b.code === code && (b.instrument === 'all' || b.instrument === instrument));
   const release = published.find(r => r.activeArtifacts?.some(a => Number(a.versionCode) === code));
-  // Manually uploaded releases predate the workflow label. Only accept an unambiguous build.
-  const builds = / @[0-9a-f]{20}$/.test(release.releaseName)
-    ? candidates.filter(b => releaseName(b.sha, b.name, b.code) === release.releaseName)
-    : candidates;
+  let builds = candidates;
+  if (/ @[0-9a-f]{20}$/.test(release.releaseName)) {
+    builds = candidates.filter(b => legacyReleaseName(b.sha, b.name, b.code) === release.releaseName);
+  } else if (/^\d+ \(.+\)$/.test(release.releaseName)) {
+    builds = candidates.filter(b => releaseName(b.name, b.code) === release.releaseName);
+  }
   const shas = new Set(builds.map(build => build.sha));
   if (shas.size !== 1) throw Error('Cannot match the published production code ' + code + ' to one build. Supply reviewed notes for this version.');
   return [...shas][0];

@@ -192,6 +192,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.ref == 'refs/heads/main' && matrix.environment || 'android-build-only' }}
     permissions:
+      actions: read
       contents: read
       id-token: write
     steps:
@@ -247,6 +248,8 @@ jobs:
       - name: Submit release and read Google Play status
         if: inputs.publish != 'build-only'
         env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_HISTORY: ${{ needs.version.outputs.history }}
           PLAY_ACCESS_TOKEN: ${{ steps.google.outputs.access_token }}
           BUILD_INSTRUMENT: ${{ matrix.instrument }}
           PLAY_TRACK: ${{ inputs.publish }}
